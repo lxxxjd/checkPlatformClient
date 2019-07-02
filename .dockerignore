@@ -2,12 +2,9 @@
 
 # dependencies
 **/node_modules
-# roadhog-api-doc ignore
 /src/utils/request-temp.js
-_roadhog-api-doc
 
 # production
-/dist
 /.vscode
 
 # misc
@@ -25,19 +22,13 @@ package-lock.json
 # visual studio code
 .history
 *.log
-functions/*
-lambda/mock/index.js
+
+functions/mock
 .temp/**
 
 # umi
 .umi
 .umi-production
-
-# next.js build output
-.next
-
-#.idea
-/.idea/*
 
 # screenshot
 screenshot
