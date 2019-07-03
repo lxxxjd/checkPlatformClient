@@ -2,7 +2,12 @@
   {
     "path": "/",
     "exact": true,
-    "redirect": "/dashboard/analysis"
+    "redirect": "/InspectEntrust/EntrustAdd"
+  },
+  {
+    "path": "/InspectEntrust",
+    "exact": true,
+    "redirect": "/InspectEntrust/EntrustAdd"
   },
   {
     "path": "/dashboard",

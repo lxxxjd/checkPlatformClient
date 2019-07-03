@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
-import { connect } from 'dva';
-import moment from 'moment';
+import { connect } from 'dva/index';
+import moment from 'moment/moment';
 import router from 'umi/router';
 import {
   Row,
@@ -21,11 +21,11 @@ import {
   Divider,
   Steps,
   Radio,
-} from 'antd';
+} from 'antd/lib/index';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
-import styles from './TableList.less';
+import styles from './EntrustAdd.less';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -279,7 +279,7 @@ class UpdateForm extends PureComponent {
   loading: loading.models.rule,
 }))
 @Form.create()
-class TableList extends PureComponent {
+class EntrustAdd extends PureComponent {
   state = {
     modalVisible: false,
     updateModalVisible: false,
@@ -688,4 +688,4 @@ class TableList extends PureComponent {
   }
 }
 
-export default TableList;
+export default EntrustAdd;
