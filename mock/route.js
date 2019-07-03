@@ -7,17 +7,17 @@ export default {
 
       // InspectEntrust
       {
-        path: '/InspectEntrust',
-        name: 'InspectEntrust',
+        path: '/Entrustment',
+        name: 'Entrustment',
         icon: 'dashboard',
         routes: [
           {
-            path: '/InspectEntrust/EntrustAdd',
-            name: 'EntrustAdd',
+            path: '/Entrustment/ApplicationForEntrustment',
+            name: 'ApplicationForEntrustment',
           },
           {
-            path: '/InspectEntrust/EntrustInfo',
-            name: 'EntrustInfo',
+            path: '/Entrustment/SearchForEntrustment',
+            name: 'SearchForEntrustment',
           },
         ],
       },

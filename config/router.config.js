@@ -26,16 +26,16 @@ export default [
 
       // InspectEntrust
       {
-        path: '/InspectEntrust',
-        name: 'InspectEntrust',
+        path: '/Entrustment',
+        name: 'Entrustment',
         icon: 'dashboard',
         routes: [
           {
-            path: '/InspectEntrust/EntrustAdd',
+            path: '/Entrustment/ApplicationForEntrustment',
             name: 'EntrustAdd',
           },
           {
-            path: '/InspectEntrust/EntrustInfo',
+            path: '/Entrustment/SearchForEntrustment',
             name: 'EntrustInfo',
           },
         ],
