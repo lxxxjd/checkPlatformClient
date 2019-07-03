@@ -32,11 +32,11 @@ export default [
         routes: [
           {
             path: '/Entrustment/ApplicationForEntrustment',
-            name: 'EntrustAdd',
+            name: 'ApplicationForEntrustment',
           },
           {
             path: '/Entrustment/SearchForEntrustment',
-            name: 'EntrustInfo',
+            name: 'SearchForEntrustment',
           },
         ],
       },
