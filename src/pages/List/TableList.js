@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
+
 import {
   Row,
   Col,
@@ -24,8 +25,12 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-
 import styles from './TableList.less';
+import 'braft-editor/dist/index.css';
+import BraftEditor from 'braft-editor';
+
+
+
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -44,23 +49,76 @@ const CreateForm = Form.create()(props => {
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
+      const fields = {
+        name:  fieldsValue.name,
+        content: fieldsValue.content.toHTML(),
+        description:  fieldsValue.description,
+        owner:  fieldsValue.owner,
+        createTime:  fieldsValue.createTime,
+      }
+      handleAdd(fields);
     });
   };
   return (
     <Modal
       destroyOnClose
-      title="新建规则"
+      title="新建证书"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
+      width={800}
+      style={{ top: 10 }}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
+
+      <Form>
+        <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 20}} label="证书名称">
+          {form.getFieldDecorator('name', {
+            rules: [{ required: true}],
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 3}} wrapperCol={{ span: 20 }} label="简要描述">
+          {form.getFieldDecorator('description', {
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} label="签署姓名">
+          {form.getFieldDecorator('owner', {
+            rules: [{ required: true}],
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} label="签署时间">
+          {form.getFieldDecorator('createTime', {
+            rules: [{ required: true, message: '请选择签署时间！' }],
+          })(
+            <DatePicker
+              style={{ width: '100%' }}
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder="选择签署时间"
+            />
+          )}
+        </FormItem>,
+        <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 25 }} label="证书内容">
+          {form.getFieldDecorator('content', {
+            validateTrigger: 'onBlur',
+            rules: [{
+              required: true,
+              validator: (_, value, callback) => {
+                if (value.isEmpty()) {
+                  callback('请输入正文内容')
+                } else {
+                  callback()
+                }
+              }
+            }],
+          })(
+            <BraftEditor
+              className="my-editor"
+              placeholder="请输入正文内容"
+            />
+          )}
+        </FormItem>
+      </Form>
+
     </Modal>
   );
 });
@@ -79,13 +137,11 @@ class UpdateForm extends PureComponent {
     this.state = {
       formVals: {
         name: props.values.name,
-        desc: props.values.desc,
+        description: props.values.description,
         key: props.values.key,
-        target: '0',
-        template: '0',
-        type: '1',
-        time: '',
-        frequency: 'month',
+        owner: props.values.owner,
+        content: props.values.content,
+        createTime: props.values.createTime,
       },
       currentStep: 0,
     };
@@ -135,76 +191,64 @@ class UpdateForm extends PureComponent {
     const { form } = this.props;
     if (currentStep === 1) {
       return [
-        <FormItem key="target" {...this.formLayout} label="监控对象">
-          {form.getFieldDecorator('target', {
-            initialValue: formVals.target,
-          })(
-            <Select style={{ width: '100%' }}>
-              <Option value="0">表一</Option>
-              <Option value="1">表二</Option>
-            </Select>
-          )}
-        </FormItem>,
-        <FormItem key="template" {...this.formLayout} label="规则模板">
-          {form.getFieldDecorator('template', {
-            initialValue: formVals.template,
-          })(
-            <Select style={{ width: '100%' }}>
-              <Option value="0">规则模板一</Option>
-              <Option value="1">规则模板二</Option>
-            </Select>
-          )}
-        </FormItem>,
-        <FormItem key="type" {...this.formLayout} label="规则类型">
-          {form.getFieldDecorator('type', {
-            initialValue: formVals.type,
-          })(
-            <RadioGroup>
-              <Radio value="0">强</Radio>
-              <Radio value="1">弱</Radio>
-            </RadioGroup>
-          )}
-        </FormItem>,
-      ];
-    }
-    if (currentStep === 2) {
-      return [
-        <FormItem key="time" {...this.formLayout} label="开始时间">
-          {form.getFieldDecorator('time', {
-            rules: [{ required: true, message: '请选择开始时间！' }],
+        <FormItem key="createTime" {...this.formLayout} label="签署时间">
+          {form.getFieldDecorator('createTime', {
+            rules: [{ required: true, message: '请选择签署时间！' }],
+            initialValue: moment(formVals.createTime),
           })(
             <DatePicker
               style={{ width: '100%' }}
               showTime
               format="YYYY-MM-DD HH:mm:ss"
-              placeholder="选择开始时间"
+              placeholder="选择签署时间"
             />
           )}
         </FormItem>,
-        <FormItem key="frequency" {...this.formLayout} label="调度周期">
-          {form.getFieldDecorator('frequency', {
-            initialValue: formVals.frequency,
+        <FormItem key="owner" {...this.formLayout} label="签署姓名">
+          {form.getFieldDecorator('owner', {
+            rules: [{ required: true, message: '请输入签署人姓名！' }],
+            initialValue: formVals.owner,
+          })(<Input placeholder="请输入" />)}
+        </FormItem>,
+      ];
+    }
+    if (currentStep === 2) {
+      return [
+        <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 25 }} label="证书内容">
+          {form.getFieldDecorator('content', {
+            validateTrigger: 'onBlur',
+            initialValue: BraftEditor.createEditorState(formVals.content),
+            rules: [{
+              required: true,
+              validator: (_, value, callback) => {
+                if (value.isEmpty()) {
+                  callback('请输入正文内容')
+                } else {
+                  callback()
+                }
+              }
+            }],
           })(
-            <Select style={{ width: '100%' }}>
-              <Option value="month">月</Option>
-              <Option value="week">周</Option>
-            </Select>
+            <BraftEditor
+              className="my-editor"
+              placeholder="请输入正文内容"
+            />
           )}
         </FormItem>,
       ];
     }
     return [
-      <FormItem key="name" {...this.formLayout} label="规则名称">
+      <FormItem key="name" {...this.formLayout} label="证书名称">
         {form.getFieldDecorator('name', {
-          rules: [{ required: true, message: '请输入规则名称！' }],
+          rules: [{ required: true, message: '请输入证书名称！' }],
           initialValue: formVals.name,
         })(<Input placeholder="请输入" />)}
       </FormItem>,
-      <FormItem key="desc" {...this.formLayout} label="规则描述">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-          initialValue: formVals.desc,
-        })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
+      <FormItem key="description" {...this.formLayout} label="简要描述">
+        {form.getFieldDecorator('description', {
+          rules: [{ required: true, message: '请输入至少五个字符的证书描述！' }],
+          initialValue: formVals.description,
+        })(<TextArea rows={4} placeholder="请输入" />)}
       </FormItem>,
     ];
   };
@@ -256,7 +300,7 @@ class UpdateForm extends PureComponent {
         width={640}
         bodyStyle={{ padding: '32px 40px 48px' }}
         destroyOnClose
-        title="规则配置"
+        title="证书配置"
         visible={updateModalVisible}
         footer={this.renderFooter(currentStep)}
         onCancel={() => handleUpdateModalVisible(false, values)}
@@ -264,8 +308,8 @@ class UpdateForm extends PureComponent {
       >
         <Steps style={{ marginBottom: 28 }} size="small" current={currentStep}>
           <Step title="基本信息" />
-          <Step title="配置规则属性" />
-          <Step title="设定调度周期" />
+          <Step title="签署信息" />
+          <Step title="证书内容" />
         </Steps>
         {this.renderContent(currentStep, formVals)}
       </Modal>
@@ -274,9 +318,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ certificate, loading }) => ({
+  certificate,
+  loading: loading.models.certificate,
 }))
 @Form.create()
 class TableList extends PureComponent {
@@ -291,70 +335,47 @@ class TableList extends PureComponent {
 
   columns = [
     {
-      title: '规则名称',
+      title: '证书名称',
       dataIndex: 'name',
       render: text => <a onClick={() => this.previewItem(text)}>{text}</a>,
     },
     {
       title: '描述',
-      dataIndex: 'desc',
+      dataIndex: 'description',
     },
     {
-      title: '服务调用次数',
-      dataIndex: 'callNo',
+      title: '签署人',
+      dataIndex: 'owner',
+    },
+   /* {
+      title: '内容',
+      dataIndex: 'content',
+    },*/
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
       sorter: true,
-      render: val => `${val} 万`,
-      // mark to display a total number
-      needTotal: true,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      filters: [
-        {
-          text: status[0],
-          value: 0,
-        },
-        {
-          text: status[1],
-          value: 1,
-        },
-        {
-          text: status[2],
-          value: 2,
-        },
-        {
-          text: status[3],
-          value: 3,
-        },
-      ],
-      render(val) {
-        return <Badge status={statusMap[val]} text={status[val]} />;
-      },
-    },
-    {
-      title: '上次调度时间',
-      dataIndex: 'updatedAt',
-      sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD HH:mm:ss')
+      }</span>,
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.handleUpdateModalVisible(true, record)}>配置</a>
-          <Divider type="vertical" />
-          <a href="">订阅警报</a>
         </Fragment>
       ),
     },
   ];
 
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'certificate/fetch',
     });
+
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -376,9 +397,8 @@ class TableList extends PureComponent {
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
-
     dispatch({
-      type: 'rule/fetch',
+      type: 'certificate/fetch',
       payload: params,
     });
   };
@@ -388,14 +408,10 @@ class TableList extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
+    const { form } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
-    });
-    dispatch({
-      type: 'rule/fetch',
-      payload: {},
     });
   };
 
@@ -414,7 +430,7 @@ class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'certificate/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -446,15 +462,19 @@ class TableList extends PureComponent {
 
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+        key :fieldsValue.key,
+        name: fieldsValue.name,
+        description: fieldsValue.description,
+        owner: fieldsValue.owner,
+        createTime: fieldsValue.createTime,
       };
-
-      this.setState({
-        formValues: values,
-      });
+      console.log(values.name)
+      // this.setState({
+      //   formValues: values,
+      // });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'certificate/appendFetch',
         payload: values,
       });
     });
@@ -473,31 +493,38 @@ class TableList extends PureComponent {
     });
   };
 
-  handleAdd = fields => {
+  handleAdd = fieldsValue => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/add',
+      type: 'certificate/add',
       payload: {
-        desc: fields.desc,
+        name:  fieldsValue.name,
+        content: fieldsValue.content,
+        description:  fieldsValue.description,
+        owner:  fieldsValue.owner,
+        createTime:  fieldsValue.createTime,
       },
     });
-
     message.success('添加成功');
     this.handleModalVisible();
   };
 
-  handleUpdate = fields => {
+  handleUpdate = fieldsValue => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
+    const fields = {
+      key:fieldsValue.key,
+      name:  fieldsValue.name,
+      content: fieldsValue.content.toHTML(),
+      description:  fieldsValue.description,
+      owner:  fieldsValue.owner,
+      createTime:  fieldsValue.createTime,
+    };
     dispatch({
-      type: 'rule/update',
+      type: 'certificate/update',
       payload: {
         query: formValues,
-        body: {
-          name: fields.name,
-          desc: fields.desc,
-          key: fields.key,
-        },
+        body: fields,
       },
     });
 
@@ -513,18 +540,13 @@ class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="规则名称">
+            <FormItem label="证书名称">
               {getFieldDecorator('name')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
+            <FormItem label="简要描述">
+              {getFieldDecorator('description')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -553,53 +575,34 @@ class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="规则名称">
+            <FormItem label="证书名称">
               {getFieldDecorator('name')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="调用次数">
-              {getFieldDecorator('number')(<InputNumber style={{ width: '100%' }} />)}
+            <FormItem label="简要描述">
+              {getFieldDecorator('description')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="更新日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
-              )}
+            <FormItem label="签署姓名">
+              {getFieldDecorator('owner')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status3')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
+            <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} label="签署时间">
+              {getFieldDecorator('createTime')(
+                <DatePicker
+                  style={{ width: '100%' }}
+                  showTime
+                  format="YYYY-MM-DD HH:mm:ss"
+                  placeholder="选择签署时间"
+                />
               )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status4')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
+            </FormItem>,
+
           </Col>
         </Row>
         <div style={{ overflow: 'hidden' }}>
@@ -626,7 +629,7 @@ class TableList extends PureComponent {
 
   render() {
     const {
-      rule: { data },
+      certificate: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -656,7 +659,6 @@ class TableList extends PureComponent {
               </Button>
               {selectedRows.length > 0 && (
                 <span>
-                  <Button>批量操作</Button>
                   <Dropdown overlay={menu}>
                     <Button>
                       更多操作 <Icon type="down" />

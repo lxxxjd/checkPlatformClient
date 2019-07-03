@@ -1,5 +1,6 @@
 // https://umijs.org/config/
 import os from 'os';
+import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
 import slash from 'slash2';
@@ -20,11 +21,6 @@ const plugins = [
         enable: true, // default false
         default: 'zh-CN', // default zh-CN
         baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
-      },
-      routes: {
-        update(routes) {
-          return [...require('../src/pages/_routes'), ...routes];
-        },
       },
       dynamicImport: {
         loadingComponent: './components/PageLoading/index',
@@ -48,18 +44,6 @@ const plugins = [
             hardSource: false,
           }
         : {}),
-    },
-  ],
-  [
-    'umi-plugin-authorize',
-    {
-      authorize: [
-        {
-          guard: ['src/pages/Auth'],
-          include: /\//,
-          exclude: /\/user/i,
-        },
-      ],
     },
   ],
 ];
@@ -86,20 +70,20 @@ export default {
   targets: {
     ie: 11,
   },
+  devtool: ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION ? 'source-map' : false,
   // 路由配置
-  // routes: pageRoutes,
+  routes: pageRoutes,
   // Theme for antd
   // https://ant.design/docs/react/customize-theme-cn
   theme: {
     'primary-color': primaryColor,
   },
-  // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
-  //   },
-  // },
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8080/',
+      changeOrigin: true,
+    },
+  },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
     javascriptEnabled: true,
