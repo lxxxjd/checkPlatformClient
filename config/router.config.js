@@ -19,7 +19,6 @@ export default [
           }
         ],
       },
-
       //newPage
       {
         path: "/Certificate",
