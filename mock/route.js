@@ -4,6 +4,20 @@ export default {
   },
   '/api/menus': {
     routes: [
+
+      // InspectEntrust
+      {
+        path: '/InspectEntrust',
+        name: 'InspectEntrust',
+        icon: 'dashboard',
+        routes: [
+          {
+            path: '/InspectEntrust/EntrustAdd',
+            name: 'EntrustAdd',
+          },
+        ],
+      },
+
       // dashboard
       {
         path: '/dashboard',
