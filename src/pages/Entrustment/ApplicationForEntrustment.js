@@ -13,7 +13,6 @@ import {
   Cascader,
   Icon,
   Popover,
-
 } from 'antd';
 import { connect } from 'dva';
 import FooterToolbar from '@/components/FooterToolbar';
@@ -82,7 +81,7 @@ const fieldLabels = {
 };
 
 @connect(({ loading }) => ({
-  submitting: loading.effects['Entrustment/submitApplicationForm'],
+  submitting: loading.effects['Entrustment/submitApplication'],
 }))
 @Form.create()
 class ApplicationForEntrustment extends PureComponent {
@@ -203,14 +202,9 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {
-                    getFieldDecorator('petitionerContactPerson', {
+                  {getFieldDecorator('petitionerContactPerson', {
                     rules: [{ required: true, message: '请输入联系人' }],
-                  })
-                    (
-                      <Input style={{ width: '100%' }} placeholder="请输入联系人" />
-                    )
-                  }
+                  })(<Input style={{ width: '100%' }} placeholder="请输入联系人" />)}
                 </Form.Item>
               </Col>
               <Col xl={{ span: 6 }} lg={{ span: 8 }} md={{ span: 12 }} sm={24}>
@@ -501,7 +495,7 @@ class ApplicationForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 4 }} lg={{ span: 8 }} md={{ span: 12 }} sm={24}>
+              <Col xl={{ span: 4 }} lg={{ span: 6 }} md={{ span: 8 }} sm={16}>
                 <Form.Item
                   label={fieldLabels.country}
                   labelCol={{ span: 6 }}
@@ -522,7 +516,7 @@ class ApplicationForEntrustment extends PureComponent {
                 <Form.Item
                   label={fieldLabels.province}
                   labelCol={{ span: 4 }}
-                  wrapperCol={{ span: 18 }}
+                  wrapperCol={{ span: 20 }}
                   colon={false}
                 >
                   {getFieldDecorator('province', {
@@ -539,7 +533,7 @@ class ApplicationForEntrustment extends PureComponent {
                 <Form.Item
                   label={fieldLabels.city}
                   labelCol={{ span: 4 }}
-                  wrapperCol={{ span: 18 }}
+                  wrapperCol={{ span: 20 }}
                   colon={false}
                 >
                   {getFieldDecorator('city', {
@@ -552,8 +546,13 @@ class ApplicationForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 1 }} lg={{ span: 2 }} md={{ span: 3 }} sm={4}>
-                <Form.Item label={fieldLabels.harbour} colon={false}></Form.Item>
+              <Col xl={{ span: 4 }} lg={{ span: 6 }} md={{ span: 8 }} sm={16}>
+                <Form.Item
+                  label={fieldLabels.harbour}
+                  labelCol={{ span: 4 }}
+                  wrapperCol={{ span: 18 }}
+                  colon={false}
+                ></Form.Item>
               </Col>
             </Row>
           </Form>
@@ -571,19 +570,19 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('inspway', {
                     rules: [{ required: true, message: '检验要求' }],
                   })(
-                    <CheckboxGroup options={[
-                      '水尺计重',
-                      '船舱计重',
-                      '',
-                      '流量计重',
-                      '衡器计重',
-                      '干仓计重',
-                      '验舱计重',
-                      '取样',
-                      '制样',
-                      '送样',
-                      '品质',
-                    ]}
+                    <CheckboxGroup
+                      options={[
+                        '水尺计重',
+                        '船舱计重',
+                        '流量计重',
+                        '衡器计重',
+                        '干仓计重',
+                        '验舱计重',
+                        '取样',
+                        '制样',
+                        '送样',
+                        '品质',
+                      ]}
                     />
                   )}
                 </Form.Item>
@@ -613,7 +612,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('certificateRequirements', {
                     rules: [{ required: true, message: '证书要求' }],
-                  })(<Cascader options={options} />)}
+                  })(<Cascader options={options} placeholder="请选择证书要求" />)}
                 </Form.Item>
               </Col>
             </Row>
