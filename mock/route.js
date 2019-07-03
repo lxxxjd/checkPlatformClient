@@ -15,6 +15,10 @@ export default {
             path: '/InspectEntrust/EntrustAdd',
             name: 'EntrustAdd',
           },
+          {
+            path: '/InspectEntrust/EntrustInfo',
+            name: 'EntrustInfo',
+          },
         ],
       },
 

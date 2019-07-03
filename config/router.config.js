@@ -23,6 +23,24 @@ export default [
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
     routes: [
+
+      // InspectEntrust
+      {
+        path: '/InspectEntrust',
+        name: 'InspectEntrust',
+        icon: 'dashboard',
+        routes: [
+          {
+            path: '/InspectEntrust/EntrustAdd',
+            name: 'EntrustAdd',
+          },
+          {
+            path: '/InspectEntrust/EntrustInfo',
+            name: 'EntrustInfo',
+          },
+        ],
+      },
+
       // dashboard
       { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
       {

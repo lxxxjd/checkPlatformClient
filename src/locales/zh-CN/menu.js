@@ -5,6 +5,7 @@ export default {
   'menu.register.result': '注册结果',
   'menu.InspectEntrust': '委托申请',
   'menu.InspectEntrust.EntrustAdd': '新建委托',
+  'menu.InspectEntrust.EntrustInfo': '委托查询',
   'menu.dashboard': 'Dashboard2',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
