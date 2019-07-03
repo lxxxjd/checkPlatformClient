@@ -33,6 +33,12 @@ lambda/mock/index.js
 .umi
 .umi-production
 
+# next.js build output
+.next
+
+#.idea
+/.idea/*
+
 # screenshot
 screenshot
 .firebase
