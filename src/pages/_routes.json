@@ -1,14 +1,5 @@
 [
-  {
-    "path": "/",
-    "exact": true,
-    "redirect": "/Entrustment/ApplicationForEntrustment"
-  },
-  {
-    "path": "/Entrustment",
-    "exact": true,
-    "redirect": "/Entrustment/ApplicationForEntrustment"
-  },
+
   {
     "path": "/dashboard",
     "exact": true,
