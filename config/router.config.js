@@ -32,6 +32,23 @@ export default [
           }
         ],
       },
+      {
+        path: "/Entrustment",
+        icon: "file",
+        name: "Entrustment",
+        routes: [
+          {
+            path: "/Entrustment/ApplicationForEntrustment",
+            name: "ApplicationForEntrustment",
+            component: "./Entrustment/ApplicationForEntrustment"
+          },
+          {
+            path: "/Entrustment/SearchForEntrustment",
+            name: "SearchForEntrustment",
+            component: "./Entrustment/SearchForEntrustment"
+          }
+        ],
+      },
 
       {
         component: '404',

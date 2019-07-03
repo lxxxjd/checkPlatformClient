@@ -142,5 +142,5 @@
     "config/**/*.js*",
     "scripts/**/*.js"
   ],
-  "proxy": "http://localhost:8080"
+  "proxy": "http:// 192.168.0.100:8080"
 }
