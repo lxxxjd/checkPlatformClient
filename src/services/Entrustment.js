@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
-export async function submitApplicationForm(params) {
-  return request('/api/certificate/search', {
+export async function submitApplication(params) {
+  return request('/api/Entrustment/add', {
     method: 'POST',
     data: {
       ...params,
