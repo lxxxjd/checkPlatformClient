@@ -19,7 +19,7 @@ import FooterToolbar from '@/components/FooterToolbar';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './style.less';
 
-const {CheckboxGroup} = Checkbox.Group;
+const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -154,21 +154,21 @@ class ApplicationForEntrustment extends PureComponent {
     );
   };
 
-  // validate = () => {
-  //   const {
-  //     form: { validateFieldsAndScroll },
-  //     dispatch,
-  //   } = this.props;
-  //   validateFieldsAndScroll((error, values) => {
-  //     if (!error) {
-  //       // submit the values
-  //       dispatch({
-  //         type: 'form/submitAdvancedForm',
-  //         payload: values,
-  //       });
-  //     }
-  //   });
-  // };
+  validate = () => {
+    const {
+      form: { validateFieldsAndScroll },
+      dispatch,
+    } = this.props;
+    validateFieldsAndScroll((error, values) => {
+      if (!error) {
+        // submit the values
+        dispatch({
+          type: 'form/submitAdvancedForm',
+          payload: values,
+        });
+      }
+    });
+  };
 
   render() {
     const {
