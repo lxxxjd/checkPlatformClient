@@ -2,7 +2,7 @@ import { fakeSubmitForm } from '@/services/api';
 
 export default {
   namespace: 'Entrustment',
-  form:{
+  state:{
     data:[
 
     ]

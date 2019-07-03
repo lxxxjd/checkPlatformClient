@@ -20,7 +20,7 @@ import FooterToolbar from '@/components/FooterToolbar';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './style.less';
 
-const CheckboxGroup = Checkbox.Group;
+const {CheckboxGroup} = Checkbox.Group;
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -81,9 +81,9 @@ const fieldLabels = {
   certificateRequirements: '证书要求',
 };
 
-@connect(({ loading }) => ({
-  submitting: loading.effects['Entrustment/submitApplicationForm'],
-}))
+// @connect(({ loading }) => ({
+//   submitting: loading.effects['Entrustment/submitApplicationForm'],
+// }))
 @Form.create()
 class ApplicationForEntrustment extends PureComponent {
   state = {
@@ -154,21 +154,21 @@ class ApplicationForEntrustment extends PureComponent {
     );
   };
 
-  validate = () => {
-    const {
-      form: { validateFieldsAndScroll },
-      dispatch,
-    } = this.props;
-    validateFieldsAndScroll((error, values) => {
-      if (!error) {
-        // submit the values
-        dispatch({
-          type: 'form/submitAdvancedForm',
-          payload: values,
-        });
-      }
-    });
-  };
+  // validate = () => {
+  //   const {
+  //     form: { validateFieldsAndScroll },
+  //     dispatch,
+  //   } = this.props;
+  //   validateFieldsAndScroll((error, values) => {
+  //     if (!error) {
+  //       // submit the values
+  //       dispatch({
+  //         type: 'form/submitAdvancedForm',
+  //         payload: values,
+  //       });
+  //     }
+  //   });
+  // };
 
   render() {
     const {
