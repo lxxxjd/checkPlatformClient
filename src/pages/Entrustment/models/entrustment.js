@@ -1,4 +1,4 @@
-import { submitApplication ,queryAllReports} from '@/services/Entrustment';
+import { submitApplication ,queryAllReports,queryReport} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -7,6 +7,7 @@ export default {
       list: [],
       pagination: {},
     },
+    report:{}
   },
 
   effects: {
@@ -25,6 +26,13 @@ export default {
       });
       if (callback) callback();
     },
+    *getReport({ payload }, { call, put }) {
+      const response = yield call(queryReport, payload);
+      yield put({
+        type: 'get',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -32,6 +40,12 @@ export default {
       return {
         ...state,
         data: payload,
+      };
+    },
+    get(state, { payload }) {
+      return {
+        ...state,
+        report: payload.data,
       };
     },
     save(state, action) {

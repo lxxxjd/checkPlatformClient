@@ -46,7 +46,12 @@ export default [
             path: "/Entrustment/SearchForEntrustment",
             name: "SearchForEntrustment",
             component: "./Entrustment/SearchForEntrustment"
-          }
+          },
+          {
+            path: "/Entrustment/DetailForEntrustment",
+            name: "DetailForEntrustment",
+            component: "./Entrustment/DetailForEntrustment"
+          },
         ],
       },
 

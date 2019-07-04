@@ -2,7 +2,7 @@ import request from '@/utils/request';
 import { stringify } from 'qs';
 
 export async function submitApplication(params) {
-	const inspway = params.inspway.join(',');
+	const inspway = params.inspway.join(' ');
 	const certstyle = params.certstyle.join('');
     params.inspway = inspway;
     params.certstyle = certstyle;
@@ -25,4 +25,8 @@ export async function queryAllReports(params) {
       method: 'post',
     },
   });
+}
+
+export async function queryReport(params) {
+  return request(`/api/report/get_report?reportNo=${params}`);
 }
