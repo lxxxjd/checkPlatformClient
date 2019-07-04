@@ -65,7 +65,7 @@ const fieldLabels = {
   businessSourse: '业务来源',
   shipName:'运输工具',
   inspplace:'检验港口',
-  linktel: '现场联系方式',
+  insplinkway: '现场联系方式',
   inspdate :'检验时间',
   cargoname: '货物名称',
   cargosort: '货物类别',
@@ -381,12 +381,12 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col xl={{ span: 8 }} lg={{ span: 12 }} md={{ span: 16 }} sm={32}>
                 <Form.Item
-                  label={fieldLabels.linktel}
+                  label={fieldLabels.insplinkway}
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('linktel', {
+                  {getFieldDecorator('insplinkway', {
                     rules: [{ required: true, message: '请输入联系方式' }],
                   })(
                     <Input placeholder="请输入联系方式" />
@@ -433,7 +433,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('quantityD', {
                     rules: [{ required: true, message: '请输入申报数量' }],
-                  })(<InputNumber min={1} max={100000} defaultValue={1} />)}
+                  })(<Input placeholder="请输入申报数量" />)}
                 </Form.Item>
               </Col>
             </Row>
