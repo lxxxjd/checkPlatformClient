@@ -1,4 +1,4 @@
-import { submitApplication ,queryAllReports} from '@/services/Entrustment';
+import { submitApplication ,queryAllReports,queryAllReportsByFilter} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -24,6 +24,13 @@ export default {
         payload,
       });
       if (callback) callback();
+    },
+    *filter({ payload }, { call, put }) {
+      const response = yield call(queryAllReportsByFilter, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
     },
   },
 

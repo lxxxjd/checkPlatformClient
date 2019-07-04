@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import moment from 'moment';
 import router from 'umi/router';
 
 import {
@@ -13,7 +12,7 @@ import {
   Button,
   Dropdown,
   Menu,
-  DatePicker,
+  DatePicker, Select,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -22,22 +21,23 @@ import styles from './SearchForEntrustment.less';
 
 
 
+
 const FormItem = Form.Item;
+const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ Entrustment, loading }) => ({
-  Entrustment,
-  loading: loading.models.Entrustment,
+@connect(({ entrustment, loading }) => ({
+  entrustment,
+  loading: loading.models.entrustment,
 }))
 
 @Form.create()
 class SearchForEntrustment extends PureComponent {
   state = {
-    expandForm: false,
     selectedRows: [],
     formValues: {},
   };
@@ -56,7 +56,7 @@ class SearchForEntrustment extends PureComponent {
     },
     {
       title: '委托人',
-      dataIndex: 'reportman',
+      dataIndex: 'applicant',
     },
     {
       title: '货名',
@@ -84,9 +84,8 @@ class SearchForEntrustment extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'Entrustment/fetch',
+      type: 'entrustment/fetch',
     });
-    console.log("test")
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -110,14 +109,14 @@ class SearchForEntrustment extends PureComponent {
     }
 
     dispatch({
-      type: 'Entrustment/fetch',
+      type: 'entrustment/fetch',
       payload: params,
     });
   };
 
   previewItem = text => {
     console.log(text.reportno);
-    //router.push(`/profile/basic/${id}`);
+    router.push(`/profile/basic/${text}`);
   };
 
   handleFormReset = () => {
@@ -126,14 +125,13 @@ class SearchForEntrustment extends PureComponent {
     this.setState({
       formValues: {},
     });
-  };
-
-  toggleForm = () => {
-    const { expandForm } = this.state;
-    this.setState({
-      expandForm: !expandForm,
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'entrustment/fetch',
     });
   };
+
+
 
   handleMenuClick = e => {
     const { dispatch } = this.props;
@@ -143,7 +141,7 @@ class SearchForEntrustment extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'Entrustment/remove',
+          type: 'entrustment/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -167,29 +165,19 @@ class SearchForEntrustment extends PureComponent {
 
   handleSearch = e => {
     e.preventDefault();
-
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
       const values = {
         ...fieldsValue,
-        key :fieldsValue.key,
-        name: fieldsValue.name,
-        description: fieldsValue.description,
-        owner: fieldsValue.owner,
-        createTime: fieldsValue.createTime,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
       };
-      console.log(values.name)
-      // this.setState({
-      //   formValues: values,
-      // });
-
       dispatch({
-        type: 'Entrustment/appendFetch',
+        type: 'entrustment/filter',
         payload: values,
       });
+      console.log(values);
     });
   };
 
@@ -202,17 +190,32 @@ class SearchForEntrustment extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="证书名称">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
+          <Col md={3} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+            >
+              {getFieldDecorator('kind', {
+                rules: [{  message: '搜索类型' }],
+              })(
+                <Select placeholder="搜索类型">
+                  <Option value="reportno">委托编号</Option>
+                  <Option value="applicant">委托人</Option>
+                  <Option value="shipname">船名</Option>
+                  <Option value="cargoname">货名</Option>
+                  <Option value="reportdate">委托时间</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+          <Col md={6} sm={20}>
+            <FormItem>
+              {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="简要描述">
-              {getFieldDecorator('description')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
+
+          <Col md={8} sm={20}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -220,9 +223,6 @@ class SearchForEntrustment extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开 <Icon type="down" />
-              </a>
             </span>
           </Col>
         </Row>
@@ -230,69 +230,12 @@ class SearchForEntrustment extends PureComponent {
     );
   }
 
-  renderAdvancedForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="证书名称">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="简要描述">
-              {getFieldDecorator('description')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="签署姓名">
-              {getFieldDecorator('owner')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 20 }} label="签署时间">
-              {getFieldDecorator('createTime')(
-                <DatePicker
-                  style={{ width: '100%' }}
-                  showTime
-                  format="YYYY-MM-DD HH:mm:ss"
-                  placeholder="选择签署时间"
-                />
-              )}
-            </FormItem>,
 
-          </Col>
-        </Row>
-        <div style={{ overflow: 'hidden' }}>
-          <div style={{ marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
-            </Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
-            </a>
-          </div>
-        </div>
-      </Form>
-    );
-  }
 
-  renderForm() {
-    const { expandForm } = this.state;
-    return expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
-  }
 
   render() {
     const {
-      Entrustment: {data},
+      entrustment: {data},
       loading,
     } = this.props;
     const { selectedRows, } = this.state;
@@ -306,7 +249,7 @@ class SearchForEntrustment extends PureComponent {
       <PageHeaderWrapper title="查询表格">
         <Card bordered={false}>
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderForm()}</div>
+            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <div className={styles.tableListOperator}>
               {selectedRows.length > 0 && (
                 <span>

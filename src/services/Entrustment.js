@@ -26,3 +26,12 @@ export async function queryAllReports(params) {
     },
   });
 }
+export async function queryAllReportsByFilter(params) {
+  return request(`/api/report/filter_report`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
