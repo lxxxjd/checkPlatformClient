@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Badge, Table, Divider } from 'antd';
-import DescriptionList from '@/components/DescriptionList';
+import { Card, Badge, Table, Divider ,Descriptions,} from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForEntrustment.less';
-
-const { Description } = DescriptionList;
 
 @connect(({ entrustment, loading }) => ({
   entrustment,
@@ -27,43 +24,43 @@ class DetailForEnturstment extends Component {
     return (
       <PageHeaderWrapper title="基础详情页" loading={loading}>
         <Card bordered={false}>
-          <DescriptionList size="large" title="申请人信息" style={{ marginBottom: 32 }}>
-            <Description term="委托编号">{report.reportno}</Description>
-            <Description term="委托日期">{report.reportdate}</Description>
-            <Description term="检验费">{report.price}</Description>
-            <Description term="申请人">{report.applicant}</Description>
-            <Description term="联系人">{report.linkername}</Description>
-            <Description term="联系电话">{report.linkerTel}</Description>
-            <Description term="代理人">{report.agent}</Description>
-            <Description term="联系人">{report.linkername}</Description>
-            <Description term="联系电话">{report.linkerTel}</Description>
-            <Description term="付款人">{report.payer}</Description>
-            <Description term="联系人">{report.linkername}</Description>
-            <Description term="联系电话">{report.linkerTel}</Description>
-            <Description term="业务分类">{report.tradeway}</Description>
-            <Description term="贸易方式">{report.tradeway}</Description>
-          </DescriptionList>
+          <Descriptions  size="large" title="申请人信息" style={{ marginBottom: 32 }} bordered>
+            <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
+            <Descriptions.Item label="委托日期">{report.reportdate}</Descriptions.Item>
+            <Descriptions.Item label="检验费">{report.price}</Descriptions.Item>
+            <Descriptions.Item label="申请人">{report.applicant}</Descriptions.Item>
+            <Descriptions.Item label="联系人">{report.linkername}</Descriptions.Item>
+            <Descriptions.Item label="联系电话">{report.linkertel}</Descriptions.Item>
+            <Descriptions.Item label="代理人">{report.agent}</Descriptions.Item>
+            <Descriptions.Item label="联系人">{report.linkername}</Descriptions.Item>
+            <Descriptions.Item label="联系电话">{report.linkertel}</Descriptions.Item>
+            <Descriptions.Item label="付款人">{report.payer}</Descriptions.Item>
+            <Descriptions.Item label="联系人">{report.linkername}</Descriptions.Item>
+            <Descriptions.Item label="联系电话">{report.linkertel}</Descriptions.Item>
+            <Descriptions.Item label="业务分类">{report.tradeway}</Descriptions.Item>
+            <Descriptions.Item label="贸易方式">{report.tradeway}</Descriptions.Item>
+          </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
-          <DescriptionList size="large" title="货物信息" style={{ marginBottom: 32 }}>
-            <Description term="运输工具">{report.shipname}</Description>
-            <Description term="检查港口">{report.inspplace1}</Description>
-            <Description term="预计日期">{report.inspdate}</Description>
-            <Description term="现场联系方式">{report.linkerTel}</Description>
-            <Description term="货物名称">{report.cargoname}</Description>
-            <Description term="货物类别">{report.cargosort}</Description>
-            <Description term="申报数量">{report.quantityD}</Description>
-            <Description term="证书中文名">{report.remark}</Description>
-            <Description term="证书英文名">{report.remark}</Description>
-            <Description term="HS编码">{report.remark}</Description>
-            <Description term="HS名称">{report.remark}</Description>
-            <Description term="到达地点">{report.remark}</Description>
-          </DescriptionList>
+          <Descriptions size="large" title="货物信息" style={{ marginBottom: 32 }} bordered>
+            <Descriptions.Item label="运输工具">{report.shipname}</Descriptions.Item>
+            <Descriptions.Item label="检查港口">{report.inspplace1}</Descriptions.Item>
+            <Descriptions.Item label="预计日期">{report.inspdate}</Descriptions.Item>
+            <Descriptions.Item label="现场联系方式">{report.insplinkway}</Descriptions.Item>
+            <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
+            <Descriptions.Item label="货物类别">{report.cargosort}</Descriptions.Item>
+            <Descriptions.Item label="申报数量">{report.quantityd}</Descriptions.Item>
+            <Descriptions.Item label="证书中文名">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="证书英文名">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="HS编码">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="HS名称">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="到达地点">{report.remark}</Descriptions.Item>
+          </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
-          <DescriptionList size="large" title="货物信息" style={{ marginBottom: 32 }}>
-            <Description term="申请项目">{report.inspway}</Description>
-            <Description term="检验要求">{report.inspwaymemo1}</Description>
-            <Description term="证书要求">{report.certstyle}</Description>
-          </DescriptionList>
+          <Descriptions size="large" title="检验要求" style={{ marginBottom: 32 }} bordered>
+            <Descriptions.Item label="申请项目">{report.inspway}</Descriptions.Item>
+            <Descriptions.Item label="检验要求">{report.inspwaymemo1}</Descriptions.Item>
+            <Descriptions.Item label="证书要求">{report.certstyle}</Descriptions.Item>
+          </Descriptions>
         </Card>
       </PageHeaderWrapper>
     );
