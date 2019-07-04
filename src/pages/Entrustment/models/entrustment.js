@@ -1,7 +1,7 @@
 import { submitApplication ,queryAllReports} from '@/services/Entrustment';
 
 export default {
-  namespace: 'Entrustment',
+  namespace: 'entrustment',
   state: {
     data: {
       list: [],
@@ -17,7 +17,7 @@ export default {
         payload: response,
       });
     },
-    *submitApplication({ payload, callback }, { call, put }) {
+    *add({ payload, callback }, { call, put }) {
       const response = yield call(submitApplication, payload);
       yield put({
         type: 'submit',
@@ -28,10 +28,10 @@ export default {
   },
 
   reducers: {
-    submit(state, { action }) {
+    submit(state, { payload }) {
       return {
         ...state,
-        data: action.payload,
+        data: payload,
       };
     },
     save(state, action) {
