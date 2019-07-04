@@ -167,6 +167,7 @@ class SearchForEntrustment extends PureComponent {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
+      console.log(err);
       if (err) return;
       const values = {
         ...fieldsValue,
@@ -177,7 +178,6 @@ class SearchForEntrustment extends PureComponent {
         type: 'entrustment/filter',
         payload: values,
       });
-      console.log(values);
     });
   };
 
