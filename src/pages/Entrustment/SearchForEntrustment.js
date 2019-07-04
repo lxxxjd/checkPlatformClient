@@ -74,7 +74,7 @@ class SearchForEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleUpdateModalVisible(true, record)}>查看</a>
+          <a onClick={() => this.previewItem(text, record)}>查看</a>
         </Fragment>
       ),
     },
@@ -108,14 +108,16 @@ class SearchForEntrustment extends PureComponent {
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
+
     dispatch({
       type: 'Entrustment/fetch',
       payload: params,
     });
   };
 
-  previewItem = id => {
-    router.push(`/profile/basic/${id}`);
+  previewItem = text => {
+    console.log(text.reportno);
+    //router.push(`/profile/basic/${id}`);
   };
 
   handleFormReset = () => {

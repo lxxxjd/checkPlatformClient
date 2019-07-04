@@ -12,5 +12,11 @@ export async function submitApplication(params) {
 }
 
 export async function queryAllReports(params) {
-  return request(`/api/report/getAllReports?${stringify(params)}`);
+  return request(`/api/report/getAllReports`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
 }
