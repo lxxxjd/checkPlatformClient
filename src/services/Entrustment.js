@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { stringify } from "qs";
+import { stringify } from 'qs';
 
 export async function submitApplication(params) {
 	const inspway = params.inspway.join(',');
@@ -15,4 +15,14 @@ export async function submitApplication(params) {
       	method: 'post',
     	},
   	});
+}
+
+export async function queryAllReports(params) {
+  return request(`/api/report/getAllReports`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
 }
