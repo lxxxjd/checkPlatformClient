@@ -347,10 +347,6 @@ class TableList extends PureComponent {
       title: '签署人',
       dataIndex: 'owner',
     },
-   /* {
-      title: '内容',
-      dataIndex: 'content',
-    },*/
     {
       title: '创建时间',
       dataIndex: 'createTime',

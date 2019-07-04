@@ -1,12 +1,22 @@
-import { submitApplication } from '@/services/Entrustment';
+import { submitApplication ,queryAllReports} from '@/services/Entrustment';
 
 export default {
   namespace: 'Entrustment',
   state: {
-    data: [],
+    data: {
+      list: [],
+      pagination: {},
+    },
   },
 
   effects: {
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(queryAllReports, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+    },
     *submitApplication({ payload, callback }, { call, put }) {
       const response = yield call(submitApplication, payload);
       yield put({
@@ -22,6 +32,12 @@ export default {
       return {
         ...state,
         data: action.payload,
+      };
+    },
+    save(state, action) {
+      return {
+        ...state,
+        data: action.payload.data,
       };
     },
   },
