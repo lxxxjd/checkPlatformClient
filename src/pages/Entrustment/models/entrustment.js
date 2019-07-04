@@ -1,13 +1,13 @@
 import { submitApplication } from '@/services/Entrustment';
 
 export default {
-  namespace: 'Entrustment',
+  namespace: 'entrustment',
   state: {
     data: [],
   },
 
   effects: {
-    *submitApplication({ payload, callback }, { call, put }) {
+    *add({ payload, callback }, { call, put }) {
       const response = yield call(submitApplication, payload);
       yield put({
         type: 'submit',
@@ -18,10 +18,10 @@ export default {
   },
 
   reducers: {
-    submit(state, { action }) {
+    submit(state, { payload }) {
       return {
         ...state,
-        data: action.payload,
+        data: payload,
       };
     },
   },
