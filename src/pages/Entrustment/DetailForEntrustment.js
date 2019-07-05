@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Badge, Table, Divider ,Descriptions,} from 'antd';
+import { Card, Divider ,Descriptions} from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForEntrustment.less';
 
