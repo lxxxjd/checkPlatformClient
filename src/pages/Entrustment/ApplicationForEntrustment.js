@@ -20,7 +20,7 @@ import FooterToolbar from '@/components/FooterToolbar';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './style.less';
 import moment from 'moment'
-import areaOptions from './areaOptions.js'
+import areaOptions from './areaOptions'
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 const { TextArea } = Input;

@@ -1,4 +1,4 @@
-const city = [
+const areaOptions  = [
     {
         "id": "35",
         "label": "北京市",
@@ -21536,5 +21536,7 @@ const city = [
                 ]
             }
         ]
-    }
+    },
 ]
+
+export default areaOptions;

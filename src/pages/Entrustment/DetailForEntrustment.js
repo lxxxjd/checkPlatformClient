@@ -23,7 +23,7 @@ class DetailForEnturstment extends Component {
     console.log(e);
     const { dispatch, match } = this.props;
     dispatch({
-      type: 'entrustment/deleteReport',
+      type: 'entrustment/remove',
       payload: {reportno:'320118070301'},
     });
     this.setState({
