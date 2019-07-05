@@ -1,5 +1,4 @@
-
-import { submitApplication ,queryAllReports,queryAllReportsByFilter,queryReport,deleteReport} from '@/services/Entrustment';
+import { submitApplication ,queryAllReports,queryAllReportsByFilter,queryReport,cancelReportItem} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -34,6 +33,7 @@ export default {
         payload: response,
       });
     },
+
     *getReport({ payload }, { call, put }) {
       const response = yield call(queryReport, payload);
       yield put({
@@ -41,22 +41,17 @@ export default {
         payload: response,
       });   
     },
-    *deleteReport({ payload }, { call, put }) {
-      const response = yield call(deleteReport, payload);
+    *remove({ payload, callback }, { call, put }) {
+      const response = yield call(cancelReportItem, payload);
       yield put({
         type: 'delete',
-        payload: response,
+        payload:response,
       });
+      if (callback) callback();
     },
   },
 
   reducers: {
-    delete(state, { payload }) {
-      return {
-        ...state,
-        data: payload.data,
-      };
-    },
     submit(state, { payload }) {
       return {
         ...state,
@@ -73,6 +68,12 @@ export default {
       return {
         ...state,
         data: action.payload.data,
+      };
+    },
+    delete(state, { payload }) {
+      return {
+        ...state,
+        data: payload,
       };
     },
   },

@@ -48,6 +48,11 @@ export default [
             component: "./Entrustment/SearchForEntrustment"
           },
           {
+            path: "/Entrustment/CancelForEntrustment",
+            name: "CancelForEntrustment",
+            component: "./Entrustment/CancelForEntrustment"
+          },
+          {
             path: "/Entrustment/DetailForEntrustment",
             name: "DetailForEntrustment",
             component: "./Entrustment/DetailForEntrustment"

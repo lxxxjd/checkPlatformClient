@@ -40,12 +40,13 @@ export async function queryAllReportsByFilter(params) {
 export async function queryReport(params) {
   return request(`/api/report/get_report?reportNo=${params}`);
 }
-export async function deleteReport(params) {
-  return request('/api/report/delete_report',{
+
+
+export async function cancelReportItem(params) {
+  return request(`/api/report/delete_report`,{
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }

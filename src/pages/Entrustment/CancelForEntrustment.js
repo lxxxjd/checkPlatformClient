@@ -36,7 +36,7 @@ const getValue = obj =>
 }))
 
 @Form.create()
-class SearchForEntrustment extends PureComponent {
+class CancelForEntrustment extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
@@ -74,7 +74,7 @@ class SearchForEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
+          <a onClick={() => this.cancelItem(text, record)}>撤销</a>
         </Fragment>
       ),
     },
@@ -114,9 +114,21 @@ class SearchForEntrustment extends PureComponent {
     });
   };
 
-  previewItem = text => {
+  cancelItem = text => {
+    const { dispatch } = this.props;
     console.log(text.reportno);
-    router.push(`/profile/basic/${text}`);
+    dispatch({
+      type: 'entrustment/remove',
+      payload: {
+        reportno: text.reportno
+      },
+      callback: () => {
+        alert("撤销成功");
+        dispatch({
+          type: 'entrustment/fetch',
+        });
+      },
+    });
   };
 
   handleFormReset = () => {
@@ -246,7 +258,7 @@ class SearchForEntrustment extends PureComponent {
       </Menu>
     );
     return (
-      <PageHeaderWrapper title="撤销查询">
+      <PageHeaderWrapper title="撤销委托">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
@@ -276,4 +288,4 @@ class SearchForEntrustment extends PureComponent {
   }
 }
 
-export default SearchForEntrustment;
+export default CancelForEntrustment;
