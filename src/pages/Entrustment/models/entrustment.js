@@ -1,4 +1,3 @@
-
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,queryReport,cancelReportItem} from '@/services/Entrustment';
 
 export default {
@@ -40,7 +39,7 @@ export default {
       yield put({
         type: 'get',
         payload: response,
-      });
+      });   
     },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(cancelReportItem, payload);
@@ -56,7 +55,7 @@ export default {
     submit(state, { payload }) {
       return {
         ...state,
-        data: payload,
+        data: payload.data,
       };
     },
     get(state, { payload }) {

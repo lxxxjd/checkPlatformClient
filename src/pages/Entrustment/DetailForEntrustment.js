@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Divider ,Descriptions} from 'antd';
+import { Card, Divider ,Descriptions,Row, Col,  Button,Typography ,Modal} from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForEntrustment.less';
 
+const { Title } = Typography;
 @connect(({ entrustment, loading }) => ({
   entrustment,
   loading: loading.models.entrustment,
 }))
 class DetailForEnturstment extends Component {
+  state = { visible: false };
   componentWillMount() {
     const { dispatch, match } = this.props;
     console.log(this.props)
@@ -17,13 +19,54 @@ class DetailForEnturstment extends Component {
       payload: '320118070301',
     });
   }
+  handleOk = e => {
+    console.log(e);
+    const { dispatch, match } = this.props;
+    dispatch({
+      type: 'entrustment/remove',
+      payload: {reportno:'320118070301'},
+    });
+    this.setState({
+      visible: false,
+    });
+  };
 
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+  deleteReport = () => {
+    this.setState({
+      visible: true,
+    });
+  };
   render() {
     const { entrustment = {}, loading } = this.props;
     const { report = { } } = entrustment;
     return (
-      <PageHeaderWrapper title="基础详情页" loading={loading}>
+      <PageHeaderWrapper  loading={loading}>
         <Card bordered={false}>
+          <Row gutter={16}>
+            <Col span={3}>
+              <Title level={3} >委托申请</Title>
+            </Col>
+            <Col span={19}>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={this.deleteReport}>撤销申请</Button>
+            </Col>
+          </Row>
+          <Modal
+          title="确认"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          >
+            <p>是否撤销</p>
+          </Modal>
+          <Divider style={{ marginBottom: 32 }} />
           <Descriptions  size="large" title="申请人信息" style={{ marginBottom: 32 }} bordered>
             <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
             <Descriptions.Item label="委托日期">{report.reportdate}</Descriptions.Item>
@@ -56,10 +99,10 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="到达地点">{report.remark}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
-          <Descriptions size="large" title="检验要求" style={{ marginBottom: 32 }} bordered>
-            <Descriptions.Item label="申请项目">{report.inspway}</Descriptions.Item>
-            <Descriptions.Item label="检验要求">{report.inspwaymemo1}</Descriptions.Item>
-            <Descriptions.Item label="证书要求">{report.certstyle}</Descriptions.Item>
+          <Descriptions size="large" title="检验要求" style={{ marginBottom: 32 }} bordered >
+            <Descriptions.Item label="申请项目" >{report.inspway}</Descriptions.Item>
+            <Descriptions.Item label="检验要求" >{report.inspwaymemo1}</Descriptions.Item>
+            <Descriptions.Item label="证书要求" >{report.certstyle}</Descriptions.Item>
           </Descriptions>
         </Card>
       </PageHeaderWrapper>
