@@ -13,7 +13,8 @@ import {
   Cascader,
   Icon,
   Popover,
-  Radio 
+  Radio ,
+  Typography ,
 } from 'antd';
 import { connect } from 'dva';
 import FooterToolbar from '@/components/FooterToolbar';
@@ -24,7 +25,7 @@ import areaOptions from './areaOptions'
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 const { TextArea } = Input;
-
+const { Title ,Text } = Typography;
 const options = [
   {
     value: 'need',
@@ -49,6 +50,18 @@ const options = [
     label: '不需要',
   },
 ];
+const inspwayOptions= [
+  '水尺计重',
+  '船舱计重',
+  '流量计重',
+  '衡器计重',
+  '干仓计重',
+  '验舱计重',
+  '取样',
+  '制样',
+  '送样',
+  '品质',
+];
 const fieldLabels = {
   applicant: '申请人',
   petitionerContactPerson: '联系人',
@@ -69,18 +82,19 @@ const fieldLabels = {
   cargoname: '货物名称',
   cargosort: '货物类别',
   quantityD: '申报数量',
+  unit :'单位',
   HScode: 'HS编码',
   HSname: 'HS名称',
   ChineseName: '中文俗名',
   EnglishName: '英文俗名',
-  destination: '到达地点',
+  destination: '检验地点',
   country: '国',
   province: '省',
   city: '市',
   area:'区' ,
   harbour: '港',
   inspway: '申请项目',
-  inspwaymemo: '检验请求',
+  inspwaymemo: '检验备注',
   certstyle: '证书要求',
 };
 
@@ -99,12 +113,16 @@ class ApplicationForEntrustment extends PureComponent {
 
   componentDidMount() {
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
+    const { form } = this.props;
+    form.setFieldsValue({['unit']:"公吨"});
+    console.log(form.getFieldValue('inspdate'));
+    const now=moment().format("YYYY-MM-DD HH:mm:ss");
+    form.setFieldsValue({['inspdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
+    form.setFieldsValue({['reportdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeFooterToolbar);
-    this.setState({date: moment().format('YYYY-MM-DD HH:mm:ss')});
-    console.log(this.state.date);
   }
 
   resizeFooterToolbar = () => {
@@ -202,8 +220,8 @@ class ApplicationForEntrustment extends PureComponent {
       <PageHeaderWrapper
         title="新建委托"
       >
-        <Card title="申请人信息" className={styles.card} bordered={false}>
-          <Form hideRequiredMark labelAlign="left">
+        <Card title="申请信息" className={styles.card} bordered={false}>
+        <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
               <Col  span={10}  >
                 <Form.Item
@@ -214,7 +232,11 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('applicant', {
                     rules: [{ required: true, message: '请输入申请人' }],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入申请人" />)}
+                  })(
+                    <Select placeholder="请选择">
+                      <Option value="xiao">付晓晓</Option>
+                    </Select>
+                  )}
                 </Form.Item>
               </Col>
               <Col  span={4}  >
@@ -243,16 +265,17 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={5}  >
                 <Form.Item
-                  label={fieldLabels.serversClass}
+                  label={fieldLabels.tradeway}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('serversClass', {
-                    rules: [{ required: true, message: '请选择业务分类' }],
+                  {getFieldDecorator('tradeway', {
+                    rules: [{ required: true, message: '请选择贸易方式' }],
                   })(
-                    <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
+                    <Select placeholder="请选择贸易方式">
+                      <Option value="private">私密</Option>
+                      <Option value="public">公开</Option>
                     </Select>
                   )}
                 </Form.Item>
@@ -268,7 +291,11 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('agent', {
                     rules: [{ required: true, message: '请输入代理人' }],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入代理人" />)}
+                  })(
+                    <Select placeholder="请选择">
+                      <Option value="xiao">付晓晓</Option>
+                    </Select>                  
+                    )}
                 </Form.Item>
               </Col>
               <Col span={4} >
@@ -295,61 +322,45 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
               </Col>
-              <Col span={5}  >
+              <Col span={5}>
                 <Form.Item
-                  label={fieldLabels.tradeway}
+                  label={fieldLabels.businessSourse}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('tradeway', {
-                    rules: [{ required: true, message: '请选择贸易方式' }],
-                  })(
-                    <Select placeholder="请选择贸易方式">
-                      <Option value="private">私密</Option>
-                      <Option value="public">公开</Option>
+                  {getFieldDecorator('businessSourse', {
+                    rules: [{ required: true, message: '业务来源' }],
+                  })(                    
+                    <Select placeholder="请选择">
+                      <Option value="xiao">付晓晓</Option>
                     </Select>
-                  )}
+                    )}
                 </Form.Item>
               </Col>
             </Row>
-            <Row gutter={16}>
+            <Row gutter={16}  type="flex">
               <Col span={10}  >
                 <Form.Item
                   label={fieldLabels.payer}
-                  labelCol={{ span: 4 }}
+                  labelCol={{ span: 4}}
                   wrapperCol={{ span: 20 }}
                   colon={false}
                 >
                   {getFieldDecorator('payer', {
                     rules: [{ required: true, message: '请输入付款人' }],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入付款人" />)}
+                  })(                    
+                    <Select placeholder="请选择">
+                      <Option value="xiao">付晓晓</Option>
+                    </Select>
+                    )}
                 </Form.Item>
               </Col>
-              <Col span={4}  >
+              <Col span={9}  >
                 <Radio.Group onChange={this.onChange} value={this.state.value}>
-                  <Radio value={1}>同申请人</Radio>
-                  <Radio value={2}>同代理人</Radio>
+                  <Radio value={1}>申请人为付款人</Radio>
+                  <Radio value={2}>代理人为付款人</Radio>
                 </Radio.Group>
-              </Col>
-              <Col span={5} >
-                <Form.Item
-                  label={fieldLabels.reportdate}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                  colon={false}
-                >
-                  {getFieldDecorator('reportdate', {
-                    rules: [{ required: true, message: '请选择委托日期' }],
-                  })(
-                    <DatePicker
-                      placeholder="委托日期"
-                      style={{ width: '100%' }}
-                      format="YYYY-MM-DD"
-                      getPopupContainer={trigger => trigger.parentNode}
-                    />
-                  )}
-                </Form.Item>
               </Col>
               <Col span={5}  >
                 <Form.Item
@@ -361,6 +372,55 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('checkFee', {
                     rules: [{ required: true, message: '请输入检验费' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入" />)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+            <Col span={5} >
+              <Form.Item
+                label={fieldLabels.reportdate}
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                colon={false}
+              >
+                {getFieldDecorator('reportdate', {
+                  rules: [{ required: true, message: '请选择委托日期' }],
+                })(
+                  <DatePicker
+                    placeholder="委托日期"
+                    style={{ width: '100%' }}
+                    format="YYYY-MM-DD"
+                    getPopupContainer={trigger => trigger.parentNode}
+                  />
+                )}
+              </Form.Item>
+            </Col>
+              <Col span={14}  >
+                <Form.Item
+                  label={fieldLabels.serversClass}
+                  labelCol={{ span: 3 }}
+                  wrapperCol={{ span: 21 }}
+                  colon={false}
+                >
+                  {getFieldDecorator('serversClass', {
+                    rules: [{ required: true, message: '请选择业务分类' }],
+                  })(
+                    <Select placeholder="请选择">
+                      <Option value="xiao">付晓晓</Option>
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+                <Form.Item
+                  label={fieldLabels.certstyle}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
+                  colon={false}
+                >
+                  {getFieldDecorator('certstyle', {
+                    rules: [{ required: true, message: '证书要求' }],
+                  })(<Cascader options={options} placeholder="请选择证书要求" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -384,8 +444,8 @@ class ApplicationForEntrustment extends PureComponent {
               <Col span={8}  >
                 <Form.Item
                   label={fieldLabels.inspplace}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
+                  labelCol={{ span: 4 }}
+                  wrapperCol={{ span: 20 }}
                   colon={false}
                 >
                   {getFieldDecorator('inspplace', {
@@ -411,11 +471,11 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
             </Row>
             <Row gutter={16}>
-              <Col span={8}  >
+              <Col span={6}  >
                 <Form.Item
                   label={fieldLabels.cargoname}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
                   colon={false}
                 >
                   {getFieldDecorator('cargoname', {
@@ -423,28 +483,37 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Input placeholder="请输入货物名称" />)}
                 </Form.Item>
               </Col>
-              <Col span={8} >
+              <Col span={4} >
                 <Form.Item
-                  label={fieldLabels.cargosort}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
+                  label={fieldLabels.HScode}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('cargosort', {
-                    rules: [{ required: true, message: '请选择货物类别' }],
-                  })(
-                    <Select placeholder="请选择货物类别">
-                      <Option value="xiao">付晓晓</Option>
-                      <Option value="mao">周毛毛</Option>
-                    </Select>
-                  )}
+                  {getFieldDecorator('HScode', {
+                    rules: [{ required: true, message: '请输入HS编码' }],
+                  })(<Input placeholder="请输入HS编码" />)}
                 </Form.Item>
               </Col>
-              <Col span={8} >
+              <Col span={14} >
+                <Form.Item
+                  label={fieldLabels.HSname}
+                  labelCol={{ span: 2 }}
+                  wrapperCol={{ span: 22 }}
+                  colon={false}
+                >
+                  {getFieldDecorator('HSname', {
+                    rules: [{ required: true, message: '请输入HS名称' }],
+                  })(<Input placeholder="请输入HS名称" />)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={6} >
                 <Form.Item
                   label={fieldLabels.quantityD}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
                   colon={false}
                 >
                   {getFieldDecorator('quantityD', {
@@ -452,13 +521,28 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Input placeholder="请输入申报数量" />)}
                 </Form.Item>
               </Col>
-            </Row>
-            <Row gutter={16}>
+              <Col span={3} >
+                <Form.Item
+                  colon={false}
+                >
+                  {getFieldDecorator('unit', {
+                    rules: [{ required: true, message: '请选择单位' }],
+                  })(
+                    <Select  placeholder="请选择">
+                      <Option value="公吨">公吨</Option>
+                      <Option value="包">包</Option>
+                      <Option value="千克">千克</Option>
+                      <Option value="个">个</Option>
+                      <Option value="捆">捆</Option>
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
               <Col span={8} >
                 <Form.Item
                   label={fieldLabels.ChineseName}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
+                  labelCol={{ span: 5 }}
+                  wrapperCol={{ span: 19 }}
                   colon={false}
                 >
                   {getFieldDecorator('ChineseName', {
@@ -466,7 +550,7 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Input placeholder="请输入中文俗名" />)}
                 </Form.Item>
               </Col>
-              <Col span={8} >
+              <Col span={7} >
                 <Form.Item
                   label={fieldLabels.EnglishName}
                   labelCol={{ span: 6 }}
@@ -476,32 +560,6 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('EnglishName', {
                     rules: [{ required: true, message: '请输入英文俗名' }],
                   })(<Input placeholder="请输入英文俗名" />)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={8} >
-                <Form.Item
-                  label={fieldLabels.HScode}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                  colon={false}
-                >
-                  {getFieldDecorator('HScode', {
-                    rules: [{ required: true, message: '请输入HS编码' }],
-                  })(<Input placeholder="请输入HS编码" />)}
-                </Form.Item>
-              </Col>
-              <Col span={8} >
-                <Form.Item
-                  label={fieldLabels.HSname}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                  colon={false}
-                >
-                  {getFieldDecorator('HSname', {
-                    rules: [{ required: true, message: '请输入HS名称' }],
-                  })(<Input placeholder="请输入HS名称" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -526,24 +584,17 @@ class ApplicationForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col span={1}>
-                <Form.Item
-                  label={fieldLabels.destination}
-                  colon={false}
-                >
-                </Form.Item>
-              </Col>
               <Col span={8}>
                 <Form.Item
-                  label=" "
+                  label={fieldLabels.destination}
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                   colon={false}
                 >
                   {getFieldDecorator('destination', {
-                    rules: [{ required: true, message: '请选择到达地点' }],
+                    rules: [{ required: true, message: '请选择检验地点' }],
                   })(
-                    <Cascader options={areaOptions} placeholder="请选择到达地点"/>
+                    <Cascader options={areaOptions} placeholder="请选择检验地点"/>
                   )}
                 </Form.Item>
               </Col>
@@ -561,13 +612,16 @@ class ApplicationForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>                
-              <Col span={2}>
+              <Col span={7}>
                 <Form.Item
                   label={fieldLabels.harbour}
                   labelCol={{ span: 4 }}
                   wrapperCol={{ span: 20 }}
                   colon={false}
                 >
+                  {getFieldDecorator('harbour')(
+                    <Input placeholder="请输入补充" />
+                  )}
                 </Form.Item>
               </Col>
             </Row>
@@ -576,59 +630,34 @@ class ApplicationForEntrustment extends PureComponent {
         <Card title="检验要求" className={styles.card} bordered={false}>
           <Form hideRequiredMark labelAlign="left">
             <Row>
-              <Col span={16}>
+              <Col span={24}>
                 <Form.Item
                   label={fieldLabels.inspway}
-                  labelCol={{ span: 3 }}
-                  wrapperCol={{ span: 21 }}
+                  labelCol={{ span: 2 }}
+                  wrapperCol={{ span: 22 }}
                   colon={false}
                 >
                   {getFieldDecorator('inspway', {
                     rules: [{ required: true, message: '申请项目' }],
                   })(
                     <CheckboxGroup
-                      options={[
-                        '水尺计重',
-                        '船舱计重',
-                        '流量计重',
-                        '衡器计重',
-                        '干仓计重',
-                        '验舱计重',
-                        '取样',
-                        '制样',
-                        '送样',
-                        '品质',
-                      ]}
+                      options={inspwayOptions}
                     />
                   )}
                 </Form.Item>
               </Col>
             </Row>
             <Row>
-              <Col span={16}>
+              <Col span={24}>
                 <Form.Item
                   label={fieldLabels.inspwaymemo}
-                  labelCol={{ span: 3 }}
-                  wrapperCol={{ span: 21 }}
+                  labelCol={{ span: 2}}
+                  wrapperCol={{ span: 22 }}
                   colon={false}
                 >
                   {getFieldDecorator('inspwaymemo', {
-                    rules: [{ required: true, message: '检验要求' }],
+                    rules: [{ required: true, message: '检验备注' }],
                   })(<TextArea style={{ minHeight: 32 }} rows={4} />)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={6}>
-                <Form.Item
-                  label={fieldLabels.certstyle}
-                  labelCol={{ span: 8 }}
-                  wrapperCol={{ span: 16 }}
-                  colon={false}
-                >
-                  {getFieldDecorator('certstyle', {
-                    rules: [{ required: true, message: '证书要求' }],
-                  })(<Cascader options={options} placeholder="请选择证书要求" />)}
                 </Form.Item>
               </Col>
             </Row>

@@ -78,31 +78,29 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="联系人">{report.linkername}</Descriptions.Item>
             <Descriptions.Item label="联系电话">{report.linkertel}</Descriptions.Item>
             <Descriptions.Item label="付款人">{report.payer}</Descriptions.Item>
-            <Descriptions.Item label="联系人">{report.linkername}</Descriptions.Item>
-            <Descriptions.Item label="联系电话">{report.linkertel}</Descriptions.Item>
-            <Descriptions.Item label="业务分类">{report.tradeway}</Descriptions.Item>
+            <Descriptions.Item label="业务来源">{report.businessSort}</Descriptions.Item>
             <Descriptions.Item label="贸易方式">{report.tradeway}</Descriptions.Item>
+            <Descriptions.Item label="证书要求" >{report.certstyle}</Descriptions.Item>
+            <Descriptions.Item label="业务分类">{report.businessSort}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="货物信息" style={{ marginBottom: 32 }} bordered>
             <Descriptions.Item label="运输工具">{report.shipname}</Descriptions.Item>
             <Descriptions.Item label="检查港口">{report.inspplace1}</Descriptions.Item>
-            <Descriptions.Item label="预计日期">{report.inspdate}</Descriptions.Item>
+            <Descriptions.Item label="检验时间">{report.inspdate}</Descriptions.Item>
             <Descriptions.Item label="现场联系方式">{report.insplinkway}</Descriptions.Item>
             <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
-            <Descriptions.Item label="货物类别">{report.cargosort}</Descriptions.Item>
-            <Descriptions.Item label="申报数量">{report.quantityd}</Descriptions.Item>
-            <Descriptions.Item label="证书中文名">{report.remark}</Descriptions.Item>
-            <Descriptions.Item label="证书英文名">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="申报数量">{report.quantityd+report.unit}</Descriptions.Item>
+            <Descriptions.Item label="中文俗名">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="英文俗名">{report.remark}</Descriptions.Item>
             <Descriptions.Item label="HS编码">{report.remark}</Descriptions.Item>
-            <Descriptions.Item label="HS名称">{report.remark}</Descriptions.Item>
             <Descriptions.Item label="到达地点">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="HS名称">{report.remark}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="检验要求" style={{ marginBottom: 32 }} bordered >
             <Descriptions.Item label="申请项目" >{report.inspway}</Descriptions.Item>
-            <Descriptions.Item label="检验要求" >{report.inspwaymemo1}</Descriptions.Item>
-            <Descriptions.Item label="证书要求" >{report.certstyle}</Descriptions.Item>
+            <Descriptions.Item label="检验备注" >{report.inspwaymemo1}</Descriptions.Item>
           </Descriptions>
         </Card>
       </PageHeaderWrapper>
