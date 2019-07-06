@@ -11,7 +11,7 @@ import styles from './DetailForEntrustment.less';
 class DetailForEnturstment extends Component {
   componentWillMount() {
     const { dispatch, match } = this.props;
-
+    console.log(this.props)
     dispatch({
       type: 'entrustment/getReport',
       payload: '320118070301',
