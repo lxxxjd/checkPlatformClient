@@ -13,7 +13,7 @@ class DetailForEnturstment extends Component {
   state = { visible: false };
   componentWillMount() {
     const { dispatch, match } = this.props;
-
+    console.log(this.props)
     dispatch({
       type: 'entrustment/getReport',
       payload: '320118070301',

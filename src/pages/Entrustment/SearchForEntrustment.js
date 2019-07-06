@@ -115,8 +115,10 @@ class SearchForEntrustment extends PureComponent {
   };
 
   previewItem = text => {
-    console.log(text.reportno);
-    router.push(`/profile/basic/${text}`);
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
+      state:text.reportno,
+    });
   };
 
   handleFormReset = () => {
