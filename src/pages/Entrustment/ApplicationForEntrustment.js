@@ -109,20 +109,31 @@ class ApplicationForEntrustment extends PureComponent {
     width: '100%',
     date:'',
     value:1,
+    reprotName:[],
   };
 
-  componentDidMount() {
+  componentDidMount () {
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     const { form } = this.props;
     form.setFieldsValue({['unit']:"公吨"});
-    console.log(form.getFieldValue('inspdate'));
     const now=moment().format("YYYY-MM-DD HH:mm:ss");
     form.setFieldsValue({['inspdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
     form.setFieldsValue({['reportdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
+    const {dispatch} = this.props;
+    const { entrustment } = this.props;
+    dispatch({
+      type: 'entrustment/getClientName',
+      payload: {},
+    })
+    this.setState({reprotName:entrustment.clientName});
+    console.log(this.props);
   }
 
-  componentWillUnmount() {
+  componentWillMount () {
     window.removeEventListener('resize', this.resizeFooterToolbar);
+    const {dispatch} = this.props;
+    const { entrustment } = this.props;
+     console.log(this.props);
   }
 
   resizeFooterToolbar = () => {
@@ -187,10 +198,8 @@ class ApplicationForEntrustment extends PureComponent {
       dispatch,
     } = this.props;
     validateFieldsAndScroll((error, values) => {
-      console.log("s");
       if (!error) {
         // submit the values
-        console.log("ss");
         dispatch({
           type: 'entrustment/add',
           payload: values,
@@ -216,6 +225,8 @@ class ApplicationForEntrustment extends PureComponent {
       submitting,
     } = this.props;
     const { width } = this.state;
+    //申请人选项
+    const reportNameOptions = this.state.reprotName.map(d => <Option key={d}>{d}</Option>);
     return (
       <PageHeaderWrapper
         title="新建委托"
@@ -234,7 +245,7 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请输入申请人' }],
                   })(
                     <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
+                      {reportNameOptions}
                     </Select>
                   )}
                 </Form.Item>
@@ -293,7 +304,7 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请输入代理人' }],
                   })(
                     <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
+                      {reportNameOptions}                      
                     </Select>                  
                     )}
                 </Form.Item>

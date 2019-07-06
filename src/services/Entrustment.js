@@ -41,6 +41,9 @@ export async function queryReport(params) {
   return request(`/api/report/get_report?reportNo=${params}`);
 }
 
+export async function getAllClientName() {
+  return request('/api/client/getAllClientName');
+}
 
 export async function cancelReportItem(params) {
   return request(`/api/report/delete_report`,{

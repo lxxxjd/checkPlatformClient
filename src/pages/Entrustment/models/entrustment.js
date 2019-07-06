@@ -1,4 +1,4 @@
-import { submitApplication ,queryAllReports,queryAllReportsByFilter,queryReport,cancelReportItem} from '@/services/Entrustment';
+import { submitApplication ,queryAllReports,queryAllReportsByFilter,queryReport,cancelReportItem,getAllClientName} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -7,7 +7,8 @@ export default {
       list: [],
       pagination: {},
     },
-    report:{}
+    report:{},
+    clientName:[],
   },
 
   effects: {
@@ -41,6 +42,13 @@ export default {
         payload: response,
       });   
     },
+    *getClientName({ payload }, { call, put }) {
+      const response = yield call(getAllClientName, payload);
+      yield put({
+        type: 'getName',
+        payload:response,
+      });
+    },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(cancelReportItem, payload);
       yield put({
@@ -62,6 +70,12 @@ export default {
       return {
         ...state,
         report: payload.data,
+      };
+    },
+    getName(state, { payload }) {
+      return {
+        ...state,
+        clientName: payload.data,
       };
     },
     save(state, action) {
