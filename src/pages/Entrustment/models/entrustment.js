@@ -1,5 +1,6 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
-  queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,getAllBusinessSource,getTradeWay,updateReport} from '@/services/Entrustment';
+        queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
+        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -71,6 +72,16 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+    *getCheckProject({ payload,callback }, { call, put }) {
+      const response = yield call(getCheckProject, payload);
+      yield put({
+        type: 'getCheckProjectName',
+        payload:response,
+      });
+      if (callback) callback(response.data);
+    },
+
     *getTradeWay({ payload ,callback}, { call, put }) {
       const response = yield call(getTradeWay, payload);
       yield put({
@@ -79,6 +90,7 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
     *updateReport({ payload, callback }, { call, put }) {
       const response = yield call(updateReport, payload);
       yield put({
@@ -87,6 +99,18 @@ export default {
       });
       if (callback) callback();
     },
+
+
+
+    *getCargos({ payload }, { call, put }) {
+      const response = yield call(getCargos, payload);
+      yield put({
+        type: 'getCargosName',
+        payload: response,
+      });
+      if (call) call();
+    },
+
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(cancelReportItem, payload);
       yield put({
@@ -122,6 +146,12 @@ export default {
         clientName: payload.data,
       };
     },
+    getCheckProjectName(state, { payload }) {
+      return {
+        ...state,
+        businessSort: payload.data,
+      };
+    },
     getBusinessName(state, { payload }) {
       return {
         ...state,
@@ -134,12 +164,20 @@ export default {
         businessSource: payload.data,
       };
     },
+
     getTradeWayName(state, { payload }) {
       return {
         ...state,
         tradeway: payload.data,
       };
     },
+    getCargosName(state, { payload }) {
+      return {
+        ...state,
+        tradeway: payload.data,
+      };
+    },
+
     save(state, action) {
       return {
         ...state,
