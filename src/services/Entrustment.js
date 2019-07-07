@@ -57,6 +57,15 @@ export async function getTradeWay() {
   return request('/api/trade_away/get_ways');
 }
 
+export async function getCheckProject() {
+  return request('/api/check_project/get_project');
+}
+
+
+export async function getCargos() {
+  return request('/api/cargo/get_cargos');
+}
+
 export async function cancelReportItem(params) {
   return request(`/api/report/delete_report`,{
     method: 'POST',

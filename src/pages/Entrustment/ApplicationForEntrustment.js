@@ -115,6 +115,8 @@ class ApplicationForEntrustment extends PureComponent {
     businessSort:[],
     businessSource:[],
     tradeway: [],
+    checkProject:[],
+    cargos:[]
   };
 
 
@@ -154,6 +156,20 @@ class ApplicationForEntrustment extends PureComponent {
       payload: {},
       callback: (response) => {
         this.setState({tradeway:response})
+      }
+    });
+    dispatch({
+      type: 'entrustment/getCheckProject',
+      payload: {},
+      callback: (response) => {
+        this.setState({checkProject:response})
+      }
+    });
+    dispatch({
+      type: 'entrustment/getCargos',
+      payload: {},
+      callback: (response) => {
+        this.setState({cargos:response})
       }
     });
   }
@@ -297,17 +313,22 @@ class ApplicationForEntrustment extends PureComponent {
     console.log(this.state.selectReporterName);
   };
 
+  handleChangeCargo =()=>{
+
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
       submitting,
     } = this.props;
-    const { width,allReporterName,businessSort,businessSource,tradeway } = this.state;
+    const { width,allReporterName,businessSort,businessSource,tradeway,checkProject,cargos} = this.state;
 
     const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
     const businessSortOptions = businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
     const businessSourceOptions = businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const cargosOptions = cargos.map(d => <Option key={d}  value={d}>{d}</Option>);
 
     //申请人选项
     return (
@@ -339,7 +360,7 @@ class ApplicationForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col  span={4}  >
+              <Col span={4}>
                 <Form.Item
                   label={fieldLabels.petitionerContactPerson}
                   labelCol={{ span: 8 }}
@@ -351,7 +372,7 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Input style={{ width: '100%' }} placeholder="联系人" />)}
                 </Form.Item>
               </Col>
-              <Col span={5}  >
+              <Col span={5}>
                 <Form.Item
                   label={fieldLabels.petitionerPhone}
                   labelCol={{ span: 8 }}
@@ -571,7 +592,7 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
             </Row>
             <Row gutter={16}>
-              <Col span={6}  >
+              <Col span={6}>
                 <Form.Item
                   label={fieldLabels.cargoname}
                   labelCol={{ span: 8 }}
@@ -580,10 +601,10 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('cargoname', {
                     rules: [{ required: true, message: '请输入货物名称' }],
-                  })(<Input placeholder="请输入货物名称" />)}
+                  })(  <Select placeholder="请选择货物名称" onChange={this.handleChangeCargo}>{cargosOptions}</Select>)}
                 </Form.Item>
               </Col>
-              <Col span={4} >
+              <Col span={4}>
                 <Form.Item
                   label={fieldLabels.HScode}
                   labelCol={{ span: 8 }}
@@ -741,7 +762,7 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '申请项目' }],
                   })(
                     <CheckboxGroup
-                      options={inspwayOptions}
+                      options={checkProject}
                     />
                   )}
                 </Form.Item>
