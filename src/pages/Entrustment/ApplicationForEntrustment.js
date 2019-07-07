@@ -111,7 +111,10 @@ class ApplicationForEntrustment extends PureComponent {
     date:'',
     value:1,
     allReporterName:[],
-    selectReporterName:[]
+    selectReporterName:[],
+    businessSort:[],
+    businessSource:[],
+    tradeway: [],
   };
 
 
@@ -128,21 +131,29 @@ class ApplicationForEntrustment extends PureComponent {
     dispatch({
       type: 'entrustment/getClientName',
       payload: {},
-
+      callback: (response) => {
+        this.setState({allReporterName:response})
+      }
     });
     dispatch({
       type: 'entrustment/getBusinessSort',
       payload: {},
+      callback: (response) => {
+        this.setState({businessSort:response})
+      }
     });
     dispatch({
       type: 'entrustment/getBusinessSource',
       payload: {},
+      callback: (response) => {
+        this.setState({businessSource:response})
+      }
     });
     dispatch({
       type: 'entrustment/getTradeWay',
       payload: {},
       callback: (response) => {
-        this.setState({allReporterName:response})
+        this.setState({tradeway:response})
       }
     });
   }
@@ -291,12 +302,12 @@ class ApplicationForEntrustment extends PureComponent {
       form: { getFieldDecorator },
       submitting,
     } = this.props;
-    const { width } = this.state;
+    const { width,allReporterName,businessSort,businessSource,tradeway } = this.state;
 
-    const reportNameOptions = entrustment.clientName.map(d => <Option key={d}  value={d}>{d}</Option>);
-    const businessSortOptions = entrustment.businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
-    const businessSourceOptions = entrustment.businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
-    const tradewayOptions = entrustment.tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const businessSortOptions = businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const businessSourceOptions = businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const tradewayOptions = tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
 
     //申请人选项
     return (

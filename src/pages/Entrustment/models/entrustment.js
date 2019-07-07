@@ -55,26 +55,29 @@ export default {
       });
       if (callback) callback(response.data);
     },
-    *getBusinessSort({ payload }, { call, put }) {
+    *getBusinessSort({ payload,callback }, { call, put }) {
       const response = yield call(getAllBusinessSort, payload);
       yield put({
         type: 'getBusinessName',
         payload:response,
       });
+      if (callback) callback(response.data);
     },
-    *getBusinessSource({ payload }, { call, put }) {
+    *getBusinessSource({ payload,callback }, { call, put }) {
       const response = yield call(getAllBusinessSource, payload);
       yield put({
         type: 'getBusinessSourceName',
         payload:response,
       });
+      if (callback) callback(response.data);
     },
-    *getTradeWay({ payload }, { call, put }) {
+    *getTradeWay({ payload ,callback}, { call, put }) {
       const response = yield call(getTradeWay, payload);
       yield put({
         type: 'getTradeWayName',
         payload:response,
       });
+      if (callback) callback(response.data);
     },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(cancelReportItem, payload);
