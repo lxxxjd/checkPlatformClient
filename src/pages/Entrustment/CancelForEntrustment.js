@@ -12,7 +12,7 @@ import {
   Button,
   Dropdown,
   Menu,
-  DatePicker, Select,
+  DatePicker, Select, Modal, message,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -40,6 +40,18 @@ class CancelForEntrustment extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
+    visible: false,
+    reportNo:'0'
+  };
+
+
+
+
+  cancelItem = text => {
+    this.setState({
+      visible: true,
+      reportNo:text.reportno
+    });
   };
 
   columns = [
@@ -114,22 +126,7 @@ class CancelForEntrustment extends PureComponent {
     });
   };
 
-  cancelItem = text => {
-    const { dispatch } = this.props;
-    console.log(text.reportno);
-    dispatch({
-      type: 'entrustment/remove',
-      payload: {
-        reportno: text.reportno
-      },
-      callback: () => {
-        alert("撤销成功");
-        dispatch({
-          type: 'entrustment/fetch',
-        });
-      },
-    });
-  };
+
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -143,37 +140,6 @@ class CancelForEntrustment extends PureComponent {
     });
   };
 
-
-
-  handleMenuClick = e => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (selectedRows.length === 0) return;
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'entrustment/remove',
-          payload: {
-            key: selectedRows.map(row => row.key),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
-  handleSelectRows = rows => {
-    this.setState({
-      selectedRows: rows,
-    });
-  };
 
   handleSearch = e => {
     e.preventDefault();
@@ -242,7 +208,33 @@ class CancelForEntrustment extends PureComponent {
     );
   }
 
+// eslint-disable-next-line react/sort-comp
+  ModalhandleOk = () => {
+    const { reportNo } = this.state;
+    const { dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/remove',
+      payload: {
+        reportno: reportNo,
+      },
+      callback: () => {
+        message.success('撤销成功');
+        dispatch({
+          type: 'entrustment/fetch',
+        });
+      },
+    });
+    this.setState({
+      visible: false,
+    });
 
+  };
+
+  ModalhandleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  };
 
 
   render() {
@@ -250,12 +242,22 @@ class CancelForEntrustment extends PureComponent {
       entrustment: {data},
       loading,
     } = this.props;
-    const { selectedRows, } = this.state;
+    const { selectedRows,visible,reportNo} = this.state;
+
     return (
       <PageHeaderWrapper title="撤销委托">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <Modal
+              title="确认"
+              visible={visible}
+              reportNo={reportNo}
+              onOk={this.ModalhandleOk}
+              onCancel={this.ModalhandleCancel}
+            >
+              <p>是否撤销</p>
+            </Modal>
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}

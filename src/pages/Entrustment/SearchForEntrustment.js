@@ -75,6 +75,10 @@ class SearchForEntrustment extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.previewItem(text, record)}>查看</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.copyItem(text, record)}>修改</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.copyItem(text, record)}>复制</a>
         </Fragment>
       ),
     },
@@ -118,6 +122,13 @@ class SearchForEntrustment extends PureComponent {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
       state:text.reportno,
+    });
+  };
+
+  copyItem = text => {
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
+      reportNo:text.reportno,
     });
   };
 
