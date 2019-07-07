@@ -1,5 +1,6 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
-  queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,getAllBusinessSource,getTradeWay,getCheckProject,getCargos} from '@/services/Entrustment';
+        queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
+        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -24,7 +25,7 @@ export default {
         payload: response,
       });
     },
-    *add({ payload, callback }, { call, put }) {
+    *addReport({ payload, callback }, { call, put }) {
       const response = yield call(submitApplication, payload);
       yield put({
         type: 'submit',
@@ -91,6 +92,16 @@ export default {
       if (callback) callback(response.data);
     },
 
+    *updateReport({ payload, callback }, { call, put }) {
+      const response = yield call(updateReport, payload);
+      yield put({
+        type: 'update',
+        payload:response,
+      });
+      if (callback) callback();
+    },
+
+
 
     *getCargos({ payload ,callback}, { call, put }) {
       const response = yield call(getCargos, payload);
@@ -113,6 +124,12 @@ export default {
 
   reducers: {
     submit(state, { payload }) {
+      return {
+        ...state,
+        data: payload.data,
+      };
+    },
+    update(state, { payload }) {
       return {
         ...state,
         data: payload.data,

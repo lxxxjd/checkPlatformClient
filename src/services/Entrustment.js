@@ -8,13 +8,28 @@ export async function submitApplication(params) {
     params.certstyle = certstyle;
     console.log(params.certstyle);
     console.log(params.inspway);
-  	return request('/api/report/add_report?', {
+  	return request('/api/report/add_report', {
     	method: 'POST',
     	data: {
       	...params,
       	method: 'post',
     	},
   	});
+}
+export async function updateReport(params) {
+  const inspway = params.inspway.join(' ');
+  const certstyle = params.certstyle.join('');
+    params.inspway = inspway;
+    params.certstyle = certstyle;
+    console.log(params.certstyle);
+    console.log(params.inspway);
+    return request('/api/report/update_report', {
+      method: 'POST',
+      data: {
+        ...params,
+        method: 'post',
+      },
+    });
 }
 
 export async function queryAllReports(params) {
@@ -41,7 +56,10 @@ export async function queryReport(params) {
   return request(`/api/report/get_report?reportNo=${params}`);
 }
 
-export async function getAllClientName() {
+export async function getAllClientName(params) {
+  if(params.content != null){
+    return request(`/api/client/getAllClientName?content=${params.content}`);
+  }
   return request('/api/client/getAllClientName');
 }
 
