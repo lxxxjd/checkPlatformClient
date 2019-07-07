@@ -110,13 +110,14 @@ class ApplicationForEntrustment extends PureComponent {
     width: '100%',
     date:'',
     value:1,
+    cargoValue:1,
     allReporterName:[],
     selectReporterName:[],
     businessSort:[],
     businessSource:[],
     tradeway: [],
     checkProject:[],
-    cargos:[]
+    cargos:[],
   };
 
 
@@ -313,8 +314,16 @@ class ApplicationForEntrustment extends PureComponent {
     console.log(this.state.selectReporterName);
   };
 
-  handleChangeCargo =()=>{
-
+  handleChangeCargo =e=>{
+    const { form  } = this.props;
+    const {state} = this;
+    for( const cargo in state.cargos){
+      if(state.cargos[cargo].keyno === e){
+        form.setFieldsValue({'HScode':state.cargos[cargo].hscode});
+        form.setFieldsValue({'HSname':state.cargos[cargo].hsname});
+        break;
+      }
+    }
   }
 
   render() {
@@ -328,7 +337,7 @@ class ApplicationForEntrustment extends PureComponent {
     const businessSortOptions = businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
     const businessSourceOptions = businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
-    const cargosOptions = cargos.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const cargosOptions =cargos.map(d => <Option key={d.keyno}  value={d.keyno}>{d.cargonamec}</Option>);
 
     //申请人选项
     return (

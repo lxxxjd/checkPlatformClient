@@ -13,6 +13,7 @@ export default {
     businessSort:[],
     businessSource:[],
     tradeway: [],
+    cargos: [],
   },
 
   effects: {
@@ -91,13 +92,13 @@ export default {
     },
 
 
-    *getCargos({ payload }, { call, put }) {
+    *getCargos({ payload ,callback}, { call, put }) {
       const response = yield call(getCargos, payload);
       yield put({
         type: 'getCargosName',
         payload: response,
       });
-      if (call) call();
+      if (callback) callback(response.data);
     },
 
     *remove({ payload, callback }, { call, put }) {
