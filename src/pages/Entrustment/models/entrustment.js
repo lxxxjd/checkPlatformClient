@@ -47,12 +47,13 @@ export default {
       });
       if (call) call();
     },
-    *getClientName({ payload }, { call, put }) {
+    *getClientName({ payload ,callback}, { call, put }) {
       const response = yield call(getAllClientName, payload);
       yield put({
         type: 'getName',
         payload:response,
       });
+      if (callback) callback(response.data);
     },
     *getBusinessSort({ payload }, { call, put }) {
       const response = yield call(getAllBusinessSort, payload);
