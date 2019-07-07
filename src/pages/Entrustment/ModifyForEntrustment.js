@@ -108,11 +108,12 @@ const fieldLabels = {
 class ModifyForEntrustment extends PureComponent {
   state = {
     width: '100%',
-    date:'',
     value:1,
+    reportno:'',
     allReporterName:[],
-    selectReporterName:[],
-    reportno:''
+    businessSort:[],
+    businessSource:[],
+    tradeway: [],
   };
 
 
@@ -191,7 +192,28 @@ class ModifyForEntrustment extends PureComponent {
         //form.setFieldsValue({['state']:response.state});
 
       }
-    })
+    });
+    dispatch({
+      type: 'entrustment/getBusinessSort',
+      payload: {},
+      callback: (response) => {
+        this.setState({businessSort:response})
+      }
+    });
+    dispatch({
+      type: 'entrustment/getBusinessSource',
+      payload: {},
+      callback: (response) => {
+        this.setState({businessSource:response})
+      }
+    });
+    dispatch({
+      type: 'entrustment/getTradeWay',
+      payload: {},
+      callback: (response) => {
+        this.setState({tradeway:response})
+      }
+    });
   }
   componentWillMount () {
   }
@@ -261,7 +283,7 @@ class ModifyForEntrustment extends PureComponent {
       if (!error) {
         // submit the values
         dispatch({
-          type: 'entrustment/add',
+          type: 'entrustment/updateReport',
           payload: values,
         });
       }
@@ -279,31 +301,17 @@ class ModifyForEntrustment extends PureComponent {
       form.setFieldsValue({['payer']:form.getFieldValue('agent')});
     }
   };
-  handleSearch = input => {
-    if(input.length == 0){
-      return;
-    }
-    const reportName = [];
-    var str;
-    for( str in this.state.allReporterName){
-      var inputLength = input.length;
-      var strLength = str.length;
-      for(var i = 0;i<strLength;i++){
-        if(str.charAt(i)===input.charAt(0)){
-          var j = 1;
-          for(var k = i + 1; j<input.length  ; j++,k++){
-            if(k === strLength || str.charAt(k) != input.charAt(j)){
-              break;
-            }
-          }
-          if(j === inputLength){
-            reportName.push(str);
-          }
-        }
+  handleSearch = value => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/getClientName',
+      payload: {
+        content:value
+      },
+      callback: (response) => {
+        this.setState({allReporterName:response})
       }
-    }
-    this.setState({selectReporterName:reportName})
-    console.log(this.state.selectReporterName);
+    });
   };
   render() {
     const {
@@ -311,8 +319,12 @@ class ModifyForEntrustment extends PureComponent {
       submitting,
       entrustment,
     } = this.props;
-    const { width } = this.state;
-    const reportNameOptions = this.state.allReporterName.map(d => <Option value={d} >{d}</Option>);
+    const { width,allReporterName,businessSort,businessSource,tradeway } = this.state;
+
+    const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const businessSortOptions = businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const businessSourceOptions = businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const tradewayOptions = tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
     //申请人选项
     return (
       <PageHeaderWrapper
@@ -333,10 +345,10 @@ class ModifyForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请输入申请人' }],
                   })(
                     <Select 
-                      //showSearch
+                      showSearch
                       placeholder="请选择"
                       filterOption={false}
-                      //onSearch={this.handleSearch}
+                      onSearch={this.handleSearch}
                     >
                       {reportNameOptions}
                     </Select>
@@ -378,8 +390,7 @@ class ModifyForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请选择贸易方式' }],
                   })(
                     <Select placeholder="请选择贸易方式">
-                      <Option value="private">私密</Option>
-                      <Option value="public">公开</Option>
+                      {tradewayOptions}
                     </Select>
                   )}
                 </Form.Item>
@@ -396,7 +407,12 @@ class ModifyForEntrustment extends PureComponent {
                   {getFieldDecorator('agent', {
                     rules: [{ required: true, message: '请输入代理人' }],
                   })(
-                    <Select placeholder="请选择">
+                    <Select 
+                      showSearch
+                      placeholder="请选择"
+                      filterOption={false}
+                      onSearch={this.handleSearch}
+                    >
                       {reportNameOptions}
                     </Select>                  
                     )}
@@ -437,7 +453,7 @@ class ModifyForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '业务来源' }],
                   })(
                     <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
+                      {businessSourceOptions}
                     </Select>
                     )}
                 </Form.Item>
@@ -510,7 +526,7 @@ class ModifyForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请选择业务分类' }],
                   })(
                     <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
+                      {businessSortOptions}
                     </Select>
                   )}
                 </Form.Item>

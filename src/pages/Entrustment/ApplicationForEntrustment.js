@@ -122,12 +122,11 @@ class ApplicationForEntrustment extends PureComponent {
   componentDidMount () {
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     const { form } = this.props;
-    form.setFieldsValue({['unit']:"公吨"});
+    form.setFieldsValue({['quantitydunit']:"公吨"});
     const now=moment().format("YYYY-MM-DD HH:mm:ss");
     form.setFieldsValue({['inspdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
     form.setFieldsValue({['reportdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
     const {dispatch} = this.props;
-    const { entrustment } = this.props;
     dispatch({
       type: 'entrustment/getClientName',
       payload: {},
@@ -226,7 +225,7 @@ class ApplicationForEntrustment extends PureComponent {
       if (!error) {
         // submit the values
         dispatch({
-          type: 'entrustment/add',
+          type: 'entrustment/addReport',
           payload: values,
         });
       }
@@ -245,58 +244,18 @@ class ApplicationForEntrustment extends PureComponent {
     }
   };
 
-  filter = (input , option) =>    0>1
-    // var str = option.props.value;
-    // var inputLength = input.length;
-    // var strLength = str.length;
-    // if(input.length == 0){
-    //   return true;
-    // }
-    // for(var i = 0;i<strLength;i++){
-    //   if(str.charAt(i)===input.charAt(0)){
-    //     var j = 1;
-    //     for(var k = i + 1; j<input.length  ; j++,k++){
-    //       if(k === strLength || str.charAt(k) != input.charAt(j)){
-    //         break;
-    //       }
-    //     }
-    //     if(j === inputLength){
-    //       console.log(input);
-    //       console.log(option);
-    //       return true;
-    //     }
-    //   }
-    // }
-    //return false;
-
-
-  handleSearch = input => {
-    if(input.length == 0){
-      return;
-    }
-    const reportName = [];
-    var str;
-    for( str in this.state.allReporterName){
-      var inputLength = input.length;
-      var strLength = str.length;
-      for(var i = 0;i<strLength;i++){
-        if(str.charAt(i)===input.charAt(0)){
-          var j = 1;
-          for(var k = i + 1; j<input.length  ; j++,k++){
-            if(k === strLength || str.charAt(k) != input.charAt(j)){
-              break;
-            }
-          }
-          if(j === inputLength){
-            reportName.push(str);
-          }
-        }
+  handleSearch = value => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/getClientName',
+      payload: {
+        content:value
+      },
+      callback: (response) => {
+        this.setState({allReporterName:response})
       }
-    }
-    this.setState({selectReporterName:reportName})
-    console.log(this.state.selectReporterName);
+    });
   };
-
   render() {
     const {
       form: { getFieldDecorator },
@@ -329,10 +288,10 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请输入申请人' }],
                   })(
                     <Select
-                      //showSearch
+                      showSearch
                       placeholder="请选择"
                       filterOption={false}
-                      //onSearch={this.handleSearch}
+                      onSearch={this.handleSearch}
                     >
                       {reportNameOptions}
                     </Select>
@@ -391,7 +350,12 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('agent', {
                     rules: [{ required: true, message: '请输入代理人' }],
                   })(
-                    <Select placeholder="请选择">
+                    <Select 
+                      showSearch
+                      placeholder="请选择代理人"
+                      filterOption={false}
+                      onSearch={this.handleSearch}
+                    >
                       {reportNameOptions}
                     </Select>
                     )}
@@ -431,7 +395,10 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('businessSourse', {
                     rules: [{ required: true, message: '业务来源' }],
                   })(
-                    <Select placeholder="请选择">
+                    <Select 
+                      placeholder="请选择业务来源"
+                      filterOption={false}
+                      >
                       {businessSourceOptions}
                     </Select>
                     )}
