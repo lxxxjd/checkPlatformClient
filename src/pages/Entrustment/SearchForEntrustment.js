@@ -59,22 +59,22 @@ class SearchForEntrustment extends PureComponent {
       dataIndex: 'applicant',
     },
     {
-      title: '货名',
-      dataIndex: 'cargoname',
-    },
-    {
-      title: '运输存放工具',
+      title: '运输工具',
       dataIndex: 'shipname',
     },
     {
-      title: '项目名称',
-      dataIndex: 'inspway',
+      title: '货名',
+      dataIndex: 'cargoname',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.previewItem(text, record)}>查看</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.copyItem(text, record)}>修改</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.copyItem(text, record)}>复制</a>
         </Fragment>
       ),
     },
@@ -118,6 +118,13 @@ class SearchForEntrustment extends PureComponent {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
       state:text.reportno,
+    });
+  };
+
+  copyItem = text => {
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
+      reportNo:text.reportno,
     });
   };
 
@@ -174,9 +181,10 @@ class SearchForEntrustment extends PureComponent {
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
                   <Option value="applicant">委托人</Option>
-                  <Option value="shipname">船名</Option>
+                  <Option value="agent">代理人</Option>
+                  <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
-                  <Option value="reportdate">委托时间</Option>
+
                 </Select>
               )}
             </Form.Item>
