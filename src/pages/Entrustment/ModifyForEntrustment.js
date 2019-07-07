@@ -47,7 +47,7 @@ const options = [
     ],
   },
   {
-    value: '不需要',
+    value: 'noNeed',
     label: '不需要',
   },
 ];
@@ -105,76 +105,95 @@ const fieldLabels = {
   loading: loading.models.entrustment,
 }))
 @Form.create()
-class ApplicationForEntrustment extends PureComponent {
+class ModifyForEntrustment extends PureComponent {
   state = {
     width: '100%',
     date:'',
     value:1,
     allReporterName:[],
     selectReporterName:[],
-    businessSort:[],
-    businessSource:[],
-    tradeway: [],
-    checkProject:[],
-    cargos:[]
+    reportno:''
   };
 
 
 
   componentDidMount () {
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
-    const { form } = this.props;
-    form.setFieldsValue({['unit']:"公吨"});
-    const now=moment().format("YYYY-MM-DD HH:mm:ss");
-    form.setFieldsValue({['inspdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
-    form.setFieldsValue({['reportdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
-    const {dispatch} = this.props;
-    const { entrustment } = this.props;
+    const { form ,dispatch} = this.props;
     dispatch({
       type: 'entrustment/getClientName',
       payload: {},
       callback: (response) => {
         this.setState({allReporterName:response})
       }
-    });
+    })
     dispatch({
-      type: 'entrustment/getBusinessSort',
-      payload: {},
+      type: 'entrustment/getReport',
+      payload: '320118080022',
       callback: (response) => {
-        this.setState({businessSort:response})
+        this.setState({reportno:response.reportno})
+        //form.setFieldsValue({['reportno']:response.reportno});
+        //form.setFieldsValue({['randomcode']:response.randomcode});
+        //form.setFieldsValue({['section']:response.section});
+        form.setFieldsValue({
+          'reportdate':moment(response.reportdate,"YYYY-MM-DD"),
+          'tradeway':response.tradeway,
+          'payer':response.payer,
+          'shipname':response.shipname,
+          'cargoname':response.cargoname,
+          'quantityd':response.quantityd,
+          'agent':response.agent,
+          'applicant':response.applicant,
+          'inspwaymemo1':response.inspwaymemo1,
+          'inspplace1':response.inspplace1,
+          'inspplace2':response.inspplace2,
+          'inspplace3':response.inspplace3,
+          'inspdate':moment(response.inspdate,"YYYY-MM-DD"),
+          'insplinkway':response.insplinkway,
+          'price':response.price,
+          'quantitydunit':response.quantitydunit,
+          'businesssort':response.businesssort,
+          'applicantName':response.applicantName,
+          'applicantTel':response.applicantTel,
+          'agentName':response.agentName,
+          'agentTel':response.agentTel
+        });
+        //form.setFieldsValue({['reportman']:response.reportman});
+        //form.setFieldsValue({['businessman']:response.businessman});
+        //form.setFieldsValue({['reportplace']:response.reportplace});
+        //form.setFieldsValue({['tradeway']:response.tradeway});
+        //form.setFieldsValue({['linkername']:response.linkername});
+        //form.setFieldsValue({['linkertel']:response.linkertel});
+        //form.setFieldsValue({['cargosort']:response.cargosort});
+        //form.setFieldsValue({['cargodescribed']:response.cargodescribed});
+        form.setFieldsValue({['inspway']:response.inspway.split(" ")});
+        //form.setFieldsValue({['other']:response.other});
+
+        //form.setFieldsValue({['inspwaymemo2']:response.inspwaymemo2});
+
+        //form.setFieldsValue({['priceway']:response.priceway});
+        //form.setFieldsValue({['certneeded']:response.certneeded});
+        //form.setFieldsValue({['certrequired']:response.certrequired});
+        if(response.certstyle!=null) {
+          const result = ['need'];
+          result.push(response.certstyle);
+          form.setFieldsValue({'certstyle':result});
+        }else{
+          form.setFieldsValue({'certstyle':['noNeed']});
+        }
+        //form.setFieldsValue({['process']:response.process});
+        //form.setFieldsValue({['contractno']:response.contractno});
+        //form.setFieldsValue({['blno']:response.blno});
+        //form.setFieldsValue({['fromto']:response.fromto});
+        //form.setFieldsValue({['certsignman']:response.certsignman});
+        //form.setFieldsValue({['certsigndate']:response.certsigndate});
+
+        //form.setFieldsValue({['state']:response.state});
+
       }
-    });
-    dispatch({
-      type: 'entrustment/getBusinessSource',
-      payload: {},
-      callback: (response) => {
-        this.setState({businessSource:response})
-      }
-    });
-    dispatch({
-      type: 'entrustment/getTradeWay',
-      payload: {},
-      callback: (response) => {
-        this.setState({tradeway:response})
-      }
-    });
-    dispatch({
-      type: 'entrustment/getCheckProject',
-      payload: {},
-      callback: (response) => {
-        this.setState({checkProject:response})
-      }
-    });
-    dispatch({
-      type: 'entrustment/getCargos',
-      payload: {},
-      callback: (response) => {
-        this.setState({cargos:response})
-      }
-    });
+    })
   }
   componentWillMount () {
-
   }
 
   resizeFooterToolbar = () => {
@@ -260,32 +279,6 @@ class ApplicationForEntrustment extends PureComponent {
       form.setFieldsValue({['payer']:form.getFieldValue('agent')});
     }
   };
-
-  filter = (input , option) =>    0>1
-    // var str = option.props.value;
-    // var inputLength = input.length;
-    // var strLength = str.length;
-    // if(input.length == 0){
-    //   return true;
-    // }
-    // for(var i = 0;i<strLength;i++){
-    //   if(str.charAt(i)===input.charAt(0)){
-    //     var j = 1;
-    //     for(var k = i + 1; j<input.length  ; j++,k++){
-    //       if(k === strLength || str.charAt(k) != input.charAt(j)){
-    //         break;
-    //       }
-    //     }
-    //     if(j === inputLength){
-    //       console.log(input);
-    //       console.log(option);
-    //       return true;
-    //     }
-    //   }
-    // }
-    //return false;
-
-
   handleSearch = input => {
     if(input.length == 0){
       return;
@@ -312,28 +305,18 @@ class ApplicationForEntrustment extends PureComponent {
     this.setState({selectReporterName:reportName})
     console.log(this.state.selectReporterName);
   };
-
-  handleChangeCargo =()=>{
-
-  }
-
   render() {
     const {
       form: { getFieldDecorator },
       submitting,
+      entrustment,
     } = this.props;
-    const { width,allReporterName,businessSort,businessSource,tradeway,checkProject,cargos} = this.state;
-
-    const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
-    const businessSortOptions = businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
-    const businessSourceOptions = businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
-    const tradewayOptions = tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
-    const cargosOptions = cargos.map(d => <Option key={d}  value={d}>{d}</Option>);
-
+    const { width } = this.state;
+    const reportNameOptions = this.state.allReporterName.map(d => <Option value={d} >{d}</Option>);
     //申请人选项
     return (
       <PageHeaderWrapper
-        title="新建委托"
+        title={"委托号:"+entrustment.report.reportno}
       >
         <Card title="申请信息" className={styles.card} bordered={false}>
         <Form hideRequiredMark labelAlign="left">
@@ -349,7 +332,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('applicant', {
                     rules: [{ required: true, message: '请输入申请人' }],
                   })(
-                    <Select
+                    <Select 
                       //showSearch
                       placeholder="请选择"
                       filterOption={false}
@@ -360,7 +343,7 @@ class ApplicationForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col  span={4}  >
                 <Form.Item
                   label={fieldLabels.applicantName}
                   labelCol={{ span: 8 }}
@@ -372,7 +355,7 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Input style={{ width: '100%' }} placeholder="联系人" />)}
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={5}  >
                 <Form.Item
                   label={fieldLabels.applicantTel}
                   labelCol={{ span: 8 }}
@@ -395,7 +378,8 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请选择贸易方式' }],
                   })(
                     <Select placeholder="请选择贸易方式">
-                      {tradewayOptions}
+                      <Option value="private">私密</Option>
+                      <Option value="public">公开</Option>
                     </Select>
                   )}
                 </Form.Item>
@@ -414,7 +398,7 @@ class ApplicationForEntrustment extends PureComponent {
                   })(
                     <Select placeholder="请选择">
                       {reportNameOptions}
-                    </Select>
+                    </Select>                  
                     )}
                 </Form.Item>
               </Col>
@@ -453,7 +437,7 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '业务来源' }],
                   })(
                     <Select placeholder="请选择">
-                      {businessSourceOptions}
+                      <Option value="xiao">付晓晓</Option>
                     </Select>
                     )}
                 </Form.Item>
@@ -471,15 +455,15 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请输入付款人' }],
                   })(
                     <Select placeholder="请选择">
-                      {reportNameOptions}
+                      <Option value="xiao">付晓晓</Option>
                     </Select>
                     )}
                 </Form.Item>
               </Col>
               <Col span={9}  >
-                <Radio.Group onChange={this.onChange} >
-                  <Radio value={2}>申请人为付款人</Radio>
-                  <Radio value={1}>代理人为付款人</Radio>
+                <Radio.Group onChange={this.onChange} value={this.state.value}>
+                  <Radio value={1}>申请人为付款人</Radio>
+                  <Radio value={2}>代理人为付款人</Radio>
                 </Radio.Group>
               </Col>
               <Col span={5}  >
@@ -491,7 +475,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('price', {
                     rules: [{ required: true, message: '请输入检验费' }],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入检验费" />)}
+                  })(<Input style={{ width: '100%' }} placeholder="请输入" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -515,6 +499,22 @@ class ApplicationForEntrustment extends PureComponent {
                 )}
               </Form.Item>
             </Col>
+              <Col span={14}  >
+                <Form.Item
+                  label={fieldLabels.businesssort}
+                  labelCol={{ span: 3 }}
+                  wrapperCol={{ span: 21 }}
+                  colon={false}
+                >
+                  {getFieldDecorator('businesssort', {
+                    rules: [{ required: true, message: '请选择业务分类' }],
+                  })(
+                    <Select placeholder="请选择">
+                      <Option value="xiao">付晓晓</Option>
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
               <Col span={5}>
                 <Form.Item
                   label={fieldLabels.certstyle}
@@ -527,23 +527,6 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Cascader options={options} placeholder="请选择证书要求" />)}
                 </Form.Item>
               </Col>
-              <Col span={14}  >
-                <Form.Item
-                  label={fieldLabels.serversClass}
-                  labelCol={{ span: 3 }}
-                  wrapperCol={{ span: 21 }}
-                  colon={false}
-                >
-                  {getFieldDecorator('serversClass', {
-                    rules: [{ required: true, message: '请选择业务分类' }],
-                  })(
-                    <Select placeholder="请选择">
-                      {businessSortOptions}
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-
             </Row>
           </Form>
         </Card>
@@ -569,7 +552,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 20 }}
                   colon={false}
                 >
-                  {getFieldDecorator('inspplace', {
+                  {getFieldDecorator('inspplace1', {
                     rules: [{ required: true, message: '请输入装运港口' }],
                   })(
                     <Input placeholder="请输入装运港口" />
@@ -592,7 +575,7 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
             </Row>
             <Row gutter={16}>
-              <Col span={6}>
+              <Col span={6}  >
                 <Form.Item
                   label={fieldLabels.cargoname}
                   labelCol={{ span: 8 }}
@@ -601,10 +584,10 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('cargoname', {
                     rules: [{ required: true, message: '请输入货物名称' }],
-                  })(  <Select placeholder="请选择货物名称" onChange={this.handleChangeCargo}>{cargosOptions}</Select>)}
+                  })(<Input placeholder="请输入货物名称" />)}
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col span={4} >
                 <Form.Item
                   label={fieldLabels.HScode}
                   labelCol={{ span: 8 }}
@@ -707,12 +690,12 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={8}>
                 <Form.Item
-                  label={fieldLabels.destination}
+                  label={fieldLabels.inspplace}
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('destination', {
+                  {getFieldDecorator('inspplace', {
                     rules: [{ required: true, message: '请选择检验地点' }],
                   })(
                     <Cascader options={areaOptions} placeholder="请选择检验地点"/>
@@ -721,12 +704,9 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={3}>
                 <Form.Item
-                  label={fieldLabels.area}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('harbour', {
+                  {getFieldDecorator('inspplace2', {
                     rules: [{ required: true, message: '请输入港' }],
                   })(
                     <Input placeholder="请输入" />
@@ -740,7 +720,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 20 }}
                   colon={false}
                 >
-                  {getFieldDecorator('harbour')(
+                  {getFieldDecorator('inspplace3')(
                     <Input placeholder="请输入补充" />
                   )}
                 </Form.Item>
@@ -762,7 +742,7 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '申请项目' }],
                   })(
                     <CheckboxGroup
-                      options={checkProject}
+                      options={inspwayOptions}
                     />
                   )}
                 </Form.Item>
@@ -795,4 +775,4 @@ class ApplicationForEntrustment extends PureComponent {
   }
 }
 
-export default ApplicationForEntrustment;
+export default ModifyForEntrustment;

@@ -76,6 +76,12 @@ export default [
             component: "./Entrustment/DetailForEntrustment",
             hideInMenu: 'true', //添加页不需要在menu上显示
           },
+          {
+            path: "/Entrustment/ModifyForEntrustment",
+            name: "ModifyForEntrustment",
+            component: "./Entrustment/ModifyForEntrustment",
+            //添加页不需要在menu上显示
+          },
         ],
       },
 

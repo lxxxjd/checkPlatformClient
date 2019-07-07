@@ -39,13 +39,13 @@ export default {
       });
     },
 
-    *getReport({ payload }, { call, put }) {
+    *getReport({ payload,callback }, { call, put }) {
       const response = yield call(queryReport, payload);
       yield put({
         type: 'get',
         payload: response,
       });
-      if (call) call();
+      if (callback) callback(response.data);
     },
     *getClientName({ payload ,callback}, { call, put }) {
       const response = yield call(getAllClientName, payload);
