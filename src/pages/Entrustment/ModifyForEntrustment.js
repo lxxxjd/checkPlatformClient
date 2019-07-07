@@ -47,7 +47,7 @@ const options = [
     ],
   },
   {
-    value: '不需要',
+    value: 'noNeed',
     label: '不需要',
   },
 ];
@@ -105,31 +105,91 @@ const fieldLabels = {
   loading: loading.models.entrustment,
 }))
 @Form.create()
-class ApplicationForEntrustment extends PureComponent {
+class ModifyForEntrustment extends PureComponent {
   state = {
     width: '100%',
     date:'',
     value:1,
     allReporterName:[],
-    selectReporterName:[]
+    selectReporterName:[],
+    reportno:''
   };
 
 
 
   componentDidMount () {
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
-    const { form } = this.props;
-    form.setFieldsValue({['unit']:"公吨"});
-    const now=moment().format("YYYY-MM-DD HH:mm:ss");
-    form.setFieldsValue({['inspdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
-    form.setFieldsValue({['reportdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
-    const {dispatch} = this.props;
-    const { entrustment } = this.props;
+    const { form ,dispatch} = this.props;
     dispatch({
       type: 'entrustment/getClientName',
       payload: {},
       callback: (response) => {
         this.setState({allReporterName:response})
+      }
+    })
+    dispatch({
+      type: 'entrustment/getReport',
+      payload: '320118080022',
+      callback: (response) => {
+        this.setState({reportno:response.reportno})
+        //form.setFieldsValue({['reportno']:response.reportno});
+        //form.setFieldsValue({['randomcode']:response.randomcode});
+        //form.setFieldsValue({['section']:response.section});
+        form.setFieldsValue({
+          'reportdate':moment(response.reportdate,"YYYY-MM-DD"),
+          'tradeway':response.tradeway,
+          'payer':response.payer,
+          'shipname':response.shipname,
+          'cargoname':response.cargoname,
+          'quantityd':response.quantityd,
+          'agent':response.agent,
+          'applicant':response.applicant,
+          'inspwaymemo1':response.inspwaymemo1,
+          'inspplace1':response.inspplace1,
+          'inspplace2':response.inspplace2,
+          'inspplace3':response.inspplace3,
+          'inspdate':moment(response.inspdate,"YYYY-MM-DD"),
+          'insplinkway':response.insplinkway,
+          'price':response.price,
+          'quantitydunit':response.quantitydunit,
+          'businesssort':response.businesssort,
+          'applicantName':response.applicantName,
+          'applicantTel':response.applicantTel,
+          'agentName':response.agentName,
+          'agentTel':response.agentTel
+        });
+        //form.setFieldsValue({['reportman']:response.reportman});
+        //form.setFieldsValue({['businessman']:response.businessman});
+        //form.setFieldsValue({['reportplace']:response.reportplace});
+        //form.setFieldsValue({['tradeway']:response.tradeway});
+        //form.setFieldsValue({['linkername']:response.linkername});
+        //form.setFieldsValue({['linkertel']:response.linkertel});
+        //form.setFieldsValue({['cargosort']:response.cargosort});
+        //form.setFieldsValue({['cargodescribed']:response.cargodescribed});
+        form.setFieldsValue({['inspway']:response.inspway.split(" ")});
+        //form.setFieldsValue({['other']:response.other});
+
+        //form.setFieldsValue({['inspwaymemo2']:response.inspwaymemo2});
+
+        //form.setFieldsValue({['priceway']:response.priceway});
+        //form.setFieldsValue({['certneeded']:response.certneeded});
+        //form.setFieldsValue({['certrequired']:response.certrequired});
+        if(response.certstyle!=null) {
+          const result = ['need'];
+          result.push(response.certstyle);
+          form.setFieldsValue({'certstyle':result});
+        }else{
+          form.setFieldsValue({'certstyle':['noNeed']});
+        }
+        //form.setFieldsValue({['process']:response.process});
+        //form.setFieldsValue({['contractno']:response.contractno});
+        //form.setFieldsValue({['blno']:response.blno});
+        //form.setFieldsValue({['fromto']:response.fromto});
+        //form.setFieldsValue({['certsignman']:response.certsignman});
+        //form.setFieldsValue({['certsigndate']:response.certsigndate});
+
+        //form.setFieldsValue({['state']:response.state});
+
       }
     })
   }
@@ -249,13 +309,14 @@ class ApplicationForEntrustment extends PureComponent {
     const {
       form: { getFieldDecorator },
       submitting,
+      entrustment,
     } = this.props;
     const { width } = this.state;
     const reportNameOptions = this.state.allReporterName.map(d => <Option value={d} >{d}</Option>);
     //申请人选项
     return (
       <PageHeaderWrapper
-        title="新建委托"
+        title={"委托号:"+entrustment.report.reportno}
       >
         <Card title="申请信息" className={styles.card} bordered={false}>
         <Form hideRequiredMark labelAlign="left">
@@ -414,7 +475,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('price', {
                     rules: [{ required: true, message: '请输入检验费' }],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入检验费" />)}
+                  })(<Input style={{ width: '100%' }} placeholder="请输入" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -440,12 +501,12 @@ class ApplicationForEntrustment extends PureComponent {
             </Col>
               <Col span={14}  >
                 <Form.Item
-                  label={fieldLabels.serversClass}
+                  label={fieldLabels.businesssort}
                   labelCol={{ span: 3 }}
                   wrapperCol={{ span: 21 }}
                   colon={false}
                 >
-                  {getFieldDecorator('serversClass', {
+                  {getFieldDecorator('businesssort', {
                     rules: [{ required: true, message: '请选择业务分类' }],
                   })(
                     <Select placeholder="请选择">
@@ -491,7 +552,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 20 }}
                   colon={false}
                 >
-                  {getFieldDecorator('inspplace', {
+                  {getFieldDecorator('inspplace1', {
                     rules: [{ required: true, message: '请输入装运港口' }],
                   })(
                     <Input placeholder="请输入装运港口" />
@@ -629,12 +690,12 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={8}>
                 <Form.Item
-                  label={fieldLabels.destination}
+                  label={fieldLabels.inspplace}
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('destination', {
+                  {getFieldDecorator('inspplace', {
                     rules: [{ required: true, message: '请选择检验地点' }],
                   })(
                     <Cascader options={areaOptions} placeholder="请选择检验地点"/>
@@ -643,12 +704,9 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={3}>
                 <Form.Item
-                  label={fieldLabels.area}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('harbour', {
+                  {getFieldDecorator('inspplace2', {
                     rules: [{ required: true, message: '请输入港' }],
                   })(
                     <Input placeholder="请输入" />
@@ -662,7 +720,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 20 }}
                   colon={false}
                 >
-                  {getFieldDecorator('harbour')(
+                  {getFieldDecorator('inspplace3')(
                     <Input placeholder="请输入补充" />
                   )}
                 </Form.Item>
@@ -717,4 +775,4 @@ class ApplicationForEntrustment extends PureComponent {
   }
 }
 
-export default ApplicationForEntrustment;
+export default ModifyForEntrustment;

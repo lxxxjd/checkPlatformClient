@@ -8,6 +8,7 @@ export default {
   'menu.Entrustment.SearchForEntrustment':'查看委托',
   'menu.Entrustment.DetailForEntrustment':'委托详情',
   'menu.Entrustment.CancelForEntrustment':'撤销委托',
+  'menu.Entrustment.ModifyForEntrustment':'撤销委托',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
