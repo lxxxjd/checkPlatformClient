@@ -111,7 +111,10 @@ class ApplicationForEntrustment extends PureComponent {
     date:'',
     value:1,
     allReporterName:[],
-    selectReporterName:[]
+    selectReporterName:[],
+    businessSort:[],
+    businessSource:[],
+    tradeway: [],
   };
 
 
@@ -131,9 +134,31 @@ class ApplicationForEntrustment extends PureComponent {
       callback: (response) => {
         this.setState({allReporterName:response})
       }
-    })
+    });
+    dispatch({
+      type: 'entrustment/getBusinessSort',
+      payload: {},
+      callback: (response) => {
+        this.setState({businessSort:response})
+      }
+    });
+    dispatch({
+      type: 'entrustment/getBusinessSource',
+      payload: {},
+      callback: (response) => {
+        this.setState({businessSource:response})
+      }
+    });
+    dispatch({
+      type: 'entrustment/getTradeWay',
+      payload: {},
+      callback: (response) => {
+        this.setState({tradeway:response})
+      }
+    });
   }
   componentWillMount () {
+
   }
 
   resizeFooterToolbar = () => {
@@ -219,6 +244,32 @@ class ApplicationForEntrustment extends PureComponent {
       form.setFieldsValue({['payer']:form.getFieldValue('agent')});
     }
   };
+
+  filter = (input , option) =>    0>1
+    // var str = option.props.value;
+    // var inputLength = input.length;
+    // var strLength = str.length;
+    // if(input.length == 0){
+    //   return true;
+    // }
+    // for(var i = 0;i<strLength;i++){
+    //   if(str.charAt(i)===input.charAt(0)){
+    //     var j = 1;
+    //     for(var k = i + 1; j<input.length  ; j++,k++){
+    //       if(k === strLength || str.charAt(k) != input.charAt(j)){
+    //         break;
+    //       }
+    //     }
+    //     if(j === inputLength){
+    //       console.log(input);
+    //       console.log(option);
+    //       return true;
+    //     }
+    //   }
+    // }
+    //return false;
+
+
   handleSearch = input => {
     if(input.length == 0){
       return;
@@ -245,13 +296,19 @@ class ApplicationForEntrustment extends PureComponent {
     this.setState({selectReporterName:reportName})
     console.log(this.state.selectReporterName);
   };
+
   render() {
     const {
       form: { getFieldDecorator },
       submitting,
     } = this.props;
-    const { width } = this.state;
-    const reportNameOptions = this.state.allReporterName.map(d => <Option value={d} >{d}</Option>);
+    const { width,allReporterName,businessSort,businessSource,tradeway } = this.state;
+
+    const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const businessSortOptions = businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const businessSourceOptions = businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const tradewayOptions = tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
+
     //申请人选项
     return (
       <PageHeaderWrapper
@@ -271,7 +328,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('applicant', {
                     rules: [{ required: true, message: '请输入申请人' }],
                   })(
-                    <Select 
+                    <Select
                       //showSearch
                       placeholder="请选择"
                       filterOption={false}
@@ -317,8 +374,7 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请选择贸易方式' }],
                   })(
                     <Select placeholder="请选择贸易方式">
-                      <Option value="private">私密</Option>
-                      <Option value="public">公开</Option>
+                      {tradewayOptions}
                     </Select>
                   )}
                 </Form.Item>
@@ -337,7 +393,7 @@ class ApplicationForEntrustment extends PureComponent {
                   })(
                     <Select placeholder="请选择">
                       {reportNameOptions}
-                    </Select>                  
+                    </Select>
                     )}
                 </Form.Item>
               </Col>
@@ -376,7 +432,7 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '业务来源' }],
                   })(
                     <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
+                      {businessSourceOptions}
                     </Select>
                     )}
                 </Form.Item>
@@ -394,15 +450,15 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请输入付款人' }],
                   })(
                     <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
+                      {reportNameOptions}
                     </Select>
                     )}
                 </Form.Item>
               </Col>
               <Col span={9}  >
-                <Radio.Group onChange={this.onChange} value={this.state.value}>
-                  <Radio value={1}>申请人为付款人</Radio>
-                  <Radio value={2}>代理人为付款人</Radio>
+                <Radio.Group onChange={this.onChange} >
+                  <Radio value={2}>申请人为付款人</Radio>
+                  <Radio value={1}>代理人为付款人</Radio>
                 </Radio.Group>
               </Col>
               <Col span={5}  >
@@ -438,22 +494,6 @@ class ApplicationForEntrustment extends PureComponent {
                 )}
               </Form.Item>
             </Col>
-              <Col span={14}  >
-                <Form.Item
-                  label={fieldLabels.serversClass}
-                  labelCol={{ span: 3 }}
-                  wrapperCol={{ span: 21 }}
-                  colon={false}
-                >
-                  {getFieldDecorator('serversClass', {
-                    rules: [{ required: true, message: '请选择业务分类' }],
-                  })(
-                    <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
               <Col span={5}>
                 <Form.Item
                   label={fieldLabels.certstyle}
@@ -466,6 +506,23 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Cascader options={options} placeholder="请选择证书要求" />)}
                 </Form.Item>
               </Col>
+              <Col span={14}  >
+                <Form.Item
+                  label={fieldLabels.serversClass}
+                  labelCol={{ span: 3 }}
+                  wrapperCol={{ span: 21 }}
+                  colon={false}
+                >
+                  {getFieldDecorator('serversClass', {
+                    rules: [{ required: true, message: '请选择业务分类' }],
+                  })(
+                    <Select placeholder="请选择">
+                      {businessSortOptions}
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+
             </Row>
           </Form>
         </Card>

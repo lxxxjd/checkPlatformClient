@@ -45,6 +45,18 @@ export async function getAllClientName() {
   return request('/api/client/getAllClientName');
 }
 
+export async function getAllBusinessSort() {
+  return request('/api/business_sort/get_sort');
+}
+
+export async function getAllBusinessSource() {
+  return request('/api/business_source/get_source');
+}
+
+export async function getTradeWay() {
+  return request('/api/trade_away/get_ways');
+}
+
 export async function cancelReportItem(params) {
   return request(`/api/report/delete_report`,{
     method: 'POST',
@@ -53,3 +65,4 @@ export async function cancelReportItem(params) {
     },
   });
 }
+
