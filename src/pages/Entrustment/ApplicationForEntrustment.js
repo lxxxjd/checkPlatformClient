@@ -275,19 +275,20 @@ class ApplicationForEntrustment extends PureComponent {
   };
 
 
-  handleChangeCargo =e=>{
-    const { form  } = this.props;
-    const {state} = this;
-    for( const cargo in state.cargos){
-      if(state.cargos[cargo].keyno === e){
-        form.setFieldsValue({'HScode':state.cargos[cargo].hscode});
-        form.setFieldsValue({'HSname':state.cargos[cargo].hsname});
+  handleChangeCargo =e=> {
+    const { form } = this.props;
+    const { state } = this;
+    for (const cargo in state.cargos) {
+      if (state.cargos[cargo].keyno === e) {
+        form.setFieldsValue({ 'HScode': state.cargos[cargo].hscode });
+        form.setFieldsValue({ 'HSname': state.cargos[cargo].hsname });
         break;
       }
     }
+  }
 
 
-  render() {
+  render(){
     const {
       form: { getFieldDecorator },
       submitting,
@@ -591,7 +592,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('HScode', {
                     rules: [{ required: true, message: '请输入HS编码' }],
-                  })(<Input placeholder="请输入HS编码" />)}
+                  })(<Input placeholder="HS编码" />)}
                 </Form.Item>
               </Col>
               <Col span={14} >
@@ -603,7 +604,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('HSname', {
                     rules: [{ required: true, message: '请输入HS名称' }],
-                  })(<Input placeholder="请输入HS名称" />)}
+                  })(<Input placeholder="HS名称" />)}
                 </Form.Item>
               </Col>
             </Row>
