@@ -12,11 +12,11 @@ const { Title } = Typography;
 class DetailForEnturstment extends Component {
   state = { visible: false };
   componentWillMount() {
-    const { dispatch, match } = this.props;
-    console.log(this.props)
+    const { dispatch, location } = this.props;
+    console.log(location.state)
     dispatch({
       type: 'entrustment/getReport',
-      payload: '320118070301',
+      payload: location.state,
     });
   }
   handleOk = e => {

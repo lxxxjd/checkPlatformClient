@@ -16,6 +16,7 @@ import {
   Radio ,
   Typography ,
 } from 'antd';
+
 import { connect } from 'dva';
 import FooterToolbar from '@/components/FooterToolbar';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -111,7 +112,10 @@ class ApplicationForEntrustment extends PureComponent {
     value:1,
   };
 
+
+
   componentDidMount () {
+
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     const { form } = this.props;
     form.setFieldsValue({['unit']:"公吨"});
@@ -253,7 +257,7 @@ class ApplicationForEntrustment extends PureComponent {
         <Card title="申请信息" className={styles.card} bordered={false}>
         <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
-              <Col  span={10}  >
+              <Col span={10}>
                 <Form.Item
                   label={fieldLabels.applicant}
                   labelCol={{ span: 4 }}
@@ -366,7 +370,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('businessSourse', {
                     rules: [{ required: true, message: '业务来源' }],
-                  })(                    
+                  })(
                     <Select placeholder="请选择">
                       <Option value="xiao">付晓晓</Option>
                     </Select>
@@ -384,7 +388,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('payer', {
                     rules: [{ required: true, message: '请输入付款人' }],
-                  })(                    
+                  })(
                     <Select placeholder="请选择">
                       <Option value="xiao">付晓晓</Option>
                     </Select>
@@ -646,7 +650,7 @@ class ApplicationForEntrustment extends PureComponent {
                     <Input placeholder="请输入" />
                   )}
                 </Form.Item>
-              </Col>                
+              </Col>
               <Col span={7}>
                 <Form.Item
                   label={fieldLabels.harbour}

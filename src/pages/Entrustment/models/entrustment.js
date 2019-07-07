@@ -40,7 +40,8 @@ export default {
       yield put({
         type: 'get',
         payload: response,
-      });   
+      });
+      if (call) call();
     },
     *getClientName({ payload }, { call, put }) {
       const response = yield call(getAllClientName, payload);

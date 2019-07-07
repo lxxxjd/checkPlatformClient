@@ -73,7 +73,8 @@ export default [
           {
             path: "/Entrustment/DetailForEntrustment",
             name: "DetailForEntrustment",
-            component: "./Entrustment/DetailForEntrustment"
+            component: "./Entrustment/DetailForEntrustment",
+            hideInMenu: 'true', //添加页不需要在menu上显示
           },
         ],
       },
