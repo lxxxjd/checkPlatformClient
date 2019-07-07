@@ -110,7 +110,6 @@ class ApplicationForEntrustment extends PureComponent {
     width: '100%',
     date:'',
     value:1,
-    reprotName:[],
   };
 
 
@@ -123,23 +122,16 @@ class ApplicationForEntrustment extends PureComponent {
     const now=moment().format("YYYY-MM-DD HH:mm:ss");
     form.setFieldsValue({['inspdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
     form.setFieldsValue({['reportdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
-    const {dispatch} = this.props;
-    const { entrustment } = this.props;
-    dispatch({
-      type: 'entrustment/getClientName',
-      payload: {},
-      call: (res) => {
-          console.log(res);
-      }
-    })
-    this.setState({reprotName:entrustment.clientName});
-
   }
 
   componentWillMount () {
     window.removeEventListener('resize', this.resizeFooterToolbar);
     const {dispatch} = this.props;
     const { entrustment } = this.props;
+    dispatch({
+      type: 'entrustment/getClientName',
+      payload: {},
+    })
   }
 
   resizeFooterToolbar = () => {
@@ -225,14 +217,39 @@ class ApplicationForEntrustment extends PureComponent {
       form.setFieldsValue({['payer']:form.getFieldValue('agent')});
     }
   };
+  filter = (input , option) =>    0>1
+    // var str = option.props.value;
+    // var inputLength = input.length;
+    // var strLength = str.length;
+    // if(input.length == 0){
+    //   return true;
+    // }
+    // for(var i = 0;i<strLength;i++){
+    //   if(str.charAt(i)===input.charAt(0)){
+    //     var j = 1;
+    //     for(var k = i + 1; j<input.length  ; j++,k++){
+    //       if(k === strLength || str.charAt(k) != input.charAt(j)){
+    //         break;
+    //       }
+    //     }
+    //     if(j === inputLength){
+    //       console.log(input);
+    //       console.log(option);
+    //       return true;
+    //     }
+    //   }
+    // }
+    //return false;
+  
   render() {
     const {
       form: { getFieldDecorator },
       submitting,
+      entrustment,
     } = this.props;
     const { width } = this.state;
+    const reportNameOptions = entrustment.clientName.map(d => <Option key={d}  value={d}>{d}</Option>);
     //申请人选项
-    const reportNameOptions = this.state.reprotName.map(d => <Option key={d}>{d}</Option>);
     return (
       <PageHeaderWrapper
         title="新建委托"
@@ -246,11 +263,16 @@ class ApplicationForEntrustment extends PureComponent {
                   labelCol={{ span: 4 }}
                   wrapperCol={{ span: 20 }}
                   colon={false}
+
                 >
                   {getFieldDecorator('applicant', {
                     rules: [{ required: true, message: '请输入申请人' }],
                   })(
-                    <Select placeholder="请选择">
+                    <Select 
+                      showSearch
+                      placeholder="请选择"
+                      filterOption={(input, option) => 0>1}
+                    >
                       {reportNameOptions}
                     </Select>
                   )}
@@ -311,7 +333,7 @@ class ApplicationForEntrustment extends PureComponent {
                   })(
                     <Select placeholder="请选择">
                       {reportNameOptions}
-                    </Select>
+                    </Select>                  
                     )}
                 </Form.Item>
               </Col>
