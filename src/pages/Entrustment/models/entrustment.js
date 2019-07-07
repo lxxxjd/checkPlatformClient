@@ -1,4 +1,5 @@
-import { submitApplication ,queryAllReports,queryAllReportsByFilter,queryReport,cancelReportItem,getAllClientName} from '@/services/Entrustment';
+import { submitApplication ,queryAllReports,queryAllReportsByFilter,
+  queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,getAllBusinessSource,getTradeWay} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -9,6 +10,9 @@ export default {
     },
     report:{},
     clientName:[],
+    businessSort:[],
+    businessSource:[],
+    tradeway: [],
   },
 
   effects: {
@@ -50,6 +54,27 @@ export default {
         payload:response,
       });
     },
+    *getBusinessSort({ payload }, { call, put }) {
+      const response = yield call(getAllBusinessSort, payload);
+      yield put({
+        type: 'getBusinessName',
+        payload:response,
+      });
+    },
+    *getBusinessSource({ payload }, { call, put }) {
+      const response = yield call(getAllBusinessSource, payload);
+      yield put({
+        type: 'getBusinessSourceName',
+        payload:response,
+      });
+    },
+    *getTradeWay({ payload }, { call, put }) {
+      const response = yield call(getTradeWay, payload);
+      yield put({
+        type: 'getTradeWayName',
+        payload:response,
+      });
+    },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(cancelReportItem, payload);
       yield put({
@@ -77,6 +102,24 @@ export default {
       return {
         ...state,
         clientName: payload.data,
+      };
+    },
+    getBusinessName(state, { payload }) {
+      return {
+        ...state,
+        businessSort: payload.data,
+      };
+    },
+    getBusinessSourceName(state, { payload }) {
+      return {
+        ...state,
+        businessSource: payload.data,
+      };
+    },
+    getTradeWayName(state, { payload }) {
+      return {
+        ...state,
+        tradeway: payload.data,
       };
     },
     save(state, action) {
