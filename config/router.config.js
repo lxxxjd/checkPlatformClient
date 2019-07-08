@@ -24,32 +24,32 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
 
-      // list
-      {
-        path: '/list',
-        icon: 'table',
-        name: 'list',
-        routes: [
-          {
-            path: '/list/table-list',
-            name: 'searchtable',
-            component: './List/TableList',
-          }
-        ],
-      },
-      //newPage
-      {
-        path: "/Certificate",
-        icon: "file",
-        name: "Certificate",
-        routes: [
-          {
-            path: "/Certificate/Certificate",
-            name: "Certificate",
-            component: "./Certificate/Certificate"
-          }
-        ],
-      },
+      // // list
+      // {
+      //   path: '/list',
+      //   icon: 'table',
+      //   name: 'list',
+      //   routes: [
+      //     {
+      //       path: '/list/table-list',
+      //       name: 'searchtable',
+      //       component: './List/TableList',
+      //     }
+      //   ],
+      // },
+      // //newPage
+      // {
+      //   path: "/Certificate",
+      //   icon: "file",
+      //   name: "Certificate",
+      //   routes: [
+      //     {
+      //       path: "/Certificate/Certificate",
+      //       name: "Certificate",
+      //       component: "./Certificate/Certificate"
+      //     }
+      //   ],
+      // },
       {
         path: "/Entrustment",
         icon: "file",
@@ -88,6 +88,21 @@ export default [
             component: "./Entrustment/copyForEntrustment",
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+        ],
+      },
+
+
+      // list
+      {
+        path: '/list',
+        icon: 'table',
+        name: 'list',
+        routes: [
+          {
+            path: '/list/table-list',
+            name: 'searchtable',
+            component: './List/TableList',
+          }
         ],
       },
 
