@@ -105,7 +105,7 @@ const fieldLabels = {
   loading: loading.models.entrustment,
 }))
 @Form.create()
-class ModifyForEntrustment extends PureComponent {
+class copyForEntrustment extends PureComponent {
   state = {
     width: '100%',
     value:1,
@@ -283,7 +283,7 @@ class ModifyForEntrustment extends PureComponent {
       if (!error) {
         // submit the values
         dispatch({
-          type: 'entrustment/updateReport',
+          type: 'entrustment/addReport',
           payload: values,
         });
       }
@@ -791,4 +791,4 @@ class ModifyForEntrustment extends PureComponent {
   }
 }
 
-export default ModifyForEntrustment;
+export default copyForEntrustment;

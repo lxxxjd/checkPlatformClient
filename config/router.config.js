@@ -80,7 +80,13 @@ export default [
             path: "/Entrustment/ModifyForEntrustment",
             name: "ModifyForEntrustment",
             component: "./Entrustment/ModifyForEntrustment",
-            //添加页不需要在menu上显示
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: "/Entrustment/copyForEntrustment",
+            name: "copyForEntrustment",
+            component: "./Entrustment/copyForEntrustment",
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
       },

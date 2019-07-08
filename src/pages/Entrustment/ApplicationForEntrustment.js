@@ -286,7 +286,74 @@ class ApplicationForEntrustment extends PureComponent {
       }
     }
   }
+  onCopy = () =>{
+    const {dispatch,location} =this.props;
+    dispatch({
+      type: 'entrustment/getReport',
+      payload: location.state,
+      callback: (response) => {
+        this.setState({reportno:response.reportno})
+        //form.setFieldsValue({['reportno']:response.reportno});
+        //form.setFieldsValue({['randomcode']:response.randomcode});
+        //form.setFieldsValue({['section']:response.section});
+        form.setFieldsValue({
+          'reportdate':moment(response.reportdate,"YYYY-MM-DD"),
+          'tradeway':response.tradeway,
+          'payer':response.payer,
+          'shipname':response.shipname,
+          'cargoname':response.cargoname,
+          'quantityd':response.quantityd,
+          'agent':response.agent,
+          'applicant':response.applicant,
+          'inspwaymemo1':response.inspwaymemo1,
+          'inspplace1':response.inspplace1,
+          'inspplace2':response.inspplace2,
+          'inspplace3':response.inspplace3,
+          'inspdate':moment(response.inspdate,"YYYY-MM-DD"),
+          'insplinkway':response.insplinkway,
+          'price':response.price,
+          'quantitydunit':response.quantitydunit,
+          'businesssort':response.businesssort,
+          'applicantName':response.applicantName,
+          'applicantTel':response.applicantTel,
+          'agentName':response.agentName,
+          'agentTel':response.agentTel
+        });
+        //form.setFieldsValue({['reportman']:response.reportman});
+        //form.setFieldsValue({['businessman']:response.businessman});
+        //form.setFieldsValue({['reportplace']:response.reportplace});
+        //form.setFieldsValue({['tradeway']:response.tradeway});
+        //form.setFieldsValue({['linkername']:response.linkername});
+        //form.setFieldsValue({['linkertel']:response.linkertel});
+        //form.setFieldsValue({['cargosort']:response.cargosort});
+        //form.setFieldsValue({['cargodescribed']:response.cargodescribed});
+        form.setFieldsValue({['inspway']:response.inspway.split(" ")});
+        //form.setFieldsValue({['other']:response.other});
 
+        //form.setFieldsValue({['inspwaymemo2']:response.inspwaymemo2});
+
+        //form.setFieldsValue({['priceway']:response.priceway});
+        //form.setFieldsValue({['certneeded']:response.certneeded});
+        //form.setFieldsValue({['certrequired']:response.certrequired});
+        if(response.certstyle!=null) {
+          const result = ['need'];
+          result.push(response.certstyle);
+          form.setFieldsValue({'certstyle':result});
+        }else{
+          form.setFieldsValue({'certstyle':['noNeed']});
+        }
+        //form.setFieldsValue({['process']:response.process});
+        //form.setFieldsValue({['contractno']:response.contractno});
+        //form.setFieldsValue({['blno']:response.blno});
+        //form.setFieldsValue({['fromto']:response.fromto});
+        //form.setFieldsValue({['certsignman']:response.certsignman});
+        //form.setFieldsValue({['certsigndate']:response.certsigndate});
+
+        //form.setFieldsValue({['state']:response.state});
+
+      }
+    });
+  }
 
   render(){
     const {
@@ -686,12 +753,12 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={8}>
                 <Form.Item
-                  label={fieldLabels.destination}
+                  label={fieldLabels.inspplace1}
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('destination', {
+                  {getFieldDecorator('inspplace1', {
                     rules: [{ required: true, message: '请选择检验地点' }],
                   })(
                     <Cascader options={areaOptions} placeholder="请选择检验地点"/>
