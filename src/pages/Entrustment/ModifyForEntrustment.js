@@ -15,6 +15,7 @@ import {
   Popover,
   Radio ,
   Typography ,
+  Divider
 } from 'antd';
 
 import { connect } from 'dva';
@@ -52,12 +53,12 @@ const options = [
   },
 ];
 const inspwayOptions= [
-  '水尺计重',
-  '船舱计重',
-  '流量计重',
-  '衡器计重',
-  '干仓计重',
-  '验舱计重',
+  '水尺',
+  '船舱',
+  '流量',
+  '衡器',
+  '干舱',
+  '验舱',
   '取样',
   '制样',
   '送样',
@@ -119,7 +120,6 @@ class ModifyForEntrustment extends PureComponent {
 
 
   componentDidMount () {
-    window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     const { form ,dispatch,location} = this.props;
     dispatch({
       type: 'entrustment/getClientName',
@@ -152,12 +152,12 @@ class ModifyForEntrustment extends PureComponent {
           'inspdate':moment(response.inspdate,"YYYY-MM-DD"),
           'insplinkway':response.insplinkway,
           'price':response.price,
-          'quantitydunit':response.quantitydunit,
+          'unit':response.unit,
           'businesssort':response.businesssort,
-          'applicantName':response.applicantName,
-          'applicantTel':response.applicantTel,
-          'agentName':response.agentName,
-          'agentTel':response.agentTel
+          'applicantname':response.applicantname,
+          'applicanttel':response.applicanttel,
+          'agentname':response.agentname,
+          'agenttel':response.agenttel,
         });
         //form.setFieldsValue({['reportman']:response.reportman});
         //form.setFieldsValue({['businessman']:response.businessman});
@@ -215,21 +215,7 @@ class ModifyForEntrustment extends PureComponent {
       }
     });
   }
-  componentWillMount () {
-  }
 
-  resizeFooterToolbar = () => {
-    requestAnimationFrame(() => {
-      const sider = document.querySelectorAll('.ant-layout-sider')[0];
-      if (sider) {
-        const width = `calc(100% - ${sider.style.width})`;
-        const { width: stateWidth } = this.state;
-        if (stateWidth !== width) {
-          this.setState({ width });
-        }
-      }
-    });
-  };
 
   getErrorInfo = () => {
     const {
@@ -328,10 +314,25 @@ class ModifyForEntrustment extends PureComponent {
     //申请人选项
     return (
       <PageHeaderWrapper
-        title={"委托号:"+entrustment.report.reportno}
       >
-        <Card title="申请信息" className={styles.card} bordered={false}>
-        <Form hideRequiredMark labelAlign="left">
+        <Card bordered={false}>
+          <Row gutter={16}>
+            <Col span={3}>
+              <Title level={3} >委托修改</Title>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={this.onCopy}>粘贴</Button>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={this.validate}>提交</Button>
+            </Col>
+            <Col span={17}>
+              <Title level={4} > 委托号:{entrustment.report.reportno}</Title>
+            </Col>
+          </Row>
+        </Card>
+        <Card title="申请信息"className={styles.card} bordered={false}>
+          <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
               <Col span={10}>
                 <Form.Item
@@ -362,7 +363,7 @@ class ModifyForEntrustment extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('applicantName', {
+                  {getFieldDecorator('applicantname', {
                     rules: [{ required: true, message: '联系人' }],
                   })(<Input style={{ width: '100%' }} placeholder="联系人" />)}
                 </Form.Item>
@@ -374,7 +375,7 @@ class ModifyForEntrustment extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('applicantTel', {
+                  {getFieldDecorator('applicanttel', {
                     rules: [{ required: true, message: '请输入联系方式' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
@@ -425,7 +426,7 @@ class ModifyForEntrustment extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('agentName', {
+                  {getFieldDecorator('agentname', {
                     rules: [{ required: true, message: '请输入联系人' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系人" />)}
                 </Form.Item>
@@ -437,7 +438,7 @@ class ModifyForEntrustment extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('agentTel', {
+                  {getFieldDecorator('agenttel', {
                     rules: [{ required: true, message: '请输入联系方式' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
@@ -645,7 +646,7 @@ class ModifyForEntrustment extends PureComponent {
                 <Form.Item
                   colon={false}
                 >
-                  {getFieldDecorator('quantitydunit', {
+                  {getFieldDecorator('unit', {
                     rules: [{ required: true, message: '请选择单位' }],
                   })(
                     <Select  placeholder="请选择">
@@ -780,12 +781,6 @@ class ModifyForEntrustment extends PureComponent {
             </Row>
           </Form>
         </Card>
-        <FooterToolbar style={{ width }}>
-          {this.getErrorInfo()}
-          <Button type="primary" onClick={this.validate} loading={submitting}>
-            提交
-          </Button>
-        </FooterToolbar>
       </PageHeaderWrapper>
     );
   }
