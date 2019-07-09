@@ -23,6 +23,8 @@ export default [
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
     routes: [
+      // Entrustment
+      { path: '/', redirect: '/Entrustment/ApplicationForEntrustment'},
 
       // // list
       // {
@@ -92,17 +94,36 @@ export default [
       },
 
 
-      // list
+      // // list
+      // {
+      //   path: '/list',
+      //   icon: 'table',
+      //   name: 'list',
+      //   routes: [
+      //     {
+      //       path: '/list/table-list',
+      //       name: 'searchtable',
+      //       component: './List/TableList',
+      //     }
+      //   ],
+      // },
+
+      // TaskAppoint
       {
-        path: '/list',
+        path: '/TaskAppoint',
         icon: 'table',
-        name: 'list',
+        name: 'TaskAppoint',
         routes: [
           {
-            path: '/list/table-list',
-            name: 'searchtable',
-            component: './List/TableList',
-          }
+            path: '/TaskAppoint/CustomerService',
+            name: 'CustomerService',
+            component: './TaskAppoint/CustomerService',
+          },
+          {
+            path: '/TaskAppoint/Inspector',
+            name: 'Inspector',
+            component: './TaskAppoint/Inspector',
+          },
         ],
       },
 

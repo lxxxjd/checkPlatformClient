@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SearchForEntrustment.less';
+import styles from './Inspector.less';
 
 
 
@@ -217,7 +217,7 @@ class Inspector extends PureComponent {
 
   render() {
     const {
-      entrustment: {data},
+      //entrustment: {data},
       loading,
     } = this.props;
     const { selectedRows, } = this.state;
@@ -229,7 +229,7 @@ class Inspector extends PureComponent {
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              //data={data}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
