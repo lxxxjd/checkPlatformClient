@@ -83,10 +83,6 @@ export default {
       target: 'http://localhost:8080/',
       changeOrigin: true,
     },
-    '/login': {
-      target: 'http://localhost:8080/',
-      changeOrigin: true,
-    },
   },
   ignoreMomentLocale: true,
   lessLoaderOptions: {

@@ -6,14 +6,15 @@ import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 
 export default {
-  namespace: 'login2',
+  namespace: 'login',
 
   state: {
     status: undefined,
+    user:{},
   },
 
   effects: {
-    *login({ payload }, { call, put }) {
+    *login({ payload , callback}, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
       yield put({
         type: 'changeLoginStatus',
@@ -37,7 +38,9 @@ export default {
           }
         }
         yield put(routerRedux.replace(redirect || '/'));
+        localStorage.setItem("user",response.user);
       }
+
     },
 
     *getCaptcha({ payload }, { call }) {
