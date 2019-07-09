@@ -10,7 +10,7 @@ export default {
   'menu.Entrustment.CancelForEntrustment':'撤销委托',
   'menu.Entrustment.ModifyForEntrustment':'修改委托',
   'menu.Entrustment.copyForEntrustment':'复制委托',
-  'menu.TaskAppoint': '业务转移',
+  'menu.TaskAppoint': '任务指派',
   'menu.TaskAppoint.CustomerService':'客服人员',
   'menu.TaskAppoint.Inspector':'检验人员',
   'menu.dashboard': 'Dashboard',
