@@ -119,7 +119,6 @@ class copyForEntrustment extends PureComponent {
 
 
   componentDidMount () {
-    window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     const { form ,dispatch,entrustment} = this.props;
     dispatch({
       type: 'entrustment/getClientName',
@@ -219,18 +218,6 @@ class copyForEntrustment extends PureComponent {
   componentWillMount () {
   }
 
-  resizeFooterToolbar = () => {
-    requestAnimationFrame(() => {
-      const sider = document.querySelectorAll('.ant-layout-sider')[0];
-      if (sider) {
-        const width = `calc(100% - ${sider.style.width})`;
-        const { width: stateWidth } = this.state;
-        if (stateWidth !== width) {
-          this.setState({ width });
-        }
-      }
-    });
-  };
 
   getErrorInfo = () => {
     const {
@@ -331,6 +318,15 @@ class copyForEntrustment extends PureComponent {
       <PageHeaderWrapper
         title={"委托号:"+entrustment.report.reportno}
       >
+        <Card bordered={false}>
+          <Row gutter={16}>
+            <Col span={2}>
+              <Button type="primary" onClick={this.validate}>提交</Button>
+            </Col>
+            <Col span={22}>
+            </Col>
+          </Row>
+        </Card>
         <Card title="申请信息" className={styles.card} bordered={false}>
         <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
@@ -781,12 +777,6 @@ class copyForEntrustment extends PureComponent {
             </Row>
           </Form>
         </Card>
-        <FooterToolbar style={{ width }}>
-          {this.getErrorInfo()}
-          <Button type="primary" onClick={this.validate} loading={submitting}>
-            提交
-          </Button>
-        </FooterToolbar>
       </PageHeaderWrapper>
     );
   }

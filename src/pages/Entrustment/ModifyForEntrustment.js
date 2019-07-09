@@ -317,16 +317,12 @@ class ModifyForEntrustment extends PureComponent {
       >
         <Card bordered={false}>
           <Row gutter={16}>
-            <Col span={3}>
-              <Title level={3} >委托修改</Title>
-            </Col>
-            <Col span={2}>
-              <Button type="primary" onClick={this.onCopy}>粘贴</Button>
-            </Col>
             <Col span={2}>
               <Button type="primary" onClick={this.validate}>提交</Button>
             </Col>
             <Col span={17}>
+            </Col>
+            <Col span={5}>
               <Title level={4} > 委托号:{entrustment.report.reportno}</Title>
             </Col>
           </Row>

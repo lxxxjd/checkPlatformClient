@@ -377,20 +377,17 @@ class ApplicationForEntrustment extends PureComponent {
       >
         <Card  bordered={false}>
           <Row gutter={16}>
-            <Col span={3}>
-              <Title level={3} >新建委托</Title>
-            </Col>
             <Col span={2}>
               <Button type="primary" onClick={this.onCopy}>粘贴</Button>
             </Col>
             <Col span={2}>
               <Button type="primary" onClick={this.validate}>提交</Button>
             </Col>
-            <Col span={17}>
+            <Col span={20}>
             </Col>
           </Row>
         </Card>
-        <Card className={styles.card} bordered={false}>
+        <Card title="申请信息" className={styles.card} bordered={false}>
           <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
               <Col span={10}>
