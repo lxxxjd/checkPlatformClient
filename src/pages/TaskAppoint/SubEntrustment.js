@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './Inspector.less';
+import styles from './subEntrustment.less';
 
 
 
@@ -33,7 +33,7 @@ const getValue = obj =>
 }))
 
 @Form.create()
-class Inspector extends PureComponent {
+class SubEntrustment extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
@@ -52,10 +52,6 @@ class Inspector extends PureComponent {
       // }</span>
     },
     {
-      title: '委托人',
-      dataIndex: 'applicant',
-    },
-    {
       title: '运输工具',
       dataIndex: 'shipname',
     },
@@ -64,18 +60,18 @@ class Inspector extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '客服人员',
-      dataIndex: 'inspman',
+      title: '被委托公司',
+      dataIndex: 'testman',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
+          <a onClick={() => this.previewItem(text, record)}>转委托</a>
           &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>复制</a>
+          <a onClick={() => this.copyItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -245,4 +241,4 @@ class Inspector extends PureComponent {
   }
 }
 
-export default Inspector;
+export default SubEntrustment;
