@@ -120,7 +120,7 @@ class copyForEntrustment extends PureComponent {
 
   componentDidMount () {
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
-    const { form ,dispatch,location} = this.props;
+    const { form ,dispatch,entrustment} = this.props;
     dispatch({
       type: 'entrustment/getClientName',
       payload: {},
@@ -128,9 +128,10 @@ class copyForEntrustment extends PureComponent {
         this.setState({allReporterName:response})
       }
     })
+    var reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'entrustment/getReport',
-      payload: location.state,
+      payload: reportno,
       callback: (response) => {
         this.setState({reportno:response.reportno})
         //form.setFieldsValue({['reportno']:response.reportno});

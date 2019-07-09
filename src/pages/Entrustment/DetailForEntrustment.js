@@ -52,10 +52,10 @@ class DetailForEnturstment extends Component {
             <Col span={3}>
               <Title level={3} >委托申请</Title>
             </Col>
-            <Col span={19}>
-            </Col>
             <Col span={2}>
               <Button type="primary" onClick={this.deleteReport}>撤销申请</Button>
+            </Col>            
+            <Col span={19}>
             </Col>
           </Row>
           <Modal

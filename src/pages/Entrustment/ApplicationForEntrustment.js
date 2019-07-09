@@ -15,6 +15,8 @@ import {
   Popover,
   Radio ,
   Typography ,
+  Divider,
+  notification 
 } from 'antd';
 
 import { connect } from 'dva';
@@ -123,7 +125,6 @@ class ApplicationForEntrustment extends PureComponent {
 
 
   componentDidMount () {
-    window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     const { form } = this.props;
     form.setFieldsValue({['quantitydunit']:"公吨"});
     const now=moment().format("YYYY-MM-DD HH:mm:ss");
@@ -177,18 +178,6 @@ class ApplicationForEntrustment extends PureComponent {
 
   }
 
-  resizeFooterToolbar = () => {
-    requestAnimationFrame(() => {
-      const sider = document.querySelectorAll('.ant-layout-sider')[0];
-      if (sider) {
-        const width = `calc(100% - ${sider.style.width})`;
-        const { width: stateWidth } = this.state;
-        if (stateWidth !== width) {
-          this.setState({ width });
-        }
-      }
-    });
-  };
 
   getErrorInfo = () => {
     const {
@@ -286,11 +275,25 @@ class ApplicationForEntrustment extends PureComponent {
       }
     }
   }
+
   onCopy = () =>{
-    const {dispatch,location} =this.props;
+    const {dispatch,form} = this.props;
+    var reportno = sessionStorage.getItem('reportno');
+    if(typeof(reportno) == "undefined"){
+      notification.open({
+        message: '提示框',
+        description:
+          '没有在查看委托页面复制，不能粘贴',
+        onClick: () => {
+          console.log('Notification Clicked!');
+        },
+      });
+      return;
+    }
+    console.log(reportno);
     dispatch({
       type: 'entrustment/getReport',
-      payload: location.state,
+      payload: reportno,
       callback: (response) => {
         this.setState({reportno:response.reportno})
         //form.setFieldsValue({['reportno']:response.reportno});
@@ -371,10 +374,24 @@ class ApplicationForEntrustment extends PureComponent {
     //申请人选项
     return (
       <PageHeaderWrapper
-        title="新建委托"
       >
-        <Card title="申请信息" className={styles.card} bordered={false}>
-        <Form hideRequiredMark labelAlign="left">
+        <Card  bordered={false}>
+          <Row gutter={16}>
+            <Col span={3}>
+              <Title level={3} >新建委托</Title>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={this.onCopy}>粘贴</Button>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={this.validate}>提交</Button>
+            </Col>
+            <Col span={17}>
+            </Col>
+          </Row>
+        </Card>
+        <Card className={styles.card} bordered={false}>
+          <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
               <Col span={10}>
                 <Form.Item
@@ -830,12 +847,6 @@ class ApplicationForEntrustment extends PureComponent {
             </Row>
           </Form>
         </Card>
-        <FooterToolbar style={{ width }}>
-          {this.getErrorInfo()}
-          <Button type="primary" onClick={this.validate} loading={submitting}>
-            提交
-          </Button>
-        </FooterToolbar>
       </PageHeaderWrapper>
     );
   }
