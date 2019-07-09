@@ -12,7 +12,7 @@ export async function queryUser1(params) {
 
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function queryUser2(params) {
-  return request(`/api//test/user?${params}`, {
+  return request(`/api/test/user?${params}`, {
     method: "POST"
   });
 }

@@ -24,7 +24,7 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // Entrustment
-      { path: '/', redirect: '/Entrustment/ApplicationForEntrustment'},
+      { path: '/', redirect: '/Entrustment/ApplicationForEntrustment',authority: ['admin', 'user']},
 
       // // list
       // {
@@ -56,6 +56,7 @@ export default [
         path: "/Entrustment",
         icon: "file",
         name: "Entrustment",
+        authority: ['admin', 'user'],
         routes: [
           {
             path: "/Entrustment/ApplicationForEntrustment",
