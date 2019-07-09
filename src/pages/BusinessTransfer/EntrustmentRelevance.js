@@ -16,9 +16,7 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SubEntrustment.less';
-
-
+import styles from './EntrustmentRelevance.less';
 
 
 const CheckboxGroup = Checkbox.Group;
@@ -36,7 +34,7 @@ const getValue = obj =>
 }))
 
 @Form.create()
-class SubEntrustment extends PureComponent {
+class EntrustmentRelevance extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
@@ -57,6 +55,10 @@ class SubEntrustment extends PureComponent {
       // }</span>
     },
     {
+      title: '委托人',
+      dataIndex: 'applicant',
+    },
+    {
       title: '运输工具',
       dataIndex: 'shipname',
     },
@@ -65,18 +67,18 @@ class SubEntrustment extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '被委托公司',
-      dataIndex: 'testman',
+      title: '关联委托号',
+      dataIndex: 'relevanceReportno',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>转委托</a>
+          <a onClick={() => this.previewItem(text, record)}>增加</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
+          <a onClick={() => this.modifyItem(text, record)}>删除</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>详情</a>
+          <a onClick={() => this.copyItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -298,4 +300,4 @@ class SubEntrustment extends PureComponent {
   }
 }
 
-export default SubEntrustment;
+export default EntrustmentRelevance;

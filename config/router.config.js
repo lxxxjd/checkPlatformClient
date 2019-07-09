@@ -127,7 +127,23 @@ export default [
           },
         ],
       },
-
+      {
+        path: '/BusinessTransfer',
+        icon: 'table',
+        name: 'BusinessTransfer',
+        routes: [
+          {
+            path: '/BusinessTransfer/SubEntrustment',
+            name: 'SubEntrustment',
+            component: './BusinessTransfer/SubEntrustment',
+          },
+          {
+            path: '/BusinessTransfer/EntrustmentRelevance',
+            name: 'EntrustmentRelevance',
+            component: './BusinessTransfer/EntrustmentRelevance',
+          },
+        ],
+      },
       {
         component: '404',
       },
