@@ -13,6 +13,7 @@ export default {
   'menu.TaskAppoint': '任务指派',
   'menu.TaskAppoint.CustomerService':'客服人员',
   'menu.TaskAppoint.Inspector':'检验人员',
+  'menu.TaskAppoint.SubEntrustment':'转委托',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',

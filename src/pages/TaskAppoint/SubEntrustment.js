@@ -10,10 +10,11 @@ import {
   Input,
   Button,
   Select,
+  Modal
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './subEntrustment.less';
+import styles from './SubEntrustment.less';
 
 
 
@@ -71,7 +72,7 @@ class SubEntrustment extends PureComponent {
           &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>委托详情</a>
+          <a onClick={() => this.copyItem(text, record)}>详情</a>
         </Fragment>
       ),
     },
@@ -223,6 +224,7 @@ class SubEntrustment extends PureComponent {
     const { selectedRows, } = this.state;
     return (
       <PageHeaderWrapper title="撤销查询">
+        <Modal></Modal>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>

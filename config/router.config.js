@@ -124,6 +124,11 @@ export default [
             name: 'Inspector',
             component: './TaskAppoint/Inspector',
           },
+          {
+            path: '/TaskAppoint/SubEntrustment',
+            name: 'SubEntrustment',
+            component: './TaskAppoint/SubEntrustment',
+          },
         ],
       },
 
