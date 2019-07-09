@@ -14,7 +14,7 @@ export default {
   },
 
   effects: {
-    *login({ payload , callback}, { call, put }) {
+    *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
       yield put({
         type: 'changeLoginStatus',
@@ -38,7 +38,8 @@ export default {
           }
         }
         yield put(routerRedux.replace(redirect || '/'));
-        localStorage.setItem("user",response.user);
+        localStorage.setItem("userinfo",JSON.stringify(response.user));
+        console.log(response.user);
       }
 
     },

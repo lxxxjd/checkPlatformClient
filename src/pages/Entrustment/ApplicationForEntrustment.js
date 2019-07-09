@@ -16,7 +16,7 @@ import {
   Radio ,
   Typography ,
   Divider,
-  notification 
+  notification
 } from 'antd';
 
 import { connect } from 'dva';

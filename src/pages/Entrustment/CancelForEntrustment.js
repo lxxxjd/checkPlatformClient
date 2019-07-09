@@ -94,6 +94,9 @@ class CancelForEntrustment extends PureComponent {
     dispatch({
       type: 'entrustment/fetch',
     });
+    const userinfo = localStorage.getItem("userinfo");
+    console.log(userinfo);
+
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
