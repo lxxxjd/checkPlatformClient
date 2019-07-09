@@ -23,33 +23,35 @@ export default [
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
     routes: [
+      // Entrustment
+      { path: '/', redirect: '/Entrustment/ApplicationForEntrustment'},
 
-      // list
-      {
-        path: '/list',
-        icon: 'table',
-        name: 'list',
-        routes: [
-          {
-            path: '/list/table-list',
-            name: 'searchtable',
-            component: './List/TableList',
-          }
-        ],
-      },
-      //newPage
-      {
-        path: "/Certificate",
-        icon: "file",
-        name: "Certificate",
-        routes: [
-          {
-            path: "/Certificate/Certificate",
-            name: "Certificate",
-            component: "./Certificate/Certificate"
-          }
-        ],
-      },
+      // // list
+      // {
+      //   path: '/list',
+      //   icon: 'table',
+      //   name: 'list',
+      //   routes: [
+      //     {
+      //       path: '/list/table-list',
+      //       name: 'searchtable',
+      //       component: './List/TableList',
+      //     }
+      //   ],
+      // },
+      // //newPage
+      // {
+      //   path: "/Certificate",
+      //   icon: "file",
+      //   name: "Certificate",
+      //   routes: [
+      //     {
+      //       path: "/Certificate/Certificate",
+      //       name: "Certificate",
+      //       component: "./Certificate/Certificate"
+      //     }
+      //   ],
+      // },
       {
         path: "/Entrustment",
         icon: "file",
@@ -87,6 +89,40 @@ export default [
             name: "copyForEntrustment",
             component: "./Entrustment/copyForEntrustment",
             hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+        ],
+      },
+
+
+      // // list
+      // {
+      //   path: '/list',
+      //   icon: 'table',
+      //   name: 'list',
+      //   routes: [
+      //     {
+      //       path: '/list/table-list',
+      //       name: 'searchtable',
+      //       component: './List/TableList',
+      //     }
+      //   ],
+      // },
+
+      // TaskAppoint
+      {
+        path: '/TaskAppoint',
+        icon: 'table',
+        name: 'TaskAppoint',
+        routes: [
+          {
+            path: '/TaskAppoint/CustomerService',
+            name: 'CustomerService',
+            component: './TaskAppoint/CustomerService',
+          },
+          {
+            path: '/TaskAppoint/Inspector',
+            name: 'Inspector',
+            component: './TaskAppoint/Inspector',
           },
         ],
       },
