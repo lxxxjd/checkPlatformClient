@@ -279,7 +279,7 @@ class ApplicationForEntrustment extends PureComponent {
   onCopy = () =>{
     const {dispatch,form} = this.props;
     var reportno = sessionStorage.getItem('reportno');
-    if(typeof(reportno) == "undefined"){
+    if(typeof(reportno) === "undefined"){
       notification.open({
         message: '提示框',
         description:
