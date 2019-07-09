@@ -125,14 +125,25 @@ export default [
             name: 'Inspector',
             component: './TaskAppoint/Inspector',
           },
+        ],
+      },
+      {
+        path: '/BusinessTransfer',
+        icon: 'table',
+        name: 'BusinessTransfer',
+        routes: [
           {
-            path: '/TaskAppoint/SubEntrustment',
+            path: '/BusinessTransfer/SubEntrustment',
             name: 'SubEntrustment',
-            component: './TaskAppoint/SubEntrustment',
+            component: './BusinessTransfer/SubEntrustment',
+          },
+          {
+            path: '/BusinessTransfer/EntrustmentRelevance',
+            name: 'EntrustmentRelevance',
+            component: './BusinessTransfer/EntrustmentRelevance',
           },
         ],
       },
-
       {
         component: '404',
       },
