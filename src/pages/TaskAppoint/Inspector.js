@@ -64,6 +64,10 @@ class Inspector extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '客服人员',
+      dataIndex: 'inspman',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
