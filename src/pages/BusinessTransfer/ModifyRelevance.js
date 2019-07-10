@@ -157,6 +157,7 @@ class ModifyRelevance extends PureComponent {
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               dataSource={data}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
         </Card>

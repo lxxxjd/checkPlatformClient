@@ -12,9 +12,9 @@ import {
   Select,
   Modal,
   Checkbox,
-  Radio
+  Radio,
+  Table
 } from 'antd';
-import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SubEntrustment.less';
 
@@ -283,13 +283,14 @@ class SubEntrustment extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
+            <Table
+              //selectedRows={selectedRows}
               loading={loading}
               //data={data}
               columns={this.columns}
-              onSelectRow={this.handleSelectRows}
+              //onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
         </Card>

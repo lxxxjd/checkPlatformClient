@@ -10,8 +10,8 @@ import {
   Input,
   Button,
   Select,
+  Table
 } from 'antd';
-import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SearchForEntrustment.less';
 
@@ -247,13 +247,14 @@ class SearchForEntrustment extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
+            <Table
+              //selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              dataSource={data.list}
               columns={this.columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              //onSelectRow={this.handleSelectRows}
+              //onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>
