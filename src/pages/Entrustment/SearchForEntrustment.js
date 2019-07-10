@@ -79,36 +79,48 @@ class SearchForEntrustment extends PureComponent {
 
 
   componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
-    dispatch({
-      type: 'entrustment/fetch',
-    });
-  }
-
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
+      certCode:user.certCode
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
     dispatch({
       type: 'entrustment/fetch',
       payload: params,
     });
+  }
+
+  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+    const { dispatch,form } = this.props;
+    const { formValues } = this.state;
+    form.validateFields((err, fieldsValue) => {
+
+      console.log(err);
+      const filters = Object.keys(filtersArg).reduce((obj, key) => {
+        const newObj = { ...obj };
+        newObj[key] = getValue(filtersArg[key]);
+        return newObj;
+      }, {});
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const params = {
+        currentPage: pagination.current,
+        pageSize: pagination.pageSize,
+        certCode:user.certCode,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
+        ...formValues,
+        ...filters,
+      };
+      if (sorter.field) {
+        params.sorter = `${sorter.field}_${sorter.order}`;
+      }
+
+      dispatch({
+        type: 'entrustment/fetch',
+        payload: params,
+      });
+    });
+
   };
 
   previewItem = text => {
@@ -131,6 +143,11 @@ class SearchForEntrustment extends PureComponent {
   };
 
   handleFormReset = () => {
+
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const params = {
+      certCode:user.certCode
+    };
     const { form } = this.props;
     form.resetFields();
     this.setState({
@@ -139,24 +156,28 @@ class SearchForEntrustment extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'entrustment/fetch',
+      payload: params,
     });
   };
 
 
 
   handleSearch = e => {
+
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
+        certCode:user.certCode,
       };
       dispatch({
-        type: 'entrustment/filter',
+        type: 'entrustment/fetch',
         payload: values,
       });
     });

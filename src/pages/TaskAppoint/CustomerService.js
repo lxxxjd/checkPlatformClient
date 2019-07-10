@@ -107,7 +107,7 @@ class CustomerService extends PureComponent {
         return newObj;
       }, {});
       const user = JSON.parse(localStorage.getItem("userinfo"));
-      console.log(formValues);
+      //console.log(formValues);
       const params = {
         currentPage: pagination.current,
         pageSize: pagination.pageSize,
@@ -137,6 +137,10 @@ class CustomerService extends PureComponent {
   };
 
   handleFormReset = () => {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const params = {
+      certCode:user.certCode
+    };
     const { form } = this.props;
     form.resetFields();
     this.setState({
@@ -145,6 +149,7 @@ class CustomerService extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'task/fetch',
+      payload: params,
     });
   };
 

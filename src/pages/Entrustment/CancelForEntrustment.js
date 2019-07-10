@@ -46,14 +46,6 @@ class CancelForEntrustment extends PureComponent {
 
 
 
-
-  cancelItem = text => {
-    this.setState({
-      visible: true,
-      reportNo:text.reportno
-    });
-  };
-
   columns = [
     {
       title: '委托编号',
@@ -88,46 +80,68 @@ class CancelForEntrustment extends PureComponent {
     },
   ];
 
+  // eslint-disable-next-line react/sort-comp
+  cancelItem = text => {
+    this.setState({
+      visible: true,
+      reportNo:text.reportno
+    });
+  };
+
 
   componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
+    const params = {
+      certCode:user.certCode
+    };
     dispatch({
       type: 'entrustment/fetch',
+      payload: params,
     });
-    const userinfo = localStorage.getItem("userinfo");
-    console.log(userinfo);
 
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
+    const { dispatch,form } = this.props;
     const { formValues } = this.state;
+    form.validateFields((err, fieldsValue) => {
 
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
+      console.log(err);
+      const filters = Object.keys(filtersArg).reduce((obj, key) => {
+        const newObj = { ...obj };
+        newObj[key] = getValue(filtersArg[key]);
+        return newObj;
+      }, {});
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      //console.log(formValues);
+      const params = {
+        currentPage: pagination.current,
+        pageSize: pagination.pageSize,
+        certCode:user.certCode,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
+        ...formValues,
+        ...filters,
+      };
+      if (sorter.field) {
+        params.sorter = `${sorter.field}_${sorter.order}`;
+      }
 
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
-    dispatch({
-      type: 'entrustment/fetch',
-      payload: params,
+      dispatch({
+        type: 'entrustment/fetch',
+        payload: params,
+      });
     });
   };
 
 
 
   handleFormReset = () => {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const params = {
+      certCode:user.certCode
+    };
     const { form } = this.props;
     form.resetFields();
     this.setState({
@@ -136,6 +150,7 @@ class CancelForEntrustment extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'entrustment/fetch',
+      payload: params,
     });
   };
 
@@ -146,13 +161,15 @@ class CancelForEntrustment extends PureComponent {
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
+        certCode:user.certCode,
       };
       dispatch({
-        type: 'entrustment/filter',
+        type: 'entrustment/fetch',
         payload: values,
       });
     });
