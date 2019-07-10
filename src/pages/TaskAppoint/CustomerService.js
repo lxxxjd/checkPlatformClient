@@ -88,6 +88,7 @@ class CustomerService extends PureComponent {
     const params = {
         certCode:user.certCode
     };
+    console.log(params.certCode);
     dispatch({
       type: 'task/fetch',
       payload: params,
@@ -95,29 +96,37 @@ class CustomerService extends PureComponent {
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
+    const { dispatch,form } = this.props;
     const { formValues } = this.state;
+    form.validateFields((err, fieldsValue) => {
 
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
+      console.log(err);
+      const filters = Object.keys(filtersArg).reduce((obj, key) => {
+        const newObj = { ...obj };
+        newObj[key] = getValue(filtersArg[key]);
+        return newObj;
+      }, {});
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      console.log(formValues);
+      const params = {
+        currentPage: pagination.current,
+        pageSize: pagination.pageSize,
+        certCode:user.certCode,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
+        ...formValues,
+        ...filters,
+      };
+      if (sorter.field) {
+        params.sorter = `${sorter.field}_${sorter.order}`;
+      }
 
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
-    dispatch({
-      type: 'task/fetch',
-      payload: params,
+      dispatch({
+        type: 'task/fetch',
+        payload: params,
+      });
     });
+
   };
 
   previewItem = text => {
@@ -147,13 +156,15 @@ class CustomerService extends PureComponent {
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
+        certCode:user.certCode,
       };
       dispatch({
-        type: 'task/filter',
+        type: 'task/fetch',
         payload: values,
       });
     });
