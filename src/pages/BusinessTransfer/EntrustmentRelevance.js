@@ -12,9 +12,9 @@ import {
   Select,
   Modal,
   Checkbox,
-  Radio
+  Radio,
+  Table
 } from 'antd';
-import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './EntrustmentRelevance.less';
 
@@ -28,9 +28,9 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ entrustment, loading }) => ({
-  entrustment,
-  loading: loading.models.entrustment,
+@connect(({ testInfo, loading }) => ({
+  testInfo,
+  loading: loading.models.testInfo,
 }))
 
 @Form.create()
@@ -87,12 +87,16 @@ class EntrustmentRelevance extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'testInfo/getReports',
+      payload:{
+         certCode : certCode,
+      }
     });
   }
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+/*  handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
 
@@ -101,8 +105,9 @@ class EntrustmentRelevance extends PureComponent {
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
-
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const params = {
+      certCode : certCode,
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
@@ -113,7 +118,7 @@ class EntrustmentRelevance extends PureComponent {
     }
 
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'testInfo/getReports',
       payload: params,
     });
   };
@@ -135,7 +140,7 @@ class EntrustmentRelevance extends PureComponent {
       pathname:'/Entrustment/DetailForEntrustment',
       reportNo:text.reportno,
     });
-  };
+  };*/
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -143,9 +148,13 @@ class EntrustmentRelevance extends PureComponent {
     this.setState({
       formValues: {},
     });
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const { dispatch } = this.props;
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'testInfo/getReports',
+      payload:{
+         certCode : certCode,
+      }
     });
   };
 
@@ -154,16 +163,18 @@ class EntrustmentRelevance extends PureComponent {
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
       const values = {
         ...fieldsValue,
+        certCode: certCode,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
       };
       dispatch({
-        type: 'entrustment/filter',
+        type: 'testInfo/getReports',
         payload: values,
       });
     });
@@ -193,7 +204,6 @@ class EntrustmentRelevance extends PureComponent {
                   <Option value="reportdate">委托日期</Option>
                   <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
-
                 </Select>
               )}
             </Form.Item>
@@ -232,7 +242,7 @@ class EntrustmentRelevance extends PureComponent {
 
   render() {
     const {
-      //entrustment: {data},
+      testInfo: {data},
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -285,13 +295,14 @@ class EntrustmentRelevance extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={loading}
-              //data={data}
+            <Table
+              //selectedRows={selectedRows}
+              //loading={loading}
+              dataSource={data.list}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+              //onSelectRow={this.handleSelectRows}
+              //onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>
