@@ -27,9 +27,9 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ entrustment, loading }) => ({
-  entrustment,
-  loading: loading.models.entrustment,
+@connect(({ task, loading }) => ({
+  task,
+  loading: loading.models.task,
 }))
 
 @Form.create()
@@ -83,9 +83,14 @@ class CustomerService extends PureComponent {
 
 
   componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
+    const params = {
+        certCode:user.certCode
+    };
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'task/fetch',
+      payload: params,
     });
   }
 
@@ -110,7 +115,7 @@ class CustomerService extends PureComponent {
     }
 
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'task/fetch',
       payload: params,
     });
   };
@@ -119,18 +124,6 @@ class CustomerService extends PureComponent {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
       state:text.reportno,
-    });
-  };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/ModifyForEntrustment',
-      reportNo:text.reportno,
-    });
-  };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-      reportNo:text.reportno,
     });
   };
 
@@ -142,7 +135,7 @@ class CustomerService extends PureComponent {
     });
     const { dispatch } = this.props;
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'task/fetch',
     });
   };
 
@@ -160,7 +153,7 @@ class CustomerService extends PureComponent {
         value: fieldsValue.value,
       };
       dispatch({
-        type: 'entrustment/filter',
+        type: 'task/filter',
         payload: values,
       });
     });
@@ -221,7 +214,7 @@ class CustomerService extends PureComponent {
 
   render() {
     const {
-      //entrustment: {data},
+      task: {data},
       loading,
     } = this.props;
     const { selectedRows, } = this.state;
@@ -233,7 +226,7 @@ class CustomerService extends PureComponent {
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
-              //data={data}
+              data={data}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
