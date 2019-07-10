@@ -16,6 +16,7 @@ export default {
   'menu.BusinessTransfer': '业务转移',
   'menu.BusinessTransfer.EntrustmentRelevance':'委托关联',
   'menu.BusinessTransfer.SubEntrustment':'转委托',
+  'menu.BusinessTransfer.ModifyRelevance':'修改委托关联',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',

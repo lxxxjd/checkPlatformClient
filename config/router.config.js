@@ -142,6 +142,11 @@ export default [
             name: 'EntrustmentRelevance',
             component: './BusinessTransfer/EntrustmentRelevance',
           },
+          {
+            path: '/BusinessTransfer/ModifyRelevance',
+            name: 'ModifyRelevance',
+            component: './BusinessTransfer/ModifyRelevance',
+          },
         ],
       },
       {
