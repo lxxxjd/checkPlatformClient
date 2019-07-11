@@ -137,10 +137,8 @@ class CustomerService extends PureComponent {
   toCustomerDetail = text => {
     router.push({
       pathname:'/TaskAppoint/CustomerServiceDetail',
-      state:text.reportno,
+      reportinfo:text,
     });
-    console.log(text.reportno);
-    console.log(text.shipname);
   };
 
   handleFormReset = () => {
@@ -252,7 +250,7 @@ class CustomerService extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
-              rowKey={data.list.reportNo}
+              rowKey="reportno"
               loading={loading}
               dataSource={data.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

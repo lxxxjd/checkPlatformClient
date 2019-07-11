@@ -36,9 +36,10 @@ const getValue = obj =>
 @Form.create()
 class CustomerServiceDetail extends PureComponent {
   state = {
-    selectedRows: [],
+    selectedRowKeys: [],
     formValues: {},
   };
+
 
   columns = [
     {
@@ -46,8 +47,12 @@ class CustomerServiceDetail extends PureComponent {
       dataIndex: 'inspman',
     },
     {
+      title: '状态',
+      dataIndex: 'state',
+    },
+    {
       title: '联系方式',
-      dataIndex: 'inspman',
+      dataIndex: 'tel',
     },
     {
       title: '岗位',
@@ -73,6 +78,7 @@ class CustomerServiceDetail extends PureComponent {
       title: '交通',
       dataIndex: 'trafficfee',
     },
+
     {
       title: '操作',
       render: (text, record) => (
@@ -86,44 +92,24 @@ class CustomerServiceDetail extends PureComponent {
   ];
 
 
+  // eslint-disable-next-line react/sort-comp
   componentDidMount() {
-    // const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'task/fetch',
-    // });
-    console.log(this.props);
-  }
-
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
+    const { dispatch,location} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
+      certCode:user.certCode,
+      reportNo:location.reportinfo.reportno
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'task/getCustomers',
       payload: params,
     });
-  };
+  }
 
-  previewItem = text => {
+
+  back = () => {
     router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-      state:text.reportno,
+      pathname:'/TaskAppoint/CustomerService',
     });
   };
 
@@ -136,7 +122,7 @@ class CustomerServiceDetail extends PureComponent {
     });
     const { dispatch } = this.props;
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'task/getCustomers',
     });
   };
 
@@ -159,6 +145,15 @@ class CustomerServiceDetail extends PureComponent {
       });
     });
   };
+
+
+  onSelectChange = (selectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    // eslint-disable-next-line react/no-unused-state
+    this.setState({ selectedRowKeys });
+  }
+
+
 
 
 
@@ -215,11 +210,10 @@ class CustomerServiceDetail extends PureComponent {
 
   render() {
     const {
-      task: {data},
+      task: {taskCustomers},
       loading,
     } = this.props;
-    const { selectedRows, } = this.state;
-
+    const { location} = this.props;
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
@@ -227,6 +221,12 @@ class CustomerServiceDetail extends PureComponent {
         {bordered && <em />}
       </div>
     );
+
+    const {  selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
 
     return (
 
@@ -248,13 +248,13 @@ class CustomerServiceDetail extends PureComponent {
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
-                <Info title="委托编号" value="321117062901" bordered />
+                <Info title="委托编号" value={location.reportinfo.reportno} bordered />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="委托人" value="湖南华菱湘潭钢铁有限公司" bordered />
+                <Info title="委托人" value={location.reportinfo.applicant} bordered />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="运输工具" value="船只" />
+                <Info title="运输工具" value={location.reportinfo.shipname} />
               </Col>
             </Row>
           </Card>
@@ -264,11 +264,12 @@ class CustomerServiceDetail extends PureComponent {
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Table
-                //selectedRows={selectedRows}
+                rowKey="inspman"
                 loading={loading}
-                data={data}
+                dataSource={taskCustomers.list}
+                pagination={{showQuickJumper:true,showSizeChanger:true}}
                 columns={this.columns}
-                //onSelectRow={this.handleSelectRows}
+                rowSelection={rowSelection}
               />
             </div>
           </Card>

@@ -7,7 +7,7 @@ export default {
       list: [],
       pagination: {},
     },
-    task:{
+    taskCustomers:{
       list: [],
       pagination: {},
     },
@@ -40,7 +40,7 @@ export default {
     getTask(state, { payload }) {
       return {
         ...state,
-        task: payload.data,
+        taskCustomers: payload.data,
       };
     },
   },
