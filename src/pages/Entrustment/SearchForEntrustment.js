@@ -251,6 +251,7 @@ class SearchForEntrustment extends PureComponent {
               selectedRows={selectedRows}
               loading={loading}
               data={data}
+              rowKey={data.reportNo}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}

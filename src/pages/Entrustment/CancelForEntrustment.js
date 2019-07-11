@@ -12,7 +12,7 @@ import {
   Button,
   Dropdown,
   Menu,
-  DatePicker, Select, Modal, message,
+  DatePicker, Select, Modal, message, Table,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -279,6 +279,7 @@ class CancelForEntrustment extends PureComponent {
               loading={loading}
               data={data}
               columns={this.columns}
+              rowKey={data.reportNo}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
