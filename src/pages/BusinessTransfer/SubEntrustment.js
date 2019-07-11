@@ -17,12 +17,11 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SubEntrustment.less';
-
-
+import moment from 'moment'
+import Search from './Search.js'
 
 
 const CheckboxGroup = Checkbox.Group;
-const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj =>
   Object.keys(obj)
@@ -30,18 +29,18 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ entrustment, loading }) => ({
-  entrustment,
-  loading: loading.models.entrustment,
-}))
-
+const SearchForm = Form.create()(Search);
 @Form.create()
+@connect(({ testInfo, loading }) => ({
+  testInfo,
+  loading: loading.models.testInfo,
+}))
 class SubEntrustment extends PureComponent {
   state = {
-    selectedRows: [],
     formValues: {},
     visible:false,
     checkProject:[],
+    allReporterName:[],
   };
 
   columns = [
@@ -52,9 +51,9 @@ class SubEntrustment extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '运输工具',
@@ -76,7 +75,7 @@ class SubEntrustment extends PureComponent {
           &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>详情</a>
+          <a onClick={() => this.previewItem(text, record)}>详情</a>
         </Fragment>
       ),
     },
@@ -85,34 +84,32 @@ class SubEntrustment extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'testInfo/getTestInfos',
+      payload:{
+         certCode : certCode,
+      }
+    });
+    dispatch({
+      type: 'testInfo/getClientName',
+      payload: {},
+      callback: (response) => {
+        this.setState({allReporterName:response})
+      }
     });
   }
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
+  handleSearch = value => {
+    const {dispatch} = this.props;
     dispatch({
-      type: 'entrustment/fetch',
-      payload: params,
+      type: 'testInfo/getClientName',
+      payload: {
+        content:value
+      },
+      callback: (response) => {
+        this.setState({allReporterName:response})
+      }
     });
   };
 
@@ -122,100 +119,23 @@ class SubEntrustment extends PureComponent {
       state:text.reportno,
     });
   };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/ModifyForEntrustment',
-      reportNo:text.reportno,
-    });
-  };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-      reportNo:text.reportno,
-    });
-  };
-
-  handleFormReset = () => {
+  modifyItem = text => {
     const { form } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
-    });
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'entrustment/fetch',
+    this.setState({visible:true});
+    const checkProject = text.inspway.split(" ");
+    this.setState({checkProject:checkProject});
+    form.setFieldsValue({['testman']:text.testman});
+    form.setFieldsValue({['priceway']:text.priceway});
+    form.setFieldsValue({['price']:text.price});
+    form.setFieldsValue({['inspwaymemo1']:text.inspwaymemo1});
+  };
+  copyItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    router.push({
+      pathname:'/Entrustment/copyForEntrustment',
     });
   };
 
-
-
-  handleSearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-      };
-      dispatch({
-        type: 'entrustment/filter',
-        payload: values,
-      });
-    });
-  };
-
-
-
-  renderSimpleForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={3} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('kind', {
-                rules: [{  message: '搜索类型' }],
-              })(
-                <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="applicant">委托人</Option>
-                  <Option value="reportdate">委托日期</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-          <Col md={6} sm={20}>
-            <FormItem>
-              {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-
-          <Col md={8} sm={20}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
-                查询
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
-              </Button>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
   handleOk = () =>{
     this.setState({ visible: false });
   };
@@ -224,30 +144,35 @@ class SubEntrustment extends PureComponent {
     this.setState({ visible: false });
   };
 
-  showModal = () => {
-    this.setState({ visible: true });
-  };
-
   render() {
     const {
-      //entrustment: {data},
+      testInfo: {data},
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const { selectedRows, checkProject} = this.state;
+    const {  checkProject,allReporterName} = this.state;
+    const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
     return (
-      <PageHeaderWrapper title="撤销查询">
+      <PageHeaderWrapper title="转委托">
         <Modal
           title="Basic Modal"
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
-          <Form >
+          <Form>
             <Form.Item label="转委托公司">
-              {getFieldDecorator('subEntrustment', {
+              {getFieldDecorator('testman', {
                 rules: [{ required: true, message: 'Please input the title of collection!' }],
-              })(<Input />)}
+              })(<Select
+                      showSearch
+                      placeholder="请选择"
+                      filterOption={false}
+                      onSearch={this.handleSearch}
+                    >
+                      {reportNameOptions}
+                    </Select>
+                    )}
             </Form.Item>
             <Form.Item label="转委托项目">
               {getFieldDecorator('inspway')(
@@ -257,14 +182,12 @@ class SubEntrustment extends PureComponent {
                 )}
             </Form.Item>
             <Form.Item label="计价方式" className="collection-create-form_last-form-item">
-              {getFieldDecorator('modifier', {
-                initialValue: 'unitPrice',
-              })(
+              {getFieldDecorator('priceway')(
                 <Radio.Group>
-                  <Radio value="unitPrice">按单价</Radio>
-                  <Radio value="batch">按批次</Radio>
-                  <Radio value="agreement">按协议</Radio>
-                  <Radio value="proportion">按比例</Radio>
+                  <Radio value="按单价">按单价</Radio>
+                  <Radio value="按批次">按批次</Radio>
+                  <Radio value="按协议">按协议</Radio>
+                  <Radio value="按比例">按比例</Radio>
                 </Radio.Group>,
               )}
             </Form.Item>
@@ -282,12 +205,12 @@ class SubEntrustment extends PureComponent {
         </Modal>
         <Card bordered={false}>
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <div className={styles.tableListForm}><SearchForm></SearchForm></div>
             <Table
-              //selectedRows={selectedRows}
               loading={loading}
-              //data={data}
+              dataSource={data.list}
               columns={this.columns}
+              rowKey="reportno"
               //onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

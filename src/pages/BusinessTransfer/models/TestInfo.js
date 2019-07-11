@@ -1,4 +1,4 @@
-import {getTestInfo,queryReport} from '@/services/TestInfo'
+import {getTestInfo,queryReport,getAllClientName} from '@/services/TestInfo'
 
 
 
@@ -28,6 +28,14 @@ export default {
         payload: response,
       });
     },
+    *getClientName({ payload ,callback}, { call, put }) {
+      const response = yield call(getAllClientName, payload);
+      yield put({
+        type: 'getName',
+        payload:response,
+      });
+      if (callback) callback(response.data);
+    },
   },
 
   reducers: {
@@ -43,6 +51,11 @@ export default {
         data: payload.data,
       };
     },
-
+    getName(state, { payload }) {
+      return {
+        ...state,
+        clientName: payload.data,
+      };
+    },
   },
 };
