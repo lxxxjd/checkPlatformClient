@@ -1,9 +1,13 @@
-import { queryAllTask } from '@/services/Task';
+import { queryAllTask ,queryCustomers} from '@/services/Task';
 
 export default {
   namespace: 'task',
   state: {
     data: {
+      list: [],
+      pagination: {},
+    },
+    task:{
       list: [],
       pagination: {},
     },
@@ -17,6 +21,13 @@ export default {
         payload: response,
       });
     },
+    *getCustomers({ payload }, { call, put }) {
+      const response = yield call(queryCustomers, payload);
+      yield put({
+        type: 'getTask',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -24,6 +35,12 @@ export default {
       return {
         ...state,
         data: payload.data,
+      };
+    },
+    getTask(state, { payload }) {
+      return {
+        ...state,
+        task: payload.data,
       };
     },
   },

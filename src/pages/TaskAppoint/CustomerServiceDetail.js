@@ -10,8 +10,9 @@ import {
   Input,
   Button,
   Select,
+  Table
+
 } from 'antd';
-import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './CustomerServiceDetail.less';
 
@@ -27,9 +28,9 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ entrustment, loading }) => ({
-  entrustment,
-  loading: loading.models.entrustment,
+@connect(({ task, loading }) => ({
+  task,
+  loading: loading.models.task,
 }))
 
 @Form.create()
@@ -41,37 +42,44 @@ class CustomerServiceDetail extends PureComponent {
 
   columns = [
     {
-      title: '委托编号',
-      dataIndex: 'reportno',
+      title: '客服姓名',
+      dataIndex: 'inspman',
     },
     {
-      title: '委托日期',
-      dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      title: '联系方式',
+      dataIndex: 'inspman',
     },
     {
-      title: '委托人',
-      dataIndex: 'applicant',
+      title: '岗位',
+      dataIndex: 'position',
     },
     {
-      title: '运输工具',
-      dataIndex: 'shipname',
+      title: '工作任务',
+      dataIndex: 'inspway',
     },
     {
-      title: '货名',
-      dataIndex: 'cargoname',
+      title: '工时',
+      dataIndex: 'manhour',
+    },
+    {
+      title: '劳务',
+      dataIndex: 'labourfee',
+    },
+    {
+      title: '餐饮',
+      dataIndex: 'lunchfee',
+    },
+    {
+      title: '交通',
+      dataIndex: 'trafficfee',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
+          <a onClick={() => this.previewItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>复制</a>
+          <a onClick={() => this.previewItem(text, record)}>在岗</a>
         </Fragment>
       ),
     },
@@ -79,10 +87,11 @@ class CustomerServiceDetail extends PureComponent {
 
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'entrustment/fetch',
-    });
+    // const { dispatch } = this.props;
+    // dispatch({
+    //   type: 'task/fetch',
+    // });
+    console.log(this.props);
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -117,18 +126,7 @@ class CustomerServiceDetail extends PureComponent {
       state:text.reportno,
     });
   };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/ModifyForEntrustment',
-      reportNo:text.reportno,
-    });
-  };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-      reportNo:text.reportno,
-    });
-  };
+
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -217,25 +215,65 @@ class CustomerServiceDetail extends PureComponent {
 
   render() {
     const {
-      //entrustment: {data},
+      task: {data},
       loading,
     } = this.props;
     const { selectedRows, } = this.state;
+
+    const Info = ({ title, value, bordered }) => (
+      <div className={styles.headerInfo}>
+        <span>{title}</span>
+        <p>{value}</p>
+        {bordered && <em />}
+      </div>
+    );
+
     return (
-      <PageHeaderWrapper title="撤销查询">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={loading}
-              //data={data}
-              columns={this.columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
-            />
-          </div>
-        </Card>
+
+      <PageHeaderWrapper title="指派编辑">
+
+        <div className={styles.standardList}>
+          <Card bordered={false}>
+            <Row gutter={16}>
+              <Col span={2}>
+                <Button type="primary" onClick={this.save}>保存</Button>
+              </Col>
+              <Col span={2}>
+                <Button type="primary" onClick={this.back}>返回</Button>
+              </Col>
+              <Col span={10} />
+            </Row>
+          </Card>
+
+          <Card bordered={false}>
+            <Row>
+              <Col sm={8} xs={24}>
+                <Info title="委托编号" value="321117062901" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="委托人" value="湖南华菱湘潭钢铁有限公司" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="运输工具" value="船只" />
+              </Col>
+            </Row>
+          </Card>
+
+
+          <Card bordered={false} style={{ marginTop: 24 }}>
+            <div className={styles.tableList}>
+              <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+              <Table
+                //selectedRows={selectedRows}
+                loading={loading}
+                data={data}
+                columns={this.columns}
+                //onSelectRow={this.handleSelectRows}
+              />
+            </div>
+          </Card>
+
+        </div>
       </PageHeaderWrapper>
     );
   }

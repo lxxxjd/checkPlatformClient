@@ -10,6 +10,7 @@ import {
   Input,
   Button,
   Select,
+  Table,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -71,9 +72,9 @@ class CustomerService extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>指派客服</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>指派编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>委托详情</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -86,7 +87,6 @@ class CustomerService extends PureComponent {
     const params = {
         certCode:user.certCode
     };
-    console.log(params.certCode);
     dispatch({
       type: 'task/fetch',
       payload: params,
@@ -105,7 +105,6 @@ class CustomerService extends PureComponent {
         return newObj;
       }, {});
       const user = JSON.parse(localStorage.getItem("userinfo"));
-      //console.log(formValues);
       const params = {
         currentPage: pagination.current,
         pageSize: pagination.pageSize,
@@ -132,6 +131,16 @@ class CustomerService extends PureComponent {
       pathname:'/Entrustment/DetailForEntrustment',
       state:text.reportno,
     });
+
+  };
+
+  toCustomerDetail = text => {
+    router.push({
+      pathname:'/TaskAppoint/CustomerServiceDetail',
+      state:text.reportno,
+    });
+    console.log(text.reportno);
+    console.log(text.shipname);
   };
 
   handleFormReset = () => {
@@ -235,17 +244,19 @@ class CustomerService extends PureComponent {
     } = this.props;
     const { selectedRows, } = this.state;
     return (
-      <PageHeaderWrapper title="撤销查询">
+      <PageHeaderWrapper title="客服指派">
+
+
+
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
+            <Table
+              rowKey={data.list.reportNo}
               loading={loading}
-              data={data}
+              dataSource={data.list}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>
