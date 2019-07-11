@@ -18,3 +18,9 @@ export async function queryReport(params) {
     },
   });
 }
+export async function getAllClientName(params) {
+  if(params.content != null){
+    return request(`/api/client/getAllClientName?content=${params.content}`);
+  }
+  return request('/api/client/getAllClientName');
+}

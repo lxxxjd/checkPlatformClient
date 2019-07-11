@@ -36,10 +36,8 @@ const getValue = obj =>
 @Form.create()
 class EntrustmentRelevance extends PureComponent {
   state = {
-    selectedRows: [],
     formValues: {},
     visible:false,
-    checkProject:[],
   };
 
   columns = [
@@ -74,11 +72,9 @@ class EntrustmentRelevance extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>增加</a>
+          <a onClick={() => this.mobileItem(text, record)}>委托修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>委托详情</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -86,7 +82,7 @@ class EntrustmentRelevance extends PureComponent {
 
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch,location } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
       type: 'testInfo/getReports',
@@ -96,51 +92,21 @@ class EntrustmentRelevance extends PureComponent {
     });
   }
 
-/*  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    const params = {
-      certCode : certCode,
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
-    dispatch({
-      type: 'testInfo/getReports',
-      payload: params,
-    });
-  };
-
   previewItem = text => {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
       state:text.reportno,
     });
   };
-  copyItem = text => {
+  mobileItem = text => {
     router.push({
-      pathname:'/Entrustment/ModifyForEntrustment',
-      reportNo:text.reportno,
+      pathname:'/BusinessTransfer/ModifyRelevance',
+      state:{
+        reportNo:text.reportno,
+        shipname:text.shipname
+      }
     });
   };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-      reportNo:text.reportno,
-    });
-  };*/
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -246,52 +212,8 @@ class EntrustmentRelevance extends PureComponent {
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const { selectedRows, checkProject} = this.state;
     return (
-      <PageHeaderWrapper title="撤销查询">
-        <Modal
-          title="Basic Modal"
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-        >
-          <Form >
-            <Form.Item label="转委托公司">
-              {getFieldDecorator('subEntrustment', {
-                rules: [{ required: true, message: 'Please input the title of collection!' }],
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="转委托项目">
-              {getFieldDecorator('inspway')(
-                  <CheckboxGroup
-                    options={checkProject}
-                  />
-                )}
-            </Form.Item>
-            <Form.Item label="计价方式" className="collection-create-form_last-form-item">
-              {getFieldDecorator('modifier', {
-                initialValue: 'unitPrice',
-              })(
-                <Radio.Group>
-                  <Radio value="unitPrice">按单价</Radio>
-                  <Radio value="batch">按批次</Radio>
-                  <Radio value="agreement">按协议</Radio>
-                  <Radio value="proportion">按比例</Radio>
-                </Radio.Group>,
-              )}
-            </Form.Item>
-            <Form.Item label="总计费用">
-              {getFieldDecorator('price')(
-                    <Input />
-                )}
-            </Form.Item>
-            <Form.Item label="转委托要求">
-              {getFieldDecorator('inspwaymemo1')(
-                    <Input />
-                )}
-            </Form.Item>
-          </Form>
-        </Modal>
+      <PageHeaderWrapper title="委托关联">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>

@@ -12,9 +12,12 @@ import {
   Button,
   Dropdown,
   Menu,
-  DatePicker, Select, Modal, message, Table,
+  DatePicker,
+  Select,
+  Modal,
+   message,
+  Table
 } from 'antd';
-import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SearchForEntrustment.less';
 
@@ -274,14 +277,14 @@ class CancelForEntrustment extends PureComponent {
             >
               <p>是否撤销</p>
             </Modal>
-            <StandardTable
-              selectedRows={selectedRows}
+            <Table
+              //selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              dataSource={data.list}
               columns={this.columns}
-              rowKey={data.reportNo}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              //onSelectRow={this.handleSelectRows}
+              //onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>

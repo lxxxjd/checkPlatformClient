@@ -50,7 +50,7 @@ class DetailForEnturstment extends Component {
         <Card bordered={false}>
           <Row gutter={16}>
             <Col span={3}>
-              <Title level={3} >委托申请</Title>
+              <Title level={3} >委托详情</Title>
             </Col>
             <Col span={2}>
               <Button type="primary" onClick={this.deleteReport}>撤销申请</Button>
@@ -72,16 +72,16 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="委托日期">{report.reportdate}</Descriptions.Item>
             <Descriptions.Item label="检验费">{report.price}</Descriptions.Item>
             <Descriptions.Item label="申请人">{report.applicant}</Descriptions.Item>
-            <Descriptions.Item label="联系人">{report.linkername}</Descriptions.Item>
-            <Descriptions.Item label="联系电话">{report.linkertel}</Descriptions.Item>
+            <Descriptions.Item label="联系人">{report.applicantname}</Descriptions.Item>
+            <Descriptions.Item label="联系电话">{report.applicanttel}</Descriptions.Item>
             <Descriptions.Item label="代理人">{report.agent}</Descriptions.Item>
-            <Descriptions.Item label="联系人">{report.linkername}</Descriptions.Item>
-            <Descriptions.Item label="联系电话">{report.linkertel}</Descriptions.Item>
+            <Descriptions.Item label="联系人">{report.agentname}</Descriptions.Item>
+            <Descriptions.Item label="联系电话">{report.agenttel}</Descriptions.Item>
             <Descriptions.Item label="付款人">{report.payer}</Descriptions.Item>
-            <Descriptions.Item label="业务来源">{report.businessSort}</Descriptions.Item>
+            <Descriptions.Item label="业务来源">{report.businesssource}</Descriptions.Item>
             <Descriptions.Item label="贸易方式">{report.tradeway}</Descriptions.Item>
             <Descriptions.Item label="证书要求" >{report.certstyle}</Descriptions.Item>
-            <Descriptions.Item label="业务分类">{report.businessSort}</Descriptions.Item>
+            <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="货物信息" style={{ marginBottom: 32 }} bordered>
@@ -91,8 +91,8 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="现场联系方式">{report.insplinkway}</Descriptions.Item>
             <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
             <Descriptions.Item label="申报数量">{report.quantityd+report.unit}</Descriptions.Item>
-            <Descriptions.Item label="中文俗名">{report.remark}</Descriptions.Item>
-            <Descriptions.Item label="英文俗名">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
+            <Descriptions.Item label="英文俗名">{report.englishlocalname}</Descriptions.Item>
             <Descriptions.Item label="HS编码">{report.remark}</Descriptions.Item>
             <Descriptions.Item label="到达地点">{report.remark}</Descriptions.Item>
             <Descriptions.Item label="HS名称">{report.remark}</Descriptions.Item>
