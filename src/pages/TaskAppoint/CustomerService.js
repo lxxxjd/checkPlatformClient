@@ -36,7 +36,6 @@ const getValue = obj =>
 @Form.create()
 class CustomerService extends PureComponent {
   state = {
-    selectedRows: [],
     formValues: {},
   };
 
@@ -132,12 +131,13 @@ class CustomerService extends PureComponent {
       state:text.reportno,
     });
 
+
   };
 
   toCustomerDetail = text => {
+    localStorage.setItem('reportinfo',JSON.stringify(text));
     router.push({
       pathname:'/TaskAppoint/CustomerServiceDetail',
-      reportinfo:text,
     });
   };
 
@@ -240,7 +240,6 @@ class CustomerService extends PureComponent {
       task: {data},
       loading,
     } = this.props;
-    const { selectedRows, } = this.state;
     return (
       <PageHeaderWrapper title="客服指派">
 

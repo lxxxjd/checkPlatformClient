@@ -1,4 +1,4 @@
-import { queryAllTask ,queryCustomers} from '@/services/Task';
+import { queryAllTask ,queryCustomers,dealTask} from '@/services/Task';
 
 export default {
   namespace: 'task',
@@ -11,6 +11,8 @@ export default {
       list: [],
       pagination: {},
     },
+
+    dealCustomers:[],
   },
 
   effects: {
@@ -21,13 +23,24 @@ export default {
         payload: response,
       });
     },
-    *getCustomers({ payload }, { call, put }) {
+    *getCustomers({ payload,callback }, { call, put }) {
       const response = yield call(queryCustomers, payload);
       yield put({
         type: 'getTask',
         payload: response,
       });
+      if (callback) callback(response.data);
     },
+
+    *dealTask({ payload,callback }, { call, put }) {
+      const response = yield call(dealTask, payload);
+      yield put({
+        type: 'dealTaskInfo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -43,5 +56,14 @@ export default {
         taskCustomers: payload.data,
       };
     },
+
+    dealTaskInfo(state, { payload }) {
+      return {
+        ...state,
+        dealCustomers: payload.data,
+      };
+    },
+
+
   },
 };

@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './CustomerServiceDetail.less';
+import task from './models/task';
 
 
 
@@ -39,6 +40,10 @@ class CustomerServiceDetail extends PureComponent {
     selectedRowKeys: [],
     formValues: {},
   };
+
+  taskData=[];
+
+  exist=[];
 
 
   columns = [
@@ -91,19 +96,9 @@ class CustomerServiceDetail extends PureComponent {
     },
   ];
 
-
   // eslint-disable-next-line react/sort-comp
   componentDidMount() {
-    const { dispatch,location} = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const params = {
-      certCode:user.certCode,
-      reportNo:location.reportinfo.reportno
-    };
-    dispatch({
-      type: 'task/getCustomers',
-      payload: params,
-    });
+    this.init();
   }
 
 
@@ -113,17 +108,74 @@ class CustomerServiceDetail extends PureComponent {
     });
   };
 
+  save = () => {
+    const {selectedRowKeys} = this.state;
+    const params = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for( const i of selectedRowKeys){
+      let itemtask = this.taskData.find(item => item.inspman === i );
+      if(!this.exist.find(item => item === itemtask.inspman)){
+          itemtask.state = 3
+      }
+      params.push(itemtask);
+    }
 
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
+    // eslint-disable-next-line no-restricted-syntax
+    for( const i of this.exist){
+      let itemtask = this.taskData.find(item => item.inspman === i );
+      if(!selectedRowKeys.find(item => item === itemtask.inspman)){
+        // eslint-disable-next-line block-scoped-var
+        itemtask.state = 4;
+      }
+      if(!params.find(item =>item.inspman ===i)) {
+        params.push(itemtask);
+      }
+    }
+    const {dispatch} = this.props;
+    console.log(JSON.stringify(params));
+    dispatch({
+      type: 'task/dealTask',
+      payload: JSON.stringify(params),
+      callback: (response) => {
+
+      }
     });
-    const { dispatch } = this.props;
+
+
+
+
+  };
+
+  init = () =>{
+    const { dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const params = {
+      certCode:user.certCode,
+      reportNo:reportinfo.reportno
+    };
     dispatch({
       type: 'task/getCustomers',
+      payload: params,
+      callback: (response) => {
+        if (response){
+          this.taskData =  response.list;
+          const data = response.list;
+          const {state} = this
+          // eslint-disable-next-line no-plusplus
+          for(let i=0;i<data.length;i++) {
+            if(data[i].state === 1){
+              state.selectedRowKeys.push(data[i].inspman);
+              this.exist.push(data[i].inspman);
+            }
+          }
+        }
+      }
     });
+  }
+
+  handleFormReset = () => {
+    this.init();
   };
 
 
@@ -148,13 +200,8 @@ class CustomerServiceDetail extends PureComponent {
 
 
   onSelectChange = (selectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
-    // eslint-disable-next-line react/no-unused-state
     this.setState({ selectedRowKeys });
   }
-
-
-
 
 
   renderSimpleForm() {
@@ -213,7 +260,9 @@ class CustomerServiceDetail extends PureComponent {
       task: {taskCustomers},
       loading,
     } = this.props;
-    const { location} = this.props;
+
+
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"));
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
@@ -248,13 +297,13 @@ class CustomerServiceDetail extends PureComponent {
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
-                <Info title="委托编号" value={location.reportinfo.reportno} bordered />
+                <Info title="委托编号" value={reportinfo.reportno} bordered />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="委托人" value={location.reportinfo.applicant} bordered />
+                <Info title="委托人" value={reportinfo.applicant} bordered />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="运输工具" value={location.reportinfo.shipname} />
+                <Info title="运输工具" value={reportinfo.shipname} />
               </Col>
             </Row>
           </Card>
