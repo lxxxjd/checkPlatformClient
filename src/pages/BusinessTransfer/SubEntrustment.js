@@ -65,7 +65,7 @@ class SubEntrustment extends PureComponent {
     },
     {
       title: '被委托公司',
-      dataIndex: 'testman',
+      dataIndex: 'testman', 
     },
     {
       title: '操作',

@@ -101,15 +101,32 @@ class ModifyRelevance extends PureComponent {
       title: '货名',
       dataIndex: 'cargoname',
     },
-    {
+/*    {
       title: '关联委托号',
       dataIndex: 'reportlink',
-    },
+      render: (text, record) => {
+        let  contentStr = [];
+        contentStr = text.split(",");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        let br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j==0){
+             result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>; 
+      },
+    },*/
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.addRelevance(text, record)}>删除关联</a>
+          <a onClick={() => this.deleteRelevance(text, record)}>删除关联</a>
         </Fragment>
       ),
     },
@@ -117,66 +134,61 @@ class ModifyRelevance extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testInfo/getReports',
+      type: 'testInfo/getReportexceptLink',
       payload:{
          certCode : certCode,
+         reportno : reportno,
       }
     });
-    console.log(location.state);
+    dispatch({
+      type: 'testInfo/getReportLink',
+      payload:{
+         reportno : reportno,
+      }
+    });
   }
-
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+  addRelevance = text =>{
     const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
-/*    dispatch({
-      type: 'entrustment/fetch',
-      payload: params,
-    });*/
-  };
-  addRelevance = test =>{
-
-  };
-  previewItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-      state:text.reportno,
+    var reportno = sessionStorage.getItem('reportno');
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    var value = [];
+    value.push(reportno);
+    value.push(text.reportno);
+    dispatch({
+      type: 'testInfo/addReportLink',
+      payload:{value},
+    });
+    dispatch({
+      type: 'testInfo/getReportexceptLink',
+      payload:{
+         certCode : certCode,
+         reportno : reportno,
+      }
     });
   };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/ModifyForEntrustment',
-      reportNo:text.reportno,
+  deleteRelevance = text =>{
+    const { dispatch } = this.props;
+    var reportno = sessionStorage.getItem('reportno');
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    var value = [];
+    value.push(reportno);
+    value.push(text.reportno);
+    dispatch({
+      type: 'testInfo/deleteReportLink',
+      payload:{value},
+      callback: () => {
+        dispatch({
+          type: 'testInfo/getReportexceptLink',
+          payload:{
+             certCode : certCode,
+             reportno : reportno,
+          }
+        });
+      }
     });
   };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-      reportNo:text.reportno,
-    });
-  };
-/*  rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-  };*/
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -225,41 +237,43 @@ class ModifyRelevance extends PureComponent {
   }
   render() {
     const {
-      testInfo: {data},
+      testInfo: {report,link},
       loading,
       location
     } = this.props;
+    var reportno = sessionStorage.getItem('reportno');
+    var shipname = sessionStorage.getItem('shipname');
     return (
       <PageHeaderWrapper title="修改委托关联">     
-        <Card bordered={false}>
-          <div className={styles.Row}>
-            <Row gutter={16}>
-              <Col span={2}>
-                <Button type="primary" onClick={this.validate}>保存</Button>
-              </Col>
-              <Col span={22}>
-              </Col>
-            </Row>
-          </div>  
+        <Card bordered={false} className={styles.card}>
           <Row gutter={16} >  
             <Col span={5}>
-              <Title level={4} > 委托号:</Title>
+              <Title level={4} > 委托号:{reportno}</Title>
             </Col>
             <Col span={5}>
-              <Title level={4} > 运输工具:</Title>
+              <Title level={4} > 运输工具:{shipname}</Title>
             </Col>
             <Col span={14}>
+            </Col>
+          </Row>
+          <Row gutter={16} >  
+            <Col span={5}>
+              <Title level={4} > 已关联委托</Title>
+            </Col>
+            <Col span={19}>
             </Col>
           </Row>
           <div className={styles.tableList}>
             <Table
               loading={loading}
               columns={this.deleteColumns}
-              //dataSource={data.list}
-              title={() => '已关联的委托'}
+              dataSource={link}
               showHeader={false}
+              pagination={false}
             />
           </div>
+        </Card>  
+        <Card bordered={false} className={styles.card}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
@@ -267,7 +281,7 @@ class ModifyRelevance extends PureComponent {
               loading={loading}
               columns={this.addColumns}
               onSelectRow={this.handleSelectRows}
-              dataSource={data.list}
+              dataSource={report}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>

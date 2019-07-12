@@ -24,3 +24,26 @@ export async function getAllClientName(params) {
   }
   return request('/api/client/getAllClientName');
 }
+
+export async function getReportLink(params) {
+	return request(`/api/report/get_links?reportno=${params.reportno}`);
+}
+
+export async function getReportexceptLink(params) {
+	return request(`/api/report/get_report_except_link?reportno=${params.reportno}&certCode=${params.certCode}`);
+}
+
+export async function addReportLink(params) {
+	const value = params.value;
+	return request('/api/report/add_reportlink',{
+		method: 'POST',
+    	data: value
+	});
+}
+export async function deleteReportLink(params) {
+	const value = params.value;
+	return request('/api/report/delete_reportlink',{
+		method: 'POST',
+    	data: value
+	});
+}
