@@ -65,8 +65,8 @@ class ModifyRelevance extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '关联委托号',
+      dataIndex: 'reportlink',
     },
     {
       title: '操作',
@@ -102,8 +102,8 @@ class ModifyRelevance extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '关联委托号',
+      dataIndex: 'reportlink',
     },
     {
       title: '操作',
