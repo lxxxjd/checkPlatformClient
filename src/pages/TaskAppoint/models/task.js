@@ -21,12 +21,13 @@ export default {
         payload: response,
       });
     },
-    *getCustomers({ payload }, { call, put }) {
+    *getCustomers({ payload,callback }, { call, put }) {
       const response = yield call(queryCustomers, payload);
       yield put({
         type: 'getTask',
         payload: response,
       });
+      if (callback) callback(response.data);
     },
   },
 

@@ -41,6 +41,7 @@ class CustomerServiceDetail extends PureComponent {
   };
 
 
+
   columns = [
     {
       title: '客服姓名',
@@ -91,18 +92,31 @@ class CustomerServiceDetail extends PureComponent {
     },
   ];
 
-
   // eslint-disable-next-line react/sort-comp
   componentDidMount() {
-    const { dispatch,location} = this.props;
+    const { dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    console.log(reportinfo);
     const params = {
       certCode:user.certCode,
-      reportNo:location.reportinfo.reportno
+      reportNo:reportinfo.reportno
     };
     dispatch({
       type: 'task/getCustomers',
       payload: params,
+      callback: (response) => {
+        if (response){
+          const data = response.list;
+          const {state} = this
+          // eslint-disable-next-line no-plusplus
+          for(let i=0;i<data.length;i++) {
+             if(data[i].state === 1){
+               state.selectedRowKeys.push(data[i].inspman);
+            }
+          }
+        }
+      }
     });
   }
 
@@ -148,13 +162,10 @@ class CustomerServiceDetail extends PureComponent {
 
 
   onSelectChange = (selectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
-    // eslint-disable-next-line react/no-unused-state
     this.setState({ selectedRowKeys });
+    console.log(selectedRowKeys);
+
   }
-
-
-
 
 
   renderSimpleForm() {
@@ -213,7 +224,9 @@ class CustomerServiceDetail extends PureComponent {
       task: {taskCustomers},
       loading,
     } = this.props;
-    const { location} = this.props;
+
+
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"));
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
@@ -248,13 +261,13 @@ class CustomerServiceDetail extends PureComponent {
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
-                <Info title="委托编号" value={location.reportinfo.reportno} bordered />
+                <Info title="委托编号" value={reportinfo.reportno} bordered />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="委托人" value={location.reportinfo.applicant} bordered />
+                <Info title="委托人" value={reportinfo.applicant} bordered />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="运输工具" value={location.reportinfo.shipname} />
+                <Info title="运输工具" value={reportinfo.shipname} />
               </Col>
             </Row>
           </Card>
