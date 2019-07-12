@@ -89,7 +89,7 @@ class EntrustmentRelevance extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>委托修改</a>
+          <a onClick={() => this.mobileItem(text, record)}>修改委托关联</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -118,6 +118,7 @@ class EntrustmentRelevance extends PureComponent {
   mobileItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',text.applicant);
     router.push({
       pathname:'/BusinessTransfer/ModifyRelevance',
     });

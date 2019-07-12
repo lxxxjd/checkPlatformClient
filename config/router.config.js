@@ -152,6 +152,7 @@ export default [
             path: '/BusinessTransfer/ModifyRelevance',
             name: 'ModifyRelevance',
             component: './BusinessTransfer/ModifyRelevance',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
       },
