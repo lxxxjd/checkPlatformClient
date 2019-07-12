@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './CustomerServiceDetail.less';
+import task from './models/task';
 
 
 
@@ -40,6 +41,9 @@ class CustomerServiceDetail extends PureComponent {
     formValues: {},
   };
 
+  taskData=[];
+
+  exist=[];
 
 
   columns = [
@@ -94,30 +98,7 @@ class CustomerServiceDetail extends PureComponent {
 
   // eslint-disable-next-line react/sort-comp
   componentDidMount() {
-    const { dispatch} = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
-    console.log(reportinfo);
-    const params = {
-      certCode:user.certCode,
-      reportNo:reportinfo.reportno
-    };
-    dispatch({
-      type: 'task/getCustomers',
-      payload: params,
-      callback: (response) => {
-        if (response){
-          const data = response.list;
-          const {state} = this
-          // eslint-disable-next-line no-plusplus
-          for(let i=0;i<data.length;i++) {
-             if(data[i].state === 1){
-               state.selectedRowKeys.push(data[i].inspman);
-            }
-          }
-        }
-      }
-    });
+    this.init();
   }
 
 
@@ -127,17 +108,74 @@ class CustomerServiceDetail extends PureComponent {
     });
   };
 
+  save = () => {
+    const {selectedRowKeys} = this.state;
+    const params = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for( const i of selectedRowKeys){
+      let itemtask = this.taskData.find(item => item.inspman === i );
+      if(!this.exist.find(item => item === itemtask.inspman)){
+          itemtask.state = 3
+      }
+      params.push(itemtask);
+    }
 
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
+    // eslint-disable-next-line no-restricted-syntax
+    for( const i of this.exist){
+      let itemtask = this.taskData.find(item => item.inspman === i );
+      if(!selectedRowKeys.find(item => item === itemtask.inspman)){
+        // eslint-disable-next-line block-scoped-var
+        itemtask.state = 4;
+      }
+      if(!params.find(item =>item.inspman ===i)) {
+        params.push(itemtask);
+      }
+    }
+    const {dispatch} = this.props;
+    console.log(JSON.stringify(params));
+    dispatch({
+      type: 'task/dealTask',
+      payload: JSON.stringify(params),
+      callback: (response) => {
+
+      }
     });
-    const { dispatch } = this.props;
+
+
+
+
+  };
+
+  init = () =>{
+    const { dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const params = {
+      certCode:user.certCode,
+      reportNo:reportinfo.reportno
+    };
     dispatch({
       type: 'task/getCustomers',
+      payload: params,
+      callback: (response) => {
+        if (response){
+          this.taskData =  response.list;
+          const data = response.list;
+          const {state} = this
+          // eslint-disable-next-line no-plusplus
+          for(let i=0;i<data.length;i++) {
+            if(data[i].state === 1){
+              state.selectedRowKeys.push(data[i].inspman);
+              this.exist.push(data[i].inspman);
+            }
+          }
+        }
+      }
     });
+  }
+
+  handleFormReset = () => {
+    this.init();
   };
 
 
@@ -163,8 +201,6 @@ class CustomerServiceDetail extends PureComponent {
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
-    console.log(selectedRowKeys);
-
   }
 
 
