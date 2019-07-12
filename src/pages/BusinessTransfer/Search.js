@@ -1,8 +1,6 @@
 
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-
-
 import {
   Form,
   Row,
@@ -14,6 +12,9 @@ import {
 const FormItem = Form.Item;
 const { Option } = Select;
 import styles from './Search.less';
+
+
+
 @connect(({ testInfo, loading }) => ({
   testInfo,
   loading: loading.models.testInfo,
@@ -60,7 +61,7 @@ class Search  extends PureComponent {
 	      form: { getFieldDecorator },
 	    } = this.props;
 	    return (
-	      <Form onSubmit={this.handleSearch} layout="inline">
+	      <Form onSubmit={this.handleSearch} layout="inline" >
 	        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
 	          <Col md={3} sm={20}>
 	            <Form.Item
