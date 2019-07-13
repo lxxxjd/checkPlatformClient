@@ -1,4 +1,4 @@
-import { queryAllTask ,queryCustomers,dealTask} from '@/services/Task';
+import { queryAllTask ,queryCustomers,dealTask,updateTask} from '@/services/Task';
 
 export default {
   namespace: 'task',
@@ -13,6 +13,7 @@ export default {
     },
 
     dealCustomers:[],
+    updateCustomers:{},
   },
 
   effects: {
@@ -40,6 +41,14 @@ export default {
       });
       if (callback) callback(response.data);
     },
+    *updateTask({ payload,callback }, { call, put }) {
+      const response = yield call(updateTask, payload);
+      yield put({
+        type: 'updateTaskInfo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
 
   },
 
@@ -61,6 +70,13 @@ export default {
       return {
         ...state,
         dealCustomers: payload.data,
+      };
+    },
+
+    updateTaskInfo(state, { payload }) {
+      return {
+        ...state,
+        updateCustomers: payload.data,
       };
     },
 

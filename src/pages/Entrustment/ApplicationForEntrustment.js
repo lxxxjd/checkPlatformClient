@@ -436,7 +436,7 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
               </Col>
-              <Col span={5}  >
+              <Col span={5}>
                 <Form.Item
                   label={fieldLabels.tradeway}
                   labelCol={{ span: 8 }}
