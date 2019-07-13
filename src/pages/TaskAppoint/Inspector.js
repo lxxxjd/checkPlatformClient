@@ -10,10 +10,11 @@ import {
   Input,
   Button,
   Select,
+  Table,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './Inspector.less';
+import styles from './CustomerService.less';
 
 
 
@@ -27,15 +28,14 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ entrustment, loading }) => ({
-  entrustment,
-  loading: loading.models.entrustment,
+@connect(({ task, loading }) => ({
+  task,
+  loading: loading.models.task,
 }))
 
 @Form.create()
 class Inspector extends PureComponent {
   state = {
-    selectedRows: [],
     formValues: {},
   };
 
@@ -71,11 +71,9 @@ class Inspector extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>指派编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>复制</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -83,36 +81,48 @@ class Inspector extends PureComponent {
 
 
   componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
+    const params = {
+      certCode:user.certCode
+    };
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'task/fetch',
+      payload: params,
     });
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
+    const { dispatch,form } = this.props;
     const { formValues } = this.state;
+    form.validateFields((err, fieldsValue) => {
 
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
+      console.log(err);
+      const filters = Object.keys(filtersArg).reduce((obj, key) => {
+        const newObj = { ...obj };
+        newObj[key] = getValue(filtersArg[key]);
+        return newObj;
+      }, {});
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const params = {
+        currentPage: pagination.current,
+        pageSize: pagination.pageSize,
+        certCode:user.certCode,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
+        ...formValues,
+        ...filters,
+      };
+      if (sorter.field) {
+        params.sorter = `${sorter.field}_${sorter.order}`;
+      }
 
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
-    dispatch({
-      type: 'entrustment/fetch',
-      payload: params,
+      dispatch({
+        type: 'task/fetch',
+        payload: params,
+      });
     });
+
   };
 
   previewItem = text => {
@@ -120,21 +130,22 @@ class Inspector extends PureComponent {
       pathname:'/Entrustment/DetailForEntrustment',
       state:text.reportno,
     });
+
+
   };
-  copyItem = text => {
+
+  toCustomerDetail = text => {
+    localStorage.setItem('reportinfo',JSON.stringify(text));
     router.push({
-      pathname:'/Entrustment/ModifyForEntrustment',
-      reportNo:text.reportno,
-    });
-  };
-  copyItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-      reportNo:text.reportno,
+      pathname:'/TaskAppoint/CustomerServiceDetail',
     });
   };
 
   handleFormReset = () => {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const params = {
+      certCode:user.certCode
+    };
     const { form } = this.props;
     form.resetFields();
     this.setState({
@@ -142,9 +153,12 @@ class Inspector extends PureComponent {
     });
     const { dispatch } = this.props;
     dispatch({
-      type: 'entrustment/fetch',
+      type: 'task/fetch',
+      payload: params,
     });
   };
+
+
 
 
 
@@ -154,13 +168,15 @@ class Inspector extends PureComponent {
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
+        certCode:user.certCode,
       };
       dispatch({
-        type: 'entrustment/filter',
+        type: 'task/fetch',
         payload: values,
       });
     });
@@ -221,22 +237,23 @@ class Inspector extends PureComponent {
 
   render() {
     const {
-      //entrustment: {data},
+      task: {data},
       loading,
     } = this.props;
-    const { selectedRows, } = this.state;
     return (
-      <PageHeaderWrapper title="撤销查询">
+      <PageHeaderWrapper title="客服指派">
+
+
+
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <StandardTable
-              selectedRows={selectedRows}
+            <Table
+              rowKey="reportno"
               loading={loading}
-              //data={data}
+              dataSource={data.list}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>
