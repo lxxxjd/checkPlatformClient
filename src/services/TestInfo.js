@@ -47,3 +47,6 @@ export async function deleteReportLink(params) {
     	data: value
 	});
 }
+export async function getCheckProject() {
+  return request('/api/check_project/get_project');
+}
