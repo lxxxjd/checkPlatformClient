@@ -131,6 +131,12 @@ export default [
             component: './TaskAppoint/CustomerServiceDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: '/TaskAppoint/InspectorDetail',
+            name: 'InspectorDetail',
+            component: './TaskAppoint/InspectorDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
       {

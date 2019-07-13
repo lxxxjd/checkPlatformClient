@@ -14,7 +14,7 @@ import {
 
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CustomerServiceDetail.less';
+import styles from './InspectorDetail.less';
 import task from './models/task';
 
 
@@ -40,7 +40,7 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="编辑客服"
+      title="编辑检验人员"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
@@ -127,7 +127,7 @@ class InspectorDetail extends PureComponent {
 
   columns = [
     {
-      title: '客服姓名',
+      title: '检员姓名',
       dataIndex: 'inspman',
     },
     {
@@ -179,14 +179,14 @@ class InspectorDetail extends PureComponent {
 
   back = () => {
     router.push({
-      pathname:'/TaskAppoint/CustomerService',
+      pathname:'/TaskAppoint/Inspector',
     });
   };
 
   save = () => {
     const {selectedRowKeys} = this.state;
     const params = [];
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
     const user = JSON.parse(localStorage.getItem("userinfo"));
 
     // eslint-disable-next-line no-restricted-syntax
@@ -215,7 +215,7 @@ class InspectorDetail extends PureComponent {
     }
     const {dispatch} = this.props;
     dispatch({
-      type: 'task/dealTask',
+      type: 'task/dealnspect',
       payload: {params},
       callback: (response) => {
         if(response){
@@ -232,13 +232,13 @@ class InspectorDetail extends PureComponent {
   init = () =>{
     const { dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
     const params = {
       certCode:user.certCode,
       reportNo:reportinfo.reportno
     };
     dispatch({
-      type: 'task/getCustomers',
+      type: 'task/getInspects',
       payload: params,
       callback: (response) => {
         if (response){
@@ -314,12 +314,12 @@ class InspectorDetail extends PureComponent {
     params.trafficfee = fields.trafficfee;
     params.otherfee = fields.otherfee;
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
     params.taskman = user.nameC;
     params.reportno = reportinfo.reportno;
 
     dispatch({
-      type: 'task/updateTask',
+      type: 'task/updateInspect',
       payload: params,
       callback: (response) => {
         if (response) {
@@ -390,12 +390,12 @@ class InspectorDetail extends PureComponent {
 
   render() {
     const {
-      task: {taskCustomers},
+      task: {taskInspects},
       loading,
     } = this.props;
 
 
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"));
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"));
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
@@ -458,7 +458,7 @@ class InspectorDetail extends PureComponent {
               <Table
                 rowKey="inspman"
                 loading={loading}
-                dataSource={taskCustomers.list}
+                dataSource={taskInspects.list}
                 pagination={{showQuickJumper:true,showSizeChanger:true}}
                 columns={this.columns}
                 rowSelection={rowSelection}

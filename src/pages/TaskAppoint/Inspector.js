@@ -64,14 +64,14 @@ class Inspector extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '客服人员',
+      title: '检验人员',
       dataIndex: 'inspman',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>指派编辑</a>
+          <a onClick={() => this.toInspectDetail(text, record)}>指派编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -87,10 +87,12 @@ class Inspector extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'task/fetch',
+      type: 'task/fetchInspect',
       payload: params,
     });
   }
+
+
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch,form } = this.props;
@@ -118,7 +120,7 @@ class Inspector extends PureComponent {
       }
 
       dispatch({
-        type: 'task/fetch',
+        type: 'task/fetchInspect',
         payload: params,
       });
     });
@@ -130,14 +132,12 @@ class Inspector extends PureComponent {
       pathname:'/Entrustment/DetailForEntrustment',
       state:text.reportno,
     });
-
-
   };
 
-  toCustomerDetail = text => {
-    localStorage.setItem('reportinfo',JSON.stringify(text));
+  toInspectDetail = text => {
+    localStorage.setItem('reportinfoAndInspect',JSON.stringify(text));
     router.push({
-      pathname:'/TaskAppoint/CustomerServiceDetail',
+      pathname:'/TaskAppoint/InspectorDetail',
     });
   };
 
@@ -153,9 +153,10 @@ class Inspector extends PureComponent {
     });
     const { dispatch } = this.props;
     dispatch({
-      type: 'task/fetch',
+      type: 'task/fetchInspect',
       payload: params,
     });
+
   };
 
 
@@ -176,7 +177,7 @@ class Inspector extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'task/fetch',
+        type: 'task/fetchInspect',
         payload: values,
       });
     });
@@ -237,11 +238,11 @@ class Inspector extends PureComponent {
 
   render() {
     const {
-      task: {data},
+      task: {dataInspect},
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="客服指派">
+      <PageHeaderWrapper title="检验指派">
 
 
 
@@ -251,7 +252,7 @@ class Inspector extends PureComponent {
             <Table
               rowKey="reportno"
               loading={loading}
-              dataSource={data.list}
+              dataSource={dataInspect.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />
