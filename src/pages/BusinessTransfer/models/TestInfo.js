@@ -1,4 +1,4 @@
-import {getTestInfo,queryReport,getAllClientName,getReportLink,addReportLink,deleteReportLink,getReportexceptLink} from '@/services/TestInfo'
+import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject} from '@/services/TestInfo'
 
 
 
@@ -10,8 +10,13 @@ export default {
       list: [],
       pagination: {},
     },
+    relevanceData:{
+      list: [],
+      pagination: {},
+    },
     report:[],
-    clientName:[],
+    companyName:[],
+    CheckProject:[],
     link:[],
   },
 
@@ -61,10 +66,10 @@ export default {
       });
       if (callback) callback();
     },
-    *getClientName({ payload ,callback}, { call, put }) {
-      const response = yield call(getAllClientName, payload);
+    *getCheckProject({ payload,callback }, { call, put }) {
+      const response = yield call(getCheckProject, payload);
       yield put({
-        type: 'getName',
+        type: 'getCheckProjectName',
         payload:response,
       });
       if (callback) callback(response.data);
@@ -76,13 +81,19 @@ export default {
     getReport(state, { payload }) {
       return {
         ...state,
-        data: payload.data,
+        relevanceData: payload.data,
       };
     },
     getReportEcpLink(state, { payload }) {
       return {
         ...state,
         report: payload.data,
+      };
+    },
+    getCheckProjectName(state, { payload }) {
+      return {
+        ...state,
+        CheckProject: payload.data,
       };
     },
     get(state, { payload }) {
@@ -95,12 +106,6 @@ export default {
       return {
         ...state,
         link: payload.data,
-      };
-    },
-    getName(state, { payload }) {
-      return {
-        ...state,
-        clientName: payload.data,
       };
     },
   },

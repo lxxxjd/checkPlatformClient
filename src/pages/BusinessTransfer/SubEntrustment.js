@@ -23,10 +23,7 @@ import Search from './Search.js'
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
+
 
 /* eslint react/no-multi-comp:0 */
 const SearchForm = Form.create()(Search);
@@ -38,9 +35,6 @@ const SearchForm = Form.create()(Search);
 class SubEntrustment extends PureComponent {
   state = {
     formValues: {},
-    visible:false,
-    checkProject:[],
-    allReporterName:[],
   };
 
   columns = [
@@ -71,11 +65,9 @@ class SubEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>转委托</a>
+          <a onClick={() => this.detailItem(text, record)}>详情</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -99,50 +91,21 @@ class SubEntrustment extends PureComponent {
       }
     });
   }
-
-  handleSearch = value => {
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'testInfo/getClientName',
-      payload: {
-        content:value
-      },
-      callback: (response) => {
-        this.setState({allReporterName:response})
-      }
+  detailItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',text.applicant);
+    router.push({
+      pathname:'/BusinessTransfer/ModifyRelevance',
     });
-  };
-
+  }
   previewItem = text => {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
       state:text.reportno,
     });
   };
-  modifyItem = text => {
-    const { form } = this.props;
-    this.setState({visible:true});
-    const checkProject = text.inspway.split(" ");
-    this.setState({checkProject:checkProject});
-    form.setFieldsValue({['testman']:text.testman});
-    form.setFieldsValue({['priceway']:text.priceway});
-    form.setFieldsValue({['price']:text.price});
-    form.setFieldsValue({['inspwaymemo1']:text.inspwaymemo1});
-  };
-  copyItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
-    router.push({
-      pathname:'/Entrustment/copyForEntrustment',
-    });
-  };
 
-  handleOk = () =>{
-    this.setState({ visible: false });
-  };
-
-  handleCancel = () =>{
-    this.setState({ visible: false });
-  };
 
   render() {
     const {
@@ -150,59 +113,8 @@ class SubEntrustment extends PureComponent {
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const {  checkProject,allReporterName} = this.state;
-    const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="转委托">
-        <Modal
-          title="Basic Modal"
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-        >
-          <Form>
-            <Form.Item label="转委托公司">
-              {getFieldDecorator('testman', {
-                rules: [{ required: true, message: 'Please input the title of collection!' }],
-              })(<Select
-                      showSearch
-                      placeholder="请选择"
-                      filterOption={false}
-                      onSearch={this.handleSearch}
-                    >
-                      {reportNameOptions}
-                    </Select>
-                    )}
-            </Form.Item>
-            <Form.Item label="转委托项目">
-              {getFieldDecorator('inspway')(
-                  <CheckboxGroup
-                    options={checkProject}
-                  />
-                )}
-            </Form.Item>
-            <Form.Item label="计价方式" className="collection-create-form_last-form-item">
-              {getFieldDecorator('priceway')(
-                <Radio.Group>
-                  <Radio value="按单价">按单价</Radio>
-                  <Radio value="按批次">按批次</Radio>
-                  <Radio value="按协议">按协议</Radio>
-                  <Radio value="按比例">按比例</Radio>
-                </Radio.Group>,
-              )}
-            </Form.Item>
-            <Form.Item label="总计费用">
-              {getFieldDecorator('price')(
-                    <Input />
-                )}
-            </Form.Item>
-            <Form.Item label="转委托要求">
-              {getFieldDecorator('inspwaymemo1')(
-                    <Input />
-                )}
-            </Form.Item>
-          </Form>
-        </Modal>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm></SearchForm></div>
@@ -212,7 +124,7 @@ class SubEntrustment extends PureComponent {
               columns={this.columns}
               rowKey="reportno"
               //onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+              //onChange={this.handleStandardTableChange}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>

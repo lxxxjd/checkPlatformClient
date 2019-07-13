@@ -224,7 +224,7 @@ class EntrustmentRelevance extends PureComponent {
 
   render() {
     const {
-      testInfo: {data},
+      testInfo: {relevanceData},
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -235,10 +235,11 @@ class EntrustmentRelevance extends PureComponent {
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               //selectedRows={selectedRows}
-              //loading={loading}
-              dataSource={data.list}
+              loading={loading}
+              dataSource={relevanceData.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
+              rowKey="reportno"
               //onSelectRow={this.handleSelectRows}
               //onChange={this.handleStandardTableChange}
             />
