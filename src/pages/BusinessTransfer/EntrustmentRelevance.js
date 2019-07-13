@@ -66,13 +66,30 @@ class EntrustmentRelevance extends PureComponent {
     },
     {
       title: '关联委托号',
-      dataIndex: 'relevanceReportno',
+      dataIndex: 'reportlink',
+      render: (text, record) => {
+        let  contentStr = [];
+        contentStr = text.split(",");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        let br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j==0){
+             result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>; 
+      },
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>委托修改</a>
+          <a onClick={() => this.mobileItem(text, record)}>修改委托关联</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -99,12 +116,11 @@ class EntrustmentRelevance extends PureComponent {
     });
   };
   mobileItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',text.applicant);
     router.push({
       pathname:'/BusinessTransfer/ModifyRelevance',
-      state:{
-        reportNo:text.reportno,
-        shipname:text.shipname
-      }
     });
   };
 
