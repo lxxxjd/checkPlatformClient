@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table
+  Table, message,Modal
 
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -18,15 +18,91 @@ import styles from './CustomerServiceDetail.less';
 import task from './models/task';
 
 
-
-
-
 const FormItem = Form.Item;
 const { Option } = Select;
+// eslint-disable-next-line no-unused-vars
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+
+
+const CreateForm = Form.create()(props => {
+
+  const { modalVisible, form, handleAdd, handleModalVisible,modalInfo  } = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      form.resetFields();
+      handleAdd(fieldsValue,modalInfo);
+    });
+  };
+  return (
+    <Modal
+      destroyOnClose
+      title="编辑客服"
+      visible={modalVisible}
+      onOk={okHandle}
+      onCancel={() => handleModalVisible()}
+    >
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
+        {form.getFieldDecorator('inspman', {
+          initialValue: modalInfo.inspman,
+        })(<Input placeholder="请输入姓名" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
+        {form.getFieldDecorator('inspway', {
+          initialValue: modalInfo.inspway,
+        })(<Input placeholder="请输入任务" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="岗位">
+        {form.getFieldDecorator('position', {
+          initialValue: modalInfo.position,
+        })(<Input placeholder="请输入工作岗位" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
+        {form.getFieldDecorator('tel', {
+          initialValue: modalInfo.tel,
+        })(<Input placeholder="请输入联系电话" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="工时">
+        {form.getFieldDecorator('manhour', {
+          initialValue: modalInfo.manhour,
+        })(<Input placeholder="请输入工时费用" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="劳务">
+        {form.getFieldDecorator('labourfee', {
+          initialValue: modalInfo.labourfee,
+        })(<Input placeholder="请输入劳务费用" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="餐饮">
+        {form.getFieldDecorator('lunchfee', {
+          initialValue: modalInfo.lunchfee,
+        })(<Input placeholder="请输入餐饮费用" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="交通">
+        {form.getFieldDecorator('trafficfee', {
+          initialValue: modalInfo.trafficfee,
+        })(<Input placeholder="请输入交通费用" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="其他">
+        {form.getFieldDecorator('otherfee', {
+          initialValue: modalInfo.otherfee,
+        })(<Input placeholder="请输入其他费用" />)}
+      </FormItem>
+
+
+    </Modal>
+  );
+});
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ task, loading }) => ({
@@ -38,7 +114,10 @@ const getValue = obj =>
 class CustomerServiceDetail extends PureComponent {
   state = {
     selectedRowKeys: [],
+    // eslint-disable-next-line react/no-unused-state
     formValues: {},
+    modalVisible: false,
+    modalInfo :{},
   };
 
   taskData=[];
@@ -50,10 +129,6 @@ class CustomerServiceDetail extends PureComponent {
     {
       title: '客服姓名',
       dataIndex: 'inspman',
-    },
-    {
-      title: '状态',
-      dataIndex: 'state',
     },
     {
       title: '联系方式',
@@ -88,9 +163,9 @@ class CustomerServiceDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>编辑</a>
+          <a onClick={() => this.handleEdit(true,text)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>在岗</a>
+          <a onClick={() => this.handleEdit(true)}>在岗</a>
         </Fragment>
       ),
     },
@@ -111,12 +186,17 @@ class CustomerServiceDetail extends PureComponent {
   save = () => {
     const {selectedRowKeys} = this.state;
     const params = [];
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+
     // eslint-disable-next-line no-restricted-syntax
     for( const i of selectedRowKeys){
       let itemtask = this.taskData.find(item => item.inspman === i );
       if(!this.exist.find(item => item === itemtask.inspman)){
-          itemtask.state = 3
+          itemtask.state = 2
       }
+      itemtask.reportno = reportinfo.reportno;
+      itemtask.taskman =user.nameC;
       params.push(itemtask);
     }
 
@@ -125,24 +205,27 @@ class CustomerServiceDetail extends PureComponent {
       let itemtask = this.taskData.find(item => item.inspman === i );
       if(!selectedRowKeys.find(item => item === itemtask.inspman)){
         // eslint-disable-next-line block-scoped-var
-        itemtask.state = 4;
+        itemtask.state = 3;
       }
       if(!params.find(item =>item.inspman ===i)) {
+        itemtask.reportno = reportinfo.reportno;
+        itemtask.taskman =user.nameC;
         params.push(itemtask);
       }
     }
     const {dispatch} = this.props;
-    console.log(JSON.stringify(params));
     dispatch({
       type: 'task/dealTask',
-      payload: JSON.stringify(params),
+      payload: {params},
       callback: (response) => {
-
+        if(response){
+          message.success('保存成功');
+          this.handleFormReset();
+        }else{
+          message.success('保存失败');
+        }
       }
     });
-
-
-
 
   };
 
@@ -203,8 +286,58 @@ class CustomerServiceDetail extends PureComponent {
     this.setState({ selectedRowKeys });
   }
 
+  handleEdit = (flag,text) => {
+    this.handleModalVisible(flag);
+    this.state.modalInfo = text;
+  }
 
-  renderSimpleForm() {
+  handleModalVisible = (flag) => {
+    this.setState({
+      modalVisible: !!flag,
+    });
+  };
+
+
+  handleAdd = (fields,modalInfo) => {
+    this.setState({
+      modalVisible: false,
+    });
+    //设置参数
+    const {dispatch}  = this.props;
+    let params = modalInfo;
+    params.inspway = fields.inspway;
+    params.position = fields.position;
+    params.tel = fields.tel;
+    params.manhour = fields.manhour;
+    params.labourfee = fields.labourfee;
+    params.lunchfee = fields.lunchfee;
+    params.trafficfee = fields.trafficfee;
+    params.otherfee = fields.otherfee;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    params.taskman = user.nameC;
+    params.reportno = reportinfo.reportno;
+
+    dispatch({
+      type: 'task/updateTask',
+      payload: params,
+      callback: (response) => {
+        if (response) {
+          message.success("保存成功");
+          this.init();
+        }else{
+          message.success("保存失败");
+        }
+      }
+    });
+    console.log(modalInfo);
+    console.log(fields);
+  }
+
+
+
+
+    renderSimpleForm() {
     const {
       form: { getFieldDecorator },
     } = this.props;
@@ -277,6 +410,15 @@ class CustomerServiceDetail extends PureComponent {
       onChange: this.onSelectChange,
     };
 
+
+    const {  modalVisible,modalInfo } = this.state;
+
+    const parentMethods = {
+      handleAdd: this.handleAdd,
+      handleModalVisible: this.handleModalVisible,
+    };
+
+
     return (
 
       <PageHeaderWrapper title="指派编辑">
@@ -308,6 +450,7 @@ class CustomerServiceDetail extends PureComponent {
             </Row>
           </Card>
 
+          <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
 
           <Card bordered={false} style={{ marginTop: 24 }}>
             <div className={styles.tableList}>
