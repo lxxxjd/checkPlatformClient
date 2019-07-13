@@ -16,7 +16,7 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SubEntrustment.less';
+import styles from './DetailForSub.less';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
@@ -32,7 +32,7 @@ class DetailForSub extends PureComponent {
     formValues: {},
     visible:false,
     checkProject:[],
-    allReporterName:[],
+    allCompanyName:[],
   };
 
   columns = [
@@ -60,6 +60,8 @@ class DetailForSub extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
+          <a onClick={() => this.detailItem(text, record)}>详情</a>
+          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
         </Fragment>
       ),
@@ -70,17 +72,20 @@ class DetailForSub extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testInfo/getTestInfos',
+      type: 'testInfo/getTestByReportNo',
       payload:{
-         certCode : certCode,
+         reportno : reportno,
       }
     });
     dispatch({
-      type: 'testInfo/getClientName',
-      payload: {},
+      type: 'testInfo/getCompany',
+      payload: {
+        certCode : certCode,
+      },
       callback: (response) => {
-        this.setState({allReporterName:response})
+        this.setState({allCompanyName:response})
       }
     });
     dispatch({
@@ -95,8 +100,11 @@ class DetailForSub extends PureComponent {
   modifyItem = text => {
     const { form } = this.props;
     this.setState({visible:true});
-    const inspway = text.inspway.split(" ");
-    form.setFieldsValue({['inspway']:inspway});
+    if(text.inspway && typeof(text.inspway) != "undefined"){
+        const inspway = text.inspway.split(" ");
+        form.setFieldsValue({['inspway']:inspway});
+    }
+    form.setFieldsValue({['keyno']:text.keyno});
     form.setFieldsValue({['testman']:text.testman});
     form.setFieldsValue({['price']:text.price});
     form.setFieldsValue({['priceway']:text.priceway});
@@ -106,6 +114,19 @@ class DetailForSub extends PureComponent {
 
   handleOk = () =>{
     this.setState({ visible: false });
+    const {
+      form: { validateFieldsAndScroll },
+      dispatch,
+    } = this.props;
+    validateFieldsAndScroll((error, values) => {
+      if (!error) {
+        // submit the values
+        dispatch({
+          type: 'testInfo/addTestInfo',
+          payload: values,
+        });
+      }
+    });
   };
 
   handleCancel = () =>{
@@ -121,15 +142,15 @@ class DetailForSub extends PureComponent {
       </div>
     );
     const {
-      testInfo: {data},
+      testInfo: {TestInfo},
       loading,
       form: { getFieldDecorator },
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const applicant = sessionStorage.getItem('applicant');
-    const {  checkProject,allReporterName} = this.state;
-    const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const {  checkProject,allCompanyName} = this.state;
+    const companyNameOptions = allCompanyName.map(d => <Option key={d}  value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="转委托">
         <Modal
@@ -148,7 +169,7 @@ class DetailForSub extends PureComponent {
                       filterOption={false}
                       onSearch={this.handleSearch}
                     >
-                      {reportNameOptions}
+                      {companyNameOptions}
                     </Select>
                     )}
             </Form.Item>
@@ -203,11 +224,9 @@ class DetailForSub extends PureComponent {
           <div className={styles.tableList}>
             <Table
               loading={loading}
-              dataSource={data.list}
+              dataSource={TestInfo}
               columns={this.columns}
-              rowKey="reportno"
-              //onSelectRow={this.handleSelectRows}
-              //onChange={this.handleStandardTableChange}
+              rowKey="testman"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>

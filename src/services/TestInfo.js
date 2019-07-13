@@ -33,6 +33,13 @@ export async function getReportexceptLink(params) {
 	return request(`/api/report/get_report_except_link?reportno=${params.reportno}&certCode=${params.certCode}`);
 }
 
+export async function getTestByReportNo(params) {
+  return request(`/api/TestInfo/getTestByReportNo?reportno=${params.reportno}`);
+}
+
+export async function getCompany(params) {
+  return request(`/api/TestInfo/getCompany?certCode=${params.certCode}`);
+}
 export async function addReportLink(params) {
 	const value = params.value;
 	return request('/api/report/add_reportlink',{
