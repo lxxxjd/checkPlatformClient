@@ -79,14 +79,14 @@ class SubEntrustment extends PureComponent {
             result=<span>{result}{br}{contentStr[j]}</span>;
           }
         }
-        return <div>{result}</div>; 
-      }, 
+        return <div>{result}</div>;
+      },
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.detailItem(text, record)}>详情</a>
+          <a onClick={() => this.detailItem(text, record)}>转委托</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

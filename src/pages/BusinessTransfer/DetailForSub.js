@@ -56,19 +56,19 @@ class DetailForSub extends PureComponent {
     },
     {
       title: '总价',
-      dataIndex: 'totalfee', 
+      dataIndex: 'totalfee',
     },
     {
       title: '转委托要求',
-      dataIndex: 'inspwaymemo1', 
+      dataIndex: 'inspwaymemo1',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.detailItem(text, record)}>详情</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
+          &nbsp;&nbsp;
+          <a>详情</a>
         </Fragment>
       ),
     },
@@ -198,7 +198,7 @@ class DetailForSub extends PureComponent {
     return (
       <PageHeaderWrapper title="转委托">
         <Modal
-          title="Basic Modal"
+          title="新建转委托"
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -275,7 +275,7 @@ class DetailForSub extends PureComponent {
               <Info title="运输工具" value={shipname} />
             </Col>
           </Row>
-        </Card>  
+        </Card>
         <Card bordered={false}>
           <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
           <div className={styles.tableList}>
