@@ -10,12 +10,13 @@ import {
   Input,
   Button,
   Select,
-  Table, message,Modal
+  Table, message, Modal, Checkbox,
 
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectorDetail.less';
 import task from './models/task';
+
 
 
 const FormItem = Form.Item;
@@ -25,11 +26,24 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+const CheckboxGroup = Checkbox.Group;
+const inspwayOptions= [
+  '水尺',
+  '船舱',
+  '流量',
+  '衡器',
+  '干仓',
+  '验舱',
+  '取样',
+  '制样',
+  '送样',
+  '品质',
+];
 
 
 const CreateForm = Form.create()(props => {
 
-  const { modalVisible, form, handleAdd, handleModalVisible,modalInfo  } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,modalInfo ,checkProject } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -51,17 +65,24 @@ const CreateForm = Form.create()(props => {
         })(<Input placeholder="请输入姓名" />)}
       </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
-        {form.getFieldDecorator('inspway', {
-          initialValue: modalInfo.inspway,
-        })(<Input placeholder="请输入任务" />)}
-      </FormItem>
-
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="岗位">
         {form.getFieldDecorator('position', {
           initialValue: modalInfo.position,
-        })(<Input placeholder="请输入工作岗位" />)}
+        })(
+          <Select placeholder="请选择工作岗位" style={{ width: 295 }}>
+            <Option value="组长">组长</Option>
+            <Option value="组员">组员</Option>
+          </Select>
+        )}
       </FormItem>
+
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
+        {form.getFieldDecorator('inspway', {
+          initialValue: modalInfo.inspway,
+        })(<CheckboxGroup options={inspwayOptions} />)}
+      </FormItem>
+
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
         {form.getFieldDecorator('tel', {
@@ -118,6 +139,7 @@ class InspectorDetail extends PureComponent {
     formValues: {},
     modalVisible: false,
     modalInfo :{},
+    checkProject:[],
   };
 
   taskData=[];
@@ -255,6 +277,16 @@ class InspectorDetail extends PureComponent {
         }
       }
     });
+
+    //获得checkoptions
+    dispatch({
+      type: 'testInfo/getCheckProject',
+      payload: {},
+      callback: (response) => {
+        this.setState({checkProject:response})
+      }
+    });
+
   }
 
   handleFormReset = () => {
@@ -305,7 +337,21 @@ class InspectorDetail extends PureComponent {
     //设置参数
     const {dispatch}  = this.props;
     let params = modalInfo;
-    params.inspway = fields.inspway;
+    if(fields.inspway !==null && fields.inspway !== undefined){
+      const len = fields.inspway.length;
+      if(len !==0){
+        let inspway ="";
+        // eslint-disable-next-line no-plusplus
+        for (let i=0; i<len;i++ ){
+          if(i !== len-1){
+            inspway += `${fields.inspway[i]},`;
+          }else{
+            inspway += `${fields.inspway[i]}`
+          }
+        }
+        params.inspway = inspway;
+      }
+    }
     params.position = fields.position;
     params.tel = fields.tel;
     params.manhour = fields.manhour;
@@ -318,20 +364,29 @@ class InspectorDetail extends PureComponent {
     params.taskman = user.nameC;
     params.reportno = reportinfo.reportno;
 
-    dispatch({
-      type: 'task/updateInspect',
-      payload: params,
-      callback: (response) => {
-        if (response) {
-          message.success("保存成功");
-          this.init();
-        }else{
-          message.success("保存失败");
+    console.log(params);
+    if(!(params.position ==null &&
+      params.tel  ==null &&
+      params.manhour ==null&&
+      params.labourfee ==null&&
+      params.lunchfee ==null&&
+      params.trafficfee ==null &&
+      params.otherfee ==null &&  params.inspway==null )){
+      dispatch({
+        type: 'task/updateInspect',
+        payload: params,
+        callback: (response) => {
+          if (response) {
+            message.success("保存成功");
+            this.init();
+          }else{
+            message.success("保存失败");
+          }
         }
-      }
-    });
-    console.log(modalInfo);
-    console.log(fields);
+      });
+    }else{
+      message.success("未编辑选项！");
+    }
   }
 
 
@@ -411,7 +466,7 @@ class InspectorDetail extends PureComponent {
     };
 
 
-    const {  modalVisible,modalInfo } = this.state;
+    const {  modalVisible,modalInfo,checkProject } = this.state;
 
     const parentMethods = {
       handleAdd: this.handleAdd,

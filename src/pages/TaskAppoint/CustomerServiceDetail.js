@@ -51,17 +51,29 @@ const CreateForm = Form.create()(props => {
         })(<Input placeholder="请输入姓名" />)}
       </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
-        {form.getFieldDecorator('inspway', {
-          initialValue: modalInfo.inspway,
-        })(<Input placeholder="请输入任务" />)}
-      </FormItem>
+
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="岗位">
         {form.getFieldDecorator('position', {
-          initialValue: modalInfo.position,
-        })(<Input placeholder="请输入工作岗位" />)}
+            initialValue: modalInfo.position,
+          })(
+            <Select placeholder="请选择工作岗位" style={{ width: 295 }}>
+              <Option value="组长">组长</Option>
+              <Option value="组员">组员</Option>
+            </Select>
+          )}
       </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
+        {form.getFieldDecorator('inspway', {
+          initialValue: modalInfo.inspway,
+        })(
+          <Select placeholder="请选择工作任务" style={{ width: 295 }}>
+            <Option value="客服">客服</Option>
+          </Select>
+        )}
+      </FormItem>
+
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
         {form.getFieldDecorator('tel', {
