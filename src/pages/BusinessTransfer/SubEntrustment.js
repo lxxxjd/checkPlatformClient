@@ -43,6 +43,10 @@ class SubEntrustment extends PureComponent {
       dataIndex: 'reportno',
     },
     {
+      title: '委托人',
+      dataIndex: 'applicant',
+    },
+    {
       title: '委托日期',
       dataIndex: 'reportdate',
       render: val => <span>{
@@ -58,8 +62,25 @@ class SubEntrustment extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '被委托公司',
-      dataIndex: 'testman', 
+      title: '转委托公司',
+      dataIndex: 'company',
+      render: (text, record) => {
+        let  contentStr = [];
+        contentStr = text.split(" ");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        let br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j==0){
+             result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>; 
+      }, 
     },
     {
       title: '操作',
@@ -96,9 +117,9 @@ class SubEntrustment extends PureComponent {
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     router.push({
-      pathname:'/BusinessTransfer/ModifyRelevance',
+      pathname:'/BusinessTransfer/DetailForSub',
     });
-  }
+  };
   previewItem = text => {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',

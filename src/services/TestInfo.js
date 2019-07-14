@@ -18,6 +18,24 @@ export async function queryReport(params) {
     },
   });
 }
+export async function addTestInfo(params) {
+  return request(`/api/TestInfo/addTestInfo`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+export async function updateTestInfo(params) {
+  return request(`/api/TestInfo/updateTestInfo`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
 export async function getAllClientName(params) {
   if(params.content != null){
     return request(`/api/client/getAllClientName?content=${params.content}`);
@@ -33,6 +51,13 @@ export async function getReportexceptLink(params) {
 	return request(`/api/report/get_report_except_link?reportno=${params.reportno}&certCode=${params.certCode}`);
 }
 
+export async function getTestByReportNo(params) {
+  return request(`/api/TestInfo/getTestByReportNo?reportno=${params.reportno}`);
+}
+
+export async function getCompany(params) {
+  return request(`/api/TestInfo/getCompany?certCode=${params.certCode}`);
+}
 export async function addReportLink(params) {
 	const value = params.value;
 	return request('/api/report/add_reportlink',{
@@ -40,6 +65,7 @@ export async function addReportLink(params) {
     	data: value
 	});
 }
+
 export async function deleteReportLink(params) {
 	const value = params.value;
 	return request('/api/report/delete_reportlink',{

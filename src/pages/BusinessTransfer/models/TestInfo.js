@@ -1,4 +1,4 @@
-import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject} from '@/services/TestInfo'
+import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject,getCompany,getTestByReportNo,addTestInfo,updateTestInfo} from '@/services/TestInfo'
 
 
 
@@ -18,6 +18,7 @@ export default {
     companyName:[],
     CheckProject:[],
     link:[],
+    TestInfo:[],
   },
 
   effects: {
@@ -35,6 +36,29 @@ export default {
         type: 'getReportEcpLink',
         payload: response,
       });
+    },
+    *getTestByReportNo({ payload }, { call, put }) {
+      const response = yield call(getTestByReportNo, payload);
+      yield put({
+        type: 'getTestInfo',
+        payload: response,
+      });
+    },
+    *addTestInfo({ payload,callback }, { call, put }) {
+      const response = yield call(addTestInfo, payload);
+      yield put({
+        type: 'getTestInfo',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *updateTestInfo({ payload,callback }, { call, put }) {
+      const response = yield call(updateTestInfo, payload);
+      yield put({
+        type: 'getTestInfo',
+        payload: response,
+      });
+      if (callback) callback();
     },
     *getTestInfos({ payload }, { call, put }) {
       const response = yield call(getTestInfo, payload);
@@ -74,7 +98,14 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
+    *getCompany({ payload,callback }, { call, put }) {
+      const response = yield call(getCompany, payload);
+      yield put({
+        type: 'getCompanyName',
+        payload:response,
+      });
+      if (callback) callback(response.data);
+    },
   },
 
   reducers: {
@@ -82,6 +113,18 @@ export default {
       return {
         ...state,
         relevanceData: payload.data,
+      };
+    },
+    getTestInfo(state, { payload }) {
+      return {
+        ...state,
+        TestInfo: payload.data,
+      };
+    },
+    getCompanyName(state, { payload }) {
+      return {
+        ...state,
+        companyName: payload.data,
       };
     },
     getReportEcpLink(state, { payload }) {

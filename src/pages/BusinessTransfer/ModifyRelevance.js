@@ -67,6 +67,23 @@ class ModifyRelevance extends PureComponent {
     {
       title: '关联委托号',
       dataIndex: 'reportlink',
+      render: (text, record) => {
+        let  contentStr = [];
+        contentStr = text.split(",");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        let br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j==0){
+             result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>; 
+      },
     },
     {
       title: '操作',
