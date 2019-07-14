@@ -33,6 +33,8 @@ class DetailForSub extends PureComponent {
     visible:false,
     checkProject:[],
     allCompanyName:[],
+    selectEntrustment:null,
+    showPrice:false,
   };
 
   columns = [
@@ -55,6 +57,10 @@ class DetailForSub extends PureComponent {
     {
       title: '总价',
       dataIndex: 'totalfee', 
+    },
+    {
+      title: '转委托要求',
+      dataIndex: 'inspwaymemo1', 
     },
     {
       title: '操作',
@@ -100,39 +106,77 @@ class DetailForSub extends PureComponent {
   modifyItem = text => {
     const { form } = this.props;
     this.setState({visible:true});
+    //this.state.selectEntrustment = text;
+    this.setState({selectEntrustment:text});
     if(text.inspway && typeof(text.inspway) != "undefined"){
         const inspway = text.inspway.split(" ");
         form.setFieldsValue({['inspway']:inspway});
     }
-    form.setFieldsValue({['keyno']:text.keyno});
     form.setFieldsValue({['testman']:text.testman});
     form.setFieldsValue({['price']:text.price});
     form.setFieldsValue({['priceway']:text.priceway});
     form.setFieldsValue({['totalfee']:text.totalfee});
     form.setFieldsValue({['inspwaymemo1']:text.inspwaymemo1});
+    if(text.priceway === "按单价"  || text.priceway ==="按比例"){
+      this.setState({showPrice:true});
+    }else{
+      this.setState({showPrice:false});
+    }
   };
 
   handleOk = () =>{
-    this.setState({ visible: false });
     const {
       form: { validateFieldsAndScroll },
       dispatch,
     } = this.props;
+    const {selectEntrustment} = this.state;
     validateFieldsAndScroll((error, values) => {
       if (!error) {
-        // submit the values
-        dispatch({
-          type: 'testInfo/addTestInfo',
-          payload: values,
-        });
+        if(selectEntrustment&&typeof(selectEntrustment) != "undefined"){
+          values.keyno = selectEntrustment.keyno;
+          values.reportno = selectEntrustment.reportno;
+          values.assignman = selectEntrustment.assignman;
+          values.inspway = values.inspway.join(" ");
+          dispatch({
+            type: 'testInfo/updateTestInfo',
+            payload: values,
+          });
+        }else{
+          const reportno = sessionStorage.getItem('reportno');
+          values.reportno = reportno;
+          values.inspway = values.inspway.join(" ");
+          dispatch({
+            type: 'testInfo/addTestInfo',
+            payload: values,
+          });
+        }
+
+        this.setState({ selectEntrustment: null });
+        this.setState({ visible: false });
+        form.resetFields();
       }
+      console.log(error);
     });
   };
-
+  show = () => {
+    const {
+      form,
+      dispatch,
+    } = this.props;
+    const validateFieldsAndScroll = form;
+    form.resetFields();
+    this.setState({ visible: true });
+  };
   handleCancel = () =>{
     this.setState({ visible: false });
   };
-
+  onChange = e =>{
+    if(e.target.value === "按单价"  || e.target.value ==="按比例"){
+      this.setState({showPrice:true});
+    }else{
+      this.setState({showPrice:false});
+    }
+  }
   render() {
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
@@ -149,7 +193,7 @@ class DetailForSub extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const applicant = sessionStorage.getItem('applicant');
-    const {  checkProject,allCompanyName} = this.state;
+    const {  showPrice,checkProject,allCompanyName} = this.state;
     const companyNameOptions = allCompanyName.map(d => <Option key={d}  value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="转委托">
@@ -174,15 +218,19 @@ class DetailForSub extends PureComponent {
                     )}
             </Form.Item>
             <Form.Item label="转委托项目">
-              {getFieldDecorator('inspway')(
+              {getFieldDecorator('inspway', {
+                rules: [{ required: true, message: '请选择转委托项目' }],
+              })(
                   <CheckboxGroup
                     options={checkProject}
                   />
                 )}
             </Form.Item>
-            <Form.Item label="计价方式" className="collection-create-form_last-form-item">
-              {getFieldDecorator('priceway')(
-                <Radio.Group>
+            <Form.Item label="计价方式" >
+              {getFieldDecorator('priceway', {
+                rules: [{ required: true, message: '请选择计价方式' }],
+              })(
+                <Radio.Group onChange={this.onChange}>
                   <Radio value="按单价">按单价</Radio>
                   <Radio value="按批次">按批次</Radio>
                   <Radio value="按协议">按协议</Radio>
@@ -190,13 +238,21 @@ class DetailForSub extends PureComponent {
                 </Radio.Group>,
               )}
             </Form.Item>
-            <Form.Item label="单价/比例">
-              {getFieldDecorator('price')(
+            <Form.Item label="单价/比例"
+              >
+              {
+                { true: getFieldDecorator('price', {
+                  rules: [{ required: true, message: '请输入单价比例' }],
+                })(
                     <Input />
-                )}
+                 )
+                  }[showPrice]
+              }
             </Form.Item>
             <Form.Item label="总计费用">
-              {getFieldDecorator('totalfee')(
+              {getFieldDecorator('totalfee', {
+                rules: [{ required: true, message: '请输入总计费用' }],
+              })(
                     <Input />
                 )}
             </Form.Item>
@@ -221,6 +277,7 @@ class DetailForSub extends PureComponent {
           </Row>
         </Card>  
         <Card bordered={false}>
+          <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
           <div className={styles.tableList}>
             <Table
               loading={loading}

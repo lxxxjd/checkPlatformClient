@@ -158,6 +158,7 @@ export default [
             path: '/BusinessTransfer/DetailForSub',
             name: 'DetailForSub',
             component: './BusinessTransfer/DetailForSub',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
             path: '/BusinessTransfer/ModifyRelevance',

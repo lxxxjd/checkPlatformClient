@@ -1,4 +1,4 @@
-import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject,getCompany,getTestByReportNo,addTestInfo} from '@/services/TestInfo'
+import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject,getCompany,getTestByReportNo,addTestInfo,updateTestInfo} from '@/services/TestInfo'
 
 
 
@@ -18,7 +18,7 @@ export default {
     companyName:[],
     CheckProject:[],
     link:[],
-    TestInfo:[]
+    TestInfo:[],
   },
 
   effects: {
@@ -46,6 +46,14 @@ export default {
     },
     *addTestInfo({ payload,callback }, { call, put }) {
       const response = yield call(addTestInfo, payload);
+      yield put({
+        type: 'getTestInfo',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *updateTestInfo({ payload,callback }, { call, put }) {
+      const response = yield call(updateTestInfo, payload);
       yield put({
         type: 'getTestInfo',
         payload: response,
