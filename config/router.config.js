@@ -168,6 +168,22 @@ export default [
           },
         ],
       },
+
+      // TaskAppoint
+      {
+        path: '/UEditor',
+        icon: 'table',
+        name: 'UEditor',
+        routes: [
+          {
+            path: '/UEditor/UEditorText',
+            name: 'UEditorText',
+            component: './UEditor/UEditorText',
+          },
+        ],
+      },
+
+
       {
         component: '404',
       },
