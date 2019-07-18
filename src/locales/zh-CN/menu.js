@@ -16,6 +16,8 @@ export default {
   'menu.TaskAppoint.Inspector':'检验人员',
   'menu.TaskAppoint.InspectorDetail':'检员详情',
   'menu.BusinessTransfer': '业务转移',
+  'menu.UEditor': '文本编辑',
+  'menu.UEditor.UEditorText':'编辑器',
   'menu.BusinessTransfer.EntrustmentRelevance':'委托关联',
   'menu.BusinessTransfer.SubEntrustment':'转委托',
   'menu.BusinessTransfer.ModifyRelevance':'修改委托关联',
