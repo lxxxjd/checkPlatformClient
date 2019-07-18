@@ -26,19 +26,19 @@ export default [
       // Entrustment
       { path: '/', redirect: '/Entrustment/ApplicationForEntrustment',authority: ['admin', 'user']},
 
-      // // list
-      // {
-      //   path: '/list',
-      //   icon: 'table',
-      //   name: 'list',
-      //   routes: [
-      //     {
-      //       path: '/list/table-list',
-      //       name: 'searchtable',
-      //       component: './List/TableList',
-      //     }
-      //   ],
-      // },
+      // list
+      {
+        path: '/list',
+        icon: 'table',
+        name: 'list',
+        routes: [
+          {
+            path: '/list/table-list',
+            name: 'searchtable',
+            component: './List/TableList',
+          }
+        ],
+      },
       // //newPage
       // {
       //   path: "/Certificate",
