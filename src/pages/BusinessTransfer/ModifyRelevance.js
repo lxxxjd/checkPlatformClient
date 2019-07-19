@@ -253,13 +253,6 @@ class ModifyRelevance extends PureComponent {
     );
   }
   render() {
-    const Info = ({ title, value, bordered }) => (
-      <div className={styles.headerInfo}>
-        <span>{title}</span>
-        <p>{value}</p>
-        {bordered && <em />}
-      </div>
-    );
     const {
       testInfo: {report,link},
       loading,
@@ -271,6 +264,15 @@ class ModifyRelevance extends PureComponent {
     return (
       <PageHeaderWrapper >     
         <Card bordered={false} className={styles.card}>
+          <Row>
+            <Col sm={5} >
+              <span level={4} > 委托编号：{reportno} </span>
+            </Col>
+            <Col sm={8} >
+              <span> 运输工具：{shipname} </span>
+            </Col>
+          </Row>
+          <br></br>
           <Row gutter={16} >  
             <Col span={5}>
               <Title level={4} > 已关联委托</Title>
@@ -278,18 +280,6 @@ class ModifyRelevance extends PureComponent {
             <Col span={19}>
             </Col>
           </Row>
-          <Row>
-            <Col sm={8} xs={24}>
-              <Info title="委托编号" value={reportno} bordered />
-            </Col>
-            <Col sm={8} xs={24}>
-              <Info title="委托人" value={applicant} bordered />
-            </Col>
-            <Col sm={8} xs={24}>
-              <Info title="运输工具" value={shipname} />
-            </Col>
-          </Row>
-          <br></br>
           <div className={styles.tableList}>
             <Table
               loading={loading}
