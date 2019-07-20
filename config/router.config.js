@@ -201,6 +201,30 @@ export default [
         ],
       },
 
+      // SampleRegister
+      {
+        path: '/SampleRegister',
+        icon: 'table',
+        name: 'SampleRegister',
+        routes: [
+          {
+            path: '/SampleRegister/SampleRegister',
+            name: 'SampleRegister',
+            component: './SampleRegister/SampleRegister',
+          },
+          {
+            path: '/SampleRegister/SampleQuery',
+            name: 'SampleQuery',
+            component: './SampleRegister/SampleQuery',
+          },
+          {
+            path: '/SampleRegister/SampleDestory',
+            name: 'SampleDestory',
+            component: './SampleRegister/SampleDestory',
+          },
+        ],
+      },
+
 
       {
         component: '404',

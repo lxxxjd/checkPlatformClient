@@ -25,6 +25,13 @@ export default {
   'menu.TestRecord': '检验结果',
   'menu.TestRecord.ResultRegistration':'结果登记',
   'menu.TestRecord.ResultDetail':'结果详情',
+
+  'menu.SampleRegister': '样品记录',
+  'menu.SampleRegister.SampleRegister':'样品登记',
+  'menu.SampleRegister.SampleQuery':'样品查询',
+  'menu.SampleRegister.SampleDestory':'样品销毁',
+
+
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
