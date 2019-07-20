@@ -13,7 +13,7 @@ import {
   Table,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SampleRegister.less';
+import styles from './SampleQuery.less';
 
 
 const FormItem = Form.Item;
@@ -24,13 +24,13 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ task, loading }) => ({
-  task,
-  loading: loading.models.task,
+@connect(({ sample, loading }) => ({
+  sample,
+  loading: loading.models.sample,
 }))
 
 @Form.create()
-class SampleRegister extends PureComponent {
+class SampleQuery extends PureComponent {
   state = {
     formValues: {},
   };
@@ -57,14 +57,14 @@ class SampleRegister extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '客服人员',
+      title: '样品编号',
       dataIndex: 'inspman',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>指派编辑</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>样品登记</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -77,7 +77,7 @@ class SampleRegister extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     const params = {
-        certCode:user.certCode
+      certCode:user.certCode
     };
     dispatch({
       type: 'task/fetch',
@@ -89,10 +89,8 @@ class SampleRegister extends PureComponent {
   previewItem = text => {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
-      state:text.reportno,
     });
-
-
+    localStorage.setItem('reportDetailNo',text.reportno);
   };
 
   toCustomerDetail = text => {
@@ -198,11 +196,11 @@ class SampleRegister extends PureComponent {
 
   render() {
     const {
-      task: {data},
+      sample: {data},
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="客服指派">
+      <PageHeaderWrapper title="样品查询">
 
 
 
@@ -212,7 +210,7 @@ class SampleRegister extends PureComponent {
             <Table
               rowKey="reportno"
               loading={loading}
-              dataSource={data.list}
+              //dataSource={data.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />
@@ -223,4 +221,4 @@ class SampleRegister extends PureComponent {
   }
 }
 
-export default SampleRegister;
+export default SampleQuery;

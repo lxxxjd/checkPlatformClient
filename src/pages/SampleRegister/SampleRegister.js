@@ -24,9 +24,9 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ task, loading }) => ({
-  task,
-  loading: loading.models.task,
+@connect(({ sample, loading }) => ({
+  sample,
+  loading: loading.models.sample,
 }))
 
 @Form.create()
@@ -90,7 +90,6 @@ class SampleRegister extends PureComponent {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
-
     localStorage.setItem('reportDetailNo',text.reportno);
   };
 
@@ -197,11 +196,11 @@ class SampleRegister extends PureComponent {
 
   render() {
     const {
-      task: {data},
+      sample: {data},
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="客服指派">
+      <PageHeaderWrapper title="样品登记">
 
 
 
@@ -211,7 +210,7 @@ class SampleRegister extends PureComponent {
             <Table
               rowKey="reportno"
               loading={loading}
-              dataSource={data.list}
+              //dataSource={data.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />

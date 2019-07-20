@@ -31,6 +31,8 @@ export default {
   'menu.SampleRegister.SampleQuery':'样品查询',
   'menu.SampleRegister.SampleDestory':'样品销毁',
 
+  'menu.SampleRegister.SampleRegisterDetail':'样品登记详情',
+
 
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',

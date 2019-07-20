@@ -26,19 +26,19 @@ export default [
       // Entrustment
       { path: '/', redirect: '/Entrustment/ApplicationForEntrustment',authority: ['admin', 'user']},
 
-      // list
-      {
-        path: '/list',
-        icon: 'table',
-        name: 'list',
-        routes: [
-          {
-            path: '/list/table-list',
-            name: 'searchtable',
-            component: './List/TableList',
-          }
-        ],
-      },
+      // // 证书
+      // {
+      //   path: '/list',
+      //   icon: 'table',
+      //   name: 'list',
+      //   routes: [
+      //     {
+      //       path: '/list/table-list',
+      //       name: 'searchtable',
+      //       component: './List/TableList',
+      //     }
+      //   ],
+      // },
       // //newPage
       // {
       //   path: "/Certificate",
@@ -142,7 +142,7 @@ export default [
       //BusinessTransfer
       {
         path: '/BusinessTransfer',
-        icon: 'table',
+        icon: 'dashboard',
         name: 'BusinessTransfer',
         routes: [
           {
@@ -172,7 +172,7 @@ export default [
       //
       {
         path: '/TestRecord',
-        icon: 'table',
+        icon: 'form',
         name: 'TestRecord',
         routes: [
           {
@@ -187,24 +187,24 @@ export default [
           },
         ],
       },
-      // TaskAppoint
-      {
-        path: '/UEditor',
-        icon: 'table',
-        name: 'UEditor',
-        routes: [
-          {
-            path: '/UEditor/UEditorText',
-            name: 'UEditorText',
-            component: './UEditor/UEditorText',
-          },
-        ],
-      },
+      // // TaskAppoint
+      // {
+      //   path: '/UEditor',
+      //   icon: 'table',
+      //   name: 'UEditor',
+      //   routes: [
+      //     {
+      //       path: '/UEditor/UEditorText',
+      //       name: 'UEditorText',
+      //       component: './UEditor/UEditorText',
+      //     },
+      //   ],
+      // },
 
       // SampleRegister
       {
         path: '/SampleRegister',
-        icon: 'table',
+        icon: 'profile',
         name: 'SampleRegister',
         routes: [
           {
@@ -221,6 +221,11 @@ export default [
             path: '/SampleRegister/SampleDestory',
             name: 'SampleDestory',
             component: './SampleRegister/SampleDestory',
+          },
+          {
+            path: '/SampleRegister/SampleRegisterDetail',
+            name: 'SampleRegisterDetail',
+            component: './SampleRegister/SampleRegisterDetail',
           },
         ],
       },
