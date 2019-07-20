@@ -57,14 +57,14 @@ class SampleRegister extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '客服人员',
+      title: '样品编号',
       dataIndex: 'inspman',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>指派编辑</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>样品登记</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -89,10 +89,9 @@ class SampleRegister extends PureComponent {
   previewItem = text => {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
-      state:text.reportno,
     });
 
-
+    localStorage.setItem('reportDetailNo',text.reportno);
   };
 
   toCustomerDetail = text => {

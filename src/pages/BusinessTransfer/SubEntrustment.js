@@ -124,8 +124,8 @@ class SubEntrustment extends PureComponent {
   previewItem = text => {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
-      state:text.reportno,
     });
+    localStorage.setItem('reportDetailNo',text.reportno);
   };
 
 

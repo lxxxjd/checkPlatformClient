@@ -11,20 +11,23 @@ const { Title } = Typography;
 }))
 class DetailForEnturstment extends Component {
   state = { visible: false };
+
   componentWillMount() {
-    const { dispatch, location } = this.props;
-    console.log(location.state)
+    const reportnNo = JSON.parse(localStorage.getItem("reportDetailNo"));
+    const { dispatch } = this.props;
     dispatch({
       type: 'entrustment/getReport',
-      payload: location.state,
+      payload: reportnNo,
     });
   }
+
   handleOk = e => {
     console.log(e);
     const { dispatch, match } = this.props;
+    const reportnNo = JSON.parse(localStorage.getItem("reportDetailNo"));
     dispatch({
       type: 'entrustment/remove',
-      payload: {reportno:'320118070301'},
+      payload: {reportno:reportnNo},
     });
     this.setState({
       visible: false,
@@ -46,7 +49,7 @@ class DetailForEnturstment extends Component {
     const { entrustment = {}, loading } = this.props;
     const { report = { } } = entrustment;
     return (
-      <PageHeaderWrapper  loading={loading}>
+      <PageHeaderWrapper loading={loading}>
         <Card bordered={false}>
           <Row gutter={16}>
             <Col span={3}>
@@ -54,7 +57,7 @@ class DetailForEnturstment extends Component {
             </Col>
             <Col span={2}>
               <Button type="primary" onClick={this.deleteReport}>撤销申请</Button>
-            </Col>            
+            </Col>
             <Col span={19}>
             </Col>
           </Row>
