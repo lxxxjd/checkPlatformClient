@@ -13,21 +13,22 @@ import {
   Modal,
   Checkbox,
   Radio,
-  Table
+  Table,
+  DatePicker
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './DetailForSub.less';
+import styles from './ResultDetail.less';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ testInfo, loading }) => ({
-  testInfo,
-  loading: loading.models.testInfo,
+@connect(({ testRecord, loading }) => ({
+  testRecord,
+  loading: loading.models.testRecord,
 }))
-class DetailForSub extends PureComponent {
+class ResultDetail extends PureComponent {
   state = {
     formValues: {},
     visible:false,
@@ -39,23 +40,23 @@ class DetailForSub extends PureComponent {
 
   columns = [
     {
-      title: '转委托公司',
-      dataIndex: 'testman',
+      title: '委托编号',
+      dataIndex: 'reportno',
     },
     {
-      title: '转委托项目',
-      dataIndex: 'inspway',
+      title: '委托日期',
+      dataIndex: 'reportdate',
     },
     {
-      title: '计价方式',
-      dataIndex: 'priceway',
+      title: '运输工具',
+      dataIndex: 'shipname',
     },
     {
-      title: '单价',
-      dataIndex: 'price',
+      title: '货号',
+      dataIndex: 'cargoname',
     },
     {
-      title: '总价',
+      title: '申请项目',
       dataIndex: 'totalfee',
     },
     {
@@ -66,9 +67,11 @@ class DetailForSub extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
+          <a onClick={() => this.modifyItem(text, record)} >登记</a>
           &nbsp;&nbsp;
           <a>详情</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)} >委托详情</a>
         </Fragment>
       ),
     },
@@ -85,39 +88,16 @@ class DetailForSub extends PureComponent {
          reportno : reportno,
       }
     });
-    dispatch({
-      type: 'testInfo/getCompany',
-      payload: {
-        certCode : certCode,
-      },
-      callback: (response) => {
-        this.setState({allCompanyName:response})
-      }
-    });
   }
-
+  previewItem = text => {
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
+      state:text.reportno,
+    });
+  };
   modifyItem = text => {
     const { form } = this.props;
     this.setState({visible:true});
-    //this.state.selectEntrustment = text;
-    this.setState({selectEntrustment:text});
-    if(text.inspway && typeof(text.inspway) != "undefined"){
-        const inspway = text.inspway.split(" ");
-        form.setFieldsValue({['inspway']:inspway});
-    }
-    const allInspway = sessionStorage.getItem('inspway').split(" ");
-
-    this.setState({ checkProject : allInspway });
-    form.setFieldsValue({['testman']:text.testman});
-    form.setFieldsValue({['price']:text.price});
-    form.setFieldsValue({['priceway']:text.priceway});
-    form.setFieldsValue({['totalfee']:text.totalfee});
-    form.setFieldsValue({['inspwaymemo1']:text.inspwaymemo1});
-    if(text.priceway === "按单价"  || text.priceway ==="按比例"){
-      this.setState({showPrice:true});
-    }else{
-      this.setState({showPrice:false});
-    }
   };
 
   handleOk = () =>{
@@ -146,7 +126,6 @@ class DetailForSub extends PureComponent {
             payload: values,
           });
         }
-
         this.setState({ selectEntrustment: null });
         this.setState({ visible: false });
         form.resetFields();
@@ -155,12 +134,12 @@ class DetailForSub extends PureComponent {
     });
   };
   show = () => {
-    const {
+/*    const {
       form,
       dispatch,
     } = this.props;
     const validateFieldsAndScroll = form;
-    form.resetFields();
+    form.resetFields();*/
     this.setState({ visible: true });
   };
   handleCancel = () =>{
@@ -174,17 +153,19 @@ class DetailForSub extends PureComponent {
     }
   }
   render() {
-
+    const Info = ({ title, value, bordered }) => (
+      <div className={styles.headerInfo}>
+        <span>{title}</span>
+        <p>{value}</p>
+        {bordered && <em />}
+      </div>
+    );
     const {
-      testInfo: {TestInfo},
       loading,
       form: { getFieldDecorator },
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
-    const applicant = sessionStorage.getItem('applicant');
-    const {  showPrice,checkProject,allCompanyName} = this.state;
-    const companyNameOptions = allCompanyName.map(d => <Option key={d}  value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="转委托">
         <Modal
@@ -194,80 +175,57 @@ class DetailForSub extends PureComponent {
           onCancel={this.handleCancel}
         >
           <Form>
-            <Form.Item label="转委托公司">
+            <Form.Item label="申请项目">
               {getFieldDecorator('testman', {
-                rules: [{ required: true, message: '请选择转委托公司' }],
+                rules: [{ required: true, message: '请选择申请项目' }],
               })(<Select
                       showSearch
                       placeholder="请选择"
                       filterOption={false}
                       onSearch={this.handleSearch}
                     >
-                      {companyNameOptions}
                     </Select>
                     )}
             </Form.Item>
-            <Form.Item label="转委托项目">
-              {getFieldDecorator('inspway', {
-                rules: [{ required: true, message: '请选择转委托项目' }],
-              })(
-                  <CheckboxGroup
-                    options={checkProject}
-                  />
+            <Form.Item label="重量">
+              {getFieldDecorator('result', {
+                rules: [{ required: true, message: '请输入重量' }],
+              })(                    
+                  <Input />
                 )}
             </Form.Item>
-            <Form.Item label="计价方式" >
-              {getFieldDecorator('priceway', {
-                rules: [{ required: true, message: '请选择计价方式' }],
-              })(
-                <Radio.Group onChange={this.onChange}>
-                  <Radio value="按单价">按单价</Radio>
-                  <Radio value="按批次">按批次</Radio>
-                  <Radio value="按协议">按协议</Radio>
-                  <Radio value="按比例">按比例</Radio>
-                </Radio.Group>,
-              )}
-            </Form.Item>
-            <Form.Item label="单价/比例"
-              >
-              {
-                { true: getFieldDecorator('price', {
-                  rules: [{ required: true, message: '请输入单价比例' }],
-                })(
-                    <Input />
-                 )
-                  }[showPrice]
-              }
-            </Form.Item>
-            <Form.Item label="总计费用">
-              {getFieldDecorator('totalfee', {
-                rules: [{ required: true, message: '请输入总计费用' }],
-              })(
-                    <Input />
+            <Form.Item label="开始日期">
+              {getFieldDecorator('begindate', {
+                rules: [{ required: true, message: '请选择开始日期' }],
+              })(    
+                  <DatePicker
+                    placeholder="开始日期"
+                    style={{ width: '100%' }}
+                    format="YYYY-MM-DD"
+                    getPopupContainer={trigger => trigger.parentNode}
+                  />              
                 )}
             </Form.Item>
-            <Form.Item label="转委托要求">
-              {getFieldDecorator('inspwaymemo1')(
-                    <Input />
+            <Form.Item label="结束日期">
+              {getFieldDecorator('finishdate', {
+                rules: [{ required: true, message: '请选择结束日期' }],
+              })(
+                  <DatePicker
+                    placeholder="结束日期"
+                    style={{ width: '100%' }}
+                    format="YYYY-MM-DD"
+                    getPopupContainer={trigger => trigger.parentNode}
+                  />                    
                 )}
-            </Form.Item>
+            </Form.Item>            
           </Form>
         </Modal>
         <Card bordered={false}>
-          <Row>
-            <Col sm={5} xs={24}>
-              <span level={4} > 委托编号：{reportno} </span>
-            </Col>
-            <Col sm={8} xs={24}>
-              <span> 运输工具：{shipname} </span>
-            </Col>
-          </Row>
-          <br></br>
           <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
           <div className={styles.tableList}>
             <Table
               loading={loading}
-              dataSource={TestInfo}
+              //dataSource={TestInfo}
               columns={this.columns}
               rowKey="testman"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
@@ -279,4 +237,4 @@ class DetailForSub extends PureComponent {
   }
 }
 
-export default DetailForSub;
+export default ResultDetail;

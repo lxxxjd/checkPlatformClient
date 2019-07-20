@@ -139,6 +139,7 @@ export default [
           },
         ],
       },
+      //BusinessTransfer
       {
         path: '/BusinessTransfer',
         icon: 'table',
@@ -168,7 +169,24 @@ export default [
           },
         ],
       },
-
+      //
+      {
+        path: '/TestRecord',
+        icon: 'table',
+        name: 'TestRecord',
+        routes: [
+          {
+            path: '/TestRecord/ResultRegistration',
+            name: 'ResultRegistration',
+            component: './TestRecord/ResultRegistration',
+          },
+          {
+            path: '/TestRecord/ResultDetail',
+            name: 'ResultDetail',
+            component: './TestRecord/ResultDetail',
+          },
+        ],
+      },
       // TaskAppoint
       {
         path: '/UEditor',
