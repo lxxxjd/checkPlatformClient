@@ -342,8 +342,6 @@ class CustomerServiceDetail extends PureComponent {
         }
       }
     });
-    console.log(modalInfo);
-    console.log(fields);
   }
 
 

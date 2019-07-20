@@ -226,6 +226,7 @@ export default [
             path: '/SampleRegister/SampleRegisterDetail',
             name: 'SampleRegisterDetail',
             component: './SampleRegister/SampleRegisterDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
       },

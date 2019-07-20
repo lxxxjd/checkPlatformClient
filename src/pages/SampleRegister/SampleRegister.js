@@ -58,13 +58,13 @@ class SampleRegister extends PureComponent {
     },
     {
       title: '样品编号',
-      dataIndex: 'inspman',
+      dataIndex: 'sampleno',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>样品登记</a>
+          <a onClick={() => this.toRegisterDetail(text, record)}>样品登记</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -74,48 +74,44 @@ class SampleRegister extends PureComponent {
 
 
   componentDidMount() {
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const { dispatch } = this.props;
-    const params = {
-        certCode:user.certCode
-    };
-    dispatch({
-      type: 'task/fetch',
-      payload: params,
-    });
+      this.init();
   }
 
 
   previewItem = text => {
+    localStorage.setItem('reportDetailNo',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
-    localStorage.setItem('reportDetailNo',text.reportno);
   };
 
-  toCustomerDetail = text => {
-    localStorage.setItem('reportinfo',JSON.stringify(text));
+  toRegisterDetail = text => {
+    localStorage.setItem('reportSampleRegisterDetailNo',text.reportno);
     router.push({
-      pathname:'/TaskAppoint/CustomerServiceDetail',
+      pathname:'/SampleRegister/SampleRegisterDetail',
     });
   };
 
   handleFormReset = () => {
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const params = {
-      certCode:user.certCode
-    };
     const { form } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
     });
+    this.init();
+  };
+
+  init =() =>{
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
+    const params = {
+      certCode:user.certCode
+    };
     dispatch({
-      type: 'task/fetch',
+      type: 'sample/getSampleRegister',
       payload: params,
     });
-  };
+  }
 
 
 
@@ -135,7 +131,7 @@ class SampleRegister extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'task/fetch',
+        type: 'sample/getSampleRegister',
         payload: values,
       });
     });
@@ -201,16 +197,13 @@ class SampleRegister extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="样品登记">
-
-
-
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               rowKey="reportno"
               loading={loading}
-              //dataSource={data.list}
+              dataSource={data.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />
