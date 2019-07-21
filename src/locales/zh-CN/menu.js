@@ -25,6 +25,8 @@ export default {
   'menu.TestRecord': '检验结果',
   'menu.TestRecord.ResultRegistration':'结果登记',
   'menu.TestRecord.ResultDetail':'结果详情',
+  'menu.TestRecord.RecordUpload':'证书上传',
+  'menu.TestRecord.UploadDetail':'记录上传',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',

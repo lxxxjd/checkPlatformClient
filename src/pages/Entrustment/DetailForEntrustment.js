@@ -11,12 +11,13 @@ const { Title } = Typography;
 }))
 class DetailForEnturstment extends Component {
   state = { visible: false };
+  
   componentWillMount() {
     const { dispatch, location } = this.props;
-    console.log(location.state)
+    const reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'entrustment/getReport',
-      payload: location.state,
+      payload: reportno,
     });
   }
   handleOk = e => {

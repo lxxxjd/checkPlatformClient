@@ -15,21 +15,30 @@ import {
   Radio,
   Table,
   DatePicker,
-  notification 
+  notification,
+  Upload,
+  Icon
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultDetail.less';
 import moment from 'moment'
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
-
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
 /* eslint react/no-multi-comp:0 */
 @Form.create()
 @connect(({ testRecord, loading }) => ({
   testRecord,
   loading: loading.models.testRecord,
 }))
-class ResultDetail extends PureComponent {
+class UploadDetail extends PureComponent {
   state = {
     formValues: {},
     visible:false,
@@ -37,27 +46,20 @@ class ResultDetail extends PureComponent {
     allCompanyName:[],
     selectEntrustment:null,
     showPrice:false,
+    previewVisible: false,
+    previewImage: '',
+    fileList: [
+    ],
   };
 
   columns = [
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '记录名',
+      dataIndex: 'recordname',
     },
     {
-      title: '分量',
-      dataIndex: 'result',
-    },
-    {
-      title: '开始日期',
-      dataIndex: 'begindate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
-    },
-    {
-      title: '结束日期',
-      dataIndex: 'finishdate',
+      title: '上传日期',
+      dataIndex: 'recorddate',
       render: val => <span>{
          moment(val).format('YYYY-MM-DD')
       }</span>
@@ -66,6 +68,8 @@ class ResultDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
+          <a onClick={() => this.previewItem(text, record)} >详情</a>
+          &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)} >删除</a>
           &nbsp;&nbsp;
         </Fragment>
@@ -78,7 +82,7 @@ class ResultDetail extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testRecord/getInspway',
+      type: 'testRecord/getRecord',
       payload:{
          reportno : reportno,
       }
@@ -94,7 +98,7 @@ class ResultDetail extends PureComponent {
       reportno:reportno
     };  
     dispatch({
-      type: 'testRecord/deleteInspway',
+      type: 'testRecord/deleteRecordInfo',
       payload:params,
       callback: (response) => {
         if(response.code === 400){
@@ -104,7 +108,7 @@ class ResultDetail extends PureComponent {
           });
         }else{
           dispatch({
-            type: 'testRecord/getInspway',
+            type: 'testRecord/getRecord',
             payload:{
               reportno : reportno,
             }
@@ -112,7 +116,7 @@ class ResultDetail extends PureComponent {
         }
       }
     });
-  }
+  };
   handleOk = () =>{
     const {
       form: { validateFieldsAndScroll },
@@ -121,13 +125,16 @@ class ResultDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     validateFieldsAndScroll((error, values) => {
       if (!error) {
-        const params = {
-          ...values,
-          reportno:reportno
-        };    
+        let formData = new FormData();        
+        values.MultipartFile.fileList.forEach(file => {
+          console.log(file)
+          formData.append('files', file.originFileObj);
+        });
+        formData.append('reportno', reportno);
+        console.log(formData.get('files'));     
         dispatch({
-          type: 'testRecord/addInspway',
-          payload : params,
+          type: 'testRecord/uploadFile',
+          payload : formData,
           callback: (response) => {
             if(response.code === 400){
               notification.open({
@@ -136,7 +143,7 @@ class ResultDetail extends PureComponent {
               });
             }else{
               dispatch({
-                type: 'testRecord/getInspway',
+                type: 'testRecord/getRecord',
                 payload:{
                   reportno : reportno,
                 }
@@ -156,13 +163,8 @@ class ResultDetail extends PureComponent {
       dispatch,
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    dispatch({
-      type: 'testRecord/getProject',
-      payload:{
-         reportno : reportno,
-      }
-    });
     form.resetFields();
+    this.setState({fileList:[]});
     this.setState({ visible: true });
   };
   handleCancel = () =>{
@@ -178,77 +180,88 @@ class ResultDetail extends PureComponent {
     }else{
       this.setState({showPrice:false});
     }
-  }
+  };
+  Cancel = () => this.setState({ previewVisible: false });
+
+  handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
+    });
+  };
+  handleChange = ({ file,fileList }) => {
+    //限制图片 格式、size、分辨率
+    const isJPG = file.type === 'image/jpg';
+    const isJPEG = file.type === 'image/jpeg';
+    const isGIF = file.type === 'image/gif';
+    const isPNG = file.type === 'image/png';
+    const isPDF = file.type === 'application/pdf'
+    const size = file.size / 1024 / 1024 < 1;
+    if (!(isJPG || isJPEG || isGIF || isPNG || isPDF)) {
+      Modal.error({
+        title: '只能上传JPG 、JPEG 、GIF、 PNG、 PDF格式的图片~',
+      });
+      return;
+    } else if (!size) {
+      Modal.error({
+        title: '超过1M限制，不允许上传~',
+      });
+      return;
+    }
+    this.setState({ fileList:fileList});
+    console.log(fileList)
+  };
+  handleBeforeUpload = file => {
+    return false;
+  };
   render() {
-    const Info = ({ title, value, bordered }) => (
-      <div className={styles.headerInfo}>
-        <span>{title}</span>
-        <p>{value}</p>
-        {bordered && <em />}
+    const uploadButton = (
+      <div>
+        <Icon type="plus" />
+        <div className="ant-upload-text">Upload</div>
       </div>
     );
     const {
-      testRecord,
+      testRecord:{recordData},
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const　{
-      inspwayData,projectData
-    } = testRecord
+    const {fileList,visible,previewVisible,previewImage} = this.state
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
-    const projectOptions = projectData.map(d => <Option key={d}  value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="结果登记">
         <Modal
           title="新建转委托"
-          visible={this.state.visible}
+          visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
           <Form>
-            <Form.Item label="申请项目">
-              {getFieldDecorator('inspway', {
+            <Form.Item label="文件上传">
+              {getFieldDecorator('MultipartFile', {
                 rules: [{ required: true, message: '请选择申请项目' }],
-              })(<Select
-                      showSearch
-                      placeholder="请选择"
-                      filterOption={false}
-                      onSearch={this.handleSearch}
-                    >
-                    {projectOptions}
-                    </Select>
-                )}
-            </Form.Item>
-            <Form.Item label="重量">
-              {getFieldDecorator('result', {
-                rules: [{ required: true, message: '请输入重量' }],
-              })(                    
-                  <Input />
-                )}
-            </Form.Item>
-            <Form.Item label="开始日期">
-              {getFieldDecorator('begindate', {
-                rules: [{ required: true, message: '请选择开始日期' }],
-              })(    
-                  <DatePicker
-                    placeholder="开始日期"
-                    style={{ width: '100%' }}
-                    format="YYYY-MM-DD"
-                  />              
-                )}
-            </Form.Item>
-            <Form.Item label="结束日期">
-              {getFieldDecorator('finishdate', {
-                rules: [{ required: true, message: '请选择结束日期' }],
               })(
-                  <DatePicker
-                    placeholder="结束日期"
-                    style={{ width: '100%' }}
-                    format="YYYY-MM-DD"
-                  />                    
-                )}
-            </Form.Item>            
+                <Upload
+                  //action="http://localhost:8000/api/recordinfo/upload"
+                  //data={{'reportno':reportno}}
+                  listType="picture-card"
+                  fileList={fileList}
+                  onPreview={this.handlePreview}
+                  beforeUpload={this.handleBeforeUpload}
+                  onChange={this.handleChange}
+                >
+                  {fileList.length >= 3 ? null : uploadButton}
+                </Upload>
+              )}
+            </Form.Item>
+            <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>
+              <img alt="example" style={{ width: '100%' }} src={previewImage} />
+            </Modal>          
           </Form>
         </Modal>
         <Card bordered={false}>
@@ -265,7 +278,7 @@ class ResultDetail extends PureComponent {
           <div className={styles.tableList}>
             <Table
               loading={loading}
-              dataSource={inspwayData}
+              dataSource={recordData}
               columns={this.columns}
               rowKey="testman"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
@@ -277,4 +290,4 @@ class ResultDetail extends PureComponent {
   }
 }
 
-export default ResultDetail;
+export default UploadDetail;

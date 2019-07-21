@@ -121,6 +121,7 @@ class ModifyForEntrustment extends PureComponent {
 
   componentDidMount () {
     const { form ,dispatch,location} = this.props;
+    const reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'entrustment/getClientName',
       payload: {},
@@ -128,9 +129,10 @@ class ModifyForEntrustment extends PureComponent {
         this.setState({allReporterName:response})
       }
     })
+
     dispatch({
       type: 'entrustment/getReport',
-      payload: location.state,
+      payload: reportno,
       callback: (response) => {
         this.setState({reportno:response.reportno})
         //form.setFieldsValue({['reportno']:response.reportno});

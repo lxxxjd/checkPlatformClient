@@ -27,7 +27,7 @@ const { Option } = Select;
   testRecord,
   loading: loading.models.testRecord,
 }))
-class ResultRegistration extends PureComponent {
+class RecordUpload extends PureComponent {
   state = {
     visible:false,
     checkProject:[],
@@ -58,10 +58,14 @@ class ResultRegistration extends PureComponent {
       dataIndex: 'inspway',
     },
     {
+      title: '证书名称',
+      dataIndex: 'recordname',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)} >结果登记</a>
+          <a onClick={() => this.modifyItem(text, record)} >记录上传</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)} >委托详情</a>
         </Fragment>
@@ -73,7 +77,7 @@ class ResultRegistration extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'testRecord/getReports',
+      type: 'testRecord/getRecordList',
       payload:{
         certCode:user.certCode
       }
@@ -91,7 +95,7 @@ class ResultRegistration extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno); 
     sessionStorage.setItem('shipname',text.shipname); 
     router.push({
-      pathname:'/TestRecord/ResultDetail',
+      pathname:'/TestRecord/UploadDetail',
     });
   };
 
@@ -104,12 +108,10 @@ class ResultRegistration extends PureComponent {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
         certCode:user.certCode,
       };
       dispatch({
-        type: 'testRecord/getReports',
+        type: 'testRecord/getRecordList',
         payload: values,
       });
     });
@@ -120,7 +122,7 @@ class ResultRegistration extends PureComponent {
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const { dispatch } = this.props;
     dispatch({
-      type: 'testRecord/getReports',
+      type: 'testRecord/getRecordList',
       payload:{
          certCode : certCode,
       }
@@ -175,7 +177,7 @@ class ResultRegistration extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     return (
-      <PageHeaderWrapper title="结果登记">
+      <PageHeaderWrapper title="证书上传">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
@@ -193,4 +195,4 @@ class ResultRegistration extends PureComponent {
   }
 }
 
-export default ResultRegistration;
+export default RecordUpload;
