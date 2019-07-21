@@ -127,10 +127,10 @@ class UploadDetail extends PureComponent {
       if (!error) {
         let formData = new FormData();        
         values.MultipartFile.fileList.forEach(file => {
-          console.log(file)
           formData.append('files', file.originFileObj);
         });
         formData.append('reportno', reportno);
+        formData.append('fileName', values.recordname);
         console.log(formData.get('files'));     
         dispatch({
           type: 'testRecord/uploadFile',
@@ -244,7 +244,7 @@ class UploadDetail extends PureComponent {
           <Form>
             <Form.Item label="文件上传">
               {getFieldDecorator('MultipartFile', {
-                rules: [{ required: true, message: '请选择申请项目' }],
+                rules: [{ required: true, message: '请选择上传文件' }],
               })(
                 <Upload
                   //action="http://localhost:8000/api/recordinfo/upload"
@@ -255,8 +255,15 @@ class UploadDetail extends PureComponent {
                   beforeUpload={this.handleBeforeUpload}
                   onChange={this.handleChange}
                 >
-                  {fileList.length >= 3 ? null : uploadButton}
+                  {fileList.length >= 1 ? null : uploadButton}
                 </Upload>
+              )}
+            </Form.Item>
+            <Form.Item label="证书名称">
+              {getFieldDecorator('recordname', {
+                rules: [{ required: true, message: '请输入证书名称' }],
+              })(
+                <Input style={{ width: '100%' }} placeholder="请输入证书名称" />
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>
