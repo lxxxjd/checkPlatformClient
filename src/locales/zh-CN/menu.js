@@ -27,6 +27,14 @@ export default {
   'menu.TestRecord.ResultDetail':'结果详情',
   'menu.TestRecord.RecordUpload':'证书上传',
   'menu.TestRecord.UploadDetail':'记录上传',
+  'menu.SampleRegister': '样品记录',
+  'menu.SampleRegister.SampleRegister':'样品登记',
+  'menu.SampleRegister.SampleQuery':'样品查询',
+  'menu.SampleRegister.SampleDestory':'样品销毁',
+
+  'menu.SampleRegister.SampleRegisterDetail':'样品登记详情',
+
+
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',

@@ -85,6 +85,7 @@ class ResultRegistration extends PureComponent {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
+    localStorage.setItem('reportDetailNo',text.reportno);
   };
 
   modifyItem = text => {

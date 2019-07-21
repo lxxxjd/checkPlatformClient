@@ -26,7 +26,7 @@ export default [
       // Entrustment
       { path: '/', redirect: '/Entrustment/ApplicationForEntrustment',authority: ['admin', 'user']},
 
-      // // list
+      // // 证书
       // {
       //   path: '/list',
       //   icon: 'table',
@@ -142,7 +142,7 @@ export default [
       //BusinessTransfer
       {
         path: '/BusinessTransfer',
-        icon: 'table',
+        icon: 'dashboard',
         name: 'BusinessTransfer',
         routes: [
           {
@@ -172,7 +172,7 @@ export default [
       //
       {
         path: '/TestRecord',
-        icon: 'table',
+        icon: 'form',
         name: 'TestRecord',
         routes: [
           {
@@ -198,16 +198,46 @@ export default [
           },
         ],
       },
-      // TaskAppoint
+      // // TaskAppoint
+      // {
+      //   path: '/UEditor',
+      //   icon: 'table',
+      //   name: 'UEditor',
+      //   routes: [
+      //     {
+      //       path: '/UEditor/UEditorText',
+      //       name: 'UEditorText',
+      //       component: './UEditor/UEditorText',
+      //     },
+      //   ],
+      // },
+
+      // SampleRegister
       {
-        path: '/UEditor',
-        icon: 'table',
-        name: 'UEditor',
+        path: '/SampleRegister',
+        icon: 'profile',
+        name: 'SampleRegister',
         routes: [
           {
-            path: '/UEditor/UEditorText',
-            name: 'UEditorText',
-            component: './UEditor/UEditorText',
+            path: '/SampleRegister/SampleRegister',
+            name: 'SampleRegister',
+            component: './SampleRegister/SampleRegister',
+          },
+          {
+            path: '/SampleRegister/SampleQuery',
+            name: 'SampleQuery',
+            component: './SampleRegister/SampleQuery',
+          },
+          {
+            path: '/SampleRegister/SampleDestory',
+            name: 'SampleDestory',
+            component: './SampleRegister/SampleDestory',
+          },
+          {
+            path: '/SampleRegister/SampleRegisterDetail',
+            name: 'SampleRegisterDetail',
+            component: './SampleRegister/SampleRegisterDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
       },

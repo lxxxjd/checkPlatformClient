@@ -27,23 +27,23 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 const CheckboxGroup = Checkbox.Group;
-const inspwayOptions= [
-  '水尺',
-  '船舱',
-  '流量',
-  '衡器',
-  '干仓',
-  '验舱',
-  '取样',
-  '制样',
-  '送样',
-  '品质',
-];
+// const checkProject= [
+//   '水尺',
+//   '船舱',
+//   '流量',
+//   '衡器',
+//   '干仓',
+//   '验舱',
+//   '取样',
+//   '制样',
+//   '送样',
+//   '品质',
+// ];
 
 
 const CreateForm = Form.create()(props => {
 
-  const { modalVisible, form, handleAdd, handleModalVisible,modalInfo ,checkProject } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,modalInfo ,checkProject} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -80,7 +80,7 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
         {form.getFieldDecorator('inspway', {
           initialValue: modalInfo.inspway,
-        })(<CheckboxGroup options={inspwayOptions} />)}
+        })(<CheckboxGroup options={checkProject} />)}
       </FormItem>
 
 
@@ -255,6 +255,16 @@ class InspectorDetail extends PureComponent {
     const { dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
+
+    const {state} = this
+    let insway = reportinfo.inspway;
+    const inswayArray = insway.split(" ");
+    for(let i=0;i<inswayArray.length;i++){
+      if(inswayArray[i] !== ""){
+        state.checkProject.push(inswayArray[i]);
+      }
+    }
+
     const params = {
       certCode:user.certCode,
       reportNo:reportinfo.reportno
@@ -266,8 +276,8 @@ class InspectorDetail extends PureComponent {
         if (response){
           this.taskData =  response.list;
           const data = response.list;
-          const {state} = this
-          // eslint-disable-next-line no-plusplus
+          const {state} = this;
+            // eslint-disable-next-line no-plusplus
           for(let i=0;i<data.length;i++) {
             if(data[i].state === 1){
               state.selectedRowKeys.push(data[i].inspman);
@@ -277,15 +287,15 @@ class InspectorDetail extends PureComponent {
         }
       }
     });
-
-    //获得checkoptions
-    dispatch({
-      type: 'testInfo/getCheckProject',
-      payload: {},
-      callback: (response) => {
-        this.setState({checkProject:response})
-      }
-    });
+    //
+    // //获得checkoptions
+    // dispatch({
+    //   type: 'testInfo/getCheckProject',
+    //   payload: {},
+    //   callback: (response) => {
+    //     this.setState({checkProject:response})
+    //   }
+    // });
 
   }
 
@@ -344,7 +354,7 @@ class InspectorDetail extends PureComponent {
         // eslint-disable-next-line no-plusplus
         for (let i=0; i<len;i++ ){
           if(i !== len-1){
-            inspway += `${fields.inspway[i]},`;
+            inspway += `${fields.inspway[i]} `;
           }else{
             inspway += `${fields.inspway[i]}`
           }
@@ -364,7 +374,6 @@ class InspectorDetail extends PureComponent {
     params.taskman = user.nameC;
     params.reportno = reportinfo.reportno;
 
-    console.log(params);
     if(!(params.position ==null &&
       params.tel  ==null &&
       params.manhour ==null&&
@@ -467,7 +476,6 @@ class InspectorDetail extends PureComponent {
 
 
     const {  modalVisible,modalInfo,checkProject } = this.state;
-
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
@@ -505,7 +513,7 @@ class InspectorDetail extends PureComponent {
             </Row>
           </Card>
 
-          <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
+          <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} checkProject={checkProject} />
 
           <Card bordered={false} style={{ marginTop: 24 }}>
             <div className={styles.tableList}>

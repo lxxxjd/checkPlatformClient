@@ -82,7 +82,7 @@ class EntrustmentRelevance extends PureComponent {
             result=<span>{result}{br}{contentStr[j]}</span>;
           }
         }
-        return <div>{result}</div>; 
+        return <div>{result}</div>;
       },
     },
     {
@@ -114,6 +114,7 @@ class EntrustmentRelevance extends PureComponent {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
+    localStorage.setItem('reportDetailNo',text.reportno);
   };
   mobileItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
