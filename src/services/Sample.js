@@ -40,3 +40,22 @@ export async function deleteSamleRegister(params) {
     },
   });
 }
+
+export async function selectSampleRegisterByConditions(params) {
+  return request(`/api/sampleRegister/selectSampleRegisterByConditions`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function selectSampleByConditionsDestory(params) {
+  return request(`/api/sampleRegister/selectSampleByConditionsDestory`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+

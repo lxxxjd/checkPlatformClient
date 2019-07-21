@@ -435,16 +435,16 @@ class CustomerServiceDetail extends PureComponent {
 
         <div className={styles.standardList}>
           <Card bordered={false}>
-            <Row gutter={16}>
-              <Col span={2}>
-                <Button type="primary" onClick={this.save}>保存</Button>
-              </Col>
-              <Col span={2}>
-                <Button type="primary" onClick={this.back}>返回</Button>
-              </Col>
-              <Col span={10} />
-            </Row>
-          </Card>
+          <Row gutter={16}>
+            <Col span={2}>
+              <Button type="primary" onClick={this.save}>保存</Button>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={this.back}>返回</Button>
+            </Col>
+            <Col span={10} />
+          </Row>
+        </Card>
 
           <Card bordered={false}>
             <Row>
