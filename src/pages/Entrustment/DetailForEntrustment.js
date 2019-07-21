@@ -12,6 +12,7 @@ const { Title } = Typography;
 class DetailForEnturstment extends Component {
   state = { visible: false };
 
+
   componentWillMount() {
     const reportnNo = JSON.parse(localStorage.getItem("reportDetailNo"));
     const { dispatch } = this.props;

@@ -184,6 +184,17 @@ export default [
             path: '/TestRecord/ResultDetail',
             name: 'ResultDetail',
             component: './TestRecord/ResultDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: '/TestRecord/RecordUpload',
+            name: 'RecordUpload',
+            component: './TestRecord/RecordUpload',
+          },
+          {
+            path: '/TestRecord/UploadDetail',
+            name: 'UploadDetail',
+            component: './TestRecord/UploadDetail',
           },
         ],
       },

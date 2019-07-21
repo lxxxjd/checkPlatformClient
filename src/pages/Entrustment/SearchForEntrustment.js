@@ -124,15 +124,16 @@ class SearchForEntrustment extends PureComponent {
   };
 
   previewItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
     localStorage.setItem('reportDetailNo',text.reportno);
   };
   modifyItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
     router.push({
       pathname:'/Entrustment/ModifyForEntrustment',
-      state:text.reportno,
     });
   };
   copyItem = text => {
