@@ -59,3 +59,11 @@ export async function selectSampleByConditionsDestory(params) {
   });
 }
 
+
+// post请求 注意 ` 这个符号 不是这种 ’号
+export async function setSampleStatus(params) {
+  return request(`/api/sampleRegister/setSampleStatus`,{
+    method: 'POST',
+    data:params,
+  });
+}

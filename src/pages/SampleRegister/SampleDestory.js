@@ -11,7 +11,7 @@ import {
   Button,
   Select,
   Table, message,
-  Radio,
+  Radio,Popconfirm
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SampleDestory.less';
@@ -36,7 +36,9 @@ class SampleDestory extends PureComponent {
   state = {
     formValues: {},
     exist:[],
+    dataSource:[],
   };
+
 
   columns = [
     {
@@ -91,16 +93,22 @@ class SampleDestory extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>样品浏览</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>浏览</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.removeExistItem(text, record)}>删除</a>
         </Fragment>
       ),
     },
   ];
 
 
+
+
   componentDidMount() {
     this.init();
   }
+
+
 
   init =() =>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -121,29 +129,37 @@ class SampleDestory extends PureComponent {
 
   saveExist = response =>{
     const mlist = response.list;
-    let {exist}= this.state;
-    let data =[];
+    var data =[];
     for(let i=0;i<mlist.length;i++) {
       data.push(mlist[i].sampleno);
     }
-    exist = data;
+    this.state.exist = data;
+    this.state.dataSource = response.list;
   }
 
 
-  previewItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
-    localStorage.setItem('reportDetailNo',text.reportno);
-  };
+
 
   toCustomerDetail = text => {
-    // localStorage.setItem('reportinfo',JSON.stringify(text));
-    // router.push({
-    //   pathname:'/TaskAppoint/CustomerServiceDetail',
-    // });
     console.log(text);
   };
+
+  listRemoveItem = (source, match)=>{
+    var len = source.length;
+    while (len--) {
+      if (len in source && source[len] === match) {
+        source.splice(len, 1);
+      }
+    }
+    return source;
+  };
+
+  removeExistItem = text => {
+    this.state.exist=this.listRemoveItem(this.state.exist,text.sampleno);
+    const dataSource = [...this.state.dataSource];
+    this.setState({ dataSource: dataSource.filter(item => item.sampleno !== text.sampleno) });
+  };
+
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -153,6 +169,42 @@ class SampleDestory extends PureComponent {
     });
     this.init();
   };
+
+
+  destoryExist = () => {
+      this.setDestoryStatus("销毁","销毁成功","销毁失败");
+  };
+
+  // 设置销毁状态
+  setDestoryStatus =(state,messagesuccess,messagefail)=>{
+    const { dispatch } = this.props;
+    const params = {
+      exist:this.state.exist,
+      status:state,
+    };
+    dispatch({
+      type: 'sample/setSampleStatus',
+      payload: params,
+      callback: (response) => {
+        if (response){
+          if(response ==='success'){
+            const {dataSource,exist} = this.state;
+            for(let i =0 ;i<exist.length;i++){
+              dataSource.find(item => item.sampleno === exist[i] ).status=state;
+            }
+            message.success(messagesuccess);
+          }else{
+            message.success(messagefail);
+          }
+        }
+      }
+    });
+  };
+
+  undestory = () => {
+    this.setDestoryStatus(undefined,"未销毁成功","未销毁失败");
+  };
+
 
 
 
@@ -199,7 +251,6 @@ class SampleDestory extends PureComponent {
         callback: (response) => {
           if (response){
             this.saveExist(response);
-            console.log(params);
           }
         }
       });
@@ -217,58 +268,16 @@ class SampleDestory extends PureComponent {
         <Card bordered={false} className={styles.searchBut}>
           <Row gutter={16}>
             <Col span={2}>
-              <Button type="primary" onClick={this.save}>销毁</Button>
+              <Button type="primary" onClick={this.destoryExist}>销毁</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" onClick={this.back}>未销毁</Button>
+              <Button type="primary" onClick={this.undestory}>未销毁</Button>
             </Col>
             <Col span={10} />
           </Row>
         </Card>
 
-        <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
 
-          <Col md={10} sm={20}>
-            <Form.Item
-              label="超过保存期天数："
-              className={styles.searchCondition}
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 20 }}
-              colon={false}
-            >
-              {getFieldDecorator('duration', {
-                rules:[{
-                  required:false,
-                  pattern: new RegExp(/^[1-9]\d*$/, "g"),
-                  message: '请输入正确的数字'
-                }],
-              })(
-                <Input placeholder="请输入超过保存期天数"  />
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={10} sm={20}>
-            <Form.Item
-              label="状态："
-              className={styles.searchCondition}
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 20 }}
-              colon={false}
-            >
-              {getFieldDecorator('status', {
-                  initialValue:"全部",
-              })(
-                // onChange={this.onChange} value={this.state.value}
-                <Radio.Group>
-                  <Radio value="全部">全部</Radio>
-                  <Radio value="销毁">销毁</Radio>
-                  <Radio value="未销毁">未销毁</Radio>
-                </Radio.Group>
-              )}
-            </Form.Item>
-          </Col>
-        </Row>
 
         <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
           <Col md={3} sm={20}>
@@ -424,7 +433,47 @@ class SampleDestory extends PureComponent {
             </FormItem>
           </Col>
 
-          <Col md={8} sm={20}>
+          <Col md={4} sm={4}>
+            <Form.Item
+              label="超保存期天数："
+              className={styles.searchCondition}
+              labelCol={{ span: 2 }}
+              wrapperCol={{ span: 4 }}
+              colon={false}
+            >
+              {getFieldDecorator('duration', {
+                rules:[{
+                  required:false,
+                  pattern: new RegExp(/^[1-9]\d*$/, "g"),
+                  message: '请输入正确的数字'
+                }],
+              })(
+                <Input placeholder="输入天数"  />
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col md={6} sm={4}>
+            <Form.Item
+              label="状态："
+              className={styles.searchCondition}
+              labelCol={{ span: 2 }}
+              wrapperCol={{ span: 10 }}
+              colon={false}
+            >
+              {getFieldDecorator('status', {
+                initialValue:"全部",
+              })(
+                // onChange={this.onChange} value={this.state.value}
+                <Radio.Group>
+                  <Radio value="全部">全部</Radio>
+                  <Radio value="销毁">销毁</Radio>
+                  <Radio value="未销毁">未销毁</Radio>
+                </Radio.Group>
+              )}
+            </Form.Item>
+          </Col>
+          <Col md={4} sm={4}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -434,9 +483,8 @@ class SampleDestory extends PureComponent {
               </Button>
             </span>
           </Col>
+
         </Row>
-
-
       </Form>
     );
   }
@@ -449,6 +497,9 @@ class SampleDestory extends PureComponent {
       sample: {selectRegisterDestory},
       loading,
     } = this.props;
+
+    const {dataSource} = this.state;
+
     return (
       <PageHeaderWrapper title="样品查询">
 
@@ -458,9 +509,10 @@ class SampleDestory extends PureComponent {
             <Table
               rowKey="sampleno"
               loading={loading}
-              dataSource={selectRegisterDestory.list}
+              dataSource={dataSource}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
+
             />
           </div>
         </Card>

@@ -1,5 +1,8 @@
 import {getAllSampleRegister,getSampleRegistersByReportNo ,
-  addSamleRegister,deleteSamleRegister,selectSampleRegisterByConditions,selectSampleByConditionsDestory} from '@/services/Sample'
+  addSamleRegister,deleteSamleRegister,selectSampleRegisterByConditions,selectSampleByConditionsDestory,
+  setSampleStatus
+
+} from '@/services/Sample'
 
 
 
@@ -25,6 +28,9 @@ export default {
       list: [],
       pagination: {},
     },
+
+    stateResult:{}
+
   },
 
   effects: {
@@ -83,6 +89,15 @@ export default {
       if (callback) callback(response.data);
     },
 
+    *setSampleStatus({ payload,callback }, { call, put }) {
+      const response = yield call(setSampleStatus, payload);
+      yield put({
+        type: 'setStatus',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -126,6 +141,12 @@ export default {
       };
     },
 
+    setStatus(state, { payload }) {
+      return {
+        ...state,
+        stateResult: payload.data,
+      };
+    },
 
   },
 };
