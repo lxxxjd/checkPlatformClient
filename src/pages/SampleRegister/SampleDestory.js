@@ -206,10 +206,6 @@ class SampleDestory extends PureComponent {
   };
 
 
-
-
-
-
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -273,7 +269,16 @@ class SampleDestory extends PureComponent {
             <Col span={2}>
               <Button type="primary" onClick={this.undestory}>未销毁</Button>
             </Col>
-            <Col span={10} />
+            <Col span={2}>
+              <Button type="primary" htmlType="submit">
+                查询
+              </Button>
+            </Col>
+            <Col span={2}>
+              <Button onClick={this.handleFormReset}>
+                重置
+              </Button>
+            </Col>
           </Row>
         </Card>
 
@@ -433,7 +438,7 @@ class SampleDestory extends PureComponent {
             </FormItem>
           </Col>
 
-          <Col md={4} sm={4}>
+          <Col md={5} sm={4}>
             <Form.Item
               label="超保存期天数："
               className={styles.searchCondition}
@@ -453,7 +458,7 @@ class SampleDestory extends PureComponent {
             </Form.Item>
           </Col>
 
-          <Col md={6} sm={4}>
+          <Col md={8} sm={4}>
             <Form.Item
               label="状态："
               className={styles.searchCondition}
@@ -473,17 +478,6 @@ class SampleDestory extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col md={4} sm={4}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
-                查询
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
-              </Button>
-            </span>
-          </Col>
-
         </Row>
       </Form>
     );
