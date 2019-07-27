@@ -69,3 +69,9 @@ export async function getModelSelectName(params) {
     data:params,
   });
 }
+
+
+export async function downloadPlatFromTemp(params) {
+  return request(`/api/template/downloadPlatFromTemp?tempName=${params.tempName}&reportno=${params.reportno}&recordName=${params.recordName}`);
+}
+

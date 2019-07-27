@@ -17,7 +17,8 @@ import {
   DatePicker,
   notification,
   Upload,
-  Icon
+  Icon,
+  message
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultDetail.less';
@@ -34,13 +35,16 @@ const CreateUploadForm = Form.create()(props => {
 
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
-      if (err) return;
+      if (err){
+        console.log(err);
+        return;
+      }
       form.resetFields();
       handleDownloadAdd(fieldsValue);
     });
   };
   const handleChange =()=>{
-    form.resetFields(`name`,[]);
+    form.resetFields(`tempName`,[]);
   }
 
   return (
@@ -59,7 +63,7 @@ const CreateUploadForm = Form.create()(props => {
 
 
       <Form.Item label="记录名称">
-        {form.getFieldDecorator('recordname', {
+        {form.getFieldDecorator('downloadRecordName', {
           rules: [{ required: true, message: '请输入记录名称' }],
         })(
           <Input style={{ width: '100%' }} placeholder="记录名称" />
@@ -80,7 +84,7 @@ const CreateUploadForm = Form.create()(props => {
       </Form.Item>
 
       <Form.Item label="模板名称">
-        {form.getFieldDecorator('name', {
+        {form.getFieldDecorator('tempName', {
           rules: [{ required: true, message: '请选择模板名称' }],
         })(
           <Select style={{ width: '100%' }} placeholder="请选择模板名称">
@@ -199,7 +203,7 @@ class UploadDetail extends PureComponent {
       }
     });
     console.log("true")
-    // this.setState({previewPDFVisible:true});
+    //this.setState({previewPDFVisible:true});
   };
 
   deleteItem = text => {
@@ -361,7 +365,23 @@ class UploadDetail extends PureComponent {
 
   // 处理下载模态框 提交表单
   handleDownloadAdd = (fields) =>{
-    console.log(fields);
+    const { dispatch, } = this.props;
+    const reportNo = sessionStorage.getItem('reportno');
+    const params = {
+      reportno:reportNo,
+      tempName:fields.tempName,
+      recordName:fields.downloadRecordName,
+    };
+    dispatch({
+      type: 'testRecord/downloadPlatFromTemp',
+      payload:params,
+      callback: (response) => {
+        if(response){
+          message.success("下载成功");
+        }
+      }
+    });
+    console.log(params);
     this.setState({
       downloadVisible: false,
     });

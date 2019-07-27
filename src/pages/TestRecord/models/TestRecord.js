@@ -1,5 +1,6 @@
 
-import {getAllReports,getInspway,getProject,addInspway,deleteInspway,getRecordList,getRecordInfo,deleteRecordInfo,uploadFile,getRecord ,getModelSelectName} from '@/services/TestRecord'
+import {getAllReports,getInspway,getProject,addInspway,deleteInspway,getRecordList,getRecordInfo,
+  deleteRecordInfo,uploadFile,getRecord ,getModelSelectName,downloadPlatFromTemp} from '@/services/TestRecord'
 
 
 
@@ -17,6 +18,7 @@ export default {
     inspway:null,
     selectModelName:[],
     url:null,
+    downloadTempResult:null,
   },
 
   effects: {
@@ -110,6 +112,15 @@ export default {
       if (callback) callback(response.data);
     },
 
+    *downloadPlatFromTemp({ payload,callback }, { call, put }) {
+      const response = yield call(downloadPlatFromTemp, payload);
+      yield put({
+        type: 'downloadFromTemp',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
 
 
   },
@@ -164,6 +175,14 @@ export default {
         selectModelName: payload.data,
       };
     },
+
+    downloadFromTemp(state, { payload }) {
+      return {
+        ...state,
+        downloadTempResult: payload.data,
+      };
+    },
+
 
 
   },
