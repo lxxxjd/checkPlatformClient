@@ -1,4 +1,4 @@
-import {getAllReports,getInspway,getProject,addInspway,deleteInspway,getRecordList,getRecord,deleteRecordInfo,uploadFile} from '@/services/TestRecord'
+import {getAllReports,getInspway,getProject,addInspway,deleteInspway,getRecordList,getRecordInfo,deleteRecordInfo,uploadFile,getRecord} from '@/services/TestRecord'
 
 
 
@@ -14,6 +14,7 @@ export default {
     projectData:[],
     recordData:[],
     inspway:null,
+    url:null,
   },
 
   effects: {
@@ -33,13 +34,21 @@ export default {
       });
       if (callback) callback(response.data);
     },
-    *getRecord({ payload,callback }, { call, put }) {
-      const response = yield call(getRecord, payload);
+    *getRecordInfo({ payload,callback }, { call, put }) {
+      const response = yield call(getRecordInfo, payload);
       yield put({
         type: 'getRecords',
         payload: response,
       });
       if (callback) callback(response.data);
+    },
+    *getRecord({ payload,callback }, { call, put }) {
+      const response = yield call(getRecord, payload);
+      yield put({
+        type: 'getURL',
+        payload: response,
+      });
+      if (callback) callback(response);
     },
     *getInspway({ payload,callback }, { call, put }) {
       const response = yield call(getInspway, payload);
@@ -92,6 +101,12 @@ export default {
   },
 
   reducers: {
+    getURL(state, { payload }) {
+      return {
+        ...state,
+        url : payload.data,
+      };
+    },
     getRecords(state, { payload }) {
       return {
         ...state,
