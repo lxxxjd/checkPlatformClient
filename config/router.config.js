@@ -195,6 +195,7 @@ export default [
             path: '/TestRecord/UploadDetail',
             name: 'UploadDetail',
             component: './TestRecord/UploadDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
       },

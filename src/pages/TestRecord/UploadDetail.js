@@ -129,6 +129,15 @@ class UploadDetail extends PureComponent {
     {
       title: '记录名',
       dataIndex: 'recordname',
+      render: val => {
+        //取文件名
+        var pattern = /\.{1}[a-z]{1,}$/;
+        if (pattern.exec(val) !== null) {
+          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
+        } else {
+          return <span>{val}</span>;
+        }
+      }
     },
     {
       title: '上传日期',
@@ -159,13 +168,42 @@ class UploadDetail extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testRecord/getRecord',
+      type: 'testRecord/getRecordInfo',
       payload:{
          reportno : reportno,
       }
     });
   }
+<<<<<<< HEAD
 
+=======
+  previewItem = text => {
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const params = {
+      ...text,
+      reportno:reportno
+    };
+    dispatch({
+      type: 'testRecord/getRecord',
+      payload:params,
+      callback:(response) =>{
+        if(response.code === 400){
+          notification.open({
+            message: '打开失败',
+            description:response.data,
+          });
+        }else{
+          const url = response.data;
+          console.log(url);
+          window.open(url);
+        }
+      }
+    });
+    console.log("true")
+    //this.setState({previewPDFVisible:true});
+  };
+>>>>>>> 4974ce9821ce9af66be7d42386b38bf5fe879b5c
   deleteItem = text => {
     const {
       dispatch,
@@ -186,7 +224,7 @@ class UploadDetail extends PureComponent {
           });
         }else{
           dispatch({
-            type: 'testRecord/getRecord',
+            type: 'testRecord/getRecordInfo',
             payload:{
               reportno : reportno,
             }
@@ -222,7 +260,7 @@ class UploadDetail extends PureComponent {
               });
             }else{
               dispatch({
-                type: 'testRecord/getRecord',
+                type: 'testRecord/getRecordInfo',
                 payload:{
                   reportno : reportno,
                 }
@@ -285,7 +323,7 @@ class UploadDetail extends PureComponent {
     const isGIF = file.type === 'image/gif';
     const isPNG = file.type === 'image/png';
     const isPDF = file.type === 'application/pdf'
-    const size = file.size / 1024 / 1024 < 1;
+    const size = file.size / 1024 / 1024 < 20;
     if (!(isJPG || isJPEG || isGIF || isPNG || isPDF)) {
       Modal.error({
         title: '只能上传JPG 、JPEG 、GIF、 PNG、 PDF格式的图片~',
@@ -293,7 +331,7 @@ class UploadDetail extends PureComponent {
       return;
     } else if (!size) {
       Modal.error({
-        title: '超过1M限制，不允许上传~',
+        title: '超过20M限制，不允许上传~',
       });
       return;
     }
@@ -374,7 +412,6 @@ class UploadDetail extends PureComponent {
       loading,
       form: { getFieldDecorator },
     } = this.props;
-
     // state 方法
     const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
@@ -386,6 +423,7 @@ class UploadDetail extends PureComponent {
       handleDownloadCancel:this.handleDownloadCancel,
       handleOnSelect :this.handleOnSelect,
     };
+
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     return (
@@ -448,7 +486,7 @@ class UploadDetail extends PureComponent {
               loading={loading}
               dataSource={recordData}
               columns={this.columns}
-              rowKey="testman"
+              rowKey="recordname"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>

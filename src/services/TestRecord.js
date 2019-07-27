@@ -19,20 +19,22 @@ export async function getRecordList(params) {
     },
   });
 }
-export async function getRecord(params) {
+export async function getRecordInfo(params) {
 	return request(`/api/recordinfo/get_recordInfo?reportno=${params.reportno}`);
 
+}
+export async function getRecord(params) {
+  return request(`/api/recordinfo/get_record?recordname=${params.recordname}&reportno=${params.reportno}`);
 }
 export async function uploadFile(params) {
     return request(`/api/recordinfo/upload`,{
     method: 'POST',
-    //headers: { 'Content-Type': 'multipart/form-data;'},
+    // headers: { 'Content-Type': 'multipart/form-data;'},
     data:params,
   });
 }
 export async function deleteRecordInfo(params) {
 	return request(`/api/recordinfo/delete_recordInfo?recordname=${params.recordname}&reportno=${params.reportno}`);
-
 }
 export async function getInspway(params) {
 	return request(`/api/inspway/get_inspway?reportno=${params.reportno}`);
