@@ -174,9 +174,7 @@ class UploadDetail extends PureComponent {
       }
     });
   }
-<<<<<<< HEAD
 
-=======
   previewItem = text => {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
@@ -201,9 +199,9 @@ class UploadDetail extends PureComponent {
       }
     });
     console.log("true")
-    //this.setState({previewPDFVisible:true});
+    // this.setState({previewPDFVisible:true});
   };
->>>>>>> 4974ce9821ce9af66be7d42386b38bf5fe879b5c
+
   deleteItem = text => {
     const {
       dispatch,
