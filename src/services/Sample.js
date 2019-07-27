@@ -40,3 +40,30 @@ export async function deleteSamleRegister(params) {
     },
   });
 }
+
+export async function selectSampleRegisterByConditions(params) {
+  return request(`/api/sampleRegister/selectSampleRegisterByConditions`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function selectSampleByConditionsDestory(params) {
+  return request(`/api/sampleRegister/selectSampleByConditionsDestory`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
+// post请求 注意 ` 这个符号 不是这种 ’号
+export async function setSampleStatus(params) {
+  return request(`/api/sampleRegister/setSampleStatus`,{
+    method: 'POST',
+    data:params,
+  });
+}

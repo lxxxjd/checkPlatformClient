@@ -1,4 +1,8 @@
-import {getAllSampleRegister,getSampleRegistersByReportNo ,addSamleRegister,deleteSamleRegister} from '@/services/Sample'
+import {getAllSampleRegister,getSampleRegistersByReportNo ,
+  addSamleRegister,deleteSamleRegister,selectSampleRegisterByConditions,selectSampleByConditionsDestory,
+  setSampleStatus
+
+} from '@/services/Sample'
 
 
 
@@ -15,7 +19,18 @@ export default {
     },
 
     addData:{},
-    deleteResult:{}
+    deleteResult:{},
+    selectRegisterResult:{
+      list: [],
+      pagination: {},
+    },
+    selectRegisterDestory:{
+      list: [],
+      pagination: {},
+    },
+
+    stateResult:{}
+
   },
 
   effects: {
@@ -57,6 +72,32 @@ export default {
       if (callback) callback(response.data);
     },
 
+    *getSampleRegisterByConditions({ payload,callback }, { call, put }) {
+      const response = yield call(selectSampleRegisterByConditions, payload);
+      yield put({
+        type: 'selectRegisterByConditions',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+    *selectSampleByConditionsDestory({ payload,callback }, { call, put }) {
+      const response = yield call(selectSampleByConditionsDestory, payload);
+      yield put({
+        type: 'selectByConditionsDestory',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *setSampleStatus({ payload,callback }, { call, put }) {
+      const response = yield call(setSampleStatus, payload);
+      yield put({
+        type: 'setStatus',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -86,5 +127,26 @@ export default {
         deleteResult: payload.data,
       };
     },
+    selectRegisterByConditions(state, { payload }) {
+      return {
+        ...state,
+        selectRegisterResult: payload.data,
+      };
+    },
+
+    selectByConditionsDestory(state, { payload }) {
+      return {
+        ...state,
+        selectRegisterDestory: payload.data,
+      };
+    },
+
+    setStatus(state, { payload }) {
+      return {
+        ...state,
+        stateResult: payload.data,
+      };
+    },
+
   },
 };
