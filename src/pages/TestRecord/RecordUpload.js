@@ -10,15 +10,11 @@ import {
   Input,
   Button,
   Select,
-  Modal,
-  Checkbox,
-  Radio,
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultRegistration.less';
 
-const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
@@ -29,11 +25,6 @@ const { Option } = Select;
 }))
 class RecordUpload extends PureComponent {
   state = {
-    visible:false,
-    checkProject:[],
-    allCompanyName:[],
-    selectEntrustment:null,
-    showPrice:false,
   };
 
   columns = [
@@ -65,6 +56,8 @@ class RecordUpload extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
+          <a onClick={() => this.modifyItem(text, record)}>记录上传</a>
+          &nbsp;&nbsp;          
           <a onClick={() => this.modifyItem(text, record)}>记录制作</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
@@ -116,6 +109,7 @@ class RecordUpload extends PureComponent {
       });
     });
   };
+
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
@@ -128,6 +122,7 @@ class RecordUpload extends PureComponent {
       }
     });
   };
+
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -170,11 +165,11 @@ class RecordUpload extends PureComponent {
       </Form>
     );
   }
+
   render() {
     const {
       testRecord:{data},
       loading,
-      form: { getFieldDecorator },
     } = this.props;
     return (
       <PageHeaderWrapper title="证书上传">

@@ -10,24 +10,15 @@ import {
   Input,
   Button,
   Select,
-  Modal,
-  Checkbox,
-  Radio,
   Table,
   Typography
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ModifyRelevance.less';
-import moment from 'moment'
 
 const { Title  } = Typography;
-const CheckboxGroup = Checkbox.Group;
 const FormItem = Form.Item;
 const { Option } = Select;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ testInfo, loading }) => ({
@@ -74,15 +65,15 @@ class ModifyRelevance extends PureComponent {
           return text;
         }
         let result = null;
-        let br = <br></br>;
-        for( let  j=0 ; j < contentStr.length ; j++){
-          if(j==0){
+        const br = <br></br>;
+        for( let  j = 0 ; j < contentStr.length ; j ++){
+          if(j===0){
              result=contentStr[j];
           }else{
             result=<span>{result}{br}{contentStr[j]}</span>;
           }
         }
-        return <div>{result}</div>; 
+        return <div>{result}</div>;
       },
     },
     {
@@ -118,27 +109,6 @@ class ModifyRelevance extends PureComponent {
       title: '货名',
       dataIndex: 'cargoname',
     },
-/*    {
-      title: '关联委托号',
-      dataIndex: 'reportlink',
-      render: (text, record) => {
-        let  contentStr = [];
-        contentStr = text.split(",");
-        if (contentStr.length < 2) {
-          return text;
-        }
-        let result = null;
-        let br = <br></br>;
-        for( let  j=0 ; j < contentStr.length ; j++){
-          if(j==0){
-             result=contentStr[j];
-          }else{
-            result=<span>{result}{br}{contentStr[j]}</span>;
-          }
-        }
-        return <div>{result}</div>; 
-      },
-    },*/
     {
       title: '操作',
       render: (text, record) => (
@@ -187,9 +157,9 @@ class ModifyRelevance extends PureComponent {
   };
   deleteRelevance = text =>{
     const { dispatch } = this.props;
-    var reportno = sessionStorage.getItem('reportno');
+    const reportno = sessionStorage.getItem('reportno');
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    var value = [];
+    let value = [];
     value.push(reportno);
     value.push(text.reportno);
     dispatch({
@@ -256,26 +226,24 @@ class ModifyRelevance extends PureComponent {
     const {
       testInfo: {report,link},
       loading,
-      location
     } = this.props;
-    var reportno = sessionStorage.getItem('reportno');
-    var shipname = sessionStorage.getItem('shipname');
-    var applicant = sessionStorage.getItem('applicant');
+    const reportno = sessionStorage.getItem('reportno');
+    const shipname = sessionStorage.getItem('shipname');
     return (
-      <PageHeaderWrapper >     
+      <PageHeaderWrapper>
         <Card bordered={false} className={styles.card}>
           <Row>
-            <Col sm={5} >
-              <span level={4} > 委托编号：{reportno} </span>
+            <Col sm={5}>
+              <span level={4}> 委托编号：{reportno} </span>
             </Col>
-            <Col sm={8} >
+            <Col sm={8}>
               <span> 运输工具：{shipname} </span>
             </Col>
           </Row>
           <br></br>
-          <Row gutter={16} >  
+          <Row gutter={16}>
             <Col span={5}>
-              <Title level={4} > 已关联委托</Title>
+              <Title level={4}> 已关联委托</Title>
             </Col>
             <Col span={19}>
             </Col>
@@ -289,7 +257,7 @@ class ModifyRelevance extends PureComponent {
               pagination={false}
             />
           </div>
-        </Card>  
+        </Card>
         <Card bordered={false} className={styles.card}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>

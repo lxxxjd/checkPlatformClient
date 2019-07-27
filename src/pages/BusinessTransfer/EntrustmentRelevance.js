@@ -10,22 +10,15 @@ import {
   Input,
   Button,
   Select,
-  Modal,
-  Checkbox,
-  Radio,
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './EntrustmentRelevance.less';
 
 
-const CheckboxGroup = Checkbox.Group;
 const FormItem = Form.Item;
 const { Option } = Select;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
+
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ testInfo, loading }) => ({
@@ -74,9 +67,9 @@ class EntrustmentRelevance extends PureComponent {
           return text;
         }
         let result = null;
-        let br = <br></br>;
+        const br = <br></br>;
         for( let  j=0 ; j < contentStr.length ; j++){
-          if(j==0){
+          if(j===0){
              result=contentStr[j];
           }else{
             result=<span>{result}{br}{contentStr[j]}</span>;
@@ -99,7 +92,7 @@ class EntrustmentRelevance extends PureComponent {
 
 
   componentDidMount() {
-    const { dispatch,location } = this.props;
+    const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
       type: 'testInfo/getReports',
@@ -129,7 +122,7 @@ class EntrustmentRelevance extends PureComponent {
     const { form } = this.props;
     form.resetFields();
     this.setState({
-      formValues: {},
+       formValues: {},
     });
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const { dispatch } = this.props;
@@ -152,7 +145,7 @@ class EntrustmentRelevance extends PureComponent {
       if (err) return;
       const values = {
         ...fieldsValue,
-        certCode: certCode,
+        certCode : certCode,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
       };
@@ -227,7 +220,6 @@ class EntrustmentRelevance extends PureComponent {
     const {
       testInfo: {relevanceData},
       loading,
-      form: { getFieldDecorator },
     } = this.props;
     return (
       <PageHeaderWrapper title="委托关联">
@@ -235,14 +227,11 @@ class EntrustmentRelevance extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
-              //selectedRows={selectedRows}
               loading={loading}
               dataSource={relevanceData.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
               rowKey="reportno"
-              //onSelectRow={this.handleSelectRows}
-              //onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>

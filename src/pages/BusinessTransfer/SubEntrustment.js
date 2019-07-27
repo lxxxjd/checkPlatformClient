@@ -3,26 +3,16 @@ import { connect } from 'dva';
 import router from 'umi/router';
 
 import {
-  Row,
-  Col,
   Card,
   Form,
-  Input,
-  Button,
   Select,
-  Modal,
   Checkbox,
-  Radio,
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SubEntrustment.less';
 import moment from 'moment'
 import Search from './Search.js'
-
-
-const CheckboxGroup = Checkbox.Group;
-const { Option } = Select;
 
 
 /* eslint react/no-multi-comp:0 */
@@ -34,7 +24,6 @@ const SearchForm = Form.create()(Search);
 }))
 class SubEntrustment extends PureComponent {
   state = {
-    formValues: {},
   };
 
   columns = [
@@ -71,9 +60,9 @@ class SubEntrustment extends PureComponent {
           return text;
         }
         let result = null;
-        let br = <br></br>;
-        for( let  j=0 ; j < contentStr.length ; j++){
-          if(j==0){
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j ++){
+          if(j === 0){
              result=contentStr[j];
           }else{
             result=<span>{result}{br}{contentStr[j]}</span>;
@@ -134,7 +123,6 @@ class SubEntrustment extends PureComponent {
     const {
       testInfo: {data},
       loading,
-      form: { getFieldDecorator },
     } = this.props;
     return (
       <PageHeaderWrapper title="转委托">
@@ -146,8 +134,6 @@ class SubEntrustment extends PureComponent {
               dataSource={data.list}
               columns={this.columns}
               rowKey="reportno"
-              //onSelectRow={this.handleSelectRows}
-              //onChange={this.handleStandardTableChange}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
