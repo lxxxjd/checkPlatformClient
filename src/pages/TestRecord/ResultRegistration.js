@@ -10,15 +10,11 @@ import {
   Input,
   Button,
   Select,
-  Modal,
-  Checkbox,
-  Radio,
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultRegistration.less';
 
-const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
@@ -29,11 +25,6 @@ const { Option } = Select;
 }))
 class ResultRegistration extends PureComponent {
   state = {
-    visible:false,
-    checkProject:[],
-    allCompanyName:[],
-    selectEntrustment:null,
-    showPrice:false,
   };
 
   columns = [
@@ -61,9 +52,9 @@ class ResultRegistration extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)} >结果登记</a>
+          <a onClick={() => this.modifyItem(text, record)}>结果登记</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)} >委托详情</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -89,8 +80,8 @@ class ResultRegistration extends PureComponent {
   };
 
   modifyItem = text => {
-    sessionStorage.setItem('reportno',text.reportno); 
-    sessionStorage.setItem('shipname',text.shipname); 
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
     router.push({
       pathname:'/TestRecord/ResultDetail',
     });
@@ -115,18 +106,20 @@ class ResultRegistration extends PureComponent {
       });
     });
   };
+
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const {certCode} = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     dispatch({
       type: 'testRecord/getReports',
       payload:{
-         certCode : certCode,
+         certCode,
       }
     });
   };
+
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -169,11 +162,11 @@ class ResultRegistration extends PureComponent {
       </Form>
     );
   }
+
   render() {
     const {
       testRecord:{data},
       loading,
-      form: { getFieldDecorator },
     } = this.props;
     return (
       <PageHeaderWrapper title="结果登记">

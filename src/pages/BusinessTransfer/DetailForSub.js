@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
 
 import {
   Row,
@@ -29,7 +28,6 @@ const { Option } = Select;
 }))
 class DetailForSub extends PureComponent {
   state = {
-    formValues: {},
     visible:false,
     checkProject:[],
     allCompanyName:[],
@@ -99,9 +97,8 @@ class DetailForSub extends PureComponent {
   modifyItem = text => {
     const { form } = this.props;
     this.setState({visible:true});
-    //this.state.selectEntrustment = text;
     this.setState({selectEntrustment:text});
-    if(text.inspway && typeof(text.inspway) != "undefined"){
+    if(text.inspway && typeof(text.inspway) !== "undefined"){
         const inspway = text.inspway.split(" ");
         form.setFieldsValue({['inspway']:inspway});
     }
@@ -128,7 +125,7 @@ class DetailForSub extends PureComponent {
     const {selectEntrustment} = this.state;
     validateFieldsAndScroll((error, values) => {
       if (!error) {
-        if(selectEntrustment&&typeof(selectEntrustment) != "undefined"){
+        if(selectEntrustment&&typeof(selectEntrustment) !== "undefined"){
           values.keyno = selectEntrustment.keyno;
           values.reportno = selectEntrustment.reportno;
           values.assignman = selectEntrustment.assignman;
@@ -157,9 +154,7 @@ class DetailForSub extends PureComponent {
   show = () => {
     const {
       form,
-      dispatch,
     } = this.props;
-    const validateFieldsAndScroll = form;
     form.resetFields();
     this.setState({ visible: true });
   };
@@ -174,7 +169,6 @@ class DetailForSub extends PureComponent {
     }
   }
   render() {
-
     const {
       testInfo: {TestInfo},
       loading,
@@ -182,14 +176,13 @@ class DetailForSub extends PureComponent {
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
-    const applicant = sessionStorage.getItem('applicant');
-    const {  showPrice,checkProject,allCompanyName} = this.state;
-    const companyNameOptions = allCompanyName.map(d => <Option key={d}  value={d}>{d}</Option>);
+    const {  showPrice,checkProject,allCompanyName,visible} = this.state;
+    const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="转委托">
         <Modal
           title="新建转委托"
-          visible={this.state.visible}
+          visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
@@ -203,7 +196,7 @@ class DetailForSub extends PureComponent {
                       filterOption={false}
                       onSearch={this.handleSearch}
                     >
-                      {companyNameOptions}
+                  {companyNameOptions}
                     </Select>
                     )}
             </Form.Item>
@@ -216,7 +209,7 @@ class DetailForSub extends PureComponent {
                   />
                 )}
             </Form.Item>
-            <Form.Item label="计价方式" >
+            <Form.Item label="计价方式">
               {getFieldDecorator('priceway', {
                 rules: [{ required: true, message: '请选择计价方式' }],
               })(
@@ -234,7 +227,7 @@ class DetailForSub extends PureComponent {
                 { true: getFieldDecorator('price', {
                   rules: [{ required: true, message: '请输入单价比例' }],
                 })(
-                    <Input />
+                  <Input />
                  )
                   }[showPrice]
               }
@@ -248,7 +241,7 @@ class DetailForSub extends PureComponent {
             </Form.Item>
             <Form.Item label="转委托要求">
               {getFieldDecorator('inspwaymemo1')(
-                    <Input />
+                  <Input />
                 )}
             </Form.Item>
           </Form>
@@ -256,7 +249,7 @@ class DetailForSub extends PureComponent {
         <Card bordered={false}>
           <Row>
             <Col sm={5} xs={24}>
-              <span level={4} > 委托编号：{reportno} </span>
+              <span level={4}> 委托编号：{reportno} </span>
             </Col>
             <Col sm={8} xs={24}>
               <span> 运输工具：{shipname} </span>
