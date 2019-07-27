@@ -1,4 +1,7 @@
-import {getAllReports,getInspway,getProject,addInspway,deleteInspway,getRecordList,getRecord,deleteRecordInfo,uploadFile} from '@/services/TestRecord'
+import {getAllReports,getInspway,getProject,addInspway,deleteInspway,
+  getRecordList,getRecord,deleteRecordInfo,uploadFile,
+  getModelSelectName,
+  } from '@/services/TestRecord'
 
 
 
@@ -14,6 +17,7 @@ export default {
     projectData:[],
     recordData:[],
     inspway:null,
+    selectModelName:[]
   },
 
   effects: {
@@ -89,6 +93,18 @@ export default {
       });
       if (callback) callback(response);
     },
+
+    *getModelName({ payload,callback }, { call, put }) {
+      const response = yield call(getModelSelectName, payload);
+      yield put({
+        type: 'getSelectName',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+
   },
 
   reducers: {
@@ -128,5 +144,14 @@ export default {
         inspway:payload.data
       };
     },
+
+    getSelectName(state, { payload }) {
+      return {
+        ...state,
+        selectModelName: payload.data,
+      };
+    },
+
+
   },
 };

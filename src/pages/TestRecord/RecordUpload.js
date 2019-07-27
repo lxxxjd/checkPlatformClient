@@ -65,9 +65,9 @@ class RecordUpload extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)} >记录上传</a>
+          <a onClick={() => this.modifyItem(text, record)}>记录制作</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)} >委托详情</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -92,8 +92,8 @@ class RecordUpload extends PureComponent {
   };
 
   modifyItem = text => {
-    sessionStorage.setItem('reportno',text.reportno); 
-    sessionStorage.setItem('shipname',text.shipname); 
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
     router.push({
       pathname:'/TestRecord/UploadDetail',
     });

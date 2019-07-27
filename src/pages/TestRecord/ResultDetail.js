@@ -15,7 +15,7 @@ import {
   Radio,
   Table,
   DatePicker,
-  notification 
+  notification
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultDetail.less';
@@ -92,7 +92,7 @@ class ResultDetail extends PureComponent {
     const params = {
       ...text,
       reportno:reportno
-    };  
+    };
     dispatch({
       type: 'testRecord/deleteInspway',
       payload:params,
@@ -124,7 +124,7 @@ class ResultDetail extends PureComponent {
         const params = {
           ...values,
           reportno:reportno
-        };    
+        };
         dispatch({
           type: 'testRecord/addInspway',
           payload : params,
@@ -201,7 +201,7 @@ class ResultDetail extends PureComponent {
     return (
       <PageHeaderWrapper title="结果登记">
         <Modal
-          title="新建转委托"
+          title="上传记录"
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -223,19 +223,19 @@ class ResultDetail extends PureComponent {
             <Form.Item label="重量">
               {getFieldDecorator('result', {
                 rules: [{ required: true, message: '请输入重量' }],
-              })(                    
+              })(
                   <Input />
                 )}
             </Form.Item>
             <Form.Item label="开始日期">
               {getFieldDecorator('begindate', {
                 rules: [{ required: true, message: '请选择开始日期' }],
-              })(    
+              })(
                   <DatePicker
                     placeholder="开始日期"
                     style={{ width: '100%' }}
                     format="YYYY-MM-DD"
-                  />              
+                  />
                 )}
             </Form.Item>
             <Form.Item label="结束日期">
@@ -246,9 +246,9 @@ class ResultDetail extends PureComponent {
                     placeholder="结束日期"
                     style={{ width: '100%' }}
                     format="YYYY-MM-DD"
-                  />                    
+                  />
                 )}
-            </Form.Item>            
+            </Form.Item>
           </Form>
         </Modal>
         <Card bordered={false}>
