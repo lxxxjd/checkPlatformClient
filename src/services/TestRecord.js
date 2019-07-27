@@ -29,6 +29,7 @@ export async function getRecord(params) {
 export async function uploadFile(params) {
     return request(`/api/recordinfo/upload`,{
     method: 'POST',
+    // headers: { 'Content-Type': 'multipart/form-data;'},
     data:params,
   });
 }
@@ -58,4 +59,13 @@ export async function deleteInspway(params) {
 }
 export async function getProject(params) {
 	return request(`/api/inspway/get_project?reportno=${params.reportno}`);
+}
+
+
+// post请求 注意 ` 这个符号 不是这种 ’号
+export async function getModelSelectName(params) {
+  return request(`/api/template/getAllNames`,{
+    method: 'POST',
+    data:params,
+  });
 }

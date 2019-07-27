@@ -24,6 +24,78 @@ import styles from './ResultDetail.less';
 import moment from 'moment'
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
+
+
+// 表单组件
+const CreateUploadForm = Form.create()(props => {
+
+
+  const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect } = props;
+
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      form.resetFields();
+      handleDownloadAdd(fieldsValue);
+    });
+  };
+  const handleChange =()=>{
+    form.resetFields(`name`,[]);
+  }
+
+  return (
+    <Modal
+      destroyOnClose
+      title="模板下载"
+      visible={downloadVisible}
+      onOk={okHandle}
+      onCancel={() => handleDownloadCancel()}
+      footer={[
+        // 定义右下角 按钮的地方 可根据需要使用 一个或者 2个按钮
+        <Button key="back" type="primary" onClick={() => handleDownloadCancel()}> 取消</Button>,
+        <Button key="submit" type="primary" onClick={okHandle}>下载</Button>,
+      ]}
+    >
+
+
+      <Form.Item label="记录名称">
+        {form.getFieldDecorator('recordname', {
+          rules: [{ required: true, message: '请输入记录名称' }],
+        })(
+          <Input style={{ width: '100%' }} placeholder="记录名称" />
+        )}
+      </Form.Item>
+
+      <Form.Item label="文件来源">
+        {form.getFieldDecorator('type', {
+          rules: [{ required: true, message: '请选择文件来源' }],
+        })(
+          <Select style={{ width: '100%' }} placeholder="请选择文件来源" onSelect={handleOnSelect} onChange={handleChange}>
+            <Option value="platform">平台模板</Option>
+            <Option value="company">公司模板</Option>
+            <Option value="person">个人模板</Option>
+            <Option value="blank">空白模板</Option>
+          </Select>
+        )}
+      </Form.Item>
+
+      <Form.Item label="模板名称">
+        {form.getFieldDecorator('name', {
+          rules: [{ required: true, message: '请选择模板名称' }],
+        })(
+          <Select style={{ width: '100%' }} placeholder="请选择模板名称">
+            {typeOptions}
+          </Select>
+        )}
+      </Form.Item>
+
+    </Modal>
+  );
+});
+
+
+
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -42,14 +114,15 @@ class UploadDetail extends PureComponent {
   state = {
     formValues: {},
     visible:false,
+    downloadVisible:false,
     checkProject:[],
     allCompanyName:[],
     selectEntrustment:null,
     showPrice:false,
     previewVisible: false,
     previewImage: '',
-    fileList: [
-    ],
+    fileList: [],
+    modelName:[],
   };
 
   columns = [
@@ -65,7 +138,7 @@ class UploadDetail extends PureComponent {
           return <span>{val}</span>;
         }
       }
-    },    
+    },
     {
       title: '上传日期',
       dataIndex: 'recorddate',
@@ -77,9 +150,13 @@ class UploadDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)} >详情</a>
+          <a onClick={() => this.previewItem(text, record)}>详情</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)} >删除</a>
+          <a onClick={() => this.previewItem(text, record)}>签署</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>复核</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
         </Fragment>
       ),
@@ -97,13 +174,14 @@ class UploadDetail extends PureComponent {
       }
     });
   }
+
   previewItem = text => {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const params = {
       ...text,
       reportno:reportno
-    }; 
+    };
     dispatch({
       type: 'testRecord/getRecord',
       payload:params,
@@ -116,13 +194,14 @@ class UploadDetail extends PureComponent {
         }else{
           const url = response.data;
           console.log(url);
-          window.open(url); 
+          window.open(url);
         }
       }
     });
     console.log("true")
-    //this.setState({previewPDFVisible:true});
+    // this.setState({previewPDFVisible:true});
   };
+
   deleteItem = text => {
     const {
       dispatch,
@@ -131,7 +210,7 @@ class UploadDetail extends PureComponent {
     const params = {
       ...text,
       reportno:reportno
-    };  
+    };
     dispatch({
       type: 'testRecord/deleteRecordInfo',
       payload:params,
@@ -152,6 +231,7 @@ class UploadDetail extends PureComponent {
       }
     });
   };
+
   handleOk = () =>{
     const {
       form: { validateFieldsAndScroll },
@@ -160,13 +240,13 @@ class UploadDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     validateFieldsAndScroll((error, values) => {
       if (!error) {
-        let formData = new FormData();        
+        let formData = new FormData();
         values.MultipartFile.fileList.forEach(file => {
           formData.append('files', file.originFileObj);
         });
         formData.append('reportno', reportno);
         formData.append('fileName', values.recordname);
-        console.log(formData.get('files'));     
+        console.log(formData.get('files'));
         dispatch({
           type: 'testRecord/uploadFile',
           payload : formData,
@@ -192,6 +272,7 @@ class UploadDetail extends PureComponent {
       console.log(error);
     });
   };
+
   show = () => {
     const {
       form,
@@ -202,6 +283,7 @@ class UploadDetail extends PureComponent {
     this.setState({fileList:[]});
     this.setState({ visible: true });
   };
+
   handleCancel = () =>{
     const {
       form
@@ -209,6 +291,8 @@ class UploadDetail extends PureComponent {
     form.resetFields();
     this.setState({ visible: false });
   };
+
+
   onChange = e =>{
     if(e.target.value === "按单价"  || e.target.value ==="按比例"){
       this.setState({showPrice:true});
@@ -216,6 +300,7 @@ class UploadDetail extends PureComponent {
       this.setState({showPrice:false});
     }
   };
+
   Cancel = () => this.setState({ previewVisible: false });
 
   handlePreview = async file => {
@@ -228,6 +313,7 @@ class UploadDetail extends PureComponent {
       previewVisible: true,
     });
   };
+
   handleChange = ({ file,fileList }) => {
     //限制图片 格式、size、分辨率
     const isJPG = file.type === 'image/jpg';
@@ -250,9 +336,68 @@ class UploadDetail extends PureComponent {
     this.setState({ fileList:fileList});
     console.log(fileList)
   };
+
   handleBeforeUpload = file => {
     return false;
   };
+
+
+
+  // 处理下载模态框打开
+  showDownloadVisible = (flag) => {
+    this.setState({
+      downloadVisible: !!flag,
+    });
+  };
+
+  // 处理下载模态框取消
+  handleDownloadCancel = (flag) => {
+    this.setState({
+      downloadVisible: !!flag,
+    });
+  };
+
+
+
+  // 处理下载模态框 提交表单
+  handleDownloadAdd = (fields) =>{
+    console.log(fields);
+    this.setState({
+      downloadVisible: false,
+    });
+  }
+
+  // 处理下载模态框 提交表单
+  handleOnSelect =(value) =>{
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    let ownerValue="";
+    if( value ==="platform"){
+      ownerValue = "platform";
+    }else if(value ==="company"){
+      ownerValue= user.certCode;
+    }else if(value ==="person"){
+      ownerValue= user.userName;
+    }else{
+      ownerValue = "blank";
+    }
+    const { dispatch, } = this.props;
+    const params = {
+      type:value,
+      owner:ownerValue
+    };
+    dispatch({
+      type: 'testRecord/getModelName',
+      payload:params,
+      callback: (response) => {
+        if(response){
+          this.state.modelName = response;
+        }
+      }
+    });
+  }
+
+
+
   render() {
     const uploadButton = (
       <div>
@@ -265,13 +410,24 @@ class UploadDetail extends PureComponent {
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const {fileList,visible,previewVisible,previewImage } = this.state
+    // state 方法
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName} = this.state
+    const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
+
+    // 下载模板 模态框方法
+    const parentMethods = {
+      handleDownloadAdd: this.handleDownloadAdd,
+      showDownloadVisible: this.showDownloadVisible,
+      handleDownloadCancel:this.handleDownloadCancel,
+      handleOnSelect :this.handleOnSelect,
+    };
+
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     return (
-      <PageHeaderWrapper title="结果登记">
+      <PageHeaderWrapper title="检验记录">
         <Modal
-          title="新建转委托"
+          title="记录上传"
           visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -303,20 +459,26 @@ class UploadDetail extends PureComponent {
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>
               <img alt="example" style={{ width: '100%' }} src={previewImage} />
-            </Modal>          
+            </Modal>
           </Form>
         </Modal>
+
+        <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
+
         <Card bordered={false}>
-            <Row>
+          <Row>
             <Col sm={5} xs={24}>
-              <span level={4} > 委托编号：{reportno} </span>
+              <span level={4}> 委托编号：{reportno} </span>
             </Col>
             <Col sm={8} xs={24}>
               <span> 运输工具：{shipname} </span>
             </Col>
           </Row>
-          <br></br>
-          <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
+          <br />
+          <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
+          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
+          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>批量上传</Button>
+          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>工作目录</Button>
           <div className={styles.tableList}>
             <Table
               loading={loading}

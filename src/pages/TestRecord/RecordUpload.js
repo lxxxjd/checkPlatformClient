@@ -57,6 +57,8 @@ class RecordUpload extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.modifyItem(text, record)}>记录上传</a>
+          &nbsp;&nbsp;          
+          <a onClick={() => this.modifyItem(text, record)}>记录制作</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

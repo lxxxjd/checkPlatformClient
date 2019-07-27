@@ -1,6 +1,6 @@
 import {getAllSampleRegister,getSampleRegistersByReportNo ,
   addSamleRegister,deleteSamleRegister,selectSampleRegisterByConditions,selectSampleByConditionsDestory,
-  setSampleStatus
+  setSampleStatus,getModelSelectName
 
 } from '@/services/Sample'
 
@@ -29,7 +29,7 @@ export default {
       pagination: {},
     },
 
-    stateResult:{}
+    stateResult:{},
 
   },
 
@@ -97,6 +97,8 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+
 
   },
 
