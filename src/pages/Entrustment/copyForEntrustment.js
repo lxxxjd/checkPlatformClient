@@ -259,6 +259,10 @@ class copyForEntrustment extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       if (!error) {
+        console.log(values.reportdate);
+        values.reportdate = values.reportdate.toDate();
+        values.inspdate = values.inspdate.toDate();
+        console.log(values.reportdate);
         // submit the values
         dispatch({
           type: 'entrustment/addReport',
@@ -274,10 +278,10 @@ class copyForEntrustment extends PureComponent {
               notification.open({
                 message: '添加成功',
               });
-              sessionStorage.setItem('reportno',response.data.reportno);
-              router.push({
-                pathname:'/Entrustment/DetailForEntrustment',
-              });
+              // sessionStorage.setItem('reportno',response.data.reportno);
+              // router.push({
+              //   pathname:'/Entrustment/DetailForEntrustment',
+              // });
             }else{
               notification.open({
                 message: '添加失败',

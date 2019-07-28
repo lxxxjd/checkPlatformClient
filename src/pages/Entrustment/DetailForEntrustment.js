@@ -14,7 +14,7 @@ class DetailForEnturstment extends Component {
 
 
   componentWillMount() {
-    const reportnNo = JSON.parse(localStorage.getItem("reportDetailNo"));
+    const reportnNo = sessionStorage.getItem("reportno");
     const { dispatch } = this.props;
     dispatch({
       type: 'entrustment/getReport',
@@ -25,7 +25,7 @@ class DetailForEnturstment extends Component {
   handleOk = e => {
     console.log(e);
     const { dispatch, match } = this.props;
-    const reportnNo = JSON.parse(localStorage.getItem("reportDetailNo"));
+    const reportnNo = sessionStorage.getItem("reportno");
     dispatch({
       type: 'entrustment/remove',
       payload: {reportno:reportnNo},
