@@ -204,7 +204,6 @@ class Inspector extends PureComponent {
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
                   <Option value="applicant">委托人</Option>
-                  <Option value="agent">代理人</Option>
                   <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
 

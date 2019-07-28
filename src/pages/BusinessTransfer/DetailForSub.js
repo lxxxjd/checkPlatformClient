@@ -66,7 +66,6 @@ class DetailForSub extends PureComponent {
         <Fragment>
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
-          <a>详情</a>
         </Fragment>
       ),
     },
@@ -143,7 +142,6 @@ class DetailForSub extends PureComponent {
             payload: values,
           });
         }
-
         this.setState({ selectEntrustment: null });
         this.setState({ visible: false });
         form.resetFields();
@@ -225,11 +223,14 @@ class DetailForSub extends PureComponent {
               >
               {
                 { true: getFieldDecorator('price', {
-                  rules: [{ required: true, message: '请输入单价比例' }],
+                  rules:
+                  showPrice === true
+                  ? [{ required: 'true', message: '请输入单价比例' }] 
+                  : []
                 })(
                   <Input />
                  )
-                  }[showPrice]
+                }[showPrice]
               }
             </Form.Item>
             <Form.Item label="总计费用">
