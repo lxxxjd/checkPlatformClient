@@ -247,14 +247,11 @@ class SearchForEntrustment extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
-              //selectedRows={selectedRows}
               loading={loading}
-              rowKey={data.reportNo}
+              rowKey='reportno'
               dataSource={data.list}
               columns={this.columns}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
-              //onSelectRow={this.handleSelectRows}
-              //onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>

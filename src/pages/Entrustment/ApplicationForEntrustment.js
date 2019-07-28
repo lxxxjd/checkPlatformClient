@@ -67,25 +67,25 @@ const inspwayOptions= [
 ];
 const fieldLabels = {
   applicant: '申请人',
-  applicantName: '联系人',
-  applicantTel: '联系方式',
+  applicantname: '联系人',
+  applicanttel: '联系方式',
   businesssort: '业务分类',
   agent: '代理人',
-  agentName: '联系人',
+  agentname: '联系人',
   agentTel: '联系方式',
   payer: '付款人',
   price: '检验费',
   reportdate: '委托日期',
   tradeway: '贸易方式',
-  businessSourse: '业务来源',
+  businesssource: '业务来源',
   shipname:'运输工具',
   inspplace:'装卸港',
   insplinkway: '现场联系方式',
   inspdate :'检验时间',
   cargoname: '货物名称',
   cargosort: '货物类别',
-  quantityd: '申报数量',
-  quantitydunit :'单位',
+  quantityD: '申报数量',
+  unit :'单位',
   HScode: 'HS编码',
   HSname: 'HS名称',
   ChineseName: '中文俗名',
@@ -126,7 +126,7 @@ class ApplicationForEntrustment extends PureComponent {
 
   componentDidMount () {
     const { form } = this.props;
-    form.setFieldsValue({['quantitydunit']:"公吨"});
+    form.setFieldsValue({['unit']:"公吨"});
     const now=moment().format("YYYY-MM-DD HH:mm:ss");
     form.setFieldsValue({['inspdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
     form.setFieldsValue({['reportdate']:moment(now,"YYYY-MM-DD HH:mm:ss")});
@@ -228,11 +228,34 @@ class ApplicationForEntrustment extends PureComponent {
       dispatch,
     } = this.props;
     validateFieldsAndScroll((error, values) => {
+      const user = JSON.parse(localStorage.getItem("userinfo"));
       if (!error) {
         // submit the values
         dispatch({
           type: 'entrustment/addReport',
-          payload: values,
+          payload: {
+            ...values,
+            username:user.nameC,
+            certcode:user.certCode,
+            section: user.section,
+            reportplace:user.place
+          },
+          callback: (response) => {
+            if(response.code === 200){
+              notification.open({
+                message: '添加成功',
+              });
+              sessionStorage.setItem('reportno',response.data.reportno);
+              router.push({
+                pathname:'/Entrustment/DetailForEntrustment',
+              });
+            }else{
+              notification.open({
+                message: '添加失败',
+                description:response.data,
+              });
+            }
+          }
         });
       }
     });
@@ -296,16 +319,13 @@ class ApplicationForEntrustment extends PureComponent {
       payload: reportno,
       callback: (response) => {
         this.setState({reportno:response.reportno})
-        //form.setFieldsValue({['reportno']:response.reportno});
-        //form.setFieldsValue({['randomcode']:response.randomcode});
-        //form.setFieldsValue({['section']:response.section});
         form.setFieldsValue({
           'reportdate':moment(response.reportdate,"YYYY-MM-DD"),
           'tradeway':response.tradeway,
           'payer':response.payer,
           'shipname':response.shipname,
           'cargoname':response.cargoname,
-          'quantityd':response.quantityd,
+          'quantityD':response.quantityD,
           'agent':response.agent,
           'applicant':response.applicant,
           'inspwaymemo1':response.inspwaymemo1,
@@ -315,29 +335,24 @@ class ApplicationForEntrustment extends PureComponent {
           'inspdate':moment(response.inspdate,"YYYY-MM-DD"),
           'insplinkway':response.insplinkway,
           'price':response.price,
-          'quantitydunit':response.quantitydunit,
+          'unit':response.unit,
           'businesssort':response.businesssort,
-          'applicantName':response.applicantName,
-          'applicantTel':response.applicantTel,
-          'agentName':response.agentName,
-          'agentTel':response.agentTel
+          'applicantname':response.applicantname,
+          'applicanttel':response.applicanttel,
+          'agentname':response.agentname,
+          'agentTel':response.agentTel,
+          'businesssource' : response.businesssource,
+          'chineselocalname' : response.chineselocalname,
+          'englishlocalname' : response.englishlocalname,
         });
-        //form.setFieldsValue({['reportman']:response.reportman});
-        //form.setFieldsValue({['businessman']:response.businessman});
-        //form.setFieldsValue({['reportplace']:response.reportplace});
-        //form.setFieldsValue({['tradeway']:response.tradeway});
-        //form.setFieldsValue({['linkername']:response.linkername});
-        //form.setFieldsValue({['linkertel']:response.linkertel});
-        //form.setFieldsValue({['cargosort']:response.cargosort});
-        //form.setFieldsValue({['cargodescribed']:response.cargodescribed});
+        for (const cargo in this.state.cargos) {
+          if (this.state.cargos[cargo].cargonamec.replace(/\s+/g,"") === response.cargoname) {
+            form.setFieldsValue({ 'HScode': this.state.cargos[cargo].hscode });
+            form.setFieldsValue({ 'HSname': this.state.cargos[cargo].hsname });
+            break;
+          }
+        }
         form.setFieldsValue({['inspway']:response.inspway.split(" ")});
-        //form.setFieldsValue({['other']:response.other});
-
-        //form.setFieldsValue({['inspwaymemo2']:response.inspwaymemo2});
-
-        //form.setFieldsValue({['priceway']:response.priceway});
-        //form.setFieldsValue({['certneeded']:response.certneeded});
-        //form.setFieldsValue({['certrequired']:response.certrequired});
         if(response.certstyle!=null) {
           const result = ['need'];
           result.push(response.certstyle);
@@ -345,14 +360,7 @@ class ApplicationForEntrustment extends PureComponent {
         }else{
           form.setFieldsValue({'certstyle':['noNeed']});
         }
-        //form.setFieldsValue({['process']:response.process});
-        //form.setFieldsValue({['contractno']:response.contractno});
-        //form.setFieldsValue({['blno']:response.blno});
-        //form.setFieldsValue({['fromto']:response.fromto});
-        //form.setFieldsValue({['certsignman']:response.certsignman});
-        //form.setFieldsValue({['certsigndate']:response.certsigndate});
 
-        //form.setFieldsValue({['state']:response.state});
 
       }
     });
@@ -414,24 +422,24 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={4}>
                 <Form.Item
-                  label={fieldLabels.applicantName}
+                  label={fieldLabels.applicantname}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('applicantName', {
+                  {getFieldDecorator('applicantname', {
                     rules: [{ required: true, message: '联系人' }],
                   })(<Input style={{ width: '100%' }} placeholder="联系人" />)}
                 </Form.Item>
               </Col>
               <Col span={5}>
                 <Form.Item
-                  label={fieldLabels.applicantTel}
+                  label={fieldLabels.applicanttel}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('applicantTel', {
+                  {getFieldDecorator('applicanttel', {
                     rules: [{ required: true, message: '请输入联系方式' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
@@ -477,12 +485,12 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={4} >
                 <Form.Item
-                  label={fieldLabels.agentName}
+                  label={fieldLabels.agentname}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('agentName', {
+                  {getFieldDecorator('agentname', {
                     rules: [{ required: true, message: '请输入联系人' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系人" />)}
                 </Form.Item>
@@ -501,12 +509,12 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={5}>
                 <Form.Item
-                  label={fieldLabels.businessSourse}
+                  label={fieldLabels.businesssource}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('businessSourse', {
+                  {getFieldDecorator('businesssource', {
                     rules: [{ required: true, message: '业务来源' }],
                   })(
                     <Select
@@ -589,12 +597,12 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
               <Col span={14}  >
                 <Form.Item
-                  label={fieldLabels.serversClass}
+                  label={fieldLabels.businesssort}
                   labelCol={{ span: 3 }}
                   wrapperCol={{ span: 21 }}
                   colon={false}
                 >
-                  {getFieldDecorator('serversClass', {
+                  {getFieldDecorator('businesssort', {
                     rules: [{ required: true, message: '请选择业务分类' }],
                   })(
                     <Select placeholder="请选择">
@@ -673,7 +681,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('HScode', {
                     rules: [{ required: true, message: '请输入HS编码' }],
-                  })(<Input placeholder="HS编码" />)}
+                  })(<Input placeholder="HS编码" disabled={true}/>)}
                 </Form.Item>
               </Col>
               <Col span={14} >
@@ -685,19 +693,19 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('HSname', {
                     rules: [{ required: true, message: '请输入HS名称' }],
-                  })(<Input placeholder="HS名称" />)}
+                  })(<Input placeholder="HS名称" disabled={true}/>)}
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={16}>
               <Col span={6} >
                 <Form.Item
-                  label={fieldLabels.quantityd}
+                  label={fieldLabels.quantityD}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('quantityd', {
+                  {getFieldDecorator('quantityD', {
                     rules: [{ required: true, message: '请输入申报数量' }],
                   })(<Input placeholder="请输入申报数量" />)}
                 </Form.Item>
@@ -706,7 +714,7 @@ class ApplicationForEntrustment extends PureComponent {
                 <Form.Item
                   colon={false}
                 >
-                  {getFieldDecorator('quantitydunit', {
+                  {getFieldDecorator('unit', {
                     rules: [{ required: true, message: '请选择单位' }],
                   })(
                     <Select  placeholder="请选择">
@@ -726,7 +734,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 19 }}
                   colon={false}
                 >
-                  {getFieldDecorator('ChineseName', {
+                  {getFieldDecorator('chinestlocalname', {
                     rules: [{ required: true, message: '请输入中文俗名' }],
                   })(<Input placeholder="请输入中文俗名" />)}
                 </Form.Item>
@@ -738,7 +746,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('EnglishName', {
+                  {getFieldDecorator('englishlocalname', {
                     rules: [{ required: true, message: '请输入英文俗名' }],
                   })(<Input placeholder="请输入英文俗名" />)}
                 </Form.Item>
@@ -786,7 +794,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('harbour', {
+                  {getFieldDecorator('inspplace2', {
                     rules: [{ required: true, message: '请输入港' }],
                   })(
                     <Input placeholder="请输入" />
@@ -800,7 +808,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 20 }}
                   colon={false}
                 >
-                  {getFieldDecorator('harbour')(
+                  {getFieldDecorator('inspplace3')(
                     <Input placeholder="请输入补充" />
                   )}
                 </Form.Item>

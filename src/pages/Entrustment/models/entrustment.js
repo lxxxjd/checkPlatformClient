@@ -32,7 +32,7 @@ export default {
         type: 'submit',
         payload,
       });
-      if (callback) callback();
+      if (callback) callback(response);
     },
     *filter({ payload }, { call, put }) {
       const response = yield call(queryAllReportsByFilter, payload);

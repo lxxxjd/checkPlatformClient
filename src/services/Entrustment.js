@@ -6,8 +6,6 @@ export async function submitApplication(params) {
 	const certstyle = params.certstyle.join('');
     params.inspway = inspway;
     params.certstyle = certstyle;
-    console.log(params.certstyle);
-    console.log(params.inspway);
   	return request('/api/report/add_report', {
     	method: 'POST',
     	data: {
@@ -21,8 +19,6 @@ export async function updateReport(params) {
   const certstyle = params.certstyle.join('');
     params.inspway = inspway;
     params.certstyle = certstyle;
-    console.log(params.certstyle);
-    console.log(params.inspway);
     return request('/api/report/update_report', {
       method: 'POST',
       data: {
