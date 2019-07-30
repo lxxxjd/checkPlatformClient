@@ -199,18 +199,18 @@ export default [
           },
         ],
       },
-      {
-        path: '/UEditor',
-        icon: 'table',
-        name: 'UEditor',
-        routes: [
-          {
-            path: '/UEditor/UEditorText',
-            name: 'UEditorText',
-            component: './UEditor/UEditorText',
-          },
-        ],
-      },
+      // {
+      //   path: '/UEditor',
+      //   icon: 'table',
+      //   name: 'UEditor',
+      //   routes: [
+      //     {
+      //       path: '/UEditor/UEditorText',
+      //       name: 'UEditorText',
+      //       component: './UEditor/UEditorText',
+      //     },
+      //   ],
+      // },
 
       // SampleRegister
       {
