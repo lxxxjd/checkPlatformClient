@@ -50,7 +50,7 @@ const options = [
     ],
   },
   {
-    value: 'noNeed',
+    value: '不需要',
     label: '不需要',
   },
 ];
@@ -129,7 +129,7 @@ class copyForEntrustment extends PureComponent {
         this.setState({cargos:response})
       }
     });
-    var reportno = sessionStorage.getItem('reportno');
+    const reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'entrustment/getReport',
       payload: reportno,
@@ -259,10 +259,6 @@ class copyForEntrustment extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       if (!error) {
-        console.log(values.reportdate);
-        values.reportdate = values.reportdate.toDate();
-        values.inspdate = values.inspdate.toDate();
-        console.log(values.reportdate);
         // submit the values
         dispatch({
           type: 'entrustment/addReport',
@@ -336,6 +332,7 @@ class copyForEntrustment extends PureComponent {
       entrustment,
     } = this.props;
     const { width,allReporterName,businessSort,businessSource,tradeway,checkProject,cargos} = this.state;
+    const reportno = sessionStorage.getItem('reportno');
     //申请人选项
     const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
     const businessSortOptions = businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
@@ -344,7 +341,7 @@ class copyForEntrustment extends PureComponent {
     const cargosOptions =cargos.map(d => <Option key={d.keyno}  value={d.keyno}>{d.cargonamec}</Option>);
     return (
       <PageHeaderWrapper
-        title={"委托号:"+entrustment.report.reportno}
+        title={"委托号:"+reportno}
       >
         <Card bordered={false}>
           <Row gutter={16}>
@@ -736,7 +733,7 @@ class copyForEntrustment extends PureComponent {
                   wrapperCol={{ span: 18 }}
                   colon={false}
                 >
-                  {getFieldDecorator('inspplace', {
+                  {getFieldDecorator('inspplace1', {
                     rules: [{ required: true, message: '请选择检验地点' }],
                   })(
                     <Cascader options={areaOptions} placeholder="请选择检验地点"/>

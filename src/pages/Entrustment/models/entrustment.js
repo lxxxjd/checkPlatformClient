@@ -16,6 +16,7 @@ export default {
     tradeway: [],
     cargos: [],
     copyNo:'',
+    deleteResult:null,
   },
 
   effects: {
@@ -124,13 +125,13 @@ export default {
     submit(state, { payload }) {
       return {
         ...state,
-        data: payload.data,
+        report: payload.data,
       };
     },
     update(state, { payload }) {
       return {
         ...state,
-        data: payload.data,
+        report: payload.data,
       };
     },
     get(state, { payload }) {
@@ -177,16 +178,16 @@ export default {
       };
     },
 
-    save(state, action) {
+    save(state, {payload}) {
       return {
         ...state,
-        data: action.payload.data,
+        data: payload.data,
       };
     },
     delete(state, { payload }) {
       return {
         ...state,
-        data: payload,
+        deleteResult: payload,
       };
     },
   },
