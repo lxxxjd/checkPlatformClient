@@ -211,7 +211,33 @@ export default [
           },
         ],
       },
-
+      {
+        path: '/InspectionAnalysis',
+        icon: 'table',
+        name: 'InspectionAnalysis',
+        routes: [
+          {
+            path: '/InspectionAnalysis/InspectionArrangement',
+            name: 'InspectionArrangement',
+            component: './InspectionAnalysis/InspectionArrangement',
+          },
+          {
+            path: '/InspectionAnalysis/InspectionArrangementDetail',
+            name: 'InspectionArrangementDetail',
+            component: './InspectionAnalysis/InspectionArrangementDetail',
+          },
+          {
+            path: '/InspectionAnalysis/SampleIndex',
+            name: 'SampleIndex',
+            component: './InspectionAnalysis/SampleIndex',
+          },
+          {
+            path: '/InspectionAnalysis/SampleDetail',
+            name: 'SampleDetail',
+            component: './InspectionAnalysis/SampleDetail',
+          },
+        ],
+      },
       // SampleRegister
       {
         path: '/SampleRegister',
@@ -241,7 +267,19 @@ export default [
           },
         ],
       },
-
+      //Certificate
+      {
+        path: '/Certificate',
+        icon: 'profile',
+        name: 'Certificate',
+        routes: [
+          {
+            path: '/Certificate/FinalPrice',
+            name: 'FinalPrice',
+            component: './Certificate/FinalPrice',
+          },
+        ],
+      },
 
       {
         component: '404',
