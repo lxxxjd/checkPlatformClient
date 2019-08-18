@@ -238,6 +238,7 @@ export default [
           },
         ],
       },
+
       // SampleRegister
       {
         path: '/SampleRegister',
