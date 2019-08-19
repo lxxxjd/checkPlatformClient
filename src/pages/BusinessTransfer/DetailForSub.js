@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
+import router from 'umi/router';
 
 import {
   Row,
@@ -12,7 +13,8 @@ import {
   Modal,
   Checkbox,
   Radio,
-  Table
+  Table,
+  Icon
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForSub.less';
@@ -165,7 +167,12 @@ class DetailForSub extends PureComponent {
     }else{
       this.setState({showPrice:false});
     }
-  }
+  };
+  back = () =>{
+    router.push({
+      pathname:'/BusinessTransfer/SubEntrustment',
+    });
+  };
   render() {
     const {
       testInfo: {TestInfo},
@@ -249,11 +256,17 @@ class DetailForSub extends PureComponent {
         </Modal>
         <Card bordered={false}>
           <Row>
-            <Col sm={5} xs={24}>
+            <Col span={5}>
               <span level={4}> 委托编号：{reportno} </span>
             </Col>
-            <Col sm={8} xs={24}>
+            <Col span={17}>
               <span> 运输工具：{shipname} </span>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
             </Col>
           </Row>
           <br></br>

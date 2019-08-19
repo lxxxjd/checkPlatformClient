@@ -199,18 +199,45 @@ export default [
           },
         ],
       },
-      // {
-      //   path: '/UEditor',
-      //   icon: 'table',
-      //   name: 'UEditor',
-      //   routes: [
-      //     {
-      //       path: '/UEditor/UEditorText',
-      //       name: 'UEditorText',
-      //       component: './UEditor/UEditorText',
-      //     },
-      //   ],
-      // },
+      {
+        path: '/UEditor',
+        icon: 'table',
+        name: 'UEditor',
+        routes: [
+          {
+            path: '/UEditor/UEditorText',
+            name: 'UEditorText',
+            component: './UEditor/UEditorText',
+          },
+        ],
+      },
+      {
+        path: '/InspectionAnalysis',
+        icon: 'table',
+        name: 'InspectionAnalysis',
+        routes: [
+          {
+            path: '/InspectionAnalysis/InspectionArrangement',
+            name: 'InspectionArrangement',
+            component: './InspectionAnalysis/InspectionArrangement',
+          },
+          {
+            path: '/InspectionAnalysis/InspectionArrangementDetail',
+            name: 'InspectionArrangementDetail',
+            component: './InspectionAnalysis/InspectionArrangementDetail',
+          },
+          {
+            path: '/InspectionAnalysis/SampleIndex',
+            name: 'SampleIndex',
+            component: './InspectionAnalysis/SampleIndex',
+          },
+          {
+            path: '/InspectionAnalysis/SampleDetail',
+            name: 'SampleDetail',
+            component: './InspectionAnalysis/SampleDetail',
+          },
+        ],
+      },
 
       // SampleRegister
       {
@@ -242,6 +269,7 @@ export default [
         ],
       },
 
+
       // Charge
       {
         path: '/Charge',
@@ -256,7 +284,19 @@ export default [
         ],
       },
 
-
+      //Certificate
+      {
+        path: '/Certificate',
+        icon: 'profile',
+        name: 'Certificate',
+        routes: [
+          {
+            path: '/Certificate/FinalPrice',
+            name: 'FinalPrice',
+            component: './Certificate/FinalPrice',
+          },
+        ],
+      },
       {
         component: '404',
       },

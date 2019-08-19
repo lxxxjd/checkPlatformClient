@@ -11,7 +11,8 @@ import {
   Button,
   Select,
   Table,
-  Typography
+  Typography,
+  Icon
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ModifyRelevance.less';
@@ -176,6 +177,11 @@ class ModifyRelevance extends PureComponent {
       }
     });
   };
+  back = () =>{
+    router.push({
+      pathname:'/BusinessTransfer/EntrustmentRelevance',
+    });
+  };
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -236,9 +242,15 @@ class ModifyRelevance extends PureComponent {
             <Col sm={5}>
               <span level={4}> 委托编号：{reportno} </span>
             </Col>
-            <Col sm={8}>
+            <Col sm={17}>
               <span> 运输工具：{shipname} </span>
             </Col>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </Col>  
           </Row>
           <br></br>
           <Row gutter={16}>

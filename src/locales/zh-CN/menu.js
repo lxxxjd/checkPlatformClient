@@ -31,10 +31,18 @@ export default {
   'menu.SampleRegister.SampleRegister':'样品登记',
   'menu.SampleRegister.SampleQuery':'样品查询',
   'menu.SampleRegister.SampleDestory':'样品销毁',
-
   'menu.Charge':'计费收费',
   'menu.Charge.ListFiction':'清单拟制',
+  'menu.SampleRegister.SampleRegisterDetail':'样品登记详情',
+  'menu.InspectionAnalysis':'检验分析',
+  'menu.InspectionAnalysis.InspectionArrangement':'检验安排',
+  'menu.InspectionAnalysis.InspectionArrangementDetail':'检验安排详情',
+  'menu.InspectionAnalysis.SampleIndex':'样品指标',
+  'menu.InspectionAnalysis.SampleDetail':'样品结果登记',
 
+
+  'menu.Certificate':'证稿证书',
+  'menu.Certificate.FinalPrice':'最终定价',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
@@ -74,6 +82,4 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
-  'menu.Certificate': '新增菜单',
-  'menu.Certificate.Certificate': '新增页面',
 };
