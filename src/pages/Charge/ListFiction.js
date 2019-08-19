@@ -2,7 +2,6 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import moment from 'moment';
-
 import {
   Row,
   Col,
@@ -11,114 +10,88 @@ import {
   Input,
   Button,
   Select,
-  Table,
+  Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SampleRegister.less';
+import styles from './ListFiction.less';
 
-
-
-const FormItem = Form.Item;
 const { Option } = Select;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ sample, loading }) => ({
-  sample,
-  loading: loading.models.sample,
-}))
-
 @Form.create()
-class SampleRegister extends PureComponent {
+@connect(({ charge, loading }) => ({
+  charge,
+  loading: loading.models.charge,
+}))
+class ListFiction extends PureComponent {
   state = {
-    formValues: {},
   };
 
   columns = [
     {
-      title: '委托编号',
-      dataIndex: 'reportno',
+      title: '清单号',
+      dataIndex: 'listno',
     },
     {
-      title: '委托日期',
-      dataIndex: 'reportdate',
+      title: '拟制日期',
+      dataIndex: 'listdate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '委托人',
-      dataIndex: 'applicant',
+      title: '拟制人',
+      dataIndex: 'listman',
     },
     {
-      title: '运输工具',
-      dataIndex: 'shipname',
+      title: '付款人',
+      dataIndex: 'payer',
     },
     {
-      title: '货名',
-      dataIndex: 'cargoname',
+      title: '金额',
+      dataIndex: 'total',
     },
     {
-      title: '样品编号',
-      dataIndex: 'sampleno',
+      title: '状态',
+      dataIndex: 'invoiceStatus',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>样品登记</a>
+          <a onClick={() => this.toRegisterDetail(text, record)}>删除</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>审核</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>浏览</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
+          &nbsp;&nbsp;
         </Fragment>
       ),
     },
   ];
 
-
   componentDidMount() {
-      this.init();
+    this.init();
   }
 
+  init =()=>{
+    const { dispatch } = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'charge/fetch',
+      payload:{
+        certCode:user.certCode
+      }
+    });
+  }
 
   previewItem = text => {
-    localStorage.setItem('reportDetailNo',text.reportno);
+    sessionStorage.setItem('reportno',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
+    localStorage.setItem('reportDetailNo',text.reportno);
   };
-
-  toRegisterDetail = text => {
-    localStorage.setItem('reportSampleRegisterDetailNo',text.reportno);
-    router.push({
-      pathname:'/SampleRegister/SampleRegisterDetail',
-    });
-  };
-
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
-    });
-    this.init();
-  };
-
-  init =() =>{
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const { dispatch } = this.props;
-    const params = {
-      certCode:user.certCode
-    };
-    dispatch({
-      type: 'sample/getSampleRegister',
-      payload: params,
-    });
-  }
-
-
-
-
 
   handleSearch = e => {
     e.preventDefault();
@@ -134,10 +107,16 @@ class SampleRegister extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'sample/getSampleRegister',
+        type: 'charge/fetch',
         payload: values,
       });
     });
+  };
+
+  handleFormReset = () => {
+    const { form } = this.props;
+    form.resetFields();
+    this.init();
   };
 
 
@@ -149,33 +128,29 @@ class SampleRegister extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={3} sm={20}>
+          <Col span={3}>
             <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
               colon={false}
             >
               {getFieldDecorator('kind', {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="applicant">委托人</Option>
-                  <Option value="agent">代理人</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-
+                  <Option value="listno">清单号</Option>
+                  <Option value="listman">拟制人</Option>
+                  <Option value="payer">付款人</Option>
+                  <Option value="invoiceStatus">状态</Option>
                 </Select>
               )}
             </Form.Item>
           </Col>
-          <Col md={6} sm={20}>
-            <FormItem>
+          <Col span={6}>
+            <Form.Item>
               {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
-            </FormItem>
+            </Form.Item>
           </Col>
 
-          <Col md={8} sm={20}>
+          <Col span={5}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -190,25 +165,35 @@ class SampleRegister extends PureComponent {
     );
   }
 
-
-
+  createList = () => {
+    router.push({
+      pathname:'/SampleRegister/SampleRegister',
+    });
+  };
 
   render() {
     const {
-      sample: {data},
+      charge:{data},
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="样品登记">
+      <PageHeaderWrapper title="清单拟制">
+        <Card bordered={false}>
+          <Row gutter={16}>
+            <Col span={2}>
+              <Button type="primary" onClick={this.createList}>新建</Button>
+            </Col>
+          </Row>
+        </Card>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
-              rowKey="reportno"
               loading={loading}
-              dataSource={data.list}
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              dataSource={data}
               columns={this.columns}
+              rowKey="listno"
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
         </Card>
@@ -217,4 +202,4 @@ class SampleRegister extends PureComponent {
   }
 }
 
-export default SampleRegister;
+export default ListFiction;

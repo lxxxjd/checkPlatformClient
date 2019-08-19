@@ -242,6 +242,20 @@ export default [
         ],
       },
 
+      // Charge
+      {
+        path: '/Charge',
+        icon: 'profile',
+        name: 'Charge',
+        routes: [
+          {
+            path: '/Charge/ListFiction',
+            name: 'ListFiction',
+            component: './Charge/ListFiction',
+          },
+        ],
+      },
+
 
       {
         component: '404',
