@@ -281,6 +281,11 @@ export default [
             name: 'ListFiction',
             component: './Charge/ListFiction',
           },
+          {
+            path: '/Charge/ListFictionAdd',
+            name: 'ListFictionAdd',
+            component: './Charge/ListFictionAdd',
+          },
         ],
       },
 
