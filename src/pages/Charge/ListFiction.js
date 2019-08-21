@@ -167,7 +167,7 @@ class ListFiction extends PureComponent {
 
   createList = () => {
     router.push({
-      pathname:'/SampleRegister/SampleRegister',
+      pathname:'/Charge/ListFictionAdd',
     });
   };
 

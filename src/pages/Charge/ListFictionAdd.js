@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table
+  Table, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ListFictionAdd.less';
@@ -25,6 +25,7 @@ const { Option } = Select;
 }))
 class ListFictionAdd extends PureComponent {
   state = {
+    selectedRowKeys: [],
   };
 
   columns = [
@@ -106,10 +107,24 @@ class ListFictionAdd extends PureComponent {
         value: fieldsValue.value,
         certCode:user.certCode,
       };
-      dispatch({
-        type: 'charge/fetch',
-        payload: values,
-      });
+      console.log(values);
+    });
+  };
+
+  handleQuerySearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      console.log(err);
+      if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const values = {
+        ...fieldsValue,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
+        certCode:user.certCode,
+      };
+      console.log(values);
     });
   };
 
@@ -130,61 +145,100 @@ class ListFictionAdd extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col span={6}>
             <Form.Item
+              label="清单号"
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 16 }}
+              colon={false} >
+              {getFieldDecorator('listno', {
+                rules: [{ required: true, message: '请输入清单号' }],
+              })(<Input title="清单号" style={{ width: '100%' }} placeholder="请输入清单号" />)}
+            </Form.Item>
+          </Col>
+
+          <Col span={6}>
+            <Form.Item
+              label="提交到"
+              colon={false}
+            >
+              {getFieldDecorator('submitTo', {
+                rules: [{  message: '提交到' }],
+              })(
+                <Select placeholder="提交到">
+                  <Option value="manager">业务经理</Option>
+                  <Option value="generalManager">业务总经理</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
+
+  renderQueryForm() {
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
+    return (
+      <Form onSubmit={this.handleQuerySearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={6} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
               label="付款人"
-              colon={false}
             >
               {getFieldDecorator('kind', {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="listno">清单号</Option>
-                  <Option value="listman">拟制人</Option>
-                  <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
+                  <Option value="reportno">委托编号</Option>
+                  <Option value="applicant">委托人</Option>
                 </Select>
               )}
             </Form.Item>
           </Col>
 
-          <Col span={6}>
+          <Col md={5} sm={20}>
             <Form.Item
-              label="日期从"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
               colon={false}
+              label="日期在"
             >
-              {getFieldDecorator('kind', {
-                rules: [{  message: '搜索类型' }],
+              {getFieldDecorator('kind1', {
               })(
-                <Select placeholder="搜索类型">
-                  <Option value="listno">清单号</Option>
-                  <Option value="listman">拟制人</Option>
-                  <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
-                </Select>
+                <DatePicker
+                  placeholder="委托日期"
+                  style={{ width: '100%' }}
+                  format="YYYY-MM-DD"
+                />
               )}
             </Form.Item>
           </Col>
 
-          <Col span={6}>
+          <Col md={5} sm={20}>
             <Form.Item
-              label="&nbsp;&nbsp;&nbsp;到"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
               colon={false}
+              label="到"
             >
-              {getFieldDecorator('kind', {
-                rules: [{  message: '搜索类型' }],
+              {getFieldDecorator('kind2', {
               })(
-                <Select placeholder="搜索类型">
-                  <Option value="listno">清单号</Option>
-                  <Option value="listman">拟制人</Option>
-                  <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
-                </Select>
+                <DatePicker
+                  placeholder="委托日期"
+                  style={{ width: '100%' }}
+                  format="YYYY-MM-DD"
+                />
               )}
             </Form.Item>
           </Col>
 
-          <Col span={5}>
+          <Col md={8} sm={20}>
             <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" onClick={this.handleQuerySearch}>
                 查询
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
@@ -197,9 +251,14 @@ class ListFictionAdd extends PureComponent {
     );
   }
 
+  onSelectChange = (selectedRowKeys) => {
+    this.setState({ selectedRowKeys });
+  }
+
+
   createList = () => {
     router.push({
-      pathname:'/SampleRegister/SampleRegister',
+      pathname:'/Charge/ListFictionAdd',
     });
   };
 
@@ -208,20 +267,38 @@ class ListFictionAdd extends PureComponent {
       charge:{data},
       loading,
     } = this.props;
+
+    const {  selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
+
+
+
     return (
       <PageHeaderWrapper title="清单拟制">
         <Card bordered={false}>
-
+          <Row gutter={16}>
+            <Col span={2}>
+              <Button type="primary" onClick={this.handleSearch}>拟制</Button>
+            </Col>
+            <Col span={2}>
+              <Button onClick={this.handleFormReset}>重置</Button>
+            </Col>
+          </Row>
         </Card>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <div className={styles.tableListForm}>{this.renderQueryForm()}</div>
             <Table
               loading={loading}
               dataSource={data}
               columns={this.columns}
               rowKey="listno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
+              rowSelection={rowSelection}
             />
           </div>
         </Card>
