@@ -17,6 +17,107 @@ import styles from './ListFictionAdd.less';
 
 const { Option } = Select;
 
+
+class Query  extends PureComponent {
+  state = {}
+
+  handleQuerySearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      console.log(err);
+      if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const values = {
+        ...fieldsValue,
+        kind: fieldsValue.kind,
+        value: fieldsValue.value,
+        certCode: user.certCode,
+      };
+      console.log(fieldsValue);
+    });
+  };
+
+  // eslint-disable-next-line react/require-render-return
+  render() {
+    const { e,form} = this.props
+    const { getFieldDecorator, getFieldValue } = form;
+    return (
+      <Form onSubmit={this.handleQuerySearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={6} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+              label="付款人"
+            >
+              {getFieldDecorator('kind', {
+                rules: [{  message: '搜索类型' }],
+              })(
+                <Select placeholder="搜索类型">
+                  <Option value="reportno">委托编号</Option>
+                  <Option value="applicant">委托人</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col md={5} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+              label="日期在"
+            >
+              {getFieldDecorator('kind1', {
+              })(
+                <DatePicker
+                  placeholder="委托日期"
+                  style={{ width: '100%' }}
+                  format="YYYY-MM-DD"
+                />
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col md={5} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+              label="到"
+            >
+              {getFieldDecorator('kind2', {
+              })(
+                <DatePicker
+                  placeholder="委托日期"
+                  style={{ width: '100%' }}
+                  format="YYYY-MM-DD"
+                />
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col md={8} sm={20}>
+            <span className={styles.submitButtons}>
+              <Button type="primary" onClick={this.handleQuerySearch}>
+                查询
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+                重置
+              </Button>
+            </span>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
+}
+
+
+Query = Form.create()(Query)
+
 /* eslint react/no-multi-comp:0 */
 @Form.create()
 @connect(({ charge, loading }) => ({
@@ -107,26 +208,11 @@ class ListFictionAdd extends PureComponent {
         value: fieldsValue.value,
         certCode:user.certCode,
       };
-      console.log(values);
+      console.log(fieldsValue);
     });
   };
 
-  handleQuerySearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-        certCode:user.certCode,
-      };
-      console.log(values);
-    });
-  };
+
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -175,81 +261,6 @@ class ListFictionAdd extends PureComponent {
     );
   }
 
-  renderQueryForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
-      <Form onSubmit={this.handleQuerySearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-              label="付款人"
-            >
-              {getFieldDecorator('kind', {
-                rules: [{  message: '搜索类型' }],
-              })(
-                <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="applicant">委托人</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={5} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-              label="日期在"
-            >
-              {getFieldDecorator('kind1', {
-              })(
-                <DatePicker
-                  placeholder="委托日期"
-                  style={{ width: '100%' }}
-                  format="YYYY-MM-DD"
-                />
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={5} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-              label="到"
-            >
-              {getFieldDecorator('kind2', {
-              })(
-                <DatePicker
-                  placeholder="委托日期"
-                  style={{ width: '100%' }}
-                  format="YYYY-MM-DD"
-                />
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={8} sm={20}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" onClick={this.handleQuerySearch}>
-                查询
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
-              </Button>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
@@ -261,6 +272,9 @@ class ListFictionAdd extends PureComponent {
       pathname:'/Charge/ListFictionAdd',
     });
   };
+
+
+
 
   render() {
     const {
@@ -291,7 +305,7 @@ class ListFictionAdd extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <div className={styles.tableListForm}>{this.renderQueryForm()}</div>
+            <div className={styles.tableListForm}><Query e='1' dispatch={this.props.dispatch}  /></div>
             <Table
               loading={loading}
               dataSource={data}
@@ -306,5 +320,10 @@ class ListFictionAdd extends PureComponent {
     );
   }
 }
+
+
+
+
+
 
 export default ListFictionAdd;
