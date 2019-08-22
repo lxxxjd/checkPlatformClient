@@ -23,20 +23,30 @@ class Query  extends PureComponent {
 
   handleQuerySearch = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
+    const { dispatch, form} = this.props;
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
-        kind: fieldsValue.kind,
-        value: fieldsValue.value,
+        payer: fieldsValue.payer,
+        begindate: fieldsValue.begindate,
+        enddate: fieldsValue.enddate,
         certCode: user.certCode,
       };
-      console.log(fieldsValue);
+      dispatch({
+        type: 'charge/getReportsFetch',
+        payload:values,
+      });
     });
   };
+
+  handleFormReset = () => {
+    const { form } = this.props;
+    form.resetFields();
+  };
+
 
   // eslint-disable-next-line react/require-render-return
   render() {
@@ -52,11 +62,11 @@ class Query  extends PureComponent {
               colon={false}
               label="付款人"
             >
-              {getFieldDecorator('kind', {
-                rules: [{  message: '搜索类型' }],
+              {getFieldDecorator('payer', {
+                rules: [{  message: '请选择付款人' }],
               })(
-                <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
+                <Select placeholder="请选择付款人">
+                  <Option value="FIBRANT CO., LTD.">FIBRANT CO., LTD.</Option>
                   <Option value="applicant">委托人</Option>
                 </Select>
               )}
@@ -70,10 +80,10 @@ class Query  extends PureComponent {
               colon={false}
               label="日期在"
             >
-              {getFieldDecorator('kind1', {
+              {getFieldDecorator('begindate', {
               })(
                 <DatePicker
-                  placeholder="委托日期"
+                  placeholder="开始日期"
                   style={{ width: '100%' }}
                   format="YYYY-MM-DD"
                 />
@@ -88,10 +98,10 @@ class Query  extends PureComponent {
               colon={false}
               label="到"
             >
-              {getFieldDecorator('kind2', {
+              {getFieldDecorator('enddate', {
               })(
                 <DatePicker
-                  placeholder="委托日期"
+                  placeholder="结束日期"
                   style={{ width: '100%' }}
                   format="YYYY-MM-DD"
                 />
@@ -105,7 +115,7 @@ class Query  extends PureComponent {
                 查询
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
+                清空条件
               </Button>
             </span>
           </Col>
@@ -131,39 +141,47 @@ class ListFictionAdd extends PureComponent {
 
   columns = [
     {
-      title: '清单号',
-      dataIndex: 'listno',
+      title: '委托编号',
+      dataIndex: 'reportno',
     },
     {
-      title: '拟制日期',
-      dataIndex: 'listdate',
+      title: '委托日期',
+      dataIndex: 'reportdate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '拟制人',
-      dataIndex: 'listman',
+      title: '运输工具',
+      dataIndex: 'shipname',
+    },
+    {
+      title: '货名',
+      dataIndex: 'cargoname',
+    },
+    {
+      title: '申请项目',
+      dataIndex: 'inspway',
     },
     {
       title: '付款人',
       dataIndex: 'payer',
     },
     {
-      title: '金额',
-      dataIndex: 'total',
+      title: '价格',
+      dataIndex: 'price',
     },
     {
       title: '状态',
-      dataIndex: 'invoiceStatus',
+      dataIndex: 'process',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>删除</a>
+          <a onClick={() => this.toRegisterDetail(text, record)}>定价</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>审核</a>
+          <a onClick={() => this.previewItem(text, record)}>删除</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>浏览</a>
+          <a onClick={() => this.previewItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
           &nbsp;&nbsp;
@@ -180,7 +198,7 @@ class ListFictionAdd extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'charge/fetch',
+      type: 'charge/getReportsFetch',
       payload:{
         certCode:user.certCode
       }
@@ -194,24 +212,6 @@ class ListFictionAdd extends PureComponent {
     });
     localStorage.setItem('reportDetailNo',text.reportno);
   };
-
-  handleSearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-        certCode:user.certCode,
-      };
-      console.log(fieldsValue);
-    });
-  };
-
 
 
   handleFormReset = () => {
@@ -278,7 +278,7 @@ class ListFictionAdd extends PureComponent {
 
   render() {
     const {
-      charge:{data},
+      charge:{reports},
       loading,
     } = this.props;
 
@@ -293,24 +293,24 @@ class ListFictionAdd extends PureComponent {
     return (
       <PageHeaderWrapper title="清单拟制">
         <Card bordered={false}>
-          <Row gutter={16}>
-            <Col span={2}>
+          <Row gutter={8}>
+            <Col span={1}>
               <Button type="primary" onClick={this.handleSearch}>拟制</Button>
             </Col>
-            <Col span={2}>
-              <Button onClick={this.handleFormReset}>重置</Button>
+            <Col span={1}>
+              <Button onClick={this.handleFormReset} style={{ marginLeft: 8 }}>重置</Button>
             </Col>
           </Row>
         </Card>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <div className={styles.tableListForm}><Query e='1' dispatch={this.props.dispatch}  /></div>
+            <div className={styles.tableListForm}><Query e='1' dispatch={this.props.dispatch} init={this.init} /></div>
             <Table
               loading={loading}
-              dataSource={data}
+              dataSource={reports}
               columns={this.columns}
-              rowKey="listno"
+              rowKey="reportno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               rowSelection={rowSelection}
             />
@@ -320,10 +320,5 @@ class ListFictionAdd extends PureComponent {
     );
   }
 }
-
-
-
-
-
 
 export default ListFictionAdd;
