@@ -223,23 +223,24 @@ class DetailForSub extends PureComponent {
                   <Radio value="按批次">按批次</Radio>
                   <Radio value="按协议">按协议</Radio>
                   <Radio value="按比例">按比例</Radio>
-                </Radio.Group>,
+                </Radio.Group>
               )}
             </Form.Item>
-            <Form.Item label="单价/比例"
-              >
-              {
-                { true: getFieldDecorator('price', {
-                  rules:
-                  showPrice === true
-                  ? [{ required: 'true', message: '请输入单价比例' }] 
-                  : []
-                })(
-                  <Input />
-                 )
-                }[showPrice]
-              }
-            </Form.Item>
+            {
+              {true:
+                <Form.Item label="单价/比例">
+                  { getFieldDecorator('price', {
+                    rules:
+                    showPrice === true
+                    ? [{ required: 'true', message: '请输入单价比例' }] 
+                    : []
+                  })(
+                    <Input />
+                   )
+                  }
+                </Form.Item>
+              }[showPrice]
+            }
             <Form.Item label="总计费用">
               {getFieldDecorator('totalfee', {
                 rules: [{ required: true, message: '请输入总计费用' }],

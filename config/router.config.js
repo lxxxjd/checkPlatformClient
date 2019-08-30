@@ -236,6 +236,16 @@ export default [
             name: 'SampleDetail',
             component: './InspectionAnalysis/SampleDetail',
           },
+          {
+            path: '/InspectionAnalysis/ResultUpdate',
+            name: 'ResultUpdate',
+            component: './InspectionAnalysis/ResultUpdate',
+          },
+          {
+            path: '/InspectionAnalysis/ResultUpdateDetail',
+            name: 'ResultUpdateDetail',
+            component: './InspectionAnalysis/ResultUpdateDetail',
+          },
         ],
       },
 
@@ -299,6 +309,11 @@ export default [
             path: '/Certificate/FinalPrice',
             name: 'FinalPrice',
             component: './Certificate/FinalPrice',
+          },
+          {
+            path: '/Certificate/FinalPriceDetail',
+            name: 'FinalPriceDetail',
+            component: './Certificate/FinalPriceDetail',
           },
         ],
       },
