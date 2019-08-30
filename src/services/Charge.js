@@ -2,7 +2,6 @@ import request from '@/utils/request';
 import { stringify } from 'qs';
 
 
-// eslint-disable-next-line import/prefer-default-export
 export async function getAllList(params) {
   return request(`/api/list/getAllList`, {
     method: 'POST',
@@ -11,3 +10,13 @@ export async function getAllList(params) {
     },
   });
 }
+
+export async function getReports(params) {
+  return request(`/api/list/getReports`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
