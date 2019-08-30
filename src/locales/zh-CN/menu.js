@@ -34,6 +34,7 @@ export default {
   'menu.Charge':'计费收费',
   'menu.Charge.ListFiction':'清单拟制',
   'menu.Charge.ListFictionAdd':'清单新增',
+  'menu.Charge.ListFictionReview':'清单审核',
   'menu.SampleRegister.SampleRegisterDetail':'样品登记详情',
   'menu.InspectionAnalysis':'检验分析',
   'menu.InspectionAnalysis.InspectionArrangement':'检验安排',

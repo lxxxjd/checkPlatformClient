@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table
+  Table, message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ListFiction.less';
@@ -57,9 +57,9 @@ class ListFiction extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>删除</a>
+          <a onClick={() => this.deleteBylistno(text, record)}>删除</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>审核</a>
+          <a onClick={() => this.toListFictionReview(text, record)}>审核</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>浏览</a>
           &nbsp;&nbsp;
@@ -74,6 +74,27 @@ class ListFiction extends PureComponent {
     this.init();
   }
 
+
+
+  deleteBylistno = text => {
+    const { dispatch } = this.props;
+    const values = {
+      listno :text.listno,
+    };
+    dispatch({
+      type: 'charge/deleteBylistnoFetch',
+      payload: values,
+      callback: (response) => {
+        if(response==="success"){
+          message.success('删除成功');
+          this.init();
+        }else{
+          message.success('删除失败');
+        }
+      }
+    });
+  };
+
   init =()=>{
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -85,12 +106,19 @@ class ListFiction extends PureComponent {
     });
   }
 
-  previewItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
+  toListFictionReview = text => {
+    localStorage.setItem('listListFictionReview',JSON.stringify(text));
     router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
+      pathname:'/Charge/ListFictionReview',
     });
-    localStorage.setItem('reportDetailNo',text.reportno);
+  };
+
+  previewItem = text => {
+    // sessionStorage.setItem('reportno',text.reportno);
+    // router.push({
+    //   pathname:'/Entrustment/DetailForEntrustment',
+    // });
+    // localStorage.setItem('reportDetailNo',text.reportno);
   };
 
   handleSearch = e => {
@@ -165,7 +193,7 @@ class ListFiction extends PureComponent {
     );
   }
 
-  createList = () => {
+  toListFictionAdd= () => {
     router.push({
       pathname:'/Charge/ListFictionAdd',
     });
@@ -181,7 +209,7 @@ class ListFiction extends PureComponent {
         <Card bordered={false}>
           <Row gutter={16}>
             <Col span={2}>
-              <Button type="primary" onClick={this.createList}>新建</Button>
+              <Button type="primary" onClick={this.toListFictionAdd}>新建</Button>
             </Col>
           </Row>
         </Card>
