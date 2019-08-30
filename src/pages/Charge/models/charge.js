@@ -1,10 +1,11 @@
-import { getAllList,getReports} from '@/services/Charge';
+import { getAllList,getReports,addList} from '@/services/Charge';
 
 export default {
   namespace: 'charge',
   state: {
     data: [],
     reports:[], // listAdd reports
+    addresult:{},
   },
   effects: {
     *fetch({ payload,callback }, { call, put }) {
@@ -19,6 +20,15 @@ export default {
       const response = yield call(getReports, payload);
       yield put({
         type: 'saveReports',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *addListFetch({ payload,callback }, { call, put }) {
+      const response = yield call(addList, payload);
+      yield put({
+        type: 'saveAddList',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -40,6 +50,12 @@ export default {
       };
     },
 
-  },
+    saveAddList(state, { payload }) {
+      return {
+        ...state,
+        addresult: payload.data,
+      };
+    }
+  }
 
 };

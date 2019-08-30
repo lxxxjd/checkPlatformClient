@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table, DatePicker,
+  Table, DatePicker, message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ListFictionAdd.less';
@@ -30,7 +30,7 @@ class Query  extends PureComponent {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
-        payer: fieldsValue.payer,
+        payer: fieldsValue.selectPayer,
         begindate: fieldsValue.begindate,
         enddate: fieldsValue.enddate,
         certCode: user.certCode,
@@ -54,31 +54,15 @@ class Query  extends PureComponent {
     const { getFieldDecorator, getFieldValue } = form;
     return (
       <Form onSubmit={this.handleQuerySearch} layout="inline">
+
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-              label="付款人"
-            >
-              {getFieldDecorator('payer', {
-                rules: [{  message: '请选择付款人' }],
-              })(
-                <Select placeholder="请选择付款人">
-                  <Option value="FIBRANT CO., LTD.">FIBRANT CO., LTD.</Option>
-                  <Option value="applicant">委托人</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
 
           <Col md={5} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
               colon={false}
-              label="日期在"
+              label="查询条件：在"
             >
               {getFieldDecorator('begindate', {
               })(
@@ -96,7 +80,7 @@ class Query  extends PureComponent {
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
               colon={false}
-              label="到"
+              label=" &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;到"
             >
               {getFieldDecorator('enddate', {
               })(
@@ -105,6 +89,24 @@ class Query  extends PureComponent {
                   style={{ width: '100%' }}
                   format="YYYY-MM-DD"
                 />
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col md={6} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+              label="付款人"
+            >
+              {getFieldDecorator('selectPayer', {
+                rules: [{  message: '请选择付款人' }],
+              })(
+                <Select placeholder="请选择付款人">
+                  <Option value="FIBRANT CO., LTD.">FIBRANT CO., LTD.</Option>
+                  <Option value="applicant">委托人</Option>
+                </Select>
               )}
             </Form.Item>
           </Col>
@@ -137,6 +139,7 @@ Query = Form.create()(Query)
 class ListFictionAdd extends PureComponent {
   state = {
     selectedRowKeys: [],
+    priceMaking:[],
   };
 
   columns = [
@@ -201,6 +204,13 @@ class ListFictionAdd extends PureComponent {
       type: 'charge/getReportsFetch',
       payload:{
         certCode:user.certCode
+      },
+      callback: (response) => {
+        if(response){
+            this.state.priceMaking=response;
+        }else{
+          message.success('加载失败');
+        }
       }
     });
   }
@@ -220,9 +230,44 @@ class ListFictionAdd extends PureComponent {
     this.init();
   };
 
+  handleSubmit = () => {
+    const { dispatch, form } = this.props;
+    const {state} = this;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      let priceMakingSelect=[];
+      // eslint-disable-next-line no-restricted-syntax
+      for( const i of state.selectedRowKeys){
+        let itemPrice = state.priceMaking.find(item => item.reportno === i );
+        if(itemPrice) {
+          priceMakingSelect.push(itemPrice);
+        }
+      }
+      const values = {
+        ...fieldsValue,
+        priceMakings:priceMakingSelect,
+        certcode:user.certCode,
+        listman:user.userName,
+      };
+      dispatch({
+        type: 'charge/addListFetch',
+        payload:values,
+        callback: (response) => {
+          console.log(response);
+          if(response==="success"){
+            message.success('添加成功');
+          }else{
+            message.success('添加失败');
+          }
+        }
+      });
+    });
+  }
 
 
-  renderSimpleForm() {
+
+    renderSimpleForm() {
     const {
       form: { getFieldDecorator },
     } = this.props;
@@ -243,6 +288,25 @@ class ListFictionAdd extends PureComponent {
 
           <Col span={6}>
             <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+              label="付款人"
+            >
+              {getFieldDecorator('payer', {
+                rules: [{  message: '请选择付款人' }],
+              })(
+                <Select placeholder="请选择付款人">
+                  <Option value="FIBRANT CO., LTD.">FIBRANT CO., LTD.</Option>
+                  <Option value="applicant">委托人</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+
+
+          {/*<Col span={6}>
+            <Form.Item
               label="提交到"
               colon={false}
             >
@@ -255,7 +319,10 @@ class ListFictionAdd extends PureComponent {
                 </Select>
               )}
             </Form.Item>
-          </Col>
+          </Col>*/}
+
+
+
         </Row>
       </Form>
     );
@@ -267,16 +334,9 @@ class ListFictionAdd extends PureComponent {
   }
 
 
-  createList = () => {
-    router.push({
-      pathname:'/Charge/ListFictionAdd',
-    });
-  };
 
 
-
-
-  render() {
+    render(){
     const {
       charge:{reports},
       loading,
@@ -294,11 +354,11 @@ class ListFictionAdd extends PureComponent {
       <PageHeaderWrapper title="清单拟制">
         <Card bordered={false}>
           <Row gutter={8}>
-            <Col span={1}>
-              <Button type="primary" onClick={this.handleSearch}>拟制</Button>
+            <Col span={2}>
+              <Button type="primary" onClick={this.handleSubmit}>拟制</Button>
             </Col>
-            <Col span={1}>
-              <Button onClick={this.handleFormReset} style={{ marginLeft: 8 }}>重置</Button>
+            <Col span={2}>
+              <Button onClick={this.handleFormReset} style={{ marginLeft: 1 }}>重置</Button>
             </Col>
           </Row>
         </Card>
