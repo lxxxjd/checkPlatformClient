@@ -203,7 +203,7 @@ class DetailForSub extends PureComponent {
                     >
                   {companyNameOptions}
                     </Select>
-                    )}
+              )}
             </Form.Item>
             <Form.Item label="转委托项目">
               {getFieldDecorator('inspway', {

@@ -140,7 +140,7 @@ class ResultUpdateDetail extends PureComponent {
 
   render() {
     const {
-      inspectionAnalysis: {data},
+      //inspectionAnalysis: {data},
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -167,7 +167,7 @@ class ResultUpdateDetail extends PureComponent {
           <div className={styles.tableList}>
             <Table
               loading={loading}
-              dataSource={data.list}
+              //dataSource={data.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
               rowKey="reportno"

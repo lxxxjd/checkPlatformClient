@@ -14,9 +14,9 @@ import styles from './Search.less';
 
 
 
-@connect(({ testInfo, loading }) => ({
-  testInfo,
-  loading: loading.models.testInfo,
+@connect(({ inspectionAnalysis, loading }) => ({
+  inspectionAnalysis,
+  loading: loading.models.inspectionAnalysis,
 }))
 class Search  extends PureComponent {
 	handleSearch = e => {
@@ -34,7 +34,7 @@ class Search  extends PureComponent {
 	        value: fieldsValue.value,
 	      };
 	      dispatch({
-	        type: 'testInfo/getTestInfos',
+      		type: 'inspectionAnalysis/getAllSample',
 	        payload: values,
 	      });
 	    });
@@ -48,7 +48,7 @@ class Search  extends PureComponent {
 	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
 	    const { dispatch } = this.props;
 	    dispatch({
-	        type: 'testInfo/getTestInfos',
+      		type: 'inspectionAnalysis/getAllSample',
       		payload:{
          		certCode : certCode,
      		}
@@ -72,12 +72,12 @@ class Search  extends PureComponent {
 	                rules: [{  message: '搜索类型' }],
 	              })(
 	                <Select placeholder="搜索类型">
-	                  <Option value="reportno">委托编号</Option>
-	                  <Option value="applicant">委托人</Option>
-	                  <Option value="reportdate">委托日期</Option>
+	                 <Option value="reportno">委托编号</Option>
 	                  <Option value="shipname">运输工具</Option>
 	                  <Option value="cargoname">货名</Option>
-
+	                  <Option value="sampleno">样品编号</Option>
+	                  <Option value="samplename">样品名称</Option>
+	                  <Option value="state">状态</Option>
 	                </Select>
 	              )}
 	            </Form.Item>
