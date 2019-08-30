@@ -40,10 +40,12 @@ export default {
   'menu.InspectionAnalysis.InspectionArrangementDetail':'检验安排详情',
   'menu.InspectionAnalysis.SampleIndex':'样品指标',
   'menu.InspectionAnalysis.SampleDetail':'样品结果登记',
-
+  'menu.InspectionAnalysis.ResultUpdate':'结果录入',
+  'menu.InspectionAnalysis.ResultUpdateDetail':'结果录入详情',
 
   'menu.Certificate':'证稿证书',
   'menu.Certificate.FinalPrice':'最终定价',
+  'menu.Certificate.FinalPriceDetail':'最终定价详情',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
