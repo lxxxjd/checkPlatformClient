@@ -20,3 +20,13 @@ export async function getReports(params) {
   });
 }
 
+
+export async function addList(params) {
+  return request(`/api/list/addList`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
