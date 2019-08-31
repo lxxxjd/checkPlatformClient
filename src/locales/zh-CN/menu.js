@@ -35,6 +35,11 @@ export default {
   'menu.Charge.ListFiction':'清单拟制',
   'menu.Charge.ListFictionAdd':'清单新增',
   'menu.Charge.ListFictionReview':'清单审核',
+  'menu.Charge.ListPay':'费用到账',
+  'menu.Charge.Invoice':'发票开具',
+  'menu.Charge.Cost':'成本查询',
+  'menu.Charge.CostEdit':'成本支出',
+
   'menu.SampleRegister.SampleRegisterDetail':'样品登记详情',
   'menu.InspectionAnalysis':'检验分析',
   'menu.InspectionAnalysis.InspectionArrangement':'检验安排',
