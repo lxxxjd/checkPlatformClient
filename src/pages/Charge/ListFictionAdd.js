@@ -50,8 +50,8 @@ class Query  extends PureComponent {
 
   // eslint-disable-next-line react/require-render-return
   render() {
-    const { e,form} = this.props
-    const { getFieldDecorator, getFieldValue } = form;
+    const { form} = this.props
+    const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.handleQuerySearch} layout="inline">
 
@@ -128,6 +128,7 @@ class Query  extends PureComponent {
 }
 
 
+// eslint-disable-next-line no-class-assign
 Query = Form.create()(Query)
 
 /* eslint react/no-multi-comp:0 */
@@ -352,7 +353,7 @@ class ListFictionAdd extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <div className={styles.tableListForm}><Query e='1' dispatch={this.props.dispatch} init={this.init} /></div>
+            <div className={styles.tableListForm}><Query dispatch={this.props.dispatch} init={this.init} /></div>
             <Table
               loading={loading}
               dataSource={reports}

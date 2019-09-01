@@ -110,10 +110,13 @@ class ListFictionReview extends PureComponent {
 
 
   handlePass = () => {
+    this.handleReview('已审核',"审核通过成功");
+  }
 
+  handleReview  =(state,text) => {
     const { dispatch} = this.props;
     let  values = this.state.list;
-    values.invoiceStatus='已审核';
+    values.invoiceStatus=state;
     dispatch({
       type: 'charge/passListFictionFetch',
       payload:values,
@@ -121,13 +124,18 @@ class ListFictionReview extends PureComponent {
         if(response==="success"){
           localStorage.setItem("listListFictionReview",JSON.stringify(values));
           this.state.list = values;
-          message.success('已审核');
+          message.success(text);
         }else{
-          message.success('审核失败');
+          message.success('操作失败');
         }
       }
     });
   }
+
+  handleNoPass = () => {
+    this.handleReview('已退回',"退回成功");
+  }
+
 
   back = () => {
     router.push({
@@ -196,7 +204,7 @@ class ListFictionReview extends PureComponent {
               <Button type="primary" onClick={this.handlePass}>通过</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" onClick={this.handleFormReset} style={{ marginLeft: 1 }}>退回</Button>
+              <Button type="primary" onClick={this.handleNoPass} style={{ marginLeft: 1 }}>退回</Button>
             </Col>
 
             <Col span={2}>
