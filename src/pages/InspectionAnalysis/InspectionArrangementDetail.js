@@ -129,7 +129,7 @@ class InspectionArrangementDetail extends PureComponent {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
-      type: 'testInfo/getReports',
+      type: 'inspectionAnalysis/getDetail',
       payload:{
          certCode : certCode,
       }
@@ -186,17 +186,6 @@ class InspectionArrangementDetail extends PureComponent {
       pathname:'/InspectionAnalysis/InspectionArrangement',
     });
   };
-  handleOk = () =>{
-    this.setState({ visible: false });
-  };
-
-  handleCancel = () =>{
-    this.setState({ visible: false });
-  };
-
-  showModal = () => {
-    this.setState({ visible: true });
-  };
   render() {
     const {
       inspectionAnalysis: {data},
@@ -242,82 +231,14 @@ class InspectionArrangementDetail extends PureComponent {
               </Button>
             </Col>  
           </Row>
-        <Card
-          className={styles.tabsCard}
-          bordered={false}
-          tabList={operationTabList}
-          onTabChange={this.onOperationTabChange}
-        >
-          <Button style={{ marginBottom: 12}} type="primary" onClick={this.show}>新建</Button>
-          {contentList[operationkey]}
-        </Card>
-          <Modal
-            title="新建转委托"
-            visible={visible}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-          > 
-            <Form>
-              <Form.Item label="分包实验室">
-                {getFieldDecorator('testman', {
-                  rules: [{ required: true, message: '请选择分包实验室' }],
-                })(<Select
-                        showSearch
-                        placeholder="请选择"
-                        filterOption={false}
-                        onSearch={this.handleSearch}
-                      >
-                    {}
-                    </Select>
-                  )}
-              </Form.Item>
-              <Form.Item label="分包日期">
-                {getFieldDecorator('assigndate', {
-                  rules: [{ required: true, message: '请选择分包日期' }],
-                })(
-                    <DatePicker
-                      placeholder="委托日期"
-                      style={{ width: '100%' }}
-                      format="YYYY-MM-DD"
-                      getPopupContainer={trigger => trigger.parentNode}
-                    />
-                  )}
-              </Form.Item>
-              <Form.Item label="计价方式">
-                {getFieldDecorator('priceway', {
-                  rules: [{ required: true, message: '请选择计价方式' }],
-                })(
-                  <Radio.Group onChange={this.onChange}>
-                    <Radio value="按单价">按单价</Radio>
-                    <Radio value="按批次">按批次</Radio>
-                    <Radio value="按协议">按协议</Radio>
-                    <Radio value="按比例">按比例</Radio>
-                  </Radio.Group>,
-                )}
-              </Form.Item>
-              <Form.Item label="单价/比例"
-                >
-                {
-                  { true: getFieldDecorator('price', {
-                    rules:
-                    showPrice === true
-                    ? [{ required: 'true', message: '请输入单价比例' }] 
-                    : []
-                  })(
-                    <Input />
-                   )
-                  }[showPrice]
-                }
-              </Form.Item>
-              <Form.Item label="总计费用">
-                {getFieldDecorator('totalfee', {
-                  rules: [{ required: true, message: '请输入总计费用' }],
-                })(
-                      <Input />
-                  )}
-              </Form.Item>
-            </Form>
-          </Modal>
+          <Card
+            className={styles.tabsCard}
+            bordered={false}
+            tabList={operationTabList}
+            onTabChange={this.onOperationTabChange}
+          >
+            {contentList[operationkey]}
+          </Card>
         </Card>
       </PageHeaderWrapper>
     );
