@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table, DatePicker, message,
+  Table, DatePicker, message, Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ListFictionAdd.less';
@@ -50,8 +50,8 @@ class Query  extends PureComponent {
 
   // eslint-disable-next-line react/require-render-return
   render() {
-    const { e,form} = this.props
-    const { getFieldDecorator, getFieldValue } = form;
+    const { form} = this.props
+    const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.handleQuerySearch} layout="inline">
 
@@ -128,6 +128,7 @@ class Query  extends PureComponent {
 }
 
 
+// eslint-disable-next-line no-class-assign
 Query = Form.create()(Query)
 
 /* eslint react/no-multi-comp:0 */
@@ -164,10 +165,10 @@ class ListFictionAdd extends PureComponent {
       title: '申请项目',
       dataIndex: 'inspway',
     },
-    {
-      title: '付款人',
-      dataIndex: 'payer',
-    },
+    // {
+    //   title: '付款人',
+    //   dataIndex: 'payer',
+    // },
     {
       title: '价格',
       dataIndex: 'price',
@@ -224,11 +225,6 @@ class ListFictionAdd extends PureComponent {
   };
 
 
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.init();
-  };
 
   handleSubmit = () => {
     const { dispatch, form } = this.props;
@@ -258,13 +254,19 @@ class ListFictionAdd extends PureComponent {
           if(response==="success"){
             message.success('添加成功');
           }else{
-            message.success('添加失败');
+            message.success('清单号已存在，添加失败');
           }
         }
       });
     });
   }
 
+
+  back = () => {
+    router.push({
+      pathname:'/Charge/ListFiction',
+    });
+  };
 
 
     renderSimpleForm() {
@@ -304,25 +306,6 @@ class ListFictionAdd extends PureComponent {
             </Form.Item>
           </Col>
 
-
-          {/*<Col span={6}>
-            <Form.Item
-              label="提交到"
-              colon={false}
-            >
-              {getFieldDecorator('submitTo', {
-                rules: [{  message: '提交到' }],
-              })(
-                <Select placeholder="提交到">
-                  <Option value="manager">业务经理</Option>
-                  <Option value="generalManager">业务总经理</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>*/}
-
-
-
         </Row>
       </Form>
     );
@@ -358,14 +341,19 @@ class ListFictionAdd extends PureComponent {
               <Button type="primary" onClick={this.handleSubmit}>拟制</Button>
             </Col>
             <Col span={2}>
-              <Button onClick={this.handleFormReset} style={{ marginLeft: 1 }}>重置</Button>
+              <Button type="primary" onClick={this.handleFormReset} style={{ marginLeft: 1 }}>重置</Button>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 1 }} onClick={this.back}>
+                返回
+              </Button>
             </Col>
           </Row>
         </Card>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <div className={styles.tableListForm}><Query e='1' dispatch={this.props.dispatch} init={this.init} /></div>
+            <div className={styles.tableListForm}><Query dispatch={this.props.dispatch} init={this.init} /></div>
             <Table
               loading={loading}
               dataSource={reports}

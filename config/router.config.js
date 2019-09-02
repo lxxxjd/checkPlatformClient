@@ -295,7 +295,39 @@ export default [
             path: '/Charge/ListFictionAdd',
             name: 'ListFictionAdd',
             component: './Charge/ListFictionAdd',
+            // hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: '/Charge/ListFictionReview',
+            name: 'ListFictionReview',
+            component: './Charge/ListFictionReview',
+            // hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Charge/Invoice',
+            name: 'Invoice',
+            component: './Charge/Invoice',
+          },
+
+          {
+            path: '/Charge/ListPay',
+            name: 'ListPay',
+            component: './Charge/ListPay',
+          },
+
+          {
+            path: '/Charge/Cost',
+            name: 'Cost',
+            component: './Charge/Cost',
+          },
+
+          {
+            path: '/Charge/CostEdit',
+            name: 'CostEdit',
+            component: './Charge/CostEdit',
+          },
+
         ],
       },
 

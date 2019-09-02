@@ -1,11 +1,14 @@
-import { getAllList,getReports,addList} from '@/services/Charge';
+import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction} from '@/services/Charge';
 
 export default {
   namespace: 'charge',
   state: {
     data: [],
     reports:[], // listAdd reports
-    addresult:{},
+    addresult:{},  // 添加返回值
+    deleteinfo:{}, // 删除返回信息
+    reportByListno:[], // 按listno 返回所有report
+    passListFictionResult:{}, // 审核返回值
   },
   effects: {
     *fetch({ payload,callback }, { call, put }) {
@@ -33,6 +36,35 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+    *deleteBylistnoFetch({ payload,callback }, { call, put }) {
+      const response = yield call(deleteBylistno, payload);
+      yield put({
+        type: 'saveDeleteBylistno',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *getReportListBylistnoFetch({ payload,callback }, { call, put }) {
+      const response = yield call(getReportListBylistno, payload);
+      yield put({
+        type: 'saveReportListByListno',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    // 审核通过
+    *passListFictionFetch({ payload,callback }, { call, put }) {
+      const response = yield call(passListFiction, payload);
+      yield put({
+        type: 'savePassListFiction',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -55,7 +87,29 @@ export default {
         ...state,
         addresult: payload.data,
       };
-    }
+    },
+
+    saveDeleteBylistno(state, { payload }) {
+      return {
+        ...state,
+        deleteinfo: payload.data,
+      };
+    },
+
+    saveReportListByListno(state, { payload }) {
+      return {
+        ...state,
+        reportByListno: payload.data,
+      };
+    },
+
+    savePassListFiction(state, { payload }) {
+      return {
+        ...state,
+        passListFictionResult: payload.data,
+      };
+    },
+
   }
 
 };

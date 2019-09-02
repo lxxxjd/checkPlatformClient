@@ -13,7 +13,7 @@ import {
   Table, message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ListFiction.less';
+import styles from './ListPay.less';
 
 const { Option } = Select;
 
@@ -23,7 +23,7 @@ const { Option } = Select;
   charge,
   loading: loading.models.charge,
 }))
-class ListFiction extends PureComponent {
+class ListPay extends PureComponent {
   state = {
   };
 
@@ -230,4 +230,4 @@ class ListFiction extends PureComponent {
   }
 }
 
-export default ListFiction;
+export default ListPay;

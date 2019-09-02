@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import moment from 'moment';
+
 import {
   Row,
   Col,
@@ -10,116 +11,114 @@ import {
   Input,
   Button,
   Select,
-  Table, message,
+  Table,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ListFiction.less';
+import styles from './CostEdit.less';
 
+
+
+const FormItem = Form.Item;
 const { Option } = Select;
+const getValue = obj =>
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@Form.create()
 @connect(({ charge, loading }) => ({
   charge,
   loading: loading.models.charge,
 }))
-class ListFiction extends PureComponent {
+
+@Form.create()
+class CostEdit extends PureComponent {
   state = {
+    formValues: {},
   };
 
   columns = [
     {
-      title: '清单号',
-      dataIndex: 'listno',
+      title: '委托编号',
+      dataIndex: 'reportno',
     },
     {
-      title: '拟制日期',
-      dataIndex: 'listdate',
+      title: '委托日期',
+      dataIndex: 'reportdate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '拟制人',
-      dataIndex: 'listman',
+      title: '委托人',
+      dataIndex: 'applicant',
     },
     {
-      title: '付款人',
-      dataIndex: 'payer',
+      title: '运输工具',
+      dataIndex: 'shipname',
     },
     {
-      title: '金额',
-      dataIndex: 'total',
+      title: '货名',
+      dataIndex: 'cargoname',
     },
     {
-      title: '状态',
-      dataIndex: 'invoiceStatus',
+      title: '样品编号',
+      dataIndex: 'sampleno',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteBylistno(text, record)}>删除</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.toListFictionReview(text, record)}>审核</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>浏览</a>
+          <a onClick={() => this.toRegisterDetail(text, record)}>样品登记</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
-          &nbsp;&nbsp;
         </Fragment>
       ),
     },
   ];
+
 
   componentDidMount() {
     this.init();
   }
 
 
-
-  deleteBylistno = text => {
-    const { dispatch } = this.props;
-    const values = {
-      listno :text.listno,
-    };
-    dispatch({
-      type: 'charge/deleteBylistnoFetch',
-      payload: values,
-      callback: (response) => {
-        if(response==="success"){
-          message.success('删除成功');
-          this.init();
-        }else{
-          message.success('删除失败');
-        }
-      }
+  previewItem = text => {
+    localStorage.setItem('reportDetailNo',text.reportno);
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
     });
   };
 
-  init =()=>{
-    const { dispatch } = this.props;
+  toRegisterDetail = text => {
+    localStorage.setItem('reportSampleRegisterDetailNo',text.reportno);
+    router.push({
+      pathname:'/SampleRegister/SampleRegisterDetail',
+    });
+  };
+
+  handleFormReset = () => {
+    const { form } = this.props;
+    form.resetFields();
+    this.setState({
+      formValues: {},
+    });
+    this.init();
+  };
+
+  init =() =>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    const { dispatch } = this.props;
+    const params = {
+      certCode:user.certCode
+    };
     dispatch({
-      type: 'charge/fetch',
-      payload:{
-        certCode:user.certCode
-      }
+      type: 'sample/getSampleRegister',
+      payload: params,
     });
   }
 
-  toListFictionReview = text => {
-    localStorage.setItem('listListFictionReview',JSON.stringify(text));
-    router.push({
-      pathname:'/Charge/ListFictionReview',
-    });
-  };
 
-  previewItem = text => {
-    // sessionStorage.setItem('reportno',text.reportno);
-    // router.push({
-    //   pathname:'/Entrustment/DetailForEntrustment',
-    // });
-    // localStorage.setItem('reportDetailNo',text.reportno);
-  };
+
+
 
   handleSearch = e => {
     e.preventDefault();
@@ -135,16 +134,10 @@ class ListFiction extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'charge/fetch',
+        type: 'sample/getSampleRegister',
         payload: values,
       });
     });
-  };
-
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.init();
   };
 
 
@@ -156,29 +149,33 @@ class ListFiction extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={3}>
+          <Col md={3} sm={20}>
             <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
               colon={false}
             >
               {getFieldDecorator('kind', {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="listno">清单号</Option>
-                  <Option value="listman">拟制人</Option>
-                  <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
+                  <Option value="reportno">委托编号</Option>
+                  <Option value="applicant">委托人</Option>
+                  <Option value="agent">代理人</Option>
+                  <Option value="shipname">运输工具</Option>
+                  <Option value="cargoname">货名</Option>
+
                 </Select>
               )}
             </Form.Item>
           </Col>
-          <Col span={6}>
-            <Form.Item>
+          <Col md={6} sm={20}>
+            <FormItem>
               {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
-            </Form.Item>
+            </FormItem>
           </Col>
 
-          <Col span={5}>
+          <Col md={8} sm={20}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -193,35 +190,25 @@ class ListFiction extends PureComponent {
     );
   }
 
-  toListFictionAdd= () => {
-    router.push({
-      pathname:'/Charge/ListFictionAdd',
-    });
-  };
+
+
 
   render() {
     const {
-      charge:{data},
+      charge: {data},
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="清单拟制">
-        <Card bordered={false}>
-          <Row gutter={16}>
-            <Col span={2}>
-              <Button type="primary" onClick={this.toListFictionAdd}>新建</Button>
-            </Col>
-          </Row>
-        </Card>
+      <PageHeaderWrapper title="样品登记">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              rowKey="reportno"
               loading={loading}
-              dataSource={data}
-              columns={this.columns}
-              rowKey="listno"
+              // dataSource={data.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
+              columns={this.columns}
             />
           </div>
         </Card>
@@ -230,4 +217,4 @@ class ListFiction extends PureComponent {
   }
 }
 
-export default ListFiction;
+export default CostEdit;
