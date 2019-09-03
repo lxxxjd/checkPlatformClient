@@ -288,7 +288,6 @@ class Invoice extends PureComponent {
     }else{
       message.success("开具发票状态失败");
     }
-
   }
 
   handleDestoryInvoice=(text ,flag)=>{
