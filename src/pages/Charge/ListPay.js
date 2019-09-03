@@ -10,12 +10,128 @@ import {
   Input,
   Button,
   Select,
-  Table, message,
+  Table, message, Modal, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ListPay.less';
 
 const { Option } = Select;
+
+
+// 确认到账组件
+const ArrivalInvoiceForm = Form.create()(props => {
+  const { handleArriveModalVisible, form, arrivalModalVisble,invoiceData,dispatch,init} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      let values = invoiceData;
+      values.paydate= fieldsValue.paydate;
+      values.invoiceStatus ='已到账';
+      dispatch({
+        type: 'charge/passListFictionFetch',
+        payload:values,
+        callback: (response) => {
+          if(response==="success"){
+            message.success("到账成功");
+          }else{
+            message.success('到账失败');
+          }
+        }
+      });
+      handleArriveModalVisible();
+      init();
+    });
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="确认到账"
+      visible={arrivalModalVisble}
+      onOk={okHandle}
+      onCancel={() => handleArriveModalVisible()}
+      width={500}
+      style={{ top: 200 }}
+    >
+
+      <Form>
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="到账时间">
+          {form.getFieldDecorator('paydate', {
+            rules: [{ required: true, message: '选择到账时间！' }],
+          })(
+            <DatePicker
+              style={{ width: '100%' }}
+              showTime
+              format="YYYY-MM-DD"
+              placeholder="选择到账时间"
+            />
+          )}
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+});
+
+
+
+// 确认退款组件
+const RefundInvoiceForm = Form.create()(props => {
+  const { refundInvoiceVisble, form, handleRefundModalVisible,invoiceData,dispatch,init} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      let values = invoiceData;
+      values.paydate= fieldsValue.paydate;
+      values.invoiceStatus ='已退款';
+      dispatch({
+        type: 'charge/passListFictionFetch',
+        payload:values,
+        callback: (response) => {
+          if(response==="success"){
+            message.success("退款成功");
+          }else{
+            message.success('退款失败');
+          }
+        }
+      });
+      handleRefundModalVisible();
+      init();
+    });
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="确认退款"
+      visible={refundInvoiceVisble}
+      onOk={okHandle}
+      onCancel={() => handleRefundModalVisible()}
+      width={500}
+      style={{ top: 200 }}
+    >
+
+      <Form>
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="退款时间">
+          {form.getFieldDecorator('paydate', {
+            rules: [{ required: true, message: '选择退款时间！' }],
+          })(
+            <DatePicker
+              style={{ width: '100%' }}
+              showTime
+              format="YYYY-MM-DD"
+              placeholder="选择退款时间"
+            />
+          )}
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+});
+
+
+
+
+
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
@@ -25,6 +141,9 @@ const { Option } = Select;
 }))
 class ListPay extends PureComponent {
   state = {
+    arrivalModalVisble: false,
+    refundInvoiceVisble:false,
+    invoiceData :{},
   };
 
   columns = [
@@ -38,16 +157,36 @@ class ListPay extends PureComponent {
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '拟制人',
-      dataIndex: 'listman',
-    },
-    {
       title: '付款人',
       dataIndex: 'payer',
     },
     {
       title: '金额',
       dataIndex: 'total',
+    },
+    {
+      title: '发票号码',
+      dataIndex: 'invoiceno',
+    },
+    {
+      title: '开具日期',
+      dataIndex: 'invoiceDate',
+      render: val =>{
+        if(val!==null){
+          return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+        }
+        return  <span> </span>;
+      },
+    },
+    {
+      title: '到账/退款日期',
+      dataIndex: 'paydate',
+      render: val =>{
+        if(val!==null){
+          return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+        }
+        return  <span> </span>;
+      },
     },
     {
       title: '状态',
@@ -57,13 +196,11 @@ class ListPay extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteBylistno(text, record)}>删除</a>
+          <a onClick={() => this.handleArrivalInvoice(text, true)}>到账</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.toListFictionReview(text, record)}>审核</a>
+          <a onClick={() => this.handleRefundInvoice(text, record)}>退款</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>浏览</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
+          <a onClick={() => this.previewItem(text, record)}>详情</a>
           &nbsp;&nbsp;
         </Fragment>
       ),
@@ -74,26 +211,11 @@ class ListPay extends PureComponent {
     this.init();
   }
 
-
-
-  deleteBylistno = text => {
-    const { dispatch } = this.props;
-    const values = {
-      listno :text.listno,
-    };
-    dispatch({
-      type: 'charge/deleteBylistnoFetch',
-      payload: values,
-      callback: (response) => {
-        if(response==="success"){
-          message.success('删除成功');
-          this.init();
-        }else{
-          message.success('删除失败');
-        }
-      }
-    });
+  previewItem = text => {
+    console.log(text);
   };
+
+
 
   init =()=>{
     const { dispatch } = this.props;
@@ -106,20 +228,6 @@ class ListPay extends PureComponent {
     });
   }
 
-  toListFictionReview = text => {
-    localStorage.setItem('listListFictionReview',JSON.stringify(text));
-    router.push({
-      pathname:'/Charge/ListFictionReview',
-    });
-  };
-
-  previewItem = text => {
-    // sessionStorage.setItem('reportno',text.reportno);
-    // router.push({
-    //   pathname:'/Entrustment/DetailForEntrustment',
-    // });
-    // localStorage.setItem('reportDetailNo',text.reportno);
-  };
 
   handleSearch = e => {
     e.preventDefault();
@@ -148,6 +256,53 @@ class ListPay extends PureComponent {
   };
 
 
+  // 处理到账 显示模态框
+  handleArrivalInvoice=(text ,flag)=>{
+    if(text.invoiceStatus!==null && text.invoiceStatus!==undefined){
+      if(text.invoiceStatus.trim() ==="已开" || text.invoiceStatus.trim() ==='已开票'){
+        this.handleArriveModalVisible(flag);
+        this.setState({
+          invoiceData:text,
+        });
+      }else{
+        message.success("到账失败，开票状态才能到账！");
+      }
+    }else{
+      message.success("到账失败，开票状态才能到账！");
+    }
+  }
+
+  // 处理退款 显示模态框
+  handleRefundInvoice=(text ,flag)=>{
+    if(text.invoiceStatus!==null && text.invoiceStatus!==undefined){
+      if(text.invoiceStatus.trim() ==="已到账"){
+        this.handleRefundModalVisible(flag);
+        this.setState({
+          invoiceData:text,
+        });
+      }else{
+        message.success("退款失败，到账状态才能退款");
+      }
+    }else{
+      message.success("退款失败，到账状态才能退款");
+    }
+
+  }
+
+  // 处理到账 显示模态框
+  handleArriveModalVisible = (flag) => {
+    this.setState({
+      arrivalModalVisble: !!flag,
+    });
+  };
+
+  // 处理退款 显示模态框
+  handleRefundModalVisible = (flag) => {
+    this.setState({
+      refundInvoiceVisble: !!flag,
+    });
+  };
+
 
   renderSimpleForm() {
     const {
@@ -167,6 +322,7 @@ class ListPay extends PureComponent {
                   <Option value="listno">清单号</Option>
                   <Option value="listman">拟制人</Option>
                   <Option value="payer">付款人</Option>
+                  <Option value="invoiceno">发票号码</Option>
                   <Option value="invoiceStatus">状态</Option>
                 </Select>
               )}
@@ -193,26 +349,21 @@ class ListPay extends PureComponent {
     );
   }
 
-  toListFictionAdd= () => {
-    router.push({
-      pathname:'/Charge/ListFictionAdd',
-    });
-  };
 
   render() {
     const {
       charge:{data},
       loading,
+      dispatch,
     } = this.props;
+
+    const parentMethods = {
+      handleArriveModalVisible: this.handleArriveModalVisible,
+    };
+    const { arrivalModalVisble,invoiceData,refundInvoiceVisble} = this.state;
+
     return (
-      <PageHeaderWrapper title="清单拟制">
-        <Card bordered={false}>
-          <Row gutter={16}>
-            <Col span={2}>
-              <Button type="primary" onClick={this.toListFictionAdd}>新建</Button>
-            </Col>
-          </Row>
-        </Card>
+      <PageHeaderWrapper title="发票开具">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
@@ -225,6 +376,8 @@ class ListPay extends PureComponent {
             />
           </div>
         </Card>
+        <ArrivalInvoiceForm {...parentMethods} arrivalModalVisble={arrivalModalVisble} invoiceData={invoiceData} dispatch={dispatch} init={this.init} />
+        <RefundInvoiceForm handleRefundModalVisible={this.handleRefundModalVisible} refundInvoiceVisble={refundInvoiceVisble} invoiceData={invoiceData} dispatch={dispatch} init={this.init} />
       </PageHeaderWrapper>
     );
   }

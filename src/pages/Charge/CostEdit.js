@@ -14,25 +14,19 @@ import {
   Table,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CostEdit.less';
+import styles from './Cost.less';
 
 
 
 const FormItem = Form.Item;
 const { Option } = Select;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
 
-/* eslint react/no-multi-comp:0 */
+@Form.create()
 @connect(({ charge, loading }) => ({
   charge,
   loading: loading.models.charge,
 }))
-
-@Form.create()
-class CostEdit extends PureComponent {
+class Cost extends PureComponent {
   state = {
     formValues: {},
   };
@@ -47,29 +41,40 @@ class CostEdit extends PureComponent {
       dataIndex: 'reportdate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
-    {
-      title: '委托人',
-      dataIndex: 'applicant',
-    },
+
     {
       title: '运输工具',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
-      dataIndex: 'cargoname',
+      title: '检验地点',
+      dataIndex: 'inspplace2',
     },
     {
-      title: '样品编号',
-      dataIndex: 'sampleno',
+      title: '费用种类',
+      dataIndex: 'costSort',
+    },
+    {
+      title: '金额',
+      dataIndex: 'amount',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>样品登记</a>
+          <a onClick={() => this.previewItem(text, record)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
+          <a onClick={() => this.previewItem(text, record)}>修改</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>审批</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>支付</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>详情</a>
         </Fragment>
       ),
     },
@@ -82,18 +87,14 @@ class CostEdit extends PureComponent {
 
 
   previewItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
   };
 
-  toRegisterDetail = text => {
-    localStorage.setItem('reportSampleRegisterDetailNo',text.reportno);
-    router.push({
-      pathname:'/SampleRegister/SampleRegisterDetail',
-    });
-  };
+
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -104,14 +105,14 @@ class CostEdit extends PureComponent {
     this.init();
   };
 
-  init =() =>{
+  init =()=>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     const params = {
       certCode:user.certCode
     };
     dispatch({
-      type: 'sample/getSampleRegister',
+      type: 'charge/getCostInfosFetch',
       payload: params,
     });
   }
@@ -134,7 +135,7 @@ class CostEdit extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'sample/getSampleRegister',
+        type: 'charge/getCostInfosFetch',
         payload: values,
       });
     });
@@ -160,11 +161,8 @@ class CostEdit extends PureComponent {
               })(
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
-                  <Option value="applicant">委托人</Option>
-                  <Option value="agent">代理人</Option>
                   <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
-
                 </Select>
               )}
             </Form.Item>
@@ -191,22 +189,20 @@ class CostEdit extends PureComponent {
   }
 
 
-
-
   render() {
     const {
-      charge: {data},
+      charge: {costInfoData},
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="样品登记">
+      <PageHeaderWrapper title="成本支出">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
-              rowKey="reportno"
               loading={loading}
-              // dataSource={data.list}
+              dataSource={costInfoData}
+              rowKey="reportno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />
@@ -217,4 +213,4 @@ class CostEdit extends PureComponent {
   }
 }
 
-export default CostEdit;
+export default Cost;
