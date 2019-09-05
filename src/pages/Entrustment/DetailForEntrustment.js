@@ -41,11 +41,13 @@ class DetailForEnturstment extends Component {
       visible: false,
     });
   };
+
   deleteReport = () => {
     this.setState({
       visible: true,
     });
   };
+
   render() {
     const { entrustment = {}, loading } = this.props;
     const { report = { } } = entrustment;
@@ -54,7 +56,7 @@ class DetailForEnturstment extends Component {
         <Card bordered={false}>
           <Row gutter={16}>
             <Col span={3}>
-              <Title level={3} >委托详情</Title>
+              <Title level={3}>委托详情</Title>
             </Col>
             <Col span={2}>
               <Button type="primary" onClick={this.deleteReport}>撤销申请</Button>

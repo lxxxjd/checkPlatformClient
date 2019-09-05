@@ -11,30 +11,120 @@ import {
   Input,
   Button,
   Select,
-  Table,
+  Table, message, Modal, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CostEdit.less';
+import styles from './Cost.less';
 
 
 
 const FormItem = Form.Item;
 const { Option } = Select;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(',');
 
-/* eslint react/no-multi-comp:0 */
+
+
+
+// 开具发票组件
+const CostAddUpdateForm = Form.create()(props => {
+  const { modalVisible, form, handleModalVisible,CostItemData,dispatch,init} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      let values = CostItemData;
+      console.log(values);
+      // values.invoiceTitle= fieldsValue.invoiceTitle;
+      // values.invoiceStatus ='已开票';
+      // dispatch({
+      //   type: 'charge/passListFictionFetch',
+      //   payload:values,
+      //   callback: (response) => {
+      //     if(response==="success"){
+      //       message.success("开具发票成功");
+      //     }else{
+      //       message.success('开具发票失败');
+      //     }
+      //   }
+      // });
+      handleModalVisible();
+      init();
+    });
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="开具发票"
+      visible={modalVisible}
+      onOk={okHandle}
+      onCancel={() => handleModalVisible()}
+      width={500}
+      style={{ top: 200 }}
+    >
+
+      <Form>
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="实际产生">
+          {form.getFieldDecorator('inCurDate', {
+            // rules: [{ required: true, message: '选择开具发票时间！' }],
+          })(
+            <DatePicker
+              style={{ width: '100%' }}
+              showTime
+              format="YYYY-MM-DD"
+              placeholder="选择实际日期"
+            />
+          )}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="申请日期">
+          {form.getFieldDecorator('applyDate', {
+            // rules: [{ required: true, message: '选择开具发票时间！' }],
+          })(
+            <DatePicker
+              style={{ width: '100%' }}
+              showTime
+              format="YYYY-MM-DD"
+              placeholder="选择申请日期"
+            />
+          )}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} label="费用种类">
+          {form.getFieldDecorator('costSort', {
+            // rules: [{ required: true,message: '选择付款方式！'}],
+          })(
+            <Select placeholder="请选择付款方式">
+              <Option value="劳务费">汇款.</Option>
+              <Option value="差旅费">现金</Option>
+              <Option value="邮寄费">支票</Option>
+              <Option value="误支费">支票</Option>
+              <Option value="分包费">支票</Option>
+              <Option value="邮寄费">支票</Option>
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="发票号码">
+          {form.getFieldDecorator('invoiceno', {
+            // rules: [{ required: true ,message: '选择发票号码！'}],
+          })(<Input placeholder="请输入" />)}
+        </Form.Item>
+
+      </Form>
+    </Modal>
+  );
+});
+
+
+
+
+@Form.create()
 @connect(({ charge, loading }) => ({
   charge,
   loading: loading.models.charge,
 }))
-
-@Form.create()
-class CostEdit extends PureComponent {
+class Cost extends PureComponent {
   state = {
-    formValues: {},
+    modalVisible: false,
+    CostItemData :{},
   };
 
   columns = [
@@ -47,29 +137,40 @@ class CostEdit extends PureComponent {
       dataIndex: 'reportdate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
-    {
-      title: '委托人',
-      dataIndex: 'applicant',
-    },
+
     {
       title: '运输工具',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
-      dataIndex: 'cargoname',
+      title: '检验地点',
+      dataIndex: 'inspplace2',
     },
     {
-      title: '样品编号',
-      dataIndex: 'sampleno',
+      title: '费用种类',
+      dataIndex: 'costSort',
+    },
+    {
+      title: '金额',
+      dataIndex: 'amount',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>样品登记</a>
+          <a onClick={() => this.handleAddUpdateCost(text, true)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
+          <a onClick={() => this.previewItem(text, record)}>删除</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>审批</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>支付</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>详情</a>
         </Fragment>
       ),
     },
@@ -82,36 +183,44 @@ class CostEdit extends PureComponent {
 
 
   previewItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
   };
 
-  toRegisterDetail = text => {
-    localStorage.setItem('reportSampleRegisterDetailNo',text.reportno);
-    router.push({
-      pathname:'/SampleRegister/SampleRegisterDetail',
+  // 处理发票开具 显示模态框
+  handleModalVisible = (flag) => {
+    this.setState({
+      modalVisible: !!flag,
     });
   };
+
+  // 处理修改cost点击事件
+  handleAddUpdateCost = (text ,flag)=>{
+    this.handleModalVisible(flag);
+    this.setState({
+      CostItemData:text,
+    });
+  }
+
+
 
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
-    this.setState({
-      formValues: {},
-    });
     this.init();
   };
 
-  init =() =>{
+  init =()=>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     const params = {
       certCode:user.certCode
     };
     dispatch({
-      type: 'sample/getSampleRegister',
+      type: 'charge/getCostInfosFetch',
       payload: params,
     });
   }
@@ -134,7 +243,7 @@ class CostEdit extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'sample/getSampleRegister',
+        type: 'charge/getCostInfosFetch',
         payload: values,
       });
     });
@@ -160,11 +269,8 @@ class CostEdit extends PureComponent {
               })(
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
-                  <Option value="applicant">委托人</Option>
-                  <Option value="agent">代理人</Option>
                   <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
-
                 </Select>
               )}
             </Form.Item>
@@ -191,30 +297,33 @@ class CostEdit extends PureComponent {
   }
 
 
-
-
   render() {
     const {
-      charge: {data},
+      charge: {costInfoData},
       loading,
+      dispatch,
     } = this.props;
+
+    const { modalVisible,CostItemData} = this.state;
+
     return (
-      <PageHeaderWrapper title="样品登记">
+      <PageHeaderWrapper title="成本支出">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
-              rowKey="reportno"
               loading={loading}
-              // dataSource={data.list}
+              dataSource={costInfoData}
+              rowKey="reportno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />
           </div>
         </Card>
+        <CostAddUpdateForm modalVisible={modalVisible} handleModalVisible={this.handleModalVisible} CostItemData={CostItemData} dispatch={dispatch} init={this.init} />
       </PageHeaderWrapper>
     );
   }
 }
 
-export default CostEdit;
+export default Cost;

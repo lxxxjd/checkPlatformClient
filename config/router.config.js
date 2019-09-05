@@ -199,18 +199,18 @@ export default [
           },
         ],
       },
-      {
-        path: '/UEditor',
-        icon: 'table',
-        name: 'UEditor',
-        routes: [
-          {
-            path: '/UEditor/UEditorText',
-            name: 'UEditorText',
-            component: './UEditor/UEditorText',
-          },
-        ],
-      },
+      // {
+      //   path: '/UEditor',
+      //   icon: 'table',
+      //   name: 'UEditor',
+      //   routes: [
+      //     {
+      //       path: '/UEditor/UEditorText',
+      //       name: 'UEditorText',
+      //       component: './UEditor/UEditorText',
+      //     },
+      //   ],
+      // },
       {
         path: '/InspectionAnalysis',
         icon: 'table',
@@ -298,13 +298,13 @@ export default [
             path: '/Charge/ListFictionAdd',
             name: 'ListFictionAdd',
             component: './Charge/ListFictionAdd',
-            // hideInMenu: 'true',//添加页不需要在menu上显示
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
             path: '/Charge/ListFictionReview',
             name: 'ListFictionReview',
             component: './Charge/ListFictionReview',
-            // hideInMenu: 'true',//添加页不需要在menu上显示
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
           {

@@ -119,6 +119,45 @@ const CreateInvoiceForm = Form.create()(props => {
 
 
 
+// 开具发票组件
+const DestoryInvoiceForm = (props => {
+  const { destoryInvoiceVisble, handleDestoryModalVisible,invoiceData,dispatch,init} = props;
+  const okHandle = () => {
+    let values = invoiceData;
+    values.invoiceStatus ='发票作废';
+    dispatch({
+      type: 'charge/passListFictionFetch',
+      payload:values,
+      callback: (response) => {
+        if(response==="success"){
+          message.success("开具作废成功");
+        }else{
+          message.success('开具作废失败');
+        }
+      }
+    });
+    handleDestoryModalVisible();
+    init();
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="发票作废"
+      visible={destoryInvoiceVisble}
+      onOk={okHandle}
+      onCancel={() => handleDestoryModalVisible()}
+      width={500}
+      style={{ top: 200 }}
+    >
+      <span>
+        确定将发票号码为{invoiceData.invoiceno}的发票作废吗？
+      </span>
+    </Modal>
+  );
+});
+
+
 
 
 
@@ -131,6 +170,7 @@ const CreateInvoiceForm = Form.create()(props => {
 class Invoice extends PureComponent {
   state = {
     modalVisible: false,
+    destoryInvoiceVisble:false,
     invoiceData :{},
   };
 
@@ -177,7 +217,7 @@ class Invoice extends PureComponent {
         <Fragment>
           <a onClick={() => this.handleCreateInvoice(text, true)}>开具</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.toListFictionReview(text, record)}>作废</a>
+          <a onClick={() => this.handleDestoryInvoice(text, record)}>作废</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>详情</a>
           &nbsp;&nbsp;
@@ -236,13 +276,34 @@ class Invoice extends PureComponent {
 
 
   handleCreateInvoice=(text ,flag)=>{
-    if(text.invoiceStatus.trim() ==="已审核" || text.invoiceStatus.trim() ==='发票作废'){
-      this.handleModalVisible(flag);
-      this.setState({
-        invoiceData:text,
-      });
+    if(text.invoiceStatus!==null && text.invoiceStatus!==undefined){
+      if(text.invoiceStatus.trim() ==="已审核" || text.invoiceStatus.trim() ==='发票作废'){
+        this.handleModalVisible(flag);
+        this.setState({
+          invoiceData:text,
+        });
+      }else{
+        message.success("开具发票状态失败");
+      }
     }else{
-      message.success("开具发票状态失败,请先审核通过");
+      message.success("开具发票状态失败");
+    }
+  }
+
+  handleDestoryInvoice=(text ,flag)=>{
+    if(text.invoiceStatus!==null && text.invoiceStatus!==undefined){
+      if(text.invoiceStatus!==null && text.invoiceStatus!==undefined && text.invoiceStatus.trim() ==="已到账"){
+        message.success("发票状态已到账,不能作废");
+      }else if(text.invoiceDate ===null ){
+        message.success("未开票,不能作废");
+      }else{
+        this.handleDestoryModalVisible(flag);
+        this.setState({
+          invoiceData:text,
+        });
+      }
+    }else{
+      message.success("未开票,不能作废");
     }
   }
 
@@ -250,6 +311,13 @@ class Invoice extends PureComponent {
   handleModalVisible = (flag) => {
     this.setState({
       modalVisible: !!flag,
+    });
+  };
+
+  // 处理发票作废 显示模态框
+  handleDestoryModalVisible = (flag) => {
+    this.setState({
+      destoryInvoiceVisble: !!flag,
     });
   };
 
@@ -310,7 +378,7 @@ class Invoice extends PureComponent {
     const parentMethods = {
       handleModalVisible: this.handleModalVisible,
     };
-    const { modalVisible,invoiceData} = this.state;
+    const { modalVisible,invoiceData,destoryInvoiceVisble} = this.state;
 
     return (
       <PageHeaderWrapper title="发票开具">
@@ -327,6 +395,7 @@ class Invoice extends PureComponent {
           </div>
         </Card>
         <CreateInvoiceForm {...parentMethods} modalVisible={modalVisible} invoiceData={invoiceData} dispatch={dispatch} init={this.init} />
+        <DestoryInvoiceForm handleDestoryModalVisible={this.handleDestoryModalVisible} destoryInvoiceVisble={destoryInvoiceVisble} invoiceData={invoiceData} dispatch={dispatch} init={this.init} />
       </PageHeaderWrapper>
     );
   }

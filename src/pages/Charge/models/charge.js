@@ -1,4 +1,4 @@
-import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction} from '@/services/Charge';
+import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getCostInfos} from '@/services/Charge';
 
 export default {
   namespace: 'charge',
@@ -9,6 +9,8 @@ export default {
     deleteinfo:{}, // 删除返回信息
     reportByListno:[], // 按listno 返回所有report
     passListFictionResult:{}, // 审核返回值
+    costData:[],  // 成本信息
+    costInfoData:[],  // 成本信息
   },
   effects: {
     *fetch({ payload,callback }, { call, put }) {
@@ -65,6 +67,26 @@ export default {
       if (callback) callback(response.data);
     },
 
+    // 成本信息
+    *getCostsFetch({ payload,callback }, { call, put }) {
+      const response = yield call(getCosts, payload);
+      yield put({
+        type: 'saveGetCostsFetch',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    // 成本信息
+    *getCostInfosFetch({ payload,callback }, { call, put }) {
+      const response = yield call(getCostInfos, payload);
+      yield put({
+        type: 'saveGetCostInfosFetch',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -107,6 +129,20 @@ export default {
       return {
         ...state,
         passListFictionResult: payload.data,
+      };
+    },
+
+    saveGetCostsFetch(state, { payload }) {
+      return {
+        ...state,
+        costData: payload.data,
+      };
+    },
+
+    saveGetCostInfosFetch(state, { payload }) {
+      return {
+        ...state,
+        costInfoData: payload.data,
       };
     },
 

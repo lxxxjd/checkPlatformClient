@@ -59,6 +59,29 @@ export async function passListFiction(params) {
 }
 
 
+// 成本支出
+export async function getCosts(params) {
+  return request(`/api/cost/getCosts`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+// 成本支出
+export async function getCostInfos(params) {
+  return request(`/api/cost/getCostInfos`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
+
+
 
 
 
