@@ -109,7 +109,9 @@ class InspectionArrangement extends PureComponent {
       }
     });
   }
+  mobileItem = text => {
 
+  };
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({

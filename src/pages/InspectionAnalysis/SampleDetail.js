@@ -131,6 +131,7 @@ class SampleDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const sampleno = sessionStorage.getItem('sampleno');
     const cargonameC = sessionStorage.getItem('cargoname');
+
     console.log(cargonameC);
     dispatch({
       type: 'inspectionAnalysis/getItemNames',
@@ -190,19 +191,11 @@ class SampleDetail extends PureComponent {
         },
         callback : response =>{
           if(response.code === 200){
-            this.setState({addOne:true});
             notification.open({
               message: '添加成功',
             });
             dispatch({
               type: 'inspectionAnalysis/getDetails',
-              payload:{
-                 reportno : reportno,
-                 sampleno : sampleno ,
-              }
-            });
-            dispatch({
-              type: 'inspectionAnalysis/getItems',
               payload:{
                  reportno : reportno,
                  sampleno : sampleno ,
@@ -222,10 +215,12 @@ class SampleDetail extends PureComponent {
 
   handleChange = value =>{
     const { dispatch,form} = this.props;
+    const cargonameC = sessionStorage.getItem('cargoname');
     dispatch({
       type: 'inspectionAnalysis/getStandards',
       payload:{
         itemC : value,
+        cargonameC,
       },
       callback : response => {
         this.setState({standard:response.data})
@@ -276,7 +271,7 @@ class SampleDetail extends PureComponent {
           <div className={styles.tableList}>
             <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddOne}>单项添加</Button>
             <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddMany}>批量添加</Button>
-            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showDelete}>删除</Button>
+            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showDelete}>批量删除</Button>
             <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.show}>导入</Button>
             <Table
               loading={loading}
@@ -309,7 +304,7 @@ class SampleDetail extends PureComponent {
                       )}
                   </Form.Item>
                   <Form.Item label="检测标准">
-                    {getFieldDecorator('standard', {
+                    {getFieldDecorator('teststandard', {
                       rules: [{ required: true, message: '请选择检测标准' }],
                     })(
                         <Select

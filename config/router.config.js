@@ -225,6 +225,7 @@ export default [
             path: '/InspectionAnalysis/InspectionArrangementDetail',
             name: 'InspectionArrangementDetail',
             component: './InspectionAnalysis/InspectionArrangementDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
             path: '/InspectionAnalysis/SampleIndex',
@@ -235,6 +236,7 @@ export default [
             path: '/InspectionAnalysis/SampleDetail',
             name: 'SampleDetail',
             component: './InspectionAnalysis/SampleDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
             path: '/InspectionAnalysis/ResultUpdate',
@@ -245,6 +247,7 @@ export default [
             path: '/InspectionAnalysis/ResultUpdateDetail',
             name: 'ResultUpdateDetail',
             component: './InspectionAnalysis/ResultUpdateDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
       },

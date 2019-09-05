@@ -20,7 +20,7 @@ export async function getItems(params) {
 	return request(`/api/testdetail/getItems?reportno=${params.reportno}&sampleno=${params.sampleno}&cargonameC=${params.cargonameC}`);
 }
 export async function getStandards(params) {
-  return request(`/api/testdetail/getStandards?itemC=${params.itemC}`);
+  return request(`/api/testdetail/getStandards?itemC=${params.itemC}&cargonameC=${params.cargonameC}`);
 }
 export async function getItemNames(params) {
   return request(`/api/testdetail/getItemNames?reportno=${params.reportno}&sampleno=${params.sampleno}&cargonameC=${params.cargonameC}`);
