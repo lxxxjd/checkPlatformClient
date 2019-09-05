@@ -1,4 +1,4 @@
-import {getAllSample,getCompany,getDetails,getItems,addDetail,getStandards,getItemNames} from '@/services/InspectionAnalysis'
+import {getAllSample,getCompany,getDetails,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails} from '@/services/InspectionAnalysis'
 
 
 
@@ -71,6 +71,14 @@ export default {
         type: 'getItemName',
         payload:response,
       });
+      if (callback) callback(response);
+    },
+    *deleteDetails({ payload,callback }, { call, put }) {
+      const response = yield call(deleteDetails, payload);
+      if (callback) callback(response);
+    },
+    *addDetails({ payload,callback }, { call, put }) {
+      const response = yield call(addDetails, payload);
       if (callback) callback(response);
     },
   },

@@ -37,6 +37,7 @@ class SampleDetail extends PureComponent {
     addMany:false,
     onDelete:false,
     selectedRowKeys:[],
+    deleteRowKeys:[],
     data:[],
     standard:[],
     itemName: [],
@@ -167,8 +168,40 @@ class SampleDetail extends PureComponent {
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
   };
-  onDelete = () => {
-    const {selectedRowKeys} = this.state;
+  onDeleteChange = (deleteRowKeys) => {
+    this.setState({ deleteRowKeys });
+  };
+  delete = () => {
+    const {deleteRowKeys} = this.state;
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const sampleno = sessionStorage.getItem('sampleno');
+    dispatch({
+      type: 'inspectionAnalysis/deleteDetails',
+      payload:{
+        deleteRowKeys,
+      },
+      callback:response => {
+        if(response.code === 200){
+          notification.open({
+            message: '删除成功',
+          });
+          dispatch({
+            type: 'inspectionAnalysis/getDetails',
+            payload:{
+               reportno : reportno,
+               sampleno : sampleno ,
+            }
+          });
+        }else{
+          notification.open({
+            message: '删除失败',
+            description:response.data,
+          });
+        }
+      }
+    });
+    this.setState({ onDelete: false });
   };
   onAddOne = () => {
     const { dispatch, form } = this.props;
@@ -229,8 +262,44 @@ class SampleDetail extends PureComponent {
     form.setFieldsValue({ 'standard': null });
   };
 
-  onAddMany = () => {
-    this.setState({ onDelete: true });
+  addMany = () => {
+    const reportno = sessionStorage.getItem('reportno');
+    const sampleno = sessionStorage.getItem('sampleno');
+    const cargonameC = sessionStorage.getItem('cargoname');
+    const {selectedRowKeys} = this.state;
+    const { 
+      dispatch ,    
+      inspectionAnalysis: {items},
+    } = this.props;
+    dispatch({
+      type: 'inspectionAnalysis/addDetails',
+      payload:{
+        reportno,
+        sampleno,
+        cargonameC,
+        selectedRowKeys,
+      },
+      callback : response => {
+        if(response.code === 200){
+          notification.open({
+            message: '添加成功',
+          });
+          dispatch({
+            type: 'inspectionAnalysis/getDetails',
+            payload:{
+               reportno : reportno,
+               sampleno : sampleno ,
+            }
+          });
+        }else{
+          notification.open({
+            message: '添加失败',
+            description:response.data,
+          });
+        }
+      }
+    });
+    this.setState({ addMany: false });
   };
   render() {
     const {
@@ -238,7 +307,7 @@ class SampleDetail extends PureComponent {
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const {addMany,addOne,onDelete,selectedRowKeys,standard,itemName} = this.state;
+    const {addMany,addOne,onDelete,selectedRowKeys,standard,itemName,deleteRowKeys} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const cargoname = sessionStorage.getItem('cargoname');
     const sampleno = sessionStorage.getItem('sampleno');
@@ -247,6 +316,10 @@ class SampleDetail extends PureComponent {
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
+    };
+    const rowDeteleSelection = {
+      deleteRowKeys,
+      onChange: this.onDeleteChange,
     };
     return (
       <PageHeaderWrapper title="样品结果登记">
@@ -322,7 +395,7 @@ class SampleDetail extends PureComponent {
               <Modal
                 title="批量添加"
                 visible={addMany}
-                onOk={this.handleOk}
+                onOk={this.addMany}
                 onCancel={this.handleCancel}
               >               
                 <Table
@@ -346,7 +419,7 @@ class SampleDetail extends PureComponent {
                   dataSource={detail}
                   pagination={{showQuickJumper:true,showSizeChanger:true}}
                   columns={this.columns1}
-                  rowSelection={rowSelection}
+                  rowSelection={rowDeteleSelection}
                 />
               </Modal>
         </Card>
