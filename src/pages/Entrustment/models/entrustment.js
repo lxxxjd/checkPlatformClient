@@ -1,6 +1,6 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
-        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport} from '@/services/Entrustment';
+        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -118,6 +118,10 @@ export default {
         payload:response,
       });
       if (callback) callback();
+    },
+    *getContacts({ payload, callback }, { call, put }) {
+      const response = yield call(getContacts, payload);
+      if (callback) callback(response);
     },
   },
 

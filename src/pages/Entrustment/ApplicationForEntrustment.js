@@ -72,7 +72,7 @@ const fieldLabels = {
   businesssort: '业务分类',
   agent: '代理人',
   agentname: '联系人',
-  agentTel: '联系方式',
+  agenttel: '联系方式',
   payer: '付款人',
   price: '检验费',
   reportdate: '委托日期',
@@ -120,6 +120,8 @@ class ApplicationForEntrustment extends PureComponent {
     tradeway: [],
     checkProject:[],
     cargos:[],
+    applicantContacts:[],
+    agentContacts:[],
   };
 
 
@@ -291,30 +293,76 @@ class ApplicationForEntrustment extends PureComponent {
   };
 
 
-  handleChangeCargo =e=> {
+  handleChangeCargo = e => {
     const { form } = this.props;
-    const { state } = this;
-    for (const cargo in state.cargos) {
-      if (state.cargos[cargo].keyno === e) {
-        form.setFieldsValue({ 'HScode': state.cargos[cargo].hscode });
-        form.setFieldsValue({ 'HSname': state.cargos[cargo].hsname });
+    const { cargos } = this.state;
+    for (const cargo in cargos) {
+      if (cargos[cargo].keyno === e) {
+        form.setFieldsValue({ 'HScode': cargos[cargo].hscode });
+        form.setFieldsValue({ 'HSname': cargos[cargo].hsname });
         break;
       }
     }
-  }
-
+  };
+  onAppliantChange = value => {
+    console.log(value);
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/getContacts',
+      payload: {
+        value
+      },
+      callback: (response) => {
+        this.setState({applicantContacts:response.data});
+      }
+    });
+  };
+  onAgentChange = value => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/getContacts',
+      payload: {
+        content:value
+      },
+      callback: (response) => {
+        this.setState({agentContacts:response.data})
+      }
+    });
+  };
+  onAppliantNameChange = value =>{
+    const { form } = this.props;
+    const { applicantContacts } = this.state;
+    for (const applicantContact in applicantContacts) {
+      if (applicantContacts[applicantContact].keyno === e) {
+        form.setFieldsValue({ 'applicanttel': applicantContacts[applicantContact].contactPhone });
+        break;
+      }
+    }
+  };
+  onAgentNameChange = value =>{
+    const { form } = this.props;
+    const { agentContacts } = this.state;
+    for (const agentContact in agentContacts) {
+      if (agentContacts[agentContact].keyno === e) {
+        form.setFieldsValue({ 'agenttel': agentContacts[agentContact].contactPhone });
+        break;
+      }
+    }
+  };
   render(){
     const {
       form: { getFieldDecorator },
       submitting,
     } = this.props;
-    const { width,allReporterName,businessSort,businessSource,tradeway,checkProject,cargos} = this.state;
+    const { width,allReporterName,businessSort,businessSource,tradeway,checkProject,cargos,agentContacts,applicantContacts} = this.state;
 
     const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
     const businessSortOptions = businessSort.map(d => <Option key={d}  value={d}>{d}</Option>);
     const businessSourceOptions = businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
     const cargosOptions =cargos.map(d => <Option key={d.keyno}  value={d.keyno}>{d.cargonamec}</Option>);
+    const applicantContactsOptions =applicantContacts.map(d => <Option key={d.keyno}  value={d.keyno}>{d.contactName}</Option>);
+    const agentContactsOptions =agentContacts.map(d => <Option key={d.keyno}  value={d.keyno}>{d.contactName}</Option>);
 
     //申请人选项
     return (
@@ -348,6 +396,7 @@ class ApplicationForEntrustment extends PureComponent {
                       placeholder="请选择"
                       filterOption={false}
                       onSearch={this.handleSearch}
+                      onChange={this.onAppliantChange}
                     >
                       {reportNameOptions}
                     </Select>
@@ -362,7 +411,17 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicantname', {
-                  })(<Input style={{ width: '100%' }} placeholder="联系人" />)}
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="请选择联系人"
+                      filterOption={false}
+                      onSearch={this.handleSearch}
+                      onChange={this.onAppliantNameChange}
+                    >
+                      {applicantContactsOptions}
+                    </Select>
+                  )}
                 </Form.Item>
               </Col>
               <Col span={5}>
@@ -422,17 +481,26 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentname', {
-                  })(<Input style={{ width: '100%' }} placeholder="请输入联系人" />)}
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="请选择联系人"
+                      filterOption={false}
+                      onSearch={this.handleSearch}
+                    >
+                      {agentContactsOptions}
+                    </Select>
+                  )}
                 </Form.Item>
               </Col>
               <Col span={5}  >
                 <Form.Item
-                  label={fieldLabels.agentTel}
+                  label={fieldLabels.agenttel}
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('agentTel', {
+                  {getFieldDecorator('agenttel', {
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
               </Col>

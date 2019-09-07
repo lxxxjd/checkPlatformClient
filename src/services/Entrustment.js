@@ -52,6 +52,9 @@ export async function queryReport(params) {
   return request(`/api/report/get_report?reportNo=${params}`);
 }
 
+export async function getContacts(params) {
+  return request(`/api/contact/getContacts?companyName=${params.value}`);
+}
 export async function getAllClientName(params) {
   if(params.content != null){
     return request(`/api/client/getAllClientName?content=${params.content}`);

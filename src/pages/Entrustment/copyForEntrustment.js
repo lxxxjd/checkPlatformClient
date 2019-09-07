@@ -109,6 +109,8 @@ class CopyForEntrustment extends PureComponent {
     tradeway: [],
     checkProject:[],
     cargos:[],
+    applicantContacts:[],
+    agentContacts:[],
   };
 
 
@@ -327,13 +329,58 @@ class CopyForEntrustment extends PureComponent {
       }
     });
   };
+  onAppliantChange = value => {
+    console.log(value);
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/getContacts',
+      payload: {
+        value
+      },
+      callback: (response) => {
+        this.setState({applicantContacts:response.data});
+      }
+    });
+  };
+  onAgentChange = value => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/getContacts',
+      payload: {
+        content:value
+      },
+      callback: (response) => {
+        this.setState({agentContacts:response.data})
+      }
+    });
+  };
+  onAppliantNameChange = value =>{
+    const { form } = this.props;
+    const { applicantContacts } = this.state;
+    for (const applicantContact in applicantContacts) {
+      if (applicantContacts[applicantContact].keyno === e) {
+        form.setFieldsValue({ 'applicanttel': applicantContacts[applicantContact].contactPhone });
+        break;
+      }
+    }
+  };
+  onAgentNameChange = value =>{
+    const { form } = this.props;
+    const { agentContacts } = this.state;
+    for (const agentContact in agentContacts) {
+      if (agentContacts[agentContact].keyno === e) {
+        form.setFieldsValue({ 'agenttel': agentContacts[agentContact].contactPhone });
+        break;
+      }
+    }
+  };
   render() {
     const {
       form: { getFieldDecorator },
       submitting,
       entrustment,
     } = this.props;
-    const { width,allReporterName,businessSort,businessSource,tradeway,checkProject,cargos} = this.state;
+    const { width,allReporterName,businessSort,businessSource,tradeway,checkProject,cargos,applicantContacts,agentContacts} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     //申请人选项
     const reportNameOptions = allReporterName.map(d => <Option key={d}  value={d}>{d}</Option>);
@@ -341,6 +388,9 @@ class CopyForEntrustment extends PureComponent {
     const businessSourceOptions = businessSource.map(d => <Option key={d}  value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d}  value={d}>{d}</Option>);
     const cargosOptions =cargos.map(d => <Option key={d.keyno}  value={d.keyno}>{d.cargonamec}</Option>);
+    const applicantContactsOptions =applicantContacts.map(d => <Option key={d.keyno}  value={d.keyno}>{d.contactName}</Option>);
+    const agentContactsOptions =agentContacts.map(d => <Option key={d.keyno}  value={d.keyno}>{d.contactName}</Option>);
+
     return (
       <PageHeaderWrapper
         title={"委托号:"+reportno}
@@ -357,6 +407,7 @@ class CopyForEntrustment extends PureComponent {
         <Card title="申请信息" className={styles.card} bordered={false}>
         <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
+             <Row gutter={16}>
               <Col span={10}>
                 <Form.Item
                   label={fieldLabels.applicant}
@@ -368,18 +419,19 @@ class CopyForEntrustment extends PureComponent {
                   {getFieldDecorator('applicant', {
                     rules: [{ required: true, message: '请输入申请人' }],
                   })(
-                    <Select 
+                    <Select
                       showSearch
                       placeholder="请选择"
                       filterOption={false}
                       onSearch={this.handleSearch}
+                      onChange={this.onAppliantChange}
                     >
                       {reportNameOptions}
                     </Select>
                   )}
                 </Form.Item>
               </Col>
-              <Col  span={4}  >
+              <Col span={4}>
                 <Form.Item
                   label={fieldLabels.applicantname}
                   labelCol={{ span: 8 }}
@@ -387,11 +439,20 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicantname', {
-                    rules: [{ required: true, message: '联系人' }],
-                  })(<Input style={{ width: '100%' }} placeholder="联系人" />)}
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="请选择联系人"
+                      filterOption={false}
+                      onSearch={this.handleSearch}
+                      onChange={this.onAppliantNameChange}
+                    >
+                      {applicantContactsOptions}
+                    </Select>
+                  )}
                 </Form.Item>
               </Col>
-              <Col span={5}  >
+              <Col span={5}>
                 <Form.Item
                   label={fieldLabels.applicanttel}
                   labelCol={{ span: 8 }}
@@ -402,7 +463,7 @@ class CopyForEntrustment extends PureComponent {
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
               </Col>
-              <Col span={5}  >
+              <Col span={5}>
                 <Form.Item
                   label={fieldLabels.tradeway}
                   labelCol={{ span: 8 }}
@@ -410,6 +471,7 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('tradeway', {
+                    rules: [{ required: true, message: '请选择贸易方式' }],
                   })(
                     <Select placeholder="请选择贸易方式">
                       {tradewayOptions}
@@ -428,14 +490,14 @@ class CopyForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('agent', {
                   })(
-                    <Select 
+                    <Select
                       showSearch
-                      placeholder="请选择"
+                      placeholder="请选择代理人"
                       filterOption={false}
                       onSearch={this.handleSearch}
                     >
                       {reportNameOptions}
-                    </Select>                  
+                    </Select>
                     )}
                 </Form.Item>
               </Col>
@@ -447,7 +509,16 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentname', {
-                  })(<Input style={{ width: '100%' }} placeholder="请输入联系人" />)}
+                  })(
+                    <Select
+                      showSearch
+                      placeholder="请选择联系人"
+                      filterOption={false}
+                      onSearch={this.handleSearch}
+                    >
+                      {agentContactsOptions}
+                    </Select>
+                  )}
                 </Form.Item>
               </Col>
               <Col span={5}  >
