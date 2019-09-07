@@ -83,8 +83,6 @@ class SampleDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.mobileItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.mobileItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
         </Fragment>
       ),
     },
@@ -161,9 +159,11 @@ class SampleDetail extends PureComponent {
          cargonameC,
       }
     });
+    this.setState({selectedRowKeys:[]});
   };  
   showDelete = () => {
     this.setState({ onDelete: true });
+    this.setState({deleteRowKeys:[]});
   };
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });

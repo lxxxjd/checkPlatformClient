@@ -96,7 +96,7 @@ const fieldLabels = {
   loading: loading.models.entrustment,
 }))
 @Form.create()
-class copyForEntrustment extends PureComponent {
+class CopyForEntrustment extends PureComponent {
   state = {
     width: '100%',
     date:'',
@@ -115,6 +115,8 @@ class copyForEntrustment extends PureComponent {
 
   componentDidMount () {
     const { form ,dispatch,entrustment} = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const now = moment().format("YYYY-MM-DD HH:mm:ss");
     dispatch({
       type: 'entrustment/getClientName',
       payload: {},
@@ -126,56 +128,55 @@ class copyForEntrustment extends PureComponent {
       type: 'entrustment/getCargos',
       payload: {},
       callback: (response) => {
-        this.setState({cargos:response})
-      }
-    });
-    const reportno = sessionStorage.getItem('reportno');
-    dispatch({
-      type: 'entrustment/getReport',
-      payload: reportno,
-      callback: (response) => {
-        this.setState({reportno:response.reportno})
-        form.setFieldsValue({
-          'reportdate':moment(response.reportdate,"YYYY-MM-DD HH:mm:ss"),
-          'tradeway':response.tradeway,
-          'payer':response.payer,
-          'shipname':response.shipname,
-          'cargoname':response.cargoname,
-          'quantityd':response.quantityd,
-          'agent':response.agent,
-          'applicant':response.applicant,
-          'inspwaymemo1':response.inspwaymemo1,
-          'inspplace1':response.inspplace1,
-          'inspplace2':response.inspplace2,
-          'inspplace3':response.inspplace3,
-          'inspdate':moment(response.inspdate,"YYYY-MM-DD HH:mm:ss"),
-          'insplinkway':response.insplinkway,
-          'price':response.price,
-          'unit':response.unit,
-          'businesssort':response.businesssort,
-          'applicantname':response.applicantname,
-          'applicanttel':response.applicanttel,
-          'agentname':response.agentname,
-          'agenttel':response.agenttel,
-          'businesssource' : response.businesssource,
-          'chineselocalname' : response.chineselocalname,
-          'englishlocalname' : response.englishlocalname,
-        });
-        for (const cargo in this.state.cargos) {
-          if (this.state.cargos[cargo].cargonamec.replace(/\s+/g,"") === response.cargoname) {
-            form.setFieldsValue({ 'HScode': this.state.cargos[cargo].hscode });
-            form.setFieldsValue({ 'HSname': this.state.cargos[cargo].hsname });
-            break;
+        this.setState({cargos:response});
+        dispatch({
+          type: 'entrustment/getReport',
+          payload: reportno,
+          callback: (response) => {
+            this.setState({reportno:response.reportno})
+            form.setFieldsValue({
+              'reportdate':moment(now,"YYYY-MM-DD HH:mm:ss"),
+              'tradeway':response.tradeway,
+              'payer':response.payer,
+              'shipname':response.shipname,
+              'cargoname':response.cargoname,
+              'quantityd':response.quantityd,
+              'agent':response.agent,
+              'applicant':response.applicant,
+              'inspwaymemo1':response.inspwaymemo1,
+              //'inspplace1':response.inspplace1,
+              'inspplace2':response.inspplace2,
+              'inspplace3':response.inspplace3,
+              'inspdate':moment(now,"YYYY-MM-DD HH:mm:ss"),
+              'insplinkway':response.insplinkway,
+              'price':response.price,
+              'unit':response.unit,
+              'businesssort':response.businesssort,
+              'applicantname':response.applicantname,
+              'applicanttel':response.applicanttel,
+              'agentname':response.agentname,
+              'agenttel':response.agenttel,
+              'businesssource' : response.businesssource,
+              'chineselocalname' : response.chineselocalname,
+              'englishlocalname' : response.englishlocalname,
+            });
+            for (const cargo in this.state.cargos) {
+              if (this.state.cargos[cargo].cargonamec.replace(/\s+/g,"") === response.cargoname) {
+                form.setFieldsValue({ 'HScode': this.state.cargos[cargo].hscode });
+                form.setFieldsValue({ 'HSname': this.state.cargos[cargo].hsname });
+                break;
+              }
+            }
+            form.setFieldsValue({['inspway']:response.inspway.split(" ")});
+            if(response.certstyle!=null) {
+              const result = ['need'];
+              result.push(response.certstyle);
+              form.setFieldsValue({'certstyle':result});
+            }else{
+              form.setFieldsValue({'certstyle':['noNeed']});
+            }
           }
-        }
-        form.setFieldsValue({['inspway']:response.inspway.split(" ")});
-        if(response.certstyle!=null) {
-          const result = ['need'];
-          result.push(response.certstyle);
-          form.setFieldsValue({'certstyle':result});
-        }else{
-          form.setFieldsValue({'certstyle':['noNeed']});
-        }
+        });
       }
     });
     dispatch({
@@ -258,6 +259,7 @@ class copyForEntrustment extends PureComponent {
     } = this.props;
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
+      values.inspplace1 = values.inspplace1[2];
       if (!error) {
         // submit the values
         dispatch({
@@ -397,7 +399,6 @@ class copyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicanttel', {
-                    rules: [{ required: true, message: '请输入联系方式' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
               </Col>
@@ -409,7 +410,6 @@ class copyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('tradeway', {
-                    rules: [{ required: true, message: '请选择贸易方式' }],
                   })(
                     <Select placeholder="请选择贸易方式">
                       {tradewayOptions}
@@ -427,7 +427,6 @@ class copyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agent', {
-                    rules: [{ required: true, message: '请输入代理人' }],
                   })(
                     <Select 
                       showSearch
@@ -448,7 +447,6 @@ class copyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentname', {
-                    rules: [{ required: true, message: '请输入联系人' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系人" />)}
                 </Form.Item>
               </Col>
@@ -460,7 +458,6 @@ class copyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agenttel', {
-                    rules: [{ required: true, message: '请输入联系方式' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
               </Col>
@@ -493,7 +490,7 @@ class copyForEntrustment extends PureComponent {
                     rules: [{ required: true, message: '请输入付款人' }],
                   })(
                     <Select placeholder="请选择">
-                      <Option value="xiao">付晓晓</Option>
+                      {reportNameOptions}
                     </Select>
                     )}
                 </Form.Item>
@@ -512,7 +509,15 @@ class copyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('price', {
-                    rules: [{ required: true, message: '请输入检验费' }],
+                    rules: [{
+                      required: true,
+                      whitespace: true,
+                      type:'number',
+                      transform(value) {
+                        if(value){
+                          return Number(value);
+                        }
+                      }, message: '请输入数字' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入" />)}
                 </Form.Item>
               </Col>
@@ -590,7 +595,7 @@ class copyForEntrustment extends PureComponent {
                   wrapperCol={{ span: 20 }}
                   colon={false}
                 >
-                  {getFieldDecorator('inspplace1', {
+                  {getFieldDecorator('inspplace', {
                     rules: [{ required: true, message: '请输入装运港口' }],
                   })(
                     <Input placeholder="请输入装运港口" />
@@ -658,9 +663,17 @@ class copyForEntrustment extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('quantityd', {
-                    rules: [{ required: true, message: '请输入申报数量' }],
-                  })(<Input placeholder="请输入申报数量" />)}
+                {getFieldDecorator('quantityd', {
+                    rules: [{
+                      required: true,
+                      whitespace: true,
+                      type:'number',
+                      transform(value) {
+                        if(value){
+                          return Number(value);
+                        }
+                      }, message: '请输入数字' }],
+                  })(<Input style={{ width: '100%' }} placeholder="请输入" />)}
                 </Form.Item>
               </Col>
               <Col span={3} >
@@ -795,7 +808,6 @@ class copyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('inspwaymemo1', {
-                    rules: [{ required: true, message: '检验备注' }],
                   })(<TextArea style={{ minHeight: 32 }} rows={4} />)}
                 </Form.Item>
               </Col>
@@ -807,4 +819,4 @@ class copyForEntrustment extends PureComponent {
   }
 }
 
-export default copyForEntrustment;
+export default CopyForEntrustment;

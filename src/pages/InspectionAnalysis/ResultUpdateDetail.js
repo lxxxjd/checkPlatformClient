@@ -36,23 +36,16 @@ class ResultUpdateDetail extends PureComponent {
   };
   columns = [
     {
-      title: '样品名称',
+      title: '指标名称',
       dataIndex: 'itemC',
     },
     {
-      title: '样品编号',
+      title: '英文名称',
       dataIndex: 'itemE',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
-    },
-    {
-      title: '指标名称',
-      dataIndex: 'shipname',
     },
     {
       title: '检测标准',
-      dataIndex: 'shipname',
+      dataIndex: 'standard',
     },
     {
       title: '单位',
@@ -65,22 +58,24 @@ class ResultUpdateDetail extends PureComponent {
     {
       title: '操作',
       dataIndex: 'operation',
-      render: (text, record) => {
+      render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.showModal(text, record)}>编辑</a>
+          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
         </Fragment>
-      },
+      ),
     },
   ];
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const reportno = sessionStorage.getItem('reportno');
+    const sampleno = sessionStorage.getItem('sampleno');
     dispatch({
-      type: 'testInfo/getReports',
+      type: 'inspectionAnalysis/getDetails',
       payload:{
-         certCode : certCode,
+         reportno : reportno,
+         sampleno : sampleno ,
       }
     });
   }
@@ -140,7 +135,7 @@ class ResultUpdateDetail extends PureComponent {
 
   render() {
     const {
-      //inspectionAnalysis: {data},
+      inspectionAnalysis: {detail},
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -167,7 +162,7 @@ class ResultUpdateDetail extends PureComponent {
           <div className={styles.tableList}>
             <Table
               loading={loading}
-              //dataSource={data.list}
+              dataSource={detail}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
               rowKey="reportno"

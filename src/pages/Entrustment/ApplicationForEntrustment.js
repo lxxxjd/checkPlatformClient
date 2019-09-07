@@ -174,9 +174,6 @@ class ApplicationForEntrustment extends PureComponent {
       }
     });
   }
-  componentWillMount () {
-
-  }
 
 
   getErrorInfo = () => {
@@ -229,6 +226,7 @@ class ApplicationForEntrustment extends PureComponent {
     } = this.props;
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
+      values.inspplace1 = values.inspplace1[2];
       if (!error) {
         // submit the values
         dispatch({
@@ -272,7 +270,13 @@ class ApplicationForEntrustment extends PureComponent {
       form.setFieldsValue({['payer']:form.getFieldValue('agent')});
     }
   };
-
+  onChangeNum = e => {
+    const { value } = e.target;
+    const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+    if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+      this.props.onChange(value);
+    }
+  };
   handleSearch = value => {
     const {dispatch} = this.props;
     dispatch({
@@ -299,73 +303,6 @@ class ApplicationForEntrustment extends PureComponent {
     }
   }
 
-  onCopy = () =>{
-    const {dispatch,form} = this.props;
-    var reportno = sessionStorage.getItem('reportno');
-    if(typeof(reportno) === "undefined"){
-      notification.open({
-        message: '提示框',
-        description:
-          '没有在查看委托页面复制，不能粘贴',
-        onClick: () => {
-          console.log('Notification Clicked!');
-        },
-      });
-      return;
-    }
-    console.log(reportno);
-    dispatch({
-      type: 'entrustment/getReport',
-      payload: reportno,
-      callback: (response) => {
-        this.setState({reportno:response.reportno})
-        form.setFieldsValue({
-          'reportdate':moment(response.reportdate,"YYYY-MM-DD"),
-          'tradeway':response.tradeway,
-          'payer':response.payer,
-          'shipname':response.shipname,
-          'cargoname':response.cargoname,
-          'quantityD':response.quantityD,
-          'agent':response.agent,
-          'applicant':response.applicant,
-          'inspwaymemo1':response.inspwaymemo1,
-          'inspplace1':response.inspplace1,
-          'inspplace2':response.inspplace2,
-          'inspplace3':response.inspplace3,
-          'inspdate':moment(response.inspdate,"YYYY-MM-DD"),
-          'insplinkway':response.insplinkway,
-          'price':response.price,
-          'unit':response.unit,
-          'businesssort':response.businesssort,
-          'applicantname':response.applicantname,
-          'applicanttel':response.applicanttel,
-          'agentname':response.agentname,
-          'agentTel':response.agentTel,
-          'businesssource' : response.businesssource,
-          'chineselocalname' : response.chineselocalname,
-          'englishlocalname' : response.englishlocalname,
-        });
-        for (const cargo in this.state.cargos) {
-          if (this.state.cargos[cargo].cargonamec.replace(/\s+/g,"") === response.cargoname) {
-            form.setFieldsValue({ 'HScode': this.state.cargos[cargo].hscode });
-            form.setFieldsValue({ 'HSname': this.state.cargos[cargo].hsname });
-            break;
-          }
-        }
-        form.setFieldsValue({['inspway']:response.inspway.split(" ")});
-        if(response.certstyle!=null) {
-          const result = ['need'];
-          result.push(response.certstyle);
-          form.setFieldsValue({'certstyle':result});
-        }else{
-          form.setFieldsValue({'certstyle':['noNeed']});
-        }
-
-
-      }
-    });
-  }
-
   render(){
     const {
       form: { getFieldDecorator },
@@ -386,12 +323,9 @@ class ApplicationForEntrustment extends PureComponent {
         <Card  bordered={false}>
           <Row gutter={16}>
             <Col span={2}>
-              <Button type="primary" onClick={this.onCopy}>粘贴</Button>
-            </Col>
-            <Col span={2}>
               <Button type="primary" onClick={this.validate}>提交</Button>
             </Col>
-            <Col span={20}>
+            <Col span={22}>
             </Col>
           </Row>
         </Card>
@@ -428,7 +362,6 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicantname', {
-                    rules: [{ required: true, message: '联系人' }],
                   })(<Input style={{ width: '100%' }} placeholder="联系人" />)}
                 </Form.Item>
               </Col>
@@ -440,7 +373,6 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicanttel', {
-                    rules: [{ required: true, message: '请输入联系方式' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
               </Col>
@@ -470,7 +402,6 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agent', {
-                    rules: [{ required: true, message: '请输入代理人' }],
                   })(
                     <Select
                       showSearch
@@ -491,7 +422,6 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentname', {
-                    rules: [{ required: true, message: '请输入联系人' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系人" />)}
                 </Form.Item>
               </Col>
@@ -503,7 +433,6 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentTel', {
-                    rules: [{ required: true, message: '请输入联系方式' }],
                   })(<Input style={{ width: '100%' }} placeholder="请输入联系方式" />)}
                 </Form.Item>
               </Col>
@@ -557,9 +486,19 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{ span: 16 }}
                   colon={false}
                 >
-                  {getFieldDecorator('price', {
-                    rules: [{ required: true, message: '请输入检验费' }],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入检验费" />)}
+                   {getFieldDecorator('price', {
+                    rules: [{
+                      required: true,
+                      whitespace: true,
+                      type:'number',
+                      transform(value) {
+                        if(value){
+                          return Number(value);
+                        }
+                      }, message: '请输入数字' }],
+                  })
+                   (<Input style={{ width: '100%' }} placeholder="请输入" />)
+                }
                 </Form.Item>
               </Col>
             </Row>
@@ -706,8 +645,18 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('quantityD', {
-                    rules: [{ required: true, message: '请输入申报数量' }],
-                  })(<Input placeholder="请输入申报数量" />)}
+                    rules: [{
+                      required: true,
+                      whitespace: true,
+                      type:'number',
+                      transform(value) {
+                        if(value){
+                          return Number(value);
+                        }
+                      }, message: '请输入数字' }],                  
+                    })(
+                      <Input placeholder="0" />
+                  )}
                 </Form.Item>
               </Col>
               <Col span={3} >
@@ -845,7 +794,6 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('inspwaymemo1', {
-                    rules: [{ required: true, message: '检验备注' }],
                   })(<TextArea style={{ minHeight: 32 }} rows={4} />)}
                 </Form.Item>
               </Col>

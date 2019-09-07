@@ -69,7 +69,7 @@ class ResultUpdate extends PureComponent {
     },
     {
       title: '样品名称',
-      dataIndex: 'item',
+      dataIndex: 'samplename',
     },
     {
       title: '状态',
