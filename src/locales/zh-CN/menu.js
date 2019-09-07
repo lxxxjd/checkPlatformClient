@@ -39,7 +39,10 @@ export default {
   'menu.Charge.Invoice':'发票开具',
   'menu.Charge.Cost':'成本查询',
   'menu.Charge.CostEdit':'成本支出',
-
+  'menu.Archives':'业务归档',
+  'menu.Archives.ArchivesAdd':'归档',
+  'menu.Archives.ArchivesDestory':'退档',
+  'menu.Archives.ArchivesQuery':'查档',
   'menu.SampleRegister.SampleRegisterDetail':'样品登记详情',
   'menu.InspectionAnalysis':'检验分析',
   'menu.InspectionAnalysis.InspectionArrangement':'检验安排',

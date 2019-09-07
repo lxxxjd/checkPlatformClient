@@ -352,6 +352,32 @@ export default [
           },
         ],
       },
+
+      //Archives
+      {
+        path: '/Archives',
+        icon: 'profile',
+        name: 'Archives',
+        routes: [
+          {
+            path: '/Archives/ArchivesAdd',
+            name: 'ArchivesAdd',
+            component: './Archives/ArchivesAdd',
+          },
+          {
+            path: '/Archives/ArchivesDestory',
+            name: 'ArchivesDestory',
+            component: './Archives/ArchivesDestory',
+          },
+          {
+            path: '/Archives/ArchivesQuery',
+            name: 'ArchivesQuery',
+            component: './Archives/ArchivesQuery',
+          },
+
+        ],
+      },
+
       {
         component: '404',
       },
