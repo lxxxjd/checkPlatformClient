@@ -407,7 +407,6 @@ class CopyForEntrustment extends PureComponent {
         <Card title="申请信息" className={styles.card} bordered={false}>
         <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
-             <Row gutter={16}>
               <Col span={10}>
                 <Form.Item
                   label={fieldLabels.applicant}
