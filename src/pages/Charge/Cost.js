@@ -202,7 +202,7 @@ class Cost extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
-              rowKey="reportno"
+              rowKey="keyno"
               loading={loading}
               dataSource={costData}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

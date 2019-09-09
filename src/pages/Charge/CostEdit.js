@@ -24,18 +24,20 @@ const { Option } = Select;
 
 
 
-// 开具发票组件
+// 修改组件
 const CostAddUpdateForm = Form.create()(props => {
   const { modalVisible, form, handleModalVisible,CostItemData,dispatch,init} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      let values = CostItemData;
-      console.log(values);
+      console.log(fieldsValue);
       // values.invoiceTitle= fieldsValue.invoiceTitle;
       // values.invoiceStatus ='已开票';
+      // const values={
+      //
+      // }
       // dispatch({
-      //   type: 'charge/passListFictionFetch',
+      //   type: 'charge/addCostFetch',
       //   payload:values,
       //   callback: (response) => {
       //     if(response==="success"){
@@ -53,18 +55,19 @@ const CostAddUpdateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="开具发票"
+      title="修改成本"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
       width={500}
-      style={{ top: 200 }}
+      style={{ top: 100 }}
     >
 
       <Form>
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="实际产生">
           {form.getFieldDecorator('inCurDate', {
-            // rules: [{ required: true, message: '选择开具发票时间！' }],
+            initialValue:moment(CostItemData.inCurDate, 'YYYY-MM-DD'),
+            // rules: [{ required: true, message:  '选择开具发票时间！' }],
           })(
             <DatePicker
               style={{ width: '100%' }}
@@ -76,6 +79,7 @@ const CostAddUpdateForm = Form.create()(props => {
         </Form.Item>
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="申请日期">
           {form.getFieldDecorator('applyDate', {
+            initialValue:moment(CostItemData.applyDate, 'YYYY-MM-DD'),
             // rules: [{ required: true, message: '选择开具发票时间！' }],
           })(
             <DatePicker
@@ -89,21 +93,31 @@ const CostAddUpdateForm = Form.create()(props => {
 
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} label="费用种类">
           {form.getFieldDecorator('costSort', {
+            initialValue:CostItemData.costSort,
             // rules: [{ required: true,message: '选择付款方式！'}],
           })(
             <Select placeholder="请选择付款方式">
-              <Option value="劳务费">汇款.</Option>
-              <Option value="差旅费">现金</Option>
-              <Option value="邮寄费">支票</Option>
-              <Option value="误支费">支票</Option>
-              <Option value="分包费">支票</Option>
-              <Option value="邮寄费">支票</Option>
+              <Option value="劳务费">劳务费.</Option>
+              <Option value="差旅费">差旅费</Option>
+              <Option value="邮寄费">邮寄费</Option>
+              <Option value="误支费">误支费</Option>
+              <Option value="分包费">分包费</Option>
+              <Option value="交通费">交通费</Option>
+              <Option value="其他费">其他费</Option>
             </Select>
           )}
         </Form.Item>
 
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="发票号码">
-          {form.getFieldDecorator('invoiceno', {
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="金额">
+          {form.getFieldDecorator('amount', {
+            initialValue:CostItemData.amount,
+            // rules: [{ required: true ,message: '选择发票号码！'}],
+          })(<Input placeholder="请输入" />)}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="备注">
+          {form.getFieldDecorator('remark', {
+            initialValue:CostItemData.remark,
             // rules: [{ required: true ,message: '选择发票号码！'}],
           })(<Input placeholder="请输入" />)}
         </Form.Item>
@@ -112,6 +126,116 @@ const CostAddUpdateForm = Form.create()(props => {
     </Modal>
   );
 });
+
+
+
+// 新建组件
+const CostAddNewForm = Form.create()(props => {
+  const { modalAddNewVisble, form,handleModalAddNewVisible,dispatch,init} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      console.log(fieldsValue);
+      const values={
+        amount: fieldsValue.amount,
+        applyDate: fieldsValue.applyDate,
+        costSort: fieldsValue.costSort,
+        inCurDate: fieldsValue.inCurDate,
+        remark: fieldsValue.remark,
+        reportno: fieldsValue.reportno,
+        status:"未审核",
+      }
+      dispatch({
+        type: 'charge/addCostFetch',
+        payload:values,
+        callback: (response) => {
+          if(response==="success"){
+            message.success("成本添加成功");
+          }else{
+            message.success('成本添加失败');
+          }
+        }
+      });
+      handleModalAddNewVisible();
+      init();
+    });
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="新增支出"
+      visible={modalAddNewVisble}
+      onOk={okHandle}
+      onCancel={() => handleModalAddNewVisible()}
+      width={500}
+      style={{ top: 100 }}
+    >
+
+      <Form>
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="委托编号">
+          {form.getFieldDecorator('reportno', {
+             rules: [{ required: true ,message: '请填写委托编号'}],
+          })(<Input placeholder="请输入" />)}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="实际产生">
+          {form.getFieldDecorator('inCurDate', {
+            rules: [{ required: true ,message: '请填写实际产生时间'}],
+          })(
+            <DatePicker
+              style={{ width: '100%' }}
+              showTime
+              format="YYYY-MM-DD"
+              placeholder="选择实际日期"
+            />
+          )}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="申请日期">
+          {form.getFieldDecorator('applyDate', {
+            rules: [{ required: true ,message: '请填写申请时间'}],
+          })(
+            <DatePicker
+              style={{ width: '100%' }}
+              showTime
+              format="YYYY-MM-DD"
+              placeholder="选择申请日期"
+            />
+          )}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} label="费用种类">
+          {form.getFieldDecorator('costSort', {
+            rules: [{ required: true,message: '选择费用种类'}],
+          })(
+            <Select placeholder="请选择付款方式">
+              <Option value="劳务费">劳务费.</Option>
+              <Option value="差旅费">差旅费</Option>
+              <Option value="邮寄费">邮寄费</Option>
+              <Option value="误支费">误支费</Option>
+              <Option value="分包费">分包费</Option>
+              <Option value="交通费">交通费</Option>
+              <Option value="其他费">其他费</Option>
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="金额">
+          {form.getFieldDecorator('amount', {
+            rules: [{ required: true,message: '请输入金额'}],
+          })(<Input placeholder="请输入" />)}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="备注">
+          {form.getFieldDecorator('remark', {
+            // rules: [{ required: true ,message: '选择发票号码！'}],
+          })(<Input placeholder="请输入" />)}
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+});
+
+
 
 
 
@@ -124,6 +248,7 @@ const CostAddUpdateForm = Form.create()(props => {
 class Cost extends PureComponent {
   state = {
     modalVisible: false,
+    modalAddNewVisble: false,
     CostItemData :{},
   };
 
@@ -205,6 +330,13 @@ class Cost extends PureComponent {
     });
   }
 
+  // 处理新增 显示模态框
+  handleModalAddNewVisible = (flag) => {
+    this.setState({
+      modalAddNewVisble: !!flag,
+    });
+  };
+
 
 
   handleFormReset = () => {
@@ -233,7 +365,6 @@ class Cost extends PureComponent {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
@@ -289,6 +420,9 @@ class Cost extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit" onClick={this.handleModalAddNewVisible}>
+                新建
+              </Button>
             </span>
           </Col>
         </Row>
@@ -304,7 +438,7 @@ class Cost extends PureComponent {
       dispatch,
     } = this.props;
 
-    const { modalVisible,CostItemData} = this.state;
+    const { modalVisible,CostItemData,modalAddNewVisble} = this.state;
 
     return (
       <PageHeaderWrapper title="成本支出">
@@ -314,13 +448,15 @@ class Cost extends PureComponent {
             <Table
               loading={loading}
               dataSource={costInfoData}
-              rowKey="reportno"
+              rowKey="keyno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />
           </div>
         </Card>
-        <CostAddUpdateForm modalVisible={modalVisible} handleModalVisible={this.handleModalVisible} CostItemData={CostItemData} dispatch={dispatch} init={this.init} />
+
+        <CostAddNewForm modalAddNewVisble={modalAddNewVisble} handleModalAddNewVisible={this.handleModalAddNewVisible} dispatch={dispatch} init={this.init} />
+        <CostAddUpdateForm modalVisible={modalVisible} handleModalVisible={this.handleModalVisible} CostItemData={CostItemData} dispatch={dispatch} init={this.init}  />
       </PageHeaderWrapper>
     );
   }

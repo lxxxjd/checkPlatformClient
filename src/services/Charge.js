@@ -79,6 +79,18 @@ export async function getCostInfos(params) {
   });
 }
 
+// 成本支出
+export async function addCost(params) {
+  return request(`/api/cost/addCost`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
+
 
 
 
