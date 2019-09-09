@@ -186,6 +186,7 @@ class ListFiction extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toListFictionAdd}>新建</Button>
             </span>
           </Col>
         </Row>
@@ -205,14 +206,7 @@ class ListFiction extends PureComponent {
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="清单拟制">
-        <Card bordered={false}>
-          <Row gutter={16}>
-            <Col span={2}>
-              <Button type="primary" onClick={this.toListFictionAdd}>新建</Button>
-            </Col>
-          </Row>
-        </Card>
+      <PageHeaderWrapper >
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>

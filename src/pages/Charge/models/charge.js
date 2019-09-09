@@ -1,4 +1,4 @@
-import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getCostInfos} from '@/services/Charge';
+import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getCostInfos ,addCost} from '@/services/Charge';
 
 export default {
   namespace: 'charge',
@@ -11,6 +11,7 @@ export default {
     passListFictionResult:{}, // 审核返回值
     costData:[],  // 成本信息
     costInfoData:[],  // 成本信息
+    costAddResult:{}, // 添加成本返回信息
   },
   effects: {
     *fetch({ payload,callback }, { call, put }) {
@@ -87,6 +88,16 @@ export default {
       if (callback) callback(response.data);
     },
 
+    // 添加成本信息
+    *addCostFetch({ payload,callback }, { call, put }) {
+      const response = yield call(addCost, payload);
+      yield put({
+        type: 'saveAddCost',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -143,6 +154,13 @@ export default {
       return {
         ...state,
         costInfoData: payload.data,
+      };
+    },
+
+    saveAddCost(state, { payload }) {
+      return {
+        ...state,
+        costAddResult: payload.data,
       };
     },
 
