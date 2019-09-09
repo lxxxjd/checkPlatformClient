@@ -667,7 +667,6 @@ class ModifyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('HScode', {
-                    rules: [{ required: true, message: '请输入HS编码' }],
                   })(<Input placeholder="请输入HS编码" disabled={true}/>)}
                 </Form.Item>
               </Col>
@@ -679,7 +678,6 @@ class ModifyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('HSname', {
-                    rules: [{ required: true, message: '请输入HS名称' }],
                   })(<Input placeholder="请输入HS名称" disabled={true}/>)}
                 </Form.Item>
               </Col>
