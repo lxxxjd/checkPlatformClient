@@ -34,21 +34,38 @@ class ArchivesQuery extends PureComponent {
   columns = [
     {
       title: '归档位置',
-      dataIndex: 'reportno',
+      dataIndex: 'place',
     },
     {
       title: '归档日期',
-      dataIndex: 'reportdate',
+      dataIndex: 'archivesDate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
 
     {
       title: '委托编号',
-      dataIndex: 'shipname',
+      dataIndex: 'reportnos',
+      render: (text, record) => {
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
     },
     {
       title: '操作人',
-      dataIndex: 'cargoname',
+      dataIndex: 'applyman',
     },
 
     {
@@ -82,9 +99,6 @@ class ArchivesQuery extends PureComponent {
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
-    this.setState({
-      formValues: {},
-    });
     this.init();
   };
 
@@ -95,7 +109,7 @@ class ArchivesQuery extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'charge/getCostsFetch',
+      type: 'archives/fetch',
       payload: params,
     });
   }
@@ -115,10 +129,10 @@ class ArchivesQuery extends PureComponent {
         ...fieldsValue,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
-        certCode:user.certCode,
+        certcode:user.certCode,
       };
       dispatch({
-        type: 'charge/getCostsFetch',
+        type: 'archives/fetch',
         payload: values,
       });
     });
@@ -143,9 +157,8 @@ class ArchivesQuery extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
+                  <Option value="place">归档位置</Option>
+                  <Option value="applyman">操作人</Option>
                 </Select>
               )}
             </Form.Item>
@@ -176,7 +189,7 @@ class ArchivesQuery extends PureComponent {
 
   render() {
     const {
-      // charge: {costData},
+      archives: {data},
       loading,
     } = this.props;
     return (
@@ -187,7 +200,7 @@ class ArchivesQuery extends PureComponent {
             <Table
               rowKey="reportno"
               loading={loading}
-              //dataSource={costData}
+              dataSource={data}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />
