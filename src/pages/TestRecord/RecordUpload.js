@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultRegistration.less';
-
+import moment from 'moment';
 const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
@@ -35,6 +35,7 @@ class RecordUpload extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
+      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>
     },
     {
       title: '运输工具',

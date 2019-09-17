@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SearchForEntrustment.less';
+import moment from 'moment';
 
 
 
@@ -47,9 +48,9 @@ class SearchForEntrustment extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
@@ -242,11 +243,12 @@ class SearchForEntrustment extends PureComponent {
     } = this.props;
     const { selectedRows, } = this.state;
     return (
-      <PageHeaderWrapper title="撤销查询">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+      <PageHeaderWrapper>
+        <Card size='small' bordered={false}>
+          <div>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               rowKey='reportno'
               dataSource={data.list}

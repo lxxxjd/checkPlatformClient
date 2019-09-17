@@ -15,7 +15,7 @@ import {
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './CustomerService.less';
-
+import moment from 'moment'
 
 
 
@@ -47,9 +47,7 @@ class CustomerService extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>
     },
     {
       title: '委托人',

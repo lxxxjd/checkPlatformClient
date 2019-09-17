@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SearchForEntrustment.less';
-
+import moment from 'moment';
 
 
 
@@ -57,9 +57,9 @@ class CancelForEntrustment extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
