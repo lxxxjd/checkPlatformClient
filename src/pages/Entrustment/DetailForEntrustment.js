@@ -58,10 +58,7 @@ class DetailForEnturstment extends Component {
             <Col span={3}>
               <Title level={3}>委托详情</Title>
             </Col>
-            <Col span={2}>
-              <Button type="primary" onClick={this.deleteReport}>撤销申请</Button>
-            </Col>
-            <Col span={19}>
+            <Col span={21}>
             </Col>
           </Row>
           <Modal
@@ -73,7 +70,7 @@ class DetailForEnturstment extends Component {
             <p>是否撤销</p>
           </Modal>
           <Divider style={{ marginBottom: 32 }} />
-          <Descriptions  size="large" title="申请人信息" style={{ marginBottom: 32 }} bordered>
+          <Descriptions  size="large" title="业务信息" style={{ marginBottom: 32 }} bordered>
             <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
             <Descriptions.Item label="委托日期">{report.reportdate}</Descriptions.Item>
             <Descriptions.Item label="检验费">{report.price}</Descriptions.Item>
@@ -90,7 +87,7 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
-          <Descriptions size="large" title="货物信息" style={{ marginBottom: 32 }} bordered>
+          <Descriptions size="large" title="检查对象" style={{ marginBottom: 32 }} bordered>
             <Descriptions.Item label="运输工具">{report.shipname}</Descriptions.Item>
             <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
             <Descriptions.Item label="检验时间">{report.inspdate}</Descriptions.Item>
@@ -104,7 +101,7 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="HS名称">{report.remark}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
-          <Descriptions size="large" title="检验要求" style={{ marginBottom: 32 }} bordered >
+          <Descriptions size="large" title="检查项目" style={{ marginBottom: 32 }} bordered >
             <Descriptions.Item label="申请项目" >{report.inspway}</Descriptions.Item>
             <Descriptions.Item label="检验备注" >{report.inspwaymemo1}</Descriptions.Item>
           </Descriptions>

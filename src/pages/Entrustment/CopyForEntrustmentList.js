@@ -8,19 +8,14 @@ import {
   Card,
   Form,
   Input,
-  Icon,
   Button,
-  Dropdown,
-  Menu,
-  DatePicker,
   Select,
-  Modal,
-   message,
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SearchForEntrustment.less';
 import moment from 'moment';
+
 
 
 
@@ -39,15 +34,11 @@ const getValue = obj =>
 }))
 
 @Form.create()
-class CancelForEntrustment extends PureComponent {
+class CopyForEntrustmentList extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
-    visible: false,
-    reportNo:'0'
   };
-
-
 
   columns = [
     {
@@ -77,28 +68,13 @@ class CancelForEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.cancelItem(text, record)}>撤销</a>
+          <a onClick={() => this.copyItem(text, record)}>复制</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
   ];
-
-  // eslint-disable-next-line react/sort-comp
-  cancelItem = text => {
-    this.setState({
-      visible: true,
-      reportNo:text.reportno
-    });
-  };
-  previewItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
-    localStorage.setItem('reportDetailNo',text.reportno);
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
-  };
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -110,45 +86,25 @@ class CancelForEntrustment extends PureComponent {
       type: 'entrustment/fetch',
       payload: params,
     });
+  };
 
-  }
-
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch,form } = this.props;
-    const { formValues } = this.state;
-    form.validateFields((err, fieldsValue) => {
-
-      console.log(err);
-      const filters = Object.keys(filtersArg).reduce((obj, key) => {
-        const newObj = { ...obj };
-        newObj[key] = getValue(filtersArg[key]);
-        return newObj;
-      }, {});
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      //console.log(formValues);
-      const params = {
-        currentPage: pagination.current,
-        pageSize: pagination.pageSize,
-        certCode:user.certCode,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-        ...formValues,
-        ...filters,
-      };
-      if (sorter.field) {
-        params.sorter = `${sorter.field}_${sorter.order}`;
-      }
-
-      dispatch({
-        type: 'entrustment/fetch',
-        payload: params,
-      });
+  previewItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    localStorage.setItem('reportDetailNo',text.reportno);
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
     });
   };
 
-
+  copyItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    router.push({
+      pathname:'/Entrustment/copyForEntrustment',
+    });
+  };
 
   handleFormReset = () => {
+
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const params = {
       certCode:user.certCode
@@ -166,7 +122,9 @@ class CancelForEntrustment extends PureComponent {
   };
 
 
+
   handleSearch = e => {
+
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
@@ -207,7 +165,6 @@ class CancelForEntrustment extends PureComponent {
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
                   <Option value="applicant">委托人</Option>
-                  <Option value="agent">代理人</Option>
                   <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
                 </Select>
@@ -235,33 +192,7 @@ class CancelForEntrustment extends PureComponent {
     );
   }
 
-// eslint-disable-next-line react/sort-comp
-  ModalhandleOk = () => {
-    const { reportNo } = this.state;
-    const { dispatch} = this.props;
-    dispatch({
-      type: 'entrustment/remove',
-      payload: {
-        reportno: reportNo,
-      },
-      callback: () => {
-        message.success('撤销成功');
-        dispatch({
-          type: 'entrustment/fetch',
-        });
-      },
-    });
-    this.setState({
-      visible: false,
-    });
 
-  };
-
-  ModalhandleCancel = () => {
-    this.setState({
-      visible: false,
-    });
-  };
 
 
   render() {
@@ -269,30 +200,19 @@ class CancelForEntrustment extends PureComponent {
       entrustment: {data},
       loading,
     } = this.props;
-    const { selectedRows,visible,reportNo} = this.state;
-
+    const { selectedRows, } = this.state;
     return (
-      <PageHeaderWrapper title="撤销委托">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+      <PageHeaderWrapper>
+        <Card size='small' bordered={false}>
+          <div>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <Modal
-              title="确认"
-              visible={visible}
-              reportNo={reportNo}
-              onOk={this.ModalhandleOk}
-              onCancel={this.ModalhandleCancel}
-            >
-              <p>是否撤销</p>
-            </Modal>
             <Table
-              //selectedRows={selectedRows}
+              size="middle"
               loading={loading}
+              rowKey='reportno'
               dataSource={data.list}
               columns={this.columns}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
-              //onSelectRow={this.handleSelectRows}
-              //onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>
@@ -301,4 +221,4 @@ class CancelForEntrustment extends PureComponent {
   }
 }
 
-export default CancelForEntrustment;
+export default CopyForEntrustmentList;

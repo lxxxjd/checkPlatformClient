@@ -107,7 +107,7 @@ class SubEntrustment extends PureComponent {
     sessionStorage.setItem('applicant',text.applicant);
     sessionStorage.setItem('inspway',text.inspway)
     router.push({
-      pathname:'/BusinessTransfer/DetailForSub',
+      pathname:'/Entrustment/DetailForSub',
     });
   };
   previewItem = text => {

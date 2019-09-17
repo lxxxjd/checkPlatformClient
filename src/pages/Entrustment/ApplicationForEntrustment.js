@@ -96,6 +96,7 @@ const fieldLabels = {
   city: '市',
   area:'区' ,
   harbour: '港',
+  reportno20:'自编号',
   inspway: '申请项目',
   inspwaymemo1: '检验备注',
   certstyle: '证书要求',
@@ -377,7 +378,7 @@ class ApplicationForEntrustment extends PureComponent {
             </Col>
           </Row>
         </Card>
-        <Card title="申请信息" className={styles.card} bordered={false}>
+        <Card title="业务信息" className={styles.card} bordered={false}>
           <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
               <Col span={10}>
@@ -602,7 +603,19 @@ class ApplicationForEntrustment extends PureComponent {
                   })(<Cascader options={options} placeholder="请选择证书要求" />)}
                 </Form.Item>
               </Col>
-              <Col span={14}  >
+              <Col span={4}>
+                <Form.Item
+                  label={fieldLabels.reportno20}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
+                  colon={false}
+                >
+                  {getFieldDecorator('reportno20', {
+                    rules: [{ required: true, message: '自编号' }],
+                  })(<Input placeholder="自编号"/>)}
+                </Form.Item>
+              </Col>
+              <Col span={10}  >
                 <Form.Item
                   label={fieldLabels.businesssort}
                   labelCol={{ span: 3 }}
@@ -622,7 +635,7 @@ class ApplicationForEntrustment extends PureComponent {
             </Row>
           </Form>
         </Card>
-        <Card title="货物信息" className={styles.card} bordered={false}>
+        <Card title="检查对象" className={styles.card} bordered={false}>
           <Form hideRequiredMark labelAlign="left">
             <Row gutter={16}>
               <Col span={8}  >
@@ -831,7 +844,7 @@ class ApplicationForEntrustment extends PureComponent {
             </Row>
           </Form>
         </Card>
-        <Card title="检验要求" className={styles.card} bordered={false}>
+        <Card title="检查项目" className={styles.card} bordered={false}>
           <Form hideRequiredMark labelAlign="left">
             <Row>
               <Col span={24}>

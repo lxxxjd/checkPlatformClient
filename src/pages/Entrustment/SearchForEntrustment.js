@@ -68,11 +68,9 @@ class SearchForEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>复制</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
