@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Card, Divider ,Descriptions,Row, Col,  Button,Typography ,Modal} from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForEntrustment.less';
-
+import moment from 'moment'
 const { Title } = Typography;
 @connect(({ entrustment, loading }) => ({
   entrustment,
@@ -72,7 +72,7 @@ class DetailForEnturstment extends Component {
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions  size="large" title="业务信息" style={{ marginBottom: 32 }} bordered>
             <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
-            <Descriptions.Item label="委托日期">{report.reportdate}</Descriptions.Item>
+            <Descriptions.Item label="委托日期">{moment(report.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
             <Descriptions.Item label="检验费">{report.price}</Descriptions.Item>
             <Descriptions.Item label="申请人">{report.applicant}</Descriptions.Item>
             <Descriptions.Item label="联系人">{report.applicantname}</Descriptions.Item>
@@ -88,17 +88,13 @@ class DetailForEnturstment extends Component {
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="检查对象" style={{ marginBottom: 32 }} bordered>
-            <Descriptions.Item label="运输工具">{report.shipname}</Descriptions.Item>
-            <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
-            <Descriptions.Item label="检验时间">{report.inspdate}</Descriptions.Item>
-            <Descriptions.Item label="现场联系方式">{report.insplinkway}</Descriptions.Item>
             <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
-            <Descriptions.Item label="申报数量">{report.quantityd+report.unit}</Descriptions.Item>
             <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
-            <Descriptions.Item label="英文俗名">{report.englishlocalname}</Descriptions.Item>
-            <Descriptions.Item label="HS编码">{report.remark}</Descriptions.Item>
+            <Descriptions.Item label="运输工具">{report.shipname}</Descriptions.Item>
+            <Descriptions.Item label="申报数量和单位">{report.quantityd+report.unit}</Descriptions.Item>
+            <Descriptions.Item label="检验时间">{report.inspdate}</Descriptions.Item>
+            <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
             <Descriptions.Item label="到达地点">{report.inspplace1}</Descriptions.Item>
-            <Descriptions.Item label="HS名称">{report.remark}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="检查项目" style={{ marginBottom: 32 }} bordered >
