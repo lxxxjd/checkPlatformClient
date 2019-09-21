@@ -112,7 +112,7 @@ class SampleDetail extends PureComponent {
   handleCancel = () =>{
     this.setState({ addOne: false });
     this.setState({ addMany: false });
-    this.setState({ onDelete: false });  
+    this.setState({ onDelete: false });
   };
 
   showAddOne = () => {
@@ -151,7 +151,7 @@ class SampleDetail extends PureComponent {
       }
     });
     this.setState({selectedRowKeys:[]});
-  };  
+  };
   showDelete = () => {
     this.setState({ onDelete: true });
     this.setState({deleteRowKeys:[]});
@@ -258,8 +258,8 @@ class SampleDetail extends PureComponent {
     const sampleno = sessionStorage.getItem('sampleno');
     const cargonameC = sessionStorage.getItem('cargoname');
     const {selectedRowKeys} = this.state;
-    const { 
-      dispatch ,    
+    const {
+      dispatch ,
       inspectionAnalysis: {items},
     } = this.props;
     dispatch({
@@ -315,7 +315,7 @@ class SampleDetail extends PureComponent {
     return (
       <PageHeaderWrapper title="样品结果登记">
         <Card bordered={false}>
-            <Row>
+          <Row>
             <Col sm={5}>
               <span level={4}> 委托编号：{reportno} </span>
             </Col>
@@ -330,7 +330,7 @@ class SampleDetail extends PureComponent {
                 <Icon type="left" />
                 返回
               </Button>
-            </Col>  
+            </Col>
           </Row>
           <div className={styles.tableList}>
             <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddOne}>单项添加</Button>
@@ -350,7 +350,7 @@ class SampleDetail extends PureComponent {
                 visible={addOne}
                 onOk={this.onAddOne}
                 onCancel={this.handleCancel}
-              > 
+              >
                 <Form>
                   <Form.Item label="指标名称">
                     {getFieldDecorator('itemC', {
@@ -388,7 +388,7 @@ class SampleDetail extends PureComponent {
                 visible={addMany}
                 onOk={this.addMany}
                 onCancel={this.handleCancel}
-              >               
+              >
                 <Table
                   rowKey="keyno"
                   loading={loading}
@@ -403,7 +403,7 @@ class SampleDetail extends PureComponent {
                 visible={onDelete}
                 onOk={this.delete}
                 onCancel={this.handleCancel}
-              > 
+              >
                 <Table
                   rowKey="keyno"
                   loading={loading}

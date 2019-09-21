@@ -45,6 +45,7 @@ const PageHeaderWrapper = ({
   logo,
   extraContent,
   hiddenBreadcrumb,
+  text,
   ...restProps
 }) => {
   return (
@@ -62,6 +63,7 @@ const PageHeaderWrapper = ({
                 conversionBreadcrumbList({
                   ...value,
                   ...restProps,
+                  text,
                   home: <FormattedMessage id="menu.home" defaultMessage="Home" />,
                 })
               }

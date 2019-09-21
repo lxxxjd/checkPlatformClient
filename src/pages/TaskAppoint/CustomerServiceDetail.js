@@ -10,11 +10,11 @@ import {
   Input,
   Button,
   Select,
-  Table, message,Modal
+  Table, message, Modal, Icon,
 
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CustomerServiceDetail.less';
+import styles from '../table.less';
 import task from './models/task';
 
 
@@ -388,6 +388,8 @@ class CustomerServiceDetail extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.save}>保存</Button>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.back}>返回</Button>
             </span>
           </Col>
         </Row>
@@ -428,56 +430,32 @@ class CustomerServiceDetail extends PureComponent {
       handleModalVisible: this.handleModalVisible,
     };
 
+    const reprotText= {
+      reportno:reportinfo.reportno,
+      applicant:reportinfo.applicant,
+      shipname:reportinfo.shipname,
+    };
 
     return (
 
-      <PageHeaderWrapper title="指派编辑">
-
-        <div className={styles.standardList}>
-          <Card bordered={false}>
-          <Row gutter={16}>
-            <Col span={2}>
-              <Button type="primary" onClick={this.save}>保存</Button>
-            </Col>
-            <Col span={2}>
-              <Button type="primary" onClick={this.back}>返回</Button>
-            </Col>
-            <Col span={10} />
-          </Row>
+      <div>
+        <PageHeaderWrapper text={reprotText}>2</PageHeaderWrapper>
+        <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
+        <Card size="small" bordered={false}>
+          <div>
+            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <Table
+              size="middle"
+              rowKey="inspman"
+              loading={loading}
+              dataSource={taskCustomers.list}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              columns={this.columns}
+              rowSelection={rowSelection}
+            />
+          </div>
         </Card>
-
-          <Card bordered={false}>
-            <Row>
-              <Col sm={8} xs={24}>
-                <Info title="委托编号" value={reportinfo.reportno} bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="委托人" value={reportinfo.applicant} bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="运输工具" value={reportinfo.shipname} />
-              </Col>
-            </Row>
-          </Card>
-
-          <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
-
-          <Card bordered={false} style={{ marginTop: 24 }}>
-            <div className={styles.tableList}>
-              <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-              <Table
-                rowKey="inspman"
-                loading={loading}
-                dataSource={taskCustomers.list}
-                pagination={{showQuickJumper:true,showSizeChanger:true}}
-                columns={this.columns}
-                rowSelection={rowSelection}
-              />
-            </div>
-          </Card>
-
-        </div>
-      </PageHeaderWrapper>
+      </div>
     );
   }
 }
