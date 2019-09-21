@@ -273,7 +273,7 @@ class CancelForEntrustment extends PureComponent {
 
     return (
       <PageHeaderWrapper title="撤销委托">
-        <Card bordered={false}>
+        <Card bordered={false}               size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Modal
@@ -287,6 +287,7 @@ class CancelForEntrustment extends PureComponent {
             </Modal>
             <Table
               //selectedRows={selectedRows}
+              size="middle"
               loading={loading}
               dataSource={data.list}
               columns={this.columns}
