@@ -169,9 +169,7 @@ class DetailForSub extends PureComponent {
     }
   };
   back = () =>{
-    router.push({
-      pathname:'/Entrustment/SubEntrustment',
-    });
+    this.props.history.goBack();
   };
   render() {
     const {
@@ -255,7 +253,7 @@ class DetailForSub extends PureComponent {
             </Form.Item>
           </Form>
         </Modal>
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <Row>
             <Col span={5}>
               <span level={4}> 委托编号：{reportno} </span>
@@ -274,6 +272,7 @@ class DetailForSub extends PureComponent {
           <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               loading={loading}
               dataSource={TestInfo}
               columns={this.columns}

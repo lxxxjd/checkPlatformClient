@@ -60,7 +60,7 @@ class ResultUpdateDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
+          <a onClick={() => this.modifyItem(text, record)}>录入</a>
         </Fragment>
       ),
     },
@@ -80,9 +80,7 @@ class ResultUpdateDetail extends PureComponent {
   }
 
   back = () =>{
-    router.push({
-      pathname:'/InspectionAnalysis/ResultUpdate',
-    });
+    this.props.history.goBack();
   };
 
   handleOk = () => {
@@ -136,7 +134,7 @@ class ResultUpdateDetail extends PureComponent {
     const shipname = sessionStorage.getItem('shipname');
     return (
       <PageHeaderWrapper title="样品结果登记">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
             <Row>
             <Col sm={5}>
               <span level={4}> 委托编号：{reportno} </span>
@@ -153,6 +151,7 @@ class ResultUpdateDetail extends PureComponent {
           </Row>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               loading={loading}
               dataSource={detail}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

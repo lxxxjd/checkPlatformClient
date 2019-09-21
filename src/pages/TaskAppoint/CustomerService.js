@@ -238,8 +238,8 @@ class CustomerService extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="客服指派">
-        <Card size='small' bordered={false}>
-          <div>
+        <Card bordered={false}  size="small">
+          <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"

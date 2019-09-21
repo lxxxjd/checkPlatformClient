@@ -14,7 +14,7 @@ import {
   Radio,Popconfirm
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SampleDestory.less';
+import styles from '../table.less';
 
 
 
@@ -261,29 +261,20 @@ class SampleDestory extends PureComponent {
     } = this.props;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Card bordered={false} className={styles.searchBut}>
+        <Card bordered={false} size="small">
           <Row gutter={16}>
-            <Col span={2}>
+            <Col span={24}>
               <Button type="primary" onClick={this.destoryExist}>销毁</Button>
-            </Col>
-            <Col span={2}>
-              <Button type="primary" onClick={this.undestory}>未销毁</Button>
-            </Col>
-            <Col span={2}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.undestory}>未销毁</Button>
+              <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">
                 查询
               </Button>
-            </Col>
-            <Col span={2}>
-              <Button onClick={this.handleFormReset}>
+              <Button onClick={this.handleFormReset} style={{ marginLeft: 8 }}> 
                 重置
               </Button>
             </Col>
-          </Row>
+        </Row>
         </Card>
-
-
-
         <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
           <Col md={3} sm={20}>
             <Form.Item
@@ -496,11 +487,11 @@ class SampleDestory extends PureComponent {
 
     return (
       <PageHeaderWrapper title="样品查询">
-
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowKey="sampleno"
               loading={loading}
               dataSource={dataSource}

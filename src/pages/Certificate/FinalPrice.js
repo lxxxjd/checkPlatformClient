@@ -13,7 +13,7 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './FinalPrice.less';
+import styles from '../table.less';
 
 
 const FormItem = Form.Item;
@@ -207,10 +207,11 @@ class FinalPrice extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="样品指标">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

@@ -17,7 +17,7 @@ import {
   Radio
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './InspectionArrangement.less';
+import styles from '../table.less';
 import moment from 'moment'
 const CheckboxGroup = Checkbox.Group;
 const FormItem = Form.Item;
@@ -153,10 +153,11 @@ class InspectionArrangement extends PureComponent {
     const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="检验安排">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm></SearchForm></div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={samples.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

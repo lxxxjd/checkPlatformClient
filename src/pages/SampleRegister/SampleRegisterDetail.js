@@ -15,6 +15,7 @@ import {
   Radio,
   Table,
   DatePicker, message,
+  Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SampleRegisterDetail.less';
@@ -160,10 +161,8 @@ class SampleRegisterDetail extends PureComponent {
   };
 
 
-  back = () => {
-    router.push({
-      pathname:'/SampleRegister/SampleRegister',
-    });
+  back = () =>{
+    this.props.history.goBack();
   };
 
 
@@ -281,18 +280,19 @@ class SampleRegisterDetail extends PureComponent {
         </Modal>
         <Card bordered={false}>
           <Row gutter={16}>
-            <Col span={2}>
+            <Col span={22}>
               <Button type="primary" onClick={this.show}>新建</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" onClick={this.back}>返回</Button>
-            </Col>
-            <Col span={5}/>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </Col> 
           </Row>
-        </Card>
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+          <div className={styles.tableList} size="small">
             <Table
+              size="middle"
               loading={loading}
               dataSource={sampleDetail.list}
               columns={this.columns}

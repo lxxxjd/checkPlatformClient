@@ -30,7 +30,7 @@ const { Option } = Select;
 }))
 
 @Form.create()
-class SampleDetail extends PureComponent {
+class SampleModify extends PureComponent {
   state = {
     formValues: {},
     addOne:false,
@@ -42,7 +42,24 @@ class SampleDetail extends PureComponent {
     standard:[],
     itemName: [],
   };
-
+  columns1 = [
+    {
+      title: '指标名称',
+      dataIndex: 'itemC',
+    },
+    {
+      title: '英文名称',
+      dataIndex: 'itemE',
+    },
+    {
+      title: '检测标准',
+      dataIndex: 'standard',
+    },
+    {
+      title: '单位',
+      dataIndex: 'unit',
+    },
+  ];
   columns = [
     {
       title: '指标名称',
@@ -76,6 +93,16 @@ class SampleDetail extends PureComponent {
     });
   }
 
+  save = () =>{
+    // const {
+    //   inspectionAnalysis: {items},
+    // } = this.props;
+
+    // var data = [];
+    // for( item in items){
+    //   if(item.keyno )
+    // }
+  };
   back = () =>{
     router.push({
       pathname:'/InspectionAnalysis/SampleIndex',
@@ -85,7 +112,7 @@ class SampleDetail extends PureComponent {
   handleCancel = () =>{
     this.setState({ addOne: false });
     this.setState({ addMany: false });
-    this.setState({ onDelete: false });
+    this.setState({ onDelete: false });  
   };
 
   showAddOne = () => {
@@ -124,7 +151,7 @@ class SampleDetail extends PureComponent {
       }
     });
     this.setState({selectedRowKeys:[]});
-  };
+  };  
   showDelete = () => {
     this.setState({ onDelete: true });
     this.setState({deleteRowKeys:[]});
@@ -231,8 +258,8 @@ class SampleDetail extends PureComponent {
     const sampleno = sessionStorage.getItem('sampleno');
     const cargonameC = sessionStorage.getItem('cargoname');
     const {selectedRowKeys} = this.state;
-    const {
-      dispatch ,
+    const { 
+      dispatch ,    
       inspectionAnalysis: {items},
     } = this.props;
     dispatch({
@@ -264,7 +291,6 @@ class SampleDetail extends PureComponent {
       }
     });
     this.setState({ addMany: false });
-    this.props.history.goBack();
   };
   render() {
     const {
@@ -272,12 +298,23 @@ class SampleDetail extends PureComponent {
       loading,
       form: { getFieldDecorator },
     } = this.props;
+    const {addMany,addOne,onDelete,selectedRowKeys,standard,itemName,deleteRowKeys} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const cargoname = sessionStorage.getItem('cargoname');
     const sampleno = sessionStorage.getItem('sampleno');
+    const standardOptions = standard.map(d => <Option key={d} value={d}>{d}</Option>);
+    const itemNameOptions = itemName.map(d => <Option key={d} value={d}>{d}</Option>);
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
+    const rowDeteleSelection = {
+      deleteRowKeys,
+      onChange: this.onDeleteChange,
+    };
     return (
       <PageHeaderWrapper title="样品结果登记">
-        <Card bordered={false} size="small">
+        <Card bordered={false}>
             <Row>
             <Col sm={5}>
               <span level={4}> 委托编号：{reportno} </span>
@@ -293,9 +330,12 @@ class SampleDetail extends PureComponent {
                 <Icon type="left" />
                 返回
               </Button>
-            </Col>
+            </Col>  
           </Row>
           <div className={styles.tableList}>
+            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddMany}>批量添加</Button>
+            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showDelete}>批量删除</Button>
+            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.show}>导入</Button>
             <Table
               size='middle'
               loading={loading}
@@ -310,7 +350,7 @@ class SampleDetail extends PureComponent {
                 visible={addOne}
                 onOk={this.onAddOne}
                 onCancel={this.handleCancel}
-              >
+              > 
                 <Form>
                   <Form.Item label="指标名称">
                     {getFieldDecorator('itemC', {
@@ -348,8 +388,9 @@ class SampleDetail extends PureComponent {
                 visible={addMany}
                 onOk={this.addMany}
                 onCancel={this.handleCancel}
-              >
+              >               
                 <Table
+                  size='middle'
                   rowKey="keyno"
                   loading={loading}
                   dataSource={items}
@@ -363,8 +404,9 @@ class SampleDetail extends PureComponent {
                 visible={onDelete}
                 onOk={this.delete}
                 onCancel={this.handleCancel}
-              >
+              > 
                 <Table
+                  size='middle'
                   rowKey="keyno"
                   loading={loading}
                   dataSource={detail}
@@ -373,12 +415,10 @@ class SampleDetail extends PureComponent {
                   rowSelection={rowDeteleSelection}
                 />
               </Modal>
-=======
->>>>>>> 6332d3fe16afd16431cc063c79698e9c2ed5b63e
         </Card>
       </PageHeaderWrapper>
     );
   }
 }
 
-export default SampleDetail;
+export default SampleModify;

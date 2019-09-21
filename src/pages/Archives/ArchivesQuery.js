@@ -14,7 +14,7 @@ import {
   Table,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ArchivesQuery.less';
+import styles from '../table.less';
 
 
 
@@ -194,10 +194,11 @@ class ArchivesQuery extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper>
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowKey="reportno"
               loading={loading}
               dataSource={data}

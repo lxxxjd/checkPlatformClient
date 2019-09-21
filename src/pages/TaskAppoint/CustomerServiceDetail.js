@@ -11,7 +11,6 @@ import {
   Button,
   Select,
   Table, message, Modal, Icon,
-
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -190,9 +189,7 @@ class CustomerServiceDetail extends PureComponent {
 
 
   back = () => {
-    router.push({
-      pathname:'/TaskAppoint/CustomerService',
-    });
+    this.props.history.goBack();
   };
 
   save = () => {
@@ -267,7 +264,7 @@ class CustomerServiceDetail extends PureComponent {
         }
       }
     });
-  }
+  };
 
   handleFormReset = () => {
     this.init();
@@ -296,12 +293,12 @@ class CustomerServiceDetail extends PureComponent {
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
-  }
+  };
 
   handleEdit = (flag,text) => {
     this.handleModalVisible(flag);
     this.state.modalInfo = text;
-  }
+  };
 
   handleModalVisible = (flag) => {
     this.setState({
@@ -437,25 +434,25 @@ class CustomerServiceDetail extends PureComponent {
     };
 
     return (
-
-      <div>
-        <PageHeaderWrapper text={reprotText}>2</PageHeaderWrapper>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
-        <Card size="small" bordered={false}>
-          <div>
-            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <Table
-              size="middle"
-              rowKey="inspman"
-              loading={loading}
-              dataSource={taskCustomers.list}
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
-              columns={this.columns}
-              rowSelection={rowSelection}
-            />
-          </div>
-        </Card>
-      </div>
+      <PageHeaderWrapper text={reprotText}>
+        <div>
+          <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
+          <Card bordered={false} style={{ marginTop: 24 }} size="small">
+            <div className={styles.tableList}>
+              <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+              <Table
+                size="middle"
+                rowKey="inspman"
+                loading={loading}
+                dataSource={taskCustomers.list}
+                pagination={{showQuickJumper:true,showSizeChanger:true}}
+                columns={this.columns}
+                rowSelection={rowSelection}
+              />
+            </div>
+          </Card>
+        </div>
+      </PageHeaderWrapper>
     );
   }
 }

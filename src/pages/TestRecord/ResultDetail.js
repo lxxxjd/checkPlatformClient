@@ -15,7 +15,8 @@ import {
   Radio,
   Table,
   DatePicker,
-  notification
+  notification,
+  Icon
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultDetail.less';
@@ -112,7 +113,10 @@ class ResultDetail extends PureComponent {
         }
       }
     });
-  }
+  };
+  back = () =>{
+    this.props.history.goBack();
+  };
   handleOk = () =>{
     const {
       form: { validateFieldsAndScroll },
@@ -251,19 +255,26 @@ class ResultDetail extends PureComponent {
             </Form.Item>
           </Form>
         </Modal>
-        <Card bordered={false}>
-            <Row>
-            <Col sm={5} xs={24}>
+        <Card bordered={false} size="small">
+          <Row>
+            <Col span={5}>
               <span level={4} > 委托编号：{reportno} </span>
             </Col>
-            <Col sm={8} xs={24}>
+            <Col span={17}>
               <span> 运输工具：{shipname} </span>
             </Col>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </Col> 
           </Row>
           <br></br>
           <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               loading={loading}
               dataSource={inspwayData}
               columns={this.columns}

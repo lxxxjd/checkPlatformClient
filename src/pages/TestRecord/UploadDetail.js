@@ -414,9 +414,11 @@ class UploadDetail extends PureComponent {
         }
       }
     });
-  }
+  };
 
-
+  back = () =>{
+    this.props.history.goBack();
+  };
 
   render() {
     const uploadButton = (
@@ -485,14 +487,20 @@ class UploadDetail extends PureComponent {
 
         <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
 
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <Row>
-            <Col sm={5} xs={24}>
-              <span level={4}> 委托编号：{reportno} </span>
+            <Col span={5}>
+              <span level={4} > 委托编号：{reportno} </span>
             </Col>
-            <Col sm={8} xs={24}>
+            <Col span={17}>
               <span> 运输工具：{shipname} </span>
             </Col>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </Col> 
           </Row>
           <br />
           <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
@@ -501,6 +509,7 @@ class UploadDetail extends PureComponent {
           <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>工作目录</Button>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               loading={loading}
               dataSource={recordData}
               columns={this.columns}

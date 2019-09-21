@@ -13,7 +13,7 @@ import {
   Table, message, Modal, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './Invoice.less';
+import styles from '../table.less';
 
 const { Option } = Select;
 
@@ -382,10 +382,11 @@ class Invoice extends PureComponent {
 
     return (
       <PageHeaderWrapper title="发票开具">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data}
               columns={this.columns}
