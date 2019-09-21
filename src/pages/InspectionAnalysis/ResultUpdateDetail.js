@@ -60,7 +60,7 @@ class ResultUpdateDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
+          <a onClick={() => this.modifyItem(text, record)}>录入</a>
         </Fragment>
       ),
     },

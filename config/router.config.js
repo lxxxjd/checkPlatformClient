@@ -226,6 +226,35 @@ export default [
           },
         ],
       },
+            // SampleRegister
+      {
+        path: '/SampleRegister',
+        icon: 'profile',
+        name: 'SampleRegister',
+        routes: [
+          {
+            path: '/SampleRegister/SampleRegister',
+            name: 'SampleRegister',
+            component: './SampleRegister/SampleRegister',
+          },
+          {
+            path: '/SampleRegister/SampleQuery',
+            name: 'SampleQuery',
+            component: './SampleRegister/SampleQuery',
+          },
+          {
+            path: '/SampleRegister/SampleDestory',
+            name: 'SampleDestory',
+            component: './SampleRegister/SampleDestory',
+          },
+          {
+            path: '/SampleRegister/SampleRegisterDetail',
+            name: 'SampleRegisterDetail',
+            component: './SampleRegister/SampleRegisterDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+        ],
+      },
       // {
       //   path: '/UEditor',
       //   icon: 'table',
@@ -266,6 +295,12 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
+            path: '/InspectionAnalysis/SampleModify',
+            name: 'SampleModify',
+            component: './InspectionAnalysis/SampleModify',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
             path: '/InspectionAnalysis/ResultUpdate',
             name: 'ResultUpdate',
             component: './InspectionAnalysis/ResultUpdate',
@@ -274,36 +309,6 @@ export default [
             path: '/InspectionAnalysis/ResultUpdateDetail',
             name: 'ResultUpdateDetail',
             component: './InspectionAnalysis/ResultUpdateDetail',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-        ],
-      },
-
-      // SampleRegister
-      {
-        path: '/SampleRegister',
-        icon: 'profile',
-        name: 'SampleRegister',
-        routes: [
-          {
-            path: '/SampleRegister/SampleRegister',
-            name: 'SampleRegister',
-            component: './SampleRegister/SampleRegister',
-          },
-          {
-            path: '/SampleRegister/SampleQuery',
-            name: 'SampleQuery',
-            component: './SampleRegister/SampleQuery',
-          },
-          {
-            path: '/SampleRegister/SampleDestory',
-            name: 'SampleDestory',
-            component: './SampleRegister/SampleDestory',
-          },
-          {
-            path: '/SampleRegister/SampleRegisterDetail',
-            name: 'SampleRegisterDetail',
-            component: './SampleRegister/SampleRegisterDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],

@@ -72,7 +72,7 @@ class SampleIndex extends PureComponent {
         <Fragment>
           <a onClick={() => this.mobileItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.mobileItem(text, record)}>详情</a>
+          <a onClick={() => this.detailItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -104,10 +104,17 @@ class SampleIndex extends PureComponent {
     sessionStorage.setItem('sampleno',text.sampleno);
     sessionStorage.setItem('cargoname',text.cargoname);
     router.push({
+      pathname:'/InspectionAnalysis/SampleModify',
+    });
+  };
+  detailItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('sampleno',text.sampleno);
+    sessionStorage.setItem('cargoname',text.cargoname);
+    router.push({
       pathname:'/InspectionAnalysis/SampleDetail',
     });
   };
-
   render() {
     const {
       inspectionAnalysis: {samples},

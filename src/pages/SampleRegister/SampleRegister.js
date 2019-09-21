@@ -114,7 +114,7 @@ class SampleRegister extends PureComponent {
       type: 'sample/getSampleRegister',
       payload: params,
     });
-  }
+  };
 
 
 
@@ -189,9 +189,6 @@ class SampleRegister extends PureComponent {
       </Form>
     );
   }
-
-
-
 
   render() {
     const {
