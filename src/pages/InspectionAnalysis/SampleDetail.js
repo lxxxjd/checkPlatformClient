@@ -77,15 +77,6 @@ class SampleDetail extends PureComponent {
       title: '单位',
       dataIndex: 'unit',
     },
-    {
-      title: '操作',
-      render: (text, record) => (
-        <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
-          &nbsp;&nbsp;
-        </Fragment>
-      ),
-    },
   ];
 
 

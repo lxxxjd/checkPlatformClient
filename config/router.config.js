@@ -91,6 +91,33 @@ export default [
             component: "./Entrustment/CopyForEntrustment",
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: "/Entrustment/CopyForEntrustmentList",
+            name: "CopyForEntrustmentList",
+            component: "./Entrustment/CopyForEntrustmentList",
+          },
+          {
+            path: '/Entrustment/SubEntrustment',
+            name: 'SubEntrustment',
+            component: './Entrustment/SubEntrustment',
+          },
+          {
+            path: '/Entrustment/EntrustmentRelevance',
+            name: 'EntrustmentRelevance',
+            component: './Entrustment/EntrustmentRelevance',
+          },
+          {
+            path: '/Entrustment/DetailForSub',
+            name: 'DetailForSub',
+            component: './Entrustment/DetailForSub',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: '/Entrustment/ModifyRelevance',
+            name: 'ModifyRelevance',
+            component: './Entrustment/ModifyRelevance',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 
@@ -140,35 +167,35 @@ export default [
         ],
       },
       //BusinessTransfer
-      {
-        path: '/BusinessTransfer',
-        icon: 'dashboard',
-        name: 'BusinessTransfer',
-        routes: [
-          {
-            path: '/BusinessTransfer/SubEntrustment',
-            name: 'SubEntrustment',
-            component: './BusinessTransfer/SubEntrustment',
-          },
-          {
-            path: '/BusinessTransfer/EntrustmentRelevance',
-            name: 'EntrustmentRelevance',
-            component: './BusinessTransfer/EntrustmentRelevance',
-          },
-          {
-            path: '/BusinessTransfer/DetailForSub',
-            name: 'DetailForSub',
-            component: './BusinessTransfer/DetailForSub',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-          {
-            path: '/BusinessTransfer/ModifyRelevance',
-            name: 'ModifyRelevance',
-            component: './BusinessTransfer/ModifyRelevance',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-        ],
-      },
+      // {
+      //   path: '/BusinessTransfer',
+      //   icon: 'dashboard',
+      //   name: 'BusinessTransfer',
+      //   routes: [
+      //     {
+      //       path: '/BusinessTransfer/SubEntrustment',
+      //       name: 'SubEntrustment',
+      //       component: './BusinessTransfer/SubEntrustment',
+      //     },
+      //     {
+      //       path: '/BusinessTransfer/EntrustmentRelevance',
+      //       name: 'EntrustmentRelevance',
+      //       component: './BusinessTransfer/EntrustmentRelevance',
+      //     },
+      //     {
+      //       path: '/BusinessTransfer/DetailForSub',
+      //       name: 'DetailForSub',
+      //       component: './BusinessTransfer/DetailForSub',
+      //       hideInMenu: 'true',//添加页不需要在menu上显示
+      //     },
+      //     {
+      //       path: '/BusinessTransfer/ModifyRelevance',
+      //       name: 'ModifyRelevance',
+      //       component: './BusinessTransfer/ModifyRelevance',
+      //       hideInMenu: 'true',//添加页不需要在menu上显示
+      //     },
+      //   ],
+      // },
       //
       {
         path: '/TestRecord',

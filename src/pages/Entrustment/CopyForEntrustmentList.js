@@ -34,7 +34,7 @@ const getValue = obj =>
 }))
 
 @Form.create()
-class SearchForEntrustment extends PureComponent {
+class CopyForEntrustmentList extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
@@ -68,14 +68,13 @@ class SearchForEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
+          <a onClick={() => this.copyItem(text, record)}>复制</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
   ];
-
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -87,39 +86,6 @@ class SearchForEntrustment extends PureComponent {
       type: 'entrustment/fetch',
       payload: params,
     });
-  }
-
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch,form } = this.props;
-    const { formValues } = this.state;
-    form.validateFields((err, fieldsValue) => {
-
-      console.log(err);
-      const filters = Object.keys(filtersArg).reduce((obj, key) => {
-        const newObj = { ...obj };
-        newObj[key] = getValue(filtersArg[key]);
-        return newObj;
-      }, {});
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const params = {
-        currentPage: pagination.current,
-        pageSize: pagination.pageSize,
-        certCode:user.certCode,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-        ...formValues,
-        ...filters,
-      };
-      if (sorter.field) {
-        params.sorter = `${sorter.field}_${sorter.order}`;
-      }
-
-      dispatch({
-        type: 'entrustment/fetch',
-        payload: params,
-      });
-    });
-
   };
 
   previewItem = text => {
@@ -129,12 +95,7 @@ class SearchForEntrustment extends PureComponent {
       pathname:'/Entrustment/DetailForEntrustment',
     });
   };
-  modifyItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
-    router.push({
-      pathname:'/Entrustment/ModifyForEntrustment',
-    });
-  };
+
   copyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
@@ -247,8 +208,6 @@ class SearchForEntrustment extends PureComponent {
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"
-              className={styles.antTable}
-              rowClassName={styles.antTable2}
               loading={loading}
               rowKey='reportno'
               dataSource={data.list}
@@ -262,4 +221,4 @@ class SearchForEntrustment extends PureComponent {
   }
 }
 
-export default SearchForEntrustment;
+export default CopyForEntrustmentList;

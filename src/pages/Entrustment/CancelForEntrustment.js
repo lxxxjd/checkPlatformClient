@@ -78,6 +78,8 @@ class CancelForEntrustment extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.cancelItem(text, record)}>撤销</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -90,7 +92,13 @@ class CancelForEntrustment extends PureComponent {
       reportNo:text.reportno
     });
   };
-
+  previewItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    localStorage.setItem('reportDetailNo',text.reportno);
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
+    });
+  };
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("userinfo"));
