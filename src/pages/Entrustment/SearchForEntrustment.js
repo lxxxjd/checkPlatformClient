@@ -248,7 +248,7 @@ class SearchForEntrustment extends PureComponent {
           <div>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
-              size="small"
+              size="middle"
               className={styles.antTable}
               rowClassName={styles.antTable2}
               loading={loading}
