@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CustomerService.less';
+import styles from '../../global.less';
 import moment from 'moment'
 
 
@@ -239,13 +239,11 @@ class CustomerService extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="客服指派">
-
-
-
-        <Card bordered={false}>
+        <Card bordered={false}  size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowKey="reportno"
               loading={loading}
               dataSource={data.list}

@@ -462,10 +462,11 @@ class CustomerServiceDetail extends PureComponent {
 
           <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
 
-          <Card bordered={false} style={{ marginTop: 24 }}>
+          <Card bordered={false} style={{ marginTop: 24 }} size="small">
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Table
+                size="middle"
                 rowKey="inspman"
                 loading={loading}
                 dataSource={taskCustomers.list}

@@ -237,7 +237,7 @@ class ModifyRelevance extends PureComponent {
     const shipname = sessionStorage.getItem('shipname');
     return (
       <PageHeaderWrapper>
-        <Card bordered={false} className={styles.card}>
+        <Card bordered={false} className={styles.card}  size="small">
           <Row>
             <Col sm={5}>
               <span level={4}> 委托编号：{reportno} </span>
@@ -271,7 +271,7 @@ class ModifyRelevance extends PureComponent {
             />
           </div>
         </Card>
-        <Card bordered={false} className={styles.card}               size="small">
+        <Card bordered={false} className={styles.card}  size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table

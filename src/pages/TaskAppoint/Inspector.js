@@ -242,13 +242,11 @@ class Inspector extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="检验指派">
-
-
-
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowKey="reportno"
               loading={loading}
               dataSource={dataInspect.list}
