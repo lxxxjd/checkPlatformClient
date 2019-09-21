@@ -262,6 +262,7 @@ class ModifyRelevance extends PureComponent {
           </Row>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               loading={loading}
               columns={this.deleteColumns}
               dataSource={link}
@@ -270,10 +271,11 @@ class ModifyRelevance extends PureComponent {
             />
           </div>
         </Card>
-        <Card bordered={false} className={styles.card}>
+        <Card bordered={false} className={styles.card}               size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowSelection={this.rowSelection}
               loading={loading}
               columns={this.addColumns}

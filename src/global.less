@@ -50,3 +50,31 @@ ol {
     }
   }
 }
+
+
+
+.tableListForm {
+  :global {
+    .ant-form-item {
+      display: flex;
+      margin-right: 0;
+      margin-bottom: 1px;
+      > .ant-form-item-label {
+        width: auto;
+        padding-right: 8px;
+        line-height: 20px;
+      }
+      .ant-form-item-control {
+        line-height: 10px;
+      }
+    }
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+  .submitButtons {
+    display: block;
+    margin-bottom: 5px;
+    white-space: nowrap;
+  }
+}

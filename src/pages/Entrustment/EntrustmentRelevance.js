@@ -13,7 +13,7 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './EntrustmentRelevance.less';
+import styles from './SearchForEntrustment.less';
 import moment from 'moment';
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -221,10 +221,11 @@ class EntrustmentRelevance extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="委托关联">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+        <Card bordered={false}  size="small">
+          <div>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={relevanceData.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

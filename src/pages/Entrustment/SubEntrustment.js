@@ -10,7 +10,7 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SubEntrustment.less';
+import styles from './SearchForEntrustment.less';
 import moment from 'moment'
 import Search from './Search.js'
 
@@ -126,10 +126,11 @@ class SubEntrustment extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="转委托">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm></SearchForm></div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data.list}
               columns={this.columns}
