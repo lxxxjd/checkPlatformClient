@@ -13,7 +13,7 @@ import {
   Table, message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SampleQuery.less';
+import styles from '../table.less';
 
 
 
@@ -372,10 +372,11 @@ class SampleQuery extends PureComponent {
     return (
       <PageHeaderWrapper title="样品查询">
 
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowKey="sampleno"
               loading={loading}
               dataSource={selectRegisterResult.list}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Divider ,Descriptions,Row, Col,  Button,Typography ,Modal} from 'antd';
+import { Card, Divider ,Descriptions,Row, Col,  Button,Typography ,Modal,Icon} from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForEntrustment.less';
 import moment from 'moment'
@@ -47,6 +47,9 @@ class DetailForEnturstment extends Component {
       visible: true,
     });
   };
+  back = () =>{
+    this.props.history.goBack();
+  };
 
   render() {
     const { entrustment = {}, loading } = this.props;
@@ -58,8 +61,14 @@ class DetailForEnturstment extends Component {
             <Col span={3}>
               <Title level={3}>委托详情</Title>
             </Col>
-            <Col span={21}>
+            <Col span={19}>
             </Col>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </Col>  
           </Row>
           <Modal
           title="确认"

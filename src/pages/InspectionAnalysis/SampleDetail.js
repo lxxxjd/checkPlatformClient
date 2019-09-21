@@ -104,9 +104,7 @@ class SampleDetail extends PureComponent {
     // }
   };
   back = () =>{
-    router.push({
-      pathname:'/InspectionAnalysis/SampleIndex',
-    });
+    this.props.history.goBack();
   };
 
   handleCancel = () =>{
@@ -314,7 +312,7 @@ class SampleDetail extends PureComponent {
     };
     return (
       <PageHeaderWrapper title="样品结果登记">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
             <Row>
             <Col sm={5}>
               <span level={4}> 委托编号：{reportno} </span>
@@ -405,6 +403,7 @@ class SampleDetail extends PureComponent {
                 onCancel={this.handleCancel}
               > 
                 <Table
+                  size="middle"
                   rowKey="keyno"
                   loading={loading}
                   dataSource={detail}

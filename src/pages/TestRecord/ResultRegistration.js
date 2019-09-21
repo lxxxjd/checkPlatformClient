@@ -13,7 +13,7 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ResultRegistration.less';
+import styles from '../table.less';
 import moment from 'moment'
 const { Option } = Select;
 
@@ -171,10 +171,11 @@ class ResultRegistration extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="结果登记">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+        <Card bordered={false} size="small">
+          <div className={styles.tableList} >
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data.list}
               columns={this.columns}

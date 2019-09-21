@@ -178,9 +178,7 @@ class ModifyRelevance extends PureComponent {
     });
   };
   back = () =>{
-    router.push({
-      pathname:'/Entrustment/EntrustmentRelevance',
-    });
+    this.props.history.goBack();
   };
   renderSimpleForm() {
     const {

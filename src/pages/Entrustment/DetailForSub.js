@@ -169,9 +169,7 @@ class DetailForSub extends PureComponent {
     }
   };
   back = () =>{
-    router.push({
-      pathname:'/Entrustment/SubEntrustment',
-    });
+    this.props.history.goBack();
   };
   render() {
     const {

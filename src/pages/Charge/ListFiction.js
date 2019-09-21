@@ -13,7 +13,7 @@ import {
   Table, message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ListFiction.less';
+import styles from '../table.less';
 
 const { Option } = Select;
 
@@ -207,10 +207,11 @@ class ListFiction extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper >
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+        <Card bordered={false} size="small">
+          <div className={styles.tableList} >
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data}
               columns={this.columns}

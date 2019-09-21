@@ -13,7 +13,7 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ResultRegistration.less';
+import styles from '../table.less';
 import moment from 'moment';
 const { Option } = Select;
 
@@ -171,11 +171,12 @@ class RecordUpload extends PureComponent {
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="证书上传">
-        <Card bordered={false}>
+      <PageHeaderWrapper title="证书上传" > 
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data.list}
               columns={this.columns}

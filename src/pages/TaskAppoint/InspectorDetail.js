@@ -11,10 +11,10 @@ import {
   Button,
   Select,
   Table, message, Modal, Checkbox,
-
+  Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './InspectorDetail.less';
+import styles from '../table.less';
 import task from './models/task';
 
 
@@ -200,9 +200,7 @@ class InspectorDetail extends PureComponent {
 
 
   back = () => {
-    router.push({
-      pathname:'/TaskAppoint/Inspector',
-    });
+    this.props.history.goBack();
   };
 
   save = () => {
@@ -492,10 +490,13 @@ class InspectorDetail extends PureComponent {
               <Col span={2}>
                 <Button type="primary" onClick={this.save}>保存</Button>
               </Col>
+              <Col span={20} />
               <Col span={2}>
-                <Button type="primary" onClick={this.back}>返回</Button>
-              </Col>
-              <Col span={10} />
+                <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                  <Icon type="left" />
+                  返回
+                </Button>
+              </Col> 
             </Row>
           </Card>
 
@@ -515,10 +516,11 @@ class InspectorDetail extends PureComponent {
 
           <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} checkProject={checkProject} />
 
-          <Card bordered={false} style={{ marginTop: 24 }}>
+          <Card bordered={false} style={{ marginTop: 24 }} size="small">
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Table
+                size="middle"
                 rowKey="inspman"
                 loading={loading}
                 dataSource={taskInspects.list}

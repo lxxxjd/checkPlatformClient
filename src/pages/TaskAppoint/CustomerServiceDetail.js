@@ -10,11 +10,12 @@ import {
   Input,
   Button,
   Select,
-  Table, message,Modal
+  Table, message,Modal,
+  Icon,
 
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CustomerServiceDetail.less';
+import styles from '../table.less';
 import task from './models/task';
 
 
@@ -190,9 +191,7 @@ class CustomerServiceDetail extends PureComponent {
 
 
   back = () => {
-    router.push({
-      pathname:'/TaskAppoint/CustomerService',
-    });
+    this.props.history.goBack();
   };
 
   save = () => {
@@ -267,7 +266,7 @@ class CustomerServiceDetail extends PureComponent {
         }
       }
     });
-  }
+  };
 
   handleFormReset = () => {
     this.init();
@@ -296,12 +295,12 @@ class CustomerServiceDetail extends PureComponent {
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
-  }
+  };
 
   handleEdit = (flag,text) => {
     this.handleModalVisible(flag);
     this.state.modalInfo = text;
-  }
+  };
 
   handleModalVisible = (flag) => {
     this.setState({
@@ -439,10 +438,13 @@ class CustomerServiceDetail extends PureComponent {
             <Col span={2}>
               <Button type="primary" onClick={this.save}>保存</Button>
             </Col>
+            <Col span={20} />
             <Col span={2}>
-              <Button type="primary" onClick={this.back}>返回</Button>
-            </Col>
-            <Col span={10} />
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </Col> 
           </Row>
         </Card>
 

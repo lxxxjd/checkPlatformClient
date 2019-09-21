@@ -13,7 +13,7 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './InspectionArrangement.less';
+import styles from '../table.less';
 import moment from 'moment'
 import Search from './Search.js'
 
@@ -115,10 +115,11 @@ class SampleIndex extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="样品指标">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm></SearchForm></div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={samples.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
