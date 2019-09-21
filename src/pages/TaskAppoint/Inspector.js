@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CustomerService.less';
+import styles from './Inspector.less';
 import moment from 'moment'
 
 

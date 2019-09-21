@@ -12,9 +12,8 @@ import {
   Select,
   Table,
 } from 'antd';
-import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from '../../global.less';
+import styles from '../table.less';
 import moment from 'moment'
 
 
