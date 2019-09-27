@@ -157,6 +157,10 @@ class InspectorDetail extends PureComponent {
       dataIndex: 'tel',
     },
     {
+      title: '住址',
+      dataIndex: 'place',
+    },
+    {
       title: '岗位',
       dataIndex: 'position',
     },
@@ -305,20 +309,9 @@ class InspectorDetail extends PureComponent {
 
   handleSearch = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-      };
-      dispatch({
-        type: 'entrustment/filter',
-        payload: values,
-      });
-    });
+    const taskInspects = [...this.state.taskInspects];
+    this.setState({ taskInspects: taskInspects.filter(item => item.sampleno === "雷华俊") });
+    console.log(taskInspects);
   };
 
 
@@ -416,12 +409,8 @@ class InspectorDetail extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="applicant">委托人</Option>
-                  <Option value="agent">代理人</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-
+                  <Option value="reportno">姓名</Option>
+                  <Option value="applicant">联系人</Option>
                 </Select>
               )}
             </Form.Item>
@@ -440,8 +429,15 @@ class InspectorDetail extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.save}>保存</Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}><Icon type="left" />
+                返回
+              </Button>
             </span>
           </Col>
+
+
+
         </Row>
       </Form>
     );
@@ -456,6 +452,7 @@ class InspectorDetail extends PureComponent {
       loading,
     } = this.props;
 
+    const {taskData} = this.state;
 
     const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"));
     const Info = ({ title, value, bordered }) => (
@@ -479,43 +476,18 @@ class InspectorDetail extends PureComponent {
       handleModalVisible: this.handleModalVisible,
     };
 
+    const reprotText= {
+      reportno:reportinfo.reportno,
+      applicant:reportinfo.applicant,
+      shipname:reportinfo.shipname,
+      inspway:reportinfo.inspway,
+    };
 
     return (
 
-      <PageHeaderWrapper title="指派编辑">
-
+      <PageHeaderWrapper text={reprotText}>
         <div className={styles.standardList}>
-          <Card bordered={false}>
-            <Row gutter={16}>
-              <Col span={2}>
-                <Button type="primary" onClick={this.save}>保存</Button>
-              </Col>
-              <Col span={20} />
-              <Col span={2}>
-                <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                  <Icon type="left" />
-                  返回
-                </Button>
-              </Col> 
-            </Row>
-          </Card>
-
-          <Card bordered={false}>
-            <Row>
-              <Col sm={8} xs={24}>
-                <Info title="委托编号" value={reportinfo.reportno} bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="委托人" value={reportinfo.applicant} bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="运输工具" value={reportinfo.shipname} />
-              </Col>
-            </Row>
-          </Card>
-
           <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} checkProject={checkProject} />
-
           <Card bordered={false} style={{ marginTop: 24 }} size="small">
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
@@ -523,7 +495,7 @@ class InspectorDetail extends PureComponent {
                 size="middle"
                 rowKey="inspman"
                 loading={loading}
-                dataSource={taskInspects.list}
+                dataSource={taskData}
                 pagination={{showQuickJumper:true,showSizeChanger:true}}
                 columns={this.columns}
                 rowSelection={rowSelection}

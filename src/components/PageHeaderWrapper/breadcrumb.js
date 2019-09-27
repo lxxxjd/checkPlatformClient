@@ -14,8 +14,9 @@ const itemRender = (route, params, routes, paths) => {
       if(last)
         return (
           <div><span>委托编号：{params.text.reportno}</span>
-            <span style={{ marginLeft: 40 }}>货名：{params.text.applicant}</span>
+            <span style={{ marginLeft: 40 }}>委托人：{params.text.applicant}</span>
             <span style={{ marginLeft: 40 }}>运输工具：{params.text.shipname}</span>
+            <span style={{ marginLeft: 40 }}>申请项目：{params.text.inspway}</span>
           </div> );
     // eslint-disable-next-line consistent-return
       return;

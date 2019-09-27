@@ -146,6 +146,10 @@ class CustomerServiceDetail extends PureComponent {
       dataIndex: 'tel',
     },
     {
+      title: '住址',
+      dataIndex: 'place',
+    },
+    {
       title: '岗位',
       dataIndex: 'position',
     },
@@ -276,7 +280,6 @@ class CustomerServiceDetail extends PureComponent {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const values = {
         ...fieldsValue,
@@ -361,12 +364,8 @@ class CustomerServiceDetail extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="applicant">委托人</Option>
-                  <Option value="agent">代理人</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-
+                  <Option value="reportno">姓名</Option>
+                  <Option value="applicant">联系人</Option>
                 </Select>
               )}
             </Form.Item>
@@ -386,7 +385,7 @@ class CustomerServiceDetail extends PureComponent {
                 重置
               </Button>
               <Button style={{ marginLeft: 8 }} type="primary" onClick={this.save}>保存</Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.back}>返回</Button>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.back}><Icon type="left" />返回</Button>
             </span>
           </Col>
         </Row>
@@ -431,6 +430,7 @@ class CustomerServiceDetail extends PureComponent {
       reportno:reportinfo.reportno,
       applicant:reportinfo.applicant,
       shipname:reportinfo.shipname,
+      inspway:reportinfo.inspway,
     };
 
     return (

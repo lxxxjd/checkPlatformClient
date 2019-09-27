@@ -202,7 +202,6 @@ class CustomerService extends PureComponent {
                   <Option value="applicant">委托人</Option>
                   <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
-
                 </Select>
               )}
             </Form.Item>
