@@ -82,6 +82,7 @@ export default {
     '/api': {
       target: 'https://localhost:81/',
       changeOrigin: true,
+      secure: false, //配置关闭证书签名验证
     },
   },
   ignoreMomentLocale: true,

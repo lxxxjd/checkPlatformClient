@@ -147,7 +147,8 @@
   "proxy": {
     "/api": {
       "target": "https://localhost:81/",
-      "changeOrigin": true
+      "changeOrigin": true,
+      "secure": false
     }
   }
 }
