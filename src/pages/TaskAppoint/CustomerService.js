@@ -68,7 +68,7 @@ class CustomerService extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>指派编辑</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -238,7 +238,7 @@ class CustomerService extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="客服指派">
-        <Card bordered={false}  size="small">
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
