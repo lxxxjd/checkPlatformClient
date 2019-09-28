@@ -322,6 +322,16 @@ export default [
         name: 'Charge',
         routes: [
           {
+            path: '/Charge/FinalPrice',
+            name: 'FinalPrice',
+            component: './Charge/FinalPrice',
+          },
+          {
+            path: '/Charge/FinalPriceDetail',
+            name: 'FinalPriceDetail',
+            component: './Charge/FinalPriceDetail',
+          },
+          {
             path: '/Charge/ListFiction',
             name: 'ListFiction',
             component: './Charge/ListFiction',
@@ -372,16 +382,7 @@ export default [
         icon: 'profile',
         name: 'Certificate',
         routes: [
-          {
-            path: '/Certificate/FinalPrice',
-            name: 'FinalPrice',
-            component: './Certificate/FinalPrice',
-          },
-          {
-            path: '/Certificate/FinalPriceDetail',
-            name: 'FinalPriceDetail',
-            component: './Certificate/FinalPriceDetail',
-          },
+
         ],
       },
 

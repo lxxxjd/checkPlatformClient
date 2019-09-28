@@ -32,7 +32,9 @@ export default {
   'menu.SampleRegister.SampleRegister':'样品登记',
   'menu.SampleRegister.SampleQuery':'样品查询',
   'menu.SampleRegister.SampleDestory':'样品销毁',
-  'menu.Charge':'计费收费',
+  'menu.Charge':'财务管理',
+  'menu.Charge.FinalPrice':'最终定价',
+  'menu.Charge.FinalPriceDetail':'最终定价详情',
   'menu.Charge.ListFiction':'清单拟制',
   'menu.Charge.ListFictionAdd':'清单新增',
   'menu.Charge.ListFictionReview':'清单审核',
@@ -55,8 +57,7 @@ export default {
   'menu.InspectionAnalysis.ResultUpdateDetail':'结果录入详情',
 
   'menu.Certificate':'证稿证书',
-  'menu.Certificate.FinalPrice':'最终定价',
-  'menu.Certificate.FinalPriceDetail':'最终定价详情',
+
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
