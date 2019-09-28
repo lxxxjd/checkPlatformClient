@@ -21,9 +21,9 @@ const { Option } = Select;
 
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ certificate, loading }) => ({
-  certificate,
-  loading: loading.models.certificate,
+@connect(({ charge, loading }) => ({
+  charge,
+  loading: loading.models.charge,
 }))
 
 @Form.create()
@@ -202,7 +202,7 @@ class FinalPrice extends PureComponent {
 
   render() {
     const {
-      certificate: {data},
+      charge: {data},
       loading,
     } = this.props;
     return (
@@ -213,7 +213,7 @@ class FinalPrice extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={data.list}
+              //dataSource={data.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
               rowKey="reportno"

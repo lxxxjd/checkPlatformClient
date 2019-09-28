@@ -23,9 +23,9 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ certificate, loading }) => ({
-  certificate,
-  loading: loading.models.certificate,
+@connect(({ charge, loading }) => ({
+  charge,
+  loading: loading.models.charge,
 }))
 
 @Form.create()
@@ -59,7 +59,7 @@ class FinalPriceDetail extends PureComponent {
   };
   render() {
     const {
-      certificate: {data},
+      charge: {data},
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -90,7 +90,7 @@ class FinalPriceDetail extends PureComponent {
             </Col>
             <Col sm={3}>
               <span> 货名：{reportno} </span>
-            </Col>            
+            </Col>
             <Col sm={4}>
               <span> 检验地点：{reportno} </span>
             </Col>
@@ -99,7 +99,7 @@ class FinalPriceDetail extends PureComponent {
             </Col>
           </Row>
           <br></br>
-          <Card>          
+          <Card>
             <span> 选择定价方式： </span>
             <Radio.Group onChange={this.onChange} value={value}>
               <Radio value="按单价">按单价</Radio>
@@ -119,28 +119,28 @@ class FinalPriceDetail extends PureComponent {
                   <Radio value="按协议">岸罐</Radio>
                   <Radio value="按比例">流量</Radio>
                   <Radio value="按比例">流量</Radio>
-                </Radio.Group>                
+                </Radio.Group>
               )}
             </Form.Item>
             <Form.Item label="单价">
               {getFieldDecorator('price', {
                 rules: value==='按单价' ? [{ required: true, message: '请输入单价' }]:[]
               })(
-                <Input style={{ width: '25%' }}/>      
+                <Input style={{ width: '25%' }}/>
               )}
             </Form.Item>
             <Form.Item label="数量">
               {getFieldDecorator('quantity', {
                 rules: value==='按单价' ? [{ required: true, message: '请输入数量' }]:[]
               })(
-                <Input style={{ width: '25%' }}/>      
+                <Input style={{ width: '25%' }}/>
               )}
             </Form.Item>
             <Form.Item label="总价">
               {getFieldDecorator('total', {
                 rules: value==='按单价' ? [{ required: true, message: '请输入总价' }]:[]
               })(
-                <Input style={{ width: '25%' }}/>      
+                <Input style={{ width: '25%' }}/>
               )}
             </Form.Item>
           </Form>]:[]
