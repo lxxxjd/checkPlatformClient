@@ -86,6 +86,7 @@ class RecordUpload extends PureComponent {
   modifyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',text.applicant);
     router.push({
       pathname:'/TestRecord/UploadDetail',
     });
