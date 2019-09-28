@@ -201,9 +201,15 @@ class ResultDetail extends PureComponent {
     } = testRecord
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
+    const applicant = sessionStorage.getItem('applicant');
+    const reprotText= {
+      reportno,
+      shipname,
+      applicant,
+    };
     const projectOptions = projectData.map(d => <Option key={d}  value={d}>{d}</Option>);
     return (
-      <PageHeaderWrapper title="结果登记">
+      <PageHeaderWrapper text={reprotText}>
         <Modal
           title="上传记录"
           visible={this.state.visible}
@@ -257,11 +263,8 @@ class ResultDetail extends PureComponent {
         </Modal>
         <Card bordered={false} size="small">
           <Row>
-            <Col span={5}>
-              <span level={4} > 委托编号：{reportno} </span>
-            </Col>
-            <Col span={17}>
-              <span> 运输工具：{shipname} </span>
+            <Col span={22}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
@@ -270,8 +273,6 @@ class ResultDetail extends PureComponent {
               </Button>
             </Col> 
           </Row>
-          <br></br>
-          <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
           <div className={styles.tableList}>
             <Table
               size="middle"

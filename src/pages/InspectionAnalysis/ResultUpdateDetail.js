@@ -132,15 +132,17 @@ class ResultUpdateDetail extends PureComponent {
     const {visible,} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
+    const sampleno = sessionStorage.getItem('sampleno');
+    const reprotText= {
+      reportno,
+      shipname,
+      sampleno,
+    };
     return (
-      <PageHeaderWrapper title="样品结果登记">
+      <PageHeaderWrapper text={reprotText}>
         <Card bordered={false} size="small">
             <Row>
-            <Col sm={5}>
-              <span level={4}> 委托编号：{reportno} </span>
-            </Col>
-            <Col sm={17}>
-              <span> 运输工具：{shipname} </span>
+            <Col sm={22}>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>

@@ -275,18 +275,16 @@ class SampleDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const cargoname = sessionStorage.getItem('cargoname');
     const sampleno = sessionStorage.getItem('sampleno');
+    const reprotText= {
+      reportno,
+      cargoname,
+      sampleno,
+    };
     return (
-      <PageHeaderWrapper title="样品结果登记">
+      <PageHeaderWrapper text={reprotText}>
         <Card bordered={false} size="small">
             <Row>
-            <Col sm={5}>
-              <span level={4}> 委托编号：{reportno} </span>
-            </Col>
-            <Col sm={5}>
-              <span level={4}> 样品编号：{sampleno} </span>
-            </Col>
-            <Col sm={12}>
-              <span> 货名：{cargoname} </span>
+            <Col sm={22}>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
@@ -305,76 +303,6 @@ class SampleDetail extends PureComponent {
               rowKey="reportno"
             />
           </div>
-          <Modal
-                title="新建样品指标"
-                visible={addOne}
-                onOk={this.onAddOne}
-                onCancel={this.handleCancel}
-              >
-                <Form>
-                  <Form.Item label="指标名称">
-                    {getFieldDecorator('itemC', {
-                      rules: [{ required: true, message: '请选择指标名称' }],
-                    })(
-                        <Select
-                          showSearch
-                          placeholder="请选择"
-                          filterOption={false}
-                          onChange={this.handleChange}
-                          //onSearch={this.handleSearch}
-                        >
-                        {itemNameOptions}
-                        </Select>
-                      )}
-                  </Form.Item>
-                  <Form.Item label="检测标准">
-                    {getFieldDecorator('teststandard', {
-                      rules: [{ required: true, message: '请选择检测标准' }],
-                    })(
-                        <Select
-                          showSearch
-                          placeholder="请选择"
-                          filterOption={false}
-                          //onSearch={this.handleSearch}
-                        >
-                        {standardOptions}
-                        </Select>
-                      )}
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Modal
-                title="批量添加"
-                visible={addMany}
-                onOk={this.addMany}
-                onCancel={this.handleCancel}
-              >
-                <Table
-                  rowKey="keyno"
-                  loading={loading}
-                  dataSource={items}
-                  pagination={{showQuickJumper:true,showSizeChanger:true}}
-                  columns={this.columns1}
-                  rowSelection={rowSelection}
-                />
-              </Modal>
-              <Modal
-                title="删除"
-                visible={onDelete}
-                onOk={this.delete}
-                onCancel={this.handleCancel}
-              >
-                <Table
-                  rowKey="keyno"
-                  loading={loading}
-                  dataSource={detail}
-                  pagination={{showQuickJumper:true,showSizeChanger:true}}
-                  columns={this.columns1}
-                  rowSelection={rowDeteleSelection}
-                />
-              </Modal>
-=======
->>>>>>> 6332d3fe16afd16431cc063c79698e9c2ed5b63e
         </Card>
       </PageHeaderWrapper>
     );

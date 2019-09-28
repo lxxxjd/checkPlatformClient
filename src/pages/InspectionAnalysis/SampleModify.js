@@ -302,6 +302,11 @@ class SampleModify extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const cargoname = sessionStorage.getItem('cargoname');
     const sampleno = sessionStorage.getItem('sampleno');
+    const reprotText= {
+      reportno,
+      cargoname,
+      sampleno,
+    };
     const standardOptions = standard.map(d => <Option key={d} value={d}>{d}</Option>);
     const itemNameOptions = itemName.map(d => <Option key={d} value={d}>{d}</Option>);
     const rowSelection = {
@@ -313,17 +318,13 @@ class SampleModify extends PureComponent {
       onChange: this.onDeleteChange,
     };
     return (
-      <PageHeaderWrapper title="样品结果登记">
+      <PageHeaderWrapper text={reprotText}>
         <Card bordered={false}>
             <Row>
-            <Col sm={5}>
-              <span level={4}> 委托编号：{reportno} </span>
-            </Col>
-            <Col sm={5}>
-              <span level={4}> 样品编号：{sampleno} </span>
-            </Col>
-            <Col sm={12}>
-              <span> 货名：{cargoname} </span>
+            <Col sm={22}>
+              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddMany}>批量添加</Button>
+              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showDelete}>批量删除</Button>
+              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.show}>导入</Button>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
@@ -333,9 +334,6 @@ class SampleModify extends PureComponent {
             </Col>  
           </Row>
           <div className={styles.tableList}>
-            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddMany}>批量添加</Button>
-            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showDelete}>批量删除</Button>
-            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.show}>导入</Button>
             <Table
               size='middle'
               loading={loading}

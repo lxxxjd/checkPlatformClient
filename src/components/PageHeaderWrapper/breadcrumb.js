@@ -12,20 +12,15 @@ const itemRender = (route, params, routes, paths) => {
   const last = routes.indexOf(route) === routes.length - 1;
   if(params!==undefined && params.text!==undefined){
       if(last)
-        if(params.text.inspway===undefined ||params.text.inspway===""){
           return (
-            <div><span>委托编号：{params.text.reportno}</span>
-              <span style={{ marginLeft: 40 }}>委托人：{params.text.applicant}</span>
-              <span style={{ marginLeft: 40 }}>运输工具：{params.text.shipname}</span>
+            <div>
+              {(params.text.reportno===undefined ||params.text.reportno==="")?[]:[<span>委托编号：{params.text.reportno}</span>]}
+              {(params.text.applicant===undefined ||params.text.applicant==="")?[]:[<span style={{ marginLeft: 40 }}>委托人：{params.text.applicant}</span>]}
+              {(params.text.inspway===undefined ||params.text.inspway==="")?[]:[<span style={{ marginLeft: 40 }}>申请项目：{params.text.inspway}</span>]}
+              {(params.text.shipname===undefined ||params.text.shipname==="")?[]:[<span style={{ marginLeft: 40 }}>运输工具：{params.text.shipname}</span>]}
+              {(params.text.sampleno===undefined ||params.text.sampleno==="")?[]:[<span style={{ marginLeft: 40 }}>样品编号：{params.text.sampleno}</span>]}
+              {(params.text.cargoname===undefined ||params.text.cargoname==="")?[]:[<span style={{ marginLeft: 40 }}>货名：{params.text.cargoname}</span>]}
             </div> );
-        }else{
-          return (
-            <div><span>委托编号：{params.text.reportno}</span>
-              <span style={{ marginLeft: 40 }}>委托人：{params.text.applicant}</span>
-              <span style={{ marginLeft: 40 }}>运输工具：{params.text.shipname}</span>
-              <span style={{ marginLeft: 40 }}>申请项目：{params.text.inspway}</span>
-            </div> );
-        }
     // eslint-disable-next-line consistent-return
       return;
   }
