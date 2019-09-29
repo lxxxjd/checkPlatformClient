@@ -19,11 +19,11 @@ const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ testRecord, loading }) => ({
-  testRecord,
-  loading: loading.models.testRecord,
+@connect(({ certificate, loading }) => ({
+  certificate,
+  loading: loading.models.certificate,
 }))
-class RecordUpload extends PureComponent {
+class CertificateUpload extends PureComponent {
   state = {
   };
 
@@ -98,7 +98,7 @@ class RecordUpload extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'testRecord/getRecordList',
+      type: 'certificate/getRecordList',
       payload:{
         certCode:user.certCode
       }
@@ -197,7 +197,7 @@ class RecordUpload extends PureComponent {
 
   render() {
     const {
-      testRecord:{data},
+      certificate:{data},
       loading,
     } = this.props;
     return (
@@ -220,4 +220,4 @@ class RecordUpload extends PureComponent {
   }
 }
 
-export default RecordUpload;
+export default CertificateUpload;

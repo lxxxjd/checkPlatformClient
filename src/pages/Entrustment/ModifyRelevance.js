@@ -233,15 +233,20 @@ class ModifyRelevance extends PureComponent {
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
+    const applicant = sessionStorage.getItem('applicant');
+    const reprotText= {
+      reportno,
+      shipname,
+      applicant,
+    };
     return (
-      <PageHeaderWrapper>
+      <PageHeaderWrapper text={reprotText}>
         <Card bordered={false} className={styles.card}  size="small">
-          <Row>
-            <Col sm={5}>
-              <span level={4}> 委托编号：{reportno} </span>
+          <Row gutter={16}>
+            <Col span={5}>
+              <Title level={4}> 已关联委托</Title>
             </Col>
-            <Col sm={17}>
-              <span> 运输工具：{shipname} </span>
+            <Col span={17}>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
@@ -249,14 +254,6 @@ class ModifyRelevance extends PureComponent {
                 返回
               </Button>
             </Col>  
-          </Row>
-          <br></br>
-          <Row gutter={16}>
-            <Col span={5}>
-              <Title level={4}> 已关联委托</Title>
-            </Col>
-            <Col span={19}>
-            </Col>
           </Row>
           <div className={styles.tableList}>
             <Table

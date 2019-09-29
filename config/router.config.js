@@ -382,7 +382,16 @@ export default [
         icon: 'profile',
         name: 'Certificate',
         routes: [
-
+          {
+            path: '/Certificate/CertificateUpload',
+            name: 'CertificateUpload',
+            component: './Certificate/CertificateUpload',
+          },
+          {
+            path: '/Certificate/UploadDetail',
+            name: 'UploadDetail',
+            component: './Certificate/UploadDetail',
+          },
         ],
       },
 

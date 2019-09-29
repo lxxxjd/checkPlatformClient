@@ -9,6 +9,7 @@ export default {
       list: [],
       pagination: {},
     },
+    recordData:[],
   },
 
   effects: {

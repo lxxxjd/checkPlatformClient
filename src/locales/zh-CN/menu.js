@@ -57,6 +57,8 @@ export default {
   'menu.InspectionAnalysis.ResultUpdateDetail':'结果录入详情',
 
   'menu.Certificate':'证稿证书',
+  'menu.Certificate.CertificateUpload':'证稿证书',
+  'menu.Certificate.UploadDetail':'证稿证书详情',
 
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
