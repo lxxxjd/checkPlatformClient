@@ -117,7 +117,6 @@ class CopyForEntrustment extends PureComponent {
     const {form, dispatch} = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const now = moment().format("YYYY-MM-DD HH:mm:ss");
-    const {cargos} = this.state;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'entrustment/getClientName',
@@ -162,6 +161,7 @@ class CopyForEntrustment extends PureComponent {
               'businesssource': response.businesssource,
               'chineselocalname': response.chineselocalname,
             });
+            const {cargos} = this.state;
             for (const cargo in cargos) {
               if (cargos[cargo].cargonamec.replace(/\s+/g, "") === response.cargoname) {
                 const checkCode = cargos[cargo].checkCode;

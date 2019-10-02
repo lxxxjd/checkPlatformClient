@@ -18,6 +18,19 @@ export async function addResult(params) {
     },
   });
 }
+export async function assign(params) {
+  return request(`/api/TestInfo/assign`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function getTestBySampleNo(params) {
+  return request(`/api/TestInfo/getTestBySampleNo?reportno=${params.reportno}&sampleno=${params.sampleno}`);
+}
 export async function getCompany(params) {
   return request(`/api/TestInfo/getCompany?certCode=${params.certCode}`);
 }

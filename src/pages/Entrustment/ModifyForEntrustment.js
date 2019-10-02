@@ -168,9 +168,10 @@ class ModifyForEntrustment extends PureComponent {
               'businesssource': response.businesssource,
               'chineselocalname': response.chineselocalname,
             });
-            for (const cargo in this.state.cargos) {
-              if (this.state.cargos[cargo].cargonamec.replace(/\s+/g, "") === response.cargoname) {
-                const checkCode = this.state.cargos[cargo].checkCode;
+            const {cargos} = this.state;
+            for (const cargo in cargos) {
+              if (cargos[cargo].cargonamec.replace(/\s+/g, "") === response.cargoname) {
+                const checkCode = cargos[cargo].checkCode;
                 dispatch({
                   type: 'entrustment/getCnasInfo',
                   payload: {
