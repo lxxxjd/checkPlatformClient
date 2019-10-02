@@ -10,13 +10,44 @@ import {
   Input,
   Button,
   Select,
-  Table, message,
+  Table, message,Icon
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import queryStyles from './SampleQuery.less'
 import styles from '../table.less';
 
 
 
+let id = 0;
+//
+// class DynamicFieldSet extends React.Component {
+//
+//
+//   render() {
+//
+//
+//     return (
+      {/*<Form onSubmit={this.handleSubmit}>*/}
+      {/*  {formItems}*/}
+      {/*  <Form.Item {...formItemLayoutWithOutLabel}>*/}
+      {/*    <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>*/}
+      {/*      <Icon type="plus" /> Add field*/}
+      {/*    </Button>*/}
+      {/*  </Form.Item>*/}
+      {/*  <Form.Item {...formItemLayoutWithOutLabel}>*/}
+      {/*    <Button type="primary" htmlType="submit">*/}
+      {/*      Submit*/}
+      {/*    </Button>*/}
+      {/*  </Form.Item>*/}
+      {/*</Form>*/}
+//     );
+//   }
+// }
+//
+// const WrappedDynamicFieldSet = Form.create({ name: 'dynamic_form_item' })(DynamicFieldSet);
+
+
+//正文页面
 const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj =>
@@ -180,8 +211,7 @@ class SampleQuery extends PureComponent {
     });
   };
 
-
-
+  // eslint-disable-next-line react/sort-comp
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -189,111 +219,7 @@ class SampleQuery extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
 
-
-        <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
-          <Col md={3} sm={20}>
-            <Form.Item
-              className={styles.searchCondition}
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('kind1', {
-                rules: [{  message: '选择字段' }],
-              })(
-                <Select placeholder="选择字段">
-                  <Option value="reportno"> 委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-                  <Option value="sampleno">样品编号</Option>
-                  <Option value="samplename">样品名称</Option>
-                  <Option value="sampleuse">样品用途</Option>
-                  <Option value="owner">持有人</Option>
-                  <Option value="duration">保存天数</Option>
-                  <Option value="position">存放位置</Option>
-                  <Option value="status">状态</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={2} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('condition1', {
-                rules: [{  message: '选择条件' }],
-              })(
-                <Select placeholder="选择条件">
-                  <Option value="=">等于</Option>
-                  <Option value="!=">不等于</Option>
-                  <Option value="like">包含</Option>
-                  <Option value="not like">不包含</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-          <Col md={5} sm={10}>
-            <FormItem>
-              {getFieldDecorator('value1',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-
-          <Col md={3} sm={20}>
-            <Form.Item
-              className={styles.searchCondition}
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('kind2', {
-                rules: [{  message: '选择字段' }],
-              })(
-                <Select placeholder="选择字段">
-                  <Option value="reportno"> 委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-                  <Option value="sampleno">样品编号</Option>
-                  <Option value="samplename">样品名称</Option>
-                  <Option value="sampleuse">样品用途</Option>
-                  <Option value="owner">持有人</Option>
-                  <Option value="duration">保存天数</Option>
-                  <Option value="position">存放位置</Option>
-                  <Option value="status">状态</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={2} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('condition2', {
-                rules: [{  message: '选择条件' }],
-              })(
-                <Select placeholder="选择条件">
-                  <Option value="=">等于</Option>
-                  <Option value="!=">不等于</Option>
-                  <Option value="like">包含</Option>
-                  <Option value="not like">不包含</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-          <Col md={5} sm={10}>
-            <FormItem>
-              {getFieldDecorator('value2',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-        </Row>
-
         <Row gutter={{ md: 6, lg: 18, xl: 5 }} >
-
           <Col md={3} sm={20}>
             <Form.Item
               className={styles.searchCondition}
@@ -338,7 +264,7 @@ class SampleQuery extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col md={5} sm={10}>
+          <Col md={4} sm={10}>
             <FormItem>
               {getFieldDecorator('value3',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
             </FormItem>
@@ -349,6 +275,9 @@ class SampleQuery extends PureComponent {
               <Button type="primary" htmlType="submit">
                 查询
               </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.add}>
+                添加条件
+              </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
@@ -357,11 +286,49 @@ class SampleQuery extends PureComponent {
         </Row>
 
 
+
       </Form>
     );
   }
 
 
+  remove = k => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    // We need at least one passenger
+    // if (keys.length === 1) {
+    //   return;
+    // }
+
+    // can use data-binding to set
+    form.setFieldsValue({
+      keys: keys.filter(key => key !== k),
+    });
+  };
+
+  add = () => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    const nextKeys = keys.concat(id++);
+    // can use data-binding to set
+    // important! notify form to detect changes
+    form.setFieldsValue({
+      keys: nextKeys,
+    });
+  };
+
+  // handleSubmit = e => {
+  //   e.preventDefault();
+  //   this.props.form.validateFields((err, values) => {
+  //     if (!err) {
+  //       const { keys, names } = values;
+  //       console.log('Received values of form: ', values);
+  //       console.log('Merged values:', keys.map(key => names[key]));
+  //     }
+  //   });
+  // };
 
 
   render() {
@@ -369,12 +336,104 @@ class SampleQuery extends PureComponent {
       sample: {selectRegisterResult},
       loading,
     } = this.props;
+
+    const { getFieldDecorator, getFieldValue } = this.props.form;
+    getFieldDecorator('keys', { initialValue: [] });
+    const keys = getFieldValue('keys');
+    const formItems = keys.map((k, index) => (
+
+      /*<Form.Item
+        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+        required={false}
+        key={k}
+      >
+        {getFieldDecorator(`names[${k}]`, {
+          validateTrigger: ['onChange', 'onBlur'],
+          rules: [
+            {
+              whitespace: true,
+            },
+          ],
+        })(<Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} />)}
+        {keys.length >= 1 ? (
+          <Icon
+            className={queryStyles.dynamicDeleteButton}
+            type="minus-circle-o"
+            onClick={() => this.remove(k)}
+          />
+        ) : null}
+      </Form.Item>*/
+        <Row>
+          <Col md={3} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+            >
+              {getFieldDecorator(`names[${k}]`, {
+                rules: [{  message: '选择字段' }],
+              })(
+                <Select placeholder="选择字段">
+                  <Option value="reportno"> 委托编号</Option>
+                  <Option value="shipname">运输工具</Option>
+                  <Option value="cargoname">货名</Option>
+                  <Option value="sampleno">样品编号</Option>
+                  <Option value="samplename">样品名称</Option>
+                  <Option value="sampleuse">样品用途</Option>
+                  <Option value="owner">持有人</Option>
+                  <Option value="duration">保存天数</Option>
+                  <Option value="position">存放位置</Option>
+                  <Option value="status">状态</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col md={2} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+            >
+              {getFieldDecorator(`condition[${k}]`, {
+                rules: [{  message: '选择条件' }],
+              })(
+                <Select placeholder="选择条件">
+                  <Option value="=">等于</Option>
+                  <Option value="!=">不等于</Option>
+                  <Option value="like">包含</Option>
+                  <Option value="not like">不包含</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+          <Col md={4} sm={10}>
+            <FormItem>
+              {getFieldDecorator(`values[${k}]`,{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={5} sm={10}>
+            {keys.length >= 1 ? (
+              <Icon
+                className={queryStyles.dynamicDeleteButton}
+                type="minus-circle-o"
+                onClick={() => this.remove(k)}
+              />
+            ) : null}
+          </Col>
+        </Row>
+    ));
+
     return (
       <PageHeaderWrapper title="样品查询">
 
         <Card bordered={false} size="small">
-          <div className={styles.tableList}>
+          <Form onSubmit={this.handleSubmit}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <div className={styles.tableListForm}>{formItems}</div>
+          </Form>
+
+          <div className={styles.tableList}>
             <Table
               size="middle"
               rowKey="sampleno"
@@ -385,6 +444,10 @@ class SampleQuery extends PureComponent {
             />
           </div>
         </Card>
+        <Icon
+          className={queryStyles.dynamicDeleteButton}
+          type="minus-circle-o"
+        />
       </PageHeaderWrapper>
     );
   }
