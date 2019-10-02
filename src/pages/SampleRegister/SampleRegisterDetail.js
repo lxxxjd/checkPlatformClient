@@ -24,6 +24,142 @@ import moment from 'moment';
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 
+
+// 修改组件
+const ArrivalInvoiceForm = Form.create()(props => {
+  const { handleModifyModalVisble, form, modifyModalVisble,sampledata,dispatch,init} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      let values = fieldsValue;
+      // values.paydate= fieldsValue.paydate;
+      // values.invoiceStatus ='已到账';
+      dispatch({
+        type: 'sample/updateSampleRegistersFetch',
+        payload:values,
+        callback:(response) => {
+          if(response==="success"){
+            message.success("修改成功");
+          }else{
+            message.success('修改失败');
+          }
+        }
+      });
+      handleModifyModalVisble();
+      init();
+    });
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="修改样品"
+      visible={modifyModalVisble}
+      onOk={okHandle}
+      onCancel={() => handleModifyModalVisble()}
+      width={500}
+      style={{ top: 20 }}
+    >
+
+      <Form>
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品编号">
+          {form.getFieldDecorator('sampleno', {
+            rules: [{ required: true, message: '请输入样品编号' }],
+            initialValue:sampledata.sampleno
+          })(<Input placeholder="请输入样品编号" />)}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="取样点">
+          {form.getFieldDecorator('samplename', {
+            initialValue:sampledata.samplename
+          })(
+            <Select placeholder="请选择取样点">
+              <Option value="堆场">堆场</Option>
+              <Option value="皮带机">皮带机</Option>
+              <Option value="卸货平台">卸货平台</Option>
+              <Option value="散货船">散货船</Option>
+              <Option value="驳船">驳船</Option>
+              <Option value="船舱">船舱</Option>
+              <Option value="岸罐">岸罐</Option>
+              <Option value="管线">管线</Option>
+              <Option value="一英尺样">一英尺样</Option>
+              <Option value="槽东">槽东</Option>
+            </Select>,
+          )}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品用途">
+          {form.getFieldDecorator('sampleuse', {
+            initialValue:sampledata.sampleuse
+          })(
+            <Select placeholder="请选择样品用途">
+              <Option value="水份">水份</Option>
+              <Option value="指标测试">指标测试</Option>
+              <Option value="留存">留存</Option>
+              <Option value="其他">其他</Option>
+            </Select>,
+          )}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品数量">
+          {form.getFieldDecorator('weight', {
+            initialValue:sampledata.weight
+          })(<Input placeholder="请输入样品编号" />)}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="持有人">
+          {form.getFieldDecorator('owner', {
+            initialValue:sampledata.owner
+          })(
+            <Select placeholder="请选择持有人">
+              <Option value="本公司">本公司</Option>
+              <Option value="分包方">分包方</Option>
+              <Option value="收货人">收货人</Option>
+              <Option value="发货人">发货人</Option>
+            </Select>,
+          )}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="保存天数">
+          {form.getFieldDecorator('duration', {
+            initialValue:sampledata.duration
+          })(
+            <Select placeholder="请选择保存天数">
+              <Option value="30">30天</Option>
+              <Option value="60">60天</Option>
+              <Option value="90">90天</Option>
+              <Option value="180">180天</Option>
+              <Option value="360">360天</Option>
+            </Select>,
+          )}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="存放位置">
+          {form.getFieldDecorator('position', {
+            initialValue:sampledata.position
+          })(<Input />)}
+        </Form.Item>
+
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="制样日期">
+          {form.getFieldDecorator('makingdate', {
+            rules: [{ required: true, message: '请输入制样日期' }],
+            initialValue:moment(sampledata.makingdate,"YYYY-MM-DD"),
+          })(
+            <DatePicker
+              placeholder="请选择制样日期"
+              style={{ width: '100%' }}
+              format="YYYY-MM-DD"
+              getPopupContainer={trigger => trigger.parentNode}
+            />,
+          )}
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+});
+
+
+
 @Form.create()
 @connect(({ sample, loading }) => ({
   sample,
@@ -33,6 +169,8 @@ class SampleRegisterDetail extends PureComponent {
   state = {
     formValues: {},
     visible:false,
+    modifyModalVisble:false,
+    sampledata:{},
   };
 
   columns = [
@@ -75,7 +213,7 @@ class SampleRegisterDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
+          <a onClick={() => this.modifyItem(text, true)}>修改</a>
         </Fragment>
       ),
     },
@@ -91,12 +229,15 @@ class SampleRegisterDetail extends PureComponent {
     const reportNo = localStorage.getItem('reportSampleRegisterDetailNo');
     dispatch({
       type: 'sample/getSampleRegistersByReportNo',
-      payload: { reportno: reportNo,}
+      payload: { reportno: reportNo,},
     });
   }
 
-  modifyItem = text => {
-    console.log(text)
+  modifyItem = (text,flag) => {
+    this.setState({
+      sampledata:text,
+    });
+    this.handleModifyModalVisble(flag);
   };
 
   deleteItem = text => {
@@ -166,7 +307,24 @@ class SampleRegisterDetail extends PureComponent {
   };
 
 
+  // 显示模态框
+  handleModifyModalVisble = (flag) => {
+    this.setState({
+      modifyModalVisble: !!flag,
+    });
+  };
+
+
   render() {
+
+    const {
+      loading,
+      sample: {sampleDetail},
+      form: { getFieldDecorator },
+      dispatch,
+    } = this.props;
+
+
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
@@ -174,11 +332,13 @@ class SampleRegisterDetail extends PureComponent {
         {bordered && <em />}
       </div>
     );
-    const {
-      loading,
-      sample: {sampleDetail},
-      form: { getFieldDecorator },
-    } = this.props;
+
+    const parentMethods = {
+      handleModifyModalVisble: this.handleModifyModalVisble,
+    };
+    const { modifyModalVisble,sampledata} = this.state;
+
+
     const reportNo = localStorage.getItem('reportSampleRegisterDetailNo');
     return (
       <PageHeaderWrapper title="样品已登记信息">
@@ -278,6 +438,9 @@ class SampleRegisterDetail extends PureComponent {
 
           </Form>
         </Modal>
+
+        <ArrivalInvoiceForm {...parentMethods} modifyModalVisble={modifyModalVisble} sampledata={sampledata} dispatch={dispatch} init={this.init} />
+
         <Card bordered={false}>
           <Row gutter={16}>
             <Col span={22}>
@@ -288,7 +451,7 @@ class SampleRegisterDetail extends PureComponent {
                 <Icon type="left" />
                 返回
               </Button>
-            </Col> 
+            </Col>
           </Row>
           <div className={styles.tableList} size="small">
             <Table

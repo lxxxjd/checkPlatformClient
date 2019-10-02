@@ -1,6 +1,6 @@
 import {getAllSampleRegister,getSampleRegistersByReportNo ,
   addSamleRegister,deleteSamleRegister,selectSampleRegisterByConditions,selectSampleByConditionsDestory,
-  setSampleStatus,getModelSelectName
+  setSampleStatus,getModelSelectName,updateSampleRegisters
 
 } from '@/services/Sample'
 
@@ -30,6 +30,8 @@ export default {
     },
 
     stateResult:{},
+
+    updateResult:{},
 
   },
 
@@ -98,6 +100,15 @@ export default {
       if (callback) callback(response.data);
     },
 
+    *updateSampleRegistersFetch({ payload,callback }, { call, put }) {
+      const response = yield call(updateSampleRegisters, payload);
+      yield put({
+        type: 'updateSampleRegistersInfo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
 
 
   },
@@ -147,6 +158,13 @@ export default {
       return {
         ...state,
         stateResult: payload.data,
+      };
+    },
+
+    updateSampleRegistersInfo(state, { payload }) {
+      return {
+        ...state,
+        updateResult: payload.data,
       };
     },
 

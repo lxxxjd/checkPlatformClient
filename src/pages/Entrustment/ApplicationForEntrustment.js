@@ -692,7 +692,7 @@ class ApplicationForEntrustment extends PureComponent {
                         if(value){
                           return Number(value);
                         }
-                      }, message: '请输入数字' }],                  
+                      }, message: '请输入数字' }],
                     })(
                       <Input placeholder="0" />
                   )}
@@ -828,6 +828,25 @@ class ApplicationForEntrustment extends PureComponent {
               </Col>
             </Row>
           </Form>
+        </Card>
+
+        <Card>
+          <table width="100%" border={1}>
+            <tr>
+              <td width="15%" style={{backgroundColor:'#E5E5E5'}}>认可领域及代码</td>
+              <td width="15%" style={{backgroundColor:'#E5E5E5'}}>认可子领域代码</td>
+              <td width="15%" style={{backgroundColor:'#E5E5E5'}}> 检查领域/检查对象及代码</td>
+              <td width="15%" style={{backgroundColor:'#E5E5E5'}}>检查项目及代码</td>
+              <td style={{backgroundColor:'#E5E5E5'}}> 检查项目</td>
+            </tr>
+            <tr>
+              <td width="15%">认可领域及代码</td>
+              <td width="15%">认可子领域代码</td>
+              <td width="15%"> 检查领域/检查对象及代码</td>
+              <td width="15%">检查项目及代码</td>
+              <td > 检查项目</td>
+            </tr>
+          </table>
         </Card>
       </PageHeaderWrapper>
     );
