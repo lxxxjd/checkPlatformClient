@@ -13,8 +13,8 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SearchForEntrustment.less';
 import moment from 'moment';
+import styles from './SearchForEntrustment.less';
 
 
 
@@ -99,7 +99,7 @@ class CopyForEntrustmentList extends PureComponent {
   copyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
-      pathname:'/Entrustment/copyForEntrustment',
+      pathname:'/Entrustment/CopyForEntrustment',
     });
   };
 
