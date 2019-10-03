@@ -276,7 +276,7 @@ class SampleQuery extends PureComponent {
 
           <Col md={8} sm={20}>
             <span className={styles.submitButtons}>
-              <Icon type="plus-circle" style={{fontSize:24, marginLeft: 8 }} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} />
+              <Icon type="plus-circle" style={{fontSize:24, marginLeft: 8 ,marginTop:4}} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} />
               <Button type="primary" style={{ marginLeft: 45 }} htmlType="submit">
                 查询
               </Button>
@@ -324,7 +324,6 @@ class SampleQuery extends PureComponent {
     form.setFieldsValue({
       keys: nextKeys,
     });
-    console.log(keys.length);
   };
 
   // handleSubmit = e => {
@@ -417,7 +416,7 @@ class SampleQuery extends PureComponent {
         <Card bordered={false} size="small">
           <Form onSubmit={this.handleSubmit}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <Row className={queryStyles.tableListForm}>{formItems}</Row>
+            <Row className={styles.tableListForm}>{formItems}</Row>
           </Form>
           <div className={styles.tableList}>
             <Table

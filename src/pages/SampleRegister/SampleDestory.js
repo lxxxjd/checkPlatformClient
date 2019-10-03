@@ -11,12 +11,13 @@ import {
   Button,
   Select,
   Table, message,
-  Radio,Popconfirm
+  Radio, Popconfirm, Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
+import queryStyles from './SampleDestory.less';
 
-
+let id = 0;
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -93,9 +94,9 @@ class SampleDestory extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>查看</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>浏览</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.removeExistItem(text, record)}>页面删除</a>
+          <a onClick={() => this.removeExistItem(text, record)}>删除</a>
         </Fragment>
       ),
     },
@@ -218,20 +219,23 @@ class SampleDestory extends PureComponent {
       let mkinds=[];
       let mvalues=[];
       let mconditions=[];
-      if(fieldsValue.kind1 !==undefined &&fieldsValue.value1 !==undefined &&fieldsValue.condition1 !== undefined ){
-        mkinds.push(fieldsValue.kind1 );
-        mvalues.push(fieldsValue.value1);
-        mconditions.push(fieldsValue.condition1 );
+      if(fieldsValue.kind !==undefined &&fieldsValue.value !==undefined &&fieldsValue.condition !== undefined ){
+        mkinds.push(fieldsValue.kind );
+        mvalues.push(fieldsValue.value);
+        mconditions.push(fieldsValue.condition );
       }
-      if(fieldsValue.kind2 !==undefined &&fieldsValue.value2 !==undefined &&fieldsValue.condition2 !== undefined ){
-        mkinds.push(fieldsValue.kind2 );
-        mvalues.push(fieldsValue.value2);
-        mconditions.push(fieldsValue.condition2 );
-      }
-      if(fieldsValue.kind3 !==undefined &&fieldsValue.value3 !==undefined &&fieldsValue.condition3 !== undefined ){
-        mkinds.push(fieldsValue.kind3 );
-        mvalues.push(fieldsValue.value3);
-        mconditions.push(fieldsValue.condition3 );
+      const keys = form.getFieldValue('keys');
+      for(let key in keys){
+        let k = keys[key];
+        console.log(k);
+        const kind = form.getFieldValue(`kinds${k}`);
+        const condition = form.getFieldValue(`conditions${k}`);
+        const value = form.getFieldValue(`values${k}`);
+        if(kind!==undefined &&value !==undefined &&condition !== undefined ){
+          mkinds.push(kind );
+          mvalues.push(value);
+          mconditions.push(condition);
+        }
       }
       const params = {
         kinds :mkinds,
@@ -250,6 +254,41 @@ class SampleDestory extends PureComponent {
           }
         }
       });
+    });
+  };
+
+
+  remove = k => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    // We need at least one passenger
+    // if (keys.length === 1) {
+    //   return;
+    // }
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+    // can use data-binding to set
+    form.setFieldsValue({
+      keys: keys.filter(key => key !== k),
+    });
+
+
+  };
+
+  add = () => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    // eslint-disable-next-line no-plusplus
+    const nextKeys = keys.concat(id++);
+    // can use data-binding to set
+    // important! notify form to detect changes
+    form.setFieldsValue({
+      keys: nextKeys,
     });
   };
 
@@ -273,189 +312,15 @@ class SampleDestory extends PureComponent {
                 重置
               </Button>
             </Col>
-        </Row>
+          </Row>
         </Card>
-        <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
-          <Col md={3} sm={20}>
-            <Form.Item
-              className={styles.searchCondition}
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('kind1', {
-                rules: [{  message: '选择字段' }],
-              })(
-                <Select placeholder="选择字段">
-                  <Option value="reportno"> 委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-                  <Option value="sampleno">样品编号</Option>
-                  <Option value="samplename">样品名称</Option>
-                  <Option value="sampleuse">样品用途</Option>
-                  <Option value="owner">持有人</Option>
-                  <Option value="duration">保存天数</Option>
-                  <Option value="position">存放位置</Option>
-                  <Option value="status">状态</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
 
-          <Col md={2} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('condition1', {
-                rules: [{  message: '选择条件' }],
-              })(
-                <Select placeholder="选择条件">
-                  <Option value="=">等于</Option>
-                  <Option value="!=">不等于</Option>
-                  <Option value="like">包含</Option>
-                  <Option value="not like">不包含</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-          <Col md={5} sm={10}>
-            <FormItem>
-              {getFieldDecorator('value1',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-
-          <Col md={3} sm={20}>
-            <Form.Item
-              className={styles.searchCondition}
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('kind2', {
-                rules: [{  message: '选择字段' }],
-              })(
-                <Select placeholder="选择字段">
-                  <Option value="reportno"> 委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-                  <Option value="sampleno">样品编号</Option>
-                  <Option value="samplename">样品名称</Option>
-                  <Option value="sampleuse">样品用途</Option>
-                  <Option value="owner">持有人</Option>
-                  <Option value="duration">保存天数</Option>
-                  <Option value="position">存放位置</Option>
-                  <Option value="status">状态</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={2} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('condition2', {
-                rules: [{  message: '选择条件' }],
-              })(
-                <Select placeholder="选择条件">
-                  <Option value="=">等于</Option>
-                  <Option value="!=">不等于</Option>
-                  <Option value="like">包含</Option>
-                  <Option value="not like">不包含</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-          <Col md={5} sm={10}>
-            <FormItem>
-              {getFieldDecorator('value2',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-        </Row>
-
-        <Row gutter={{ md: 6, lg: 18, xl: 5 }} >
-
-          <Col md={3} sm={20}>
-            <Form.Item
-              className={styles.searchCondition}
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('kind3', {
-                rules: [{  message: '选择字段' }],
-              })(
-                <Select placeholder="选择字段">
-                  <Option value="reportno"> 委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-                  <Option value="sampleno">样品编号</Option>
-                  <Option value="samplename">样品名称</Option>
-                  <Option value="sampleuse">样品用途</Option>
-                  <Option value="owner">持有人</Option>
-                  <Option value="duration">保存天数</Option>
-                  <Option value="position">存放位置</Option>
-                  <Option value="status">状态</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={2} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('condition3', {
-                rules: [{  message: '选择条件' }],
-              })(
-                <Select placeholder="选择条件">
-                  <Option value="=">等于</Option>
-                  <Option value="!=">不等于</Option>
-                  <Option value="like">包含</Option>
-                  <Option value="not like">不包含</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-          <Col md={5} sm={10}>
-            <FormItem>
-              {getFieldDecorator('value3',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-
-          <Col md={5} sm={4}>
-            <Form.Item
-              label="超保存期天数："
-              className={styles.searchCondition}
-              labelCol={{ span: 2 }}
-              wrapperCol={{ span: 4 }}
-              colon={false}
-            >
-              {getFieldDecorator('duration', {
-                rules:[{
-                  required:false,
-                  pattern: new RegExp(/^[1-9]\d*$/, "g"),
-                  message: '请输入正确的数字'
-                }],
-              })(
-                <Input placeholder="输入天数"  />
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={8} sm={4}>
+        <Row gutter={16} >
+          <Col md={6} sm={4}>
             <Form.Item
               label="状态："
-              className={styles.searchCondition}
               labelCol={{ span: 2 }}
               wrapperCol={{ span: 10 }}
-              colon={false}
             >
               {getFieldDecorator('status', {
                 initialValue:"全部",
@@ -469,6 +334,84 @@ class SampleDestory extends PureComponent {
               )}
             </Form.Item>
           </Col>
+          <Col md={3} sm={4}>
+            <Form.Item
+              label="超保存期："
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 4 }}
+              colon={false}
+            >
+              {getFieldDecorator('duration', {
+                rules:[{
+                  required:false,
+                  pattern: new RegExp(/^[1-9]\d*$/, "g"),
+                  message: '输入数字'
+                }],
+              })(
+                <Input placeholder="天数"  />
+              )}
+            </Form.Item>
+          </Col>
+
+
+
+          <Col md={3} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+              // style={{marginLeft:45}}
+            >
+              {getFieldDecorator('kind', {
+                rules: [{  message: '选择字段' }],
+              })(
+                <Select placeholder="选择字段">
+                  <Option value="reportno"> 委托编号</Option>
+                  <Option value="shipname">运输工具</Option>
+                  <Option value="cargoname">货名</Option>
+                  <Option value="sampleno">样品编号</Option>
+                  <Option value="samplename">样品名称</Option>
+                  <Option value="sampleuse">样品用途</Option>
+                  <Option value="owner">持有人</Option>
+                  <Option value="duration">保存天数</Option>
+                  <Option value="position">存放位置</Option>
+                  <Option value="status">状态</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col md={3} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+            >
+              {getFieldDecorator('condition', {
+                rules: [{  message: '选择条件' }],
+              })(
+                <Select placeholder="选择条件">
+                  <Option value="=">等于</Option>
+                  <Option value="!=">不等于</Option>
+                  <Option value="like">包含</Option>
+                  <Option value="not like">不包含</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+          <Col md={4} sm={10}>
+            <FormItem>
+              {getFieldDecorator('value',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+
+          <Col md={4} sm={20}>
+            <span>
+              <Icon type="plus-circle" style={{fontSize:24, marginLeft: 8,marginTop:4}} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} />
+            </span>
+          </Col>
+
+
         </Row>
       </Form>
     );
@@ -485,12 +428,83 @@ class SampleDestory extends PureComponent {
 
     const {dataSource} = this.state;
 
+    const { getFieldDecorator, getFieldValue } = this.props.form;
+    getFieldDecorator('keys', { initialValue: [] });
+    const keys = getFieldValue('keys');
+
+    const formItems = keys.map((k, index) => (
+      <div>
+        { index %2===0 && keys.length!==0? (
+          <Row className={queryStyles.rowClass} />
+        ) : null}
+        <Col md={3} sm={20}>
+          <Form.Item
+            style={{marginRight:8}}
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 6 }}
+          >
+            {getFieldDecorator(`kinds${k}`, {
+              rules: [{  message: '选择字段' }],
+            })(
+              <Select placeholder="选择字段">
+                <Option value="reportno"> 委托编号</Option>
+                <Option value="shipname">运输工具</Option>
+                <Option value="cargoname">货名</Option>
+                <Option value="sampleno">样品编号</Option>
+                <Option value="samplename">样品名称</Option>
+                <Option value="sampleuse">样品用途</Option>
+                <Option value="owner">持有人</Option>
+                <Option value="duration">保存天数</Option>
+                <Option value="position">存放位置</Option>
+                <Option value="status">状态</Option>
+              </Select>
+            )}
+          </Form.Item>
+        </Col>
+        <Col md={2} sm={20}>
+          <Form.Item
+            style={{marginRight:8}}
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 6 }}
+          >
+            {getFieldDecorator(`conditions${k}`, {
+              rules: [{  message: '选择条件' }],
+            })(
+              <Select placeholder="选择条件">
+                <Option value="=">等于</Option>
+                <Option value="!=">不等于</Option>
+                <Option value="like">包含</Option>
+                <Option value="not like">不包含</Option>
+              </Select>
+            )}
+          </Form.Item>
+        </Col>
+        <Col md={4} sm={10}>
+          <FormItem>
+            {getFieldDecorator(`values${k}`,{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
+          </FormItem>
+        </Col>
+        <Col md={1} sm={5}>
+          {keys.length >= 1 ? (
+            <Icon style={{fontSize:24,marginLeft:8}} type="minus-circle" theme='twoTone' twoToneColor="#ff0000" onClick={() => this.remove(k)} />
+          ) : null}
+        </Col>
+      </div>
+    ));
+
+
+
+
     return (
       <PageHeaderWrapper title="样品查询">
         <Card bordered={false} size="small">
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+          <div>
+            <Form onSubmit={this.handleSubmit}>
+              <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+              <Row className={styles.tableListForm}>{formItems}</Row>
+            </Form>
             <Table
+              className={styles.tableList}
               size="middle"
               rowKey="sampleno"
               loading={loading}
