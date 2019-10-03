@@ -23,7 +23,7 @@ const { Option } = Select;
   charge,
   loading: loading.models.charge,
 }))
-class ListFiction extends PureComponent {
+class ListReview extends PureComponent {
   state = {
   };
 
@@ -57,9 +57,10 @@ class ListFiction extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {(record.invoiceStatus==='未审核    '||text.invoiceStatus==='已退回    ')?[ <span><a onClick={() => this.deleteBylistno(text, record)}>删除</a></span>]:null}
+          <a onClick={() => this.toListFictionReview(text, record)}>审核</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text)}>查看</a>
+          <a onClick={() => this.previewItem(text, record)}>查看</a>
+          &nbsp;&nbsp;
         </Fragment>
       ),
     },
@@ -109,7 +110,6 @@ class ListFiction extends PureComponent {
   };
 
   previewItem = text => {
-    console.log(text.invoiceStatus);
     // sessionStorage.setItem('reportno',text.reportno);
     // router.push({
     //   pathname:'/Entrustment/DetailForEntrustment',
@@ -221,4 +221,4 @@ class ListFiction extends PureComponent {
   }
 }
 
-export default ListFiction;
+export default ListReview;
