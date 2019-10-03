@@ -337,6 +337,11 @@ export default [
             component: './Charge/ListFiction',
           },
           {
+            path: '/Charge/ListReview',
+            name: 'ListReview',
+            component: './Charge/ListReview',
+          },
+          {
             path: '/Charge/ListFictionAdd',
             name: 'ListFictionAdd',
             component: './Charge/ListFictionAdd',

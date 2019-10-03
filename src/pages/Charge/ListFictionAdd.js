@@ -13,7 +13,7 @@ import {
   Table, DatePicker, message, Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ListFictionAdd.less';
+import styles from '../table.less';
 
 const { Option } = Select;
 
@@ -181,11 +181,9 @@ class ListFictionAdd extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>定价</a>
+          <a onClick={() => this.baoliu(text, record)}>定价</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
+          <a onClick={() => this.removeExistItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
           &nbsp;&nbsp;
@@ -216,6 +214,12 @@ class ListFictionAdd extends PureComponent {
     });
   }
 
+  handleFormReset = ()=>{
+    const { form } = this.props;
+    form.resetFields();
+    this.init();
+  }
+
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
@@ -223,6 +227,23 @@ class ListFictionAdd extends PureComponent {
     });
     localStorage.setItem('reportDetailNo',text.reportno);
   };
+
+  removeExistItem = text => {
+    this.state.exist=this.listRemoveItem(this.state.priceMaking,text.reportno);
+    const dataSource = [...this.state.priceMaking];
+    this.setState({ priceMaking: dataSource.filter(item => item.reportno !== text.reportno) });
+  };
+
+  listRemoveItem = (source, match)=>{
+    var len = source.length;
+    while (len--) {
+      if (len in source && source[len] === match) {
+        source.splice(len, 1);
+      }
+    }
+    return source;
+  };
+
 
 
 
@@ -283,7 +304,7 @@ class ListFictionAdd extends PureComponent {
               wrapperCol={{ span: 16 }}
               colon={false} >
               {getFieldDecorator('listno', {
-                rules: [{ required: true, message: '请输入清单号' }],
+                rules: [{ required: true,message:"请输入清单" }],
               })(<Input title="清单号" style={{ width: '100%' }} placeholder="请输入清单号" />)}
             </Form.Item>
           </Col>
@@ -296,7 +317,7 @@ class ListFictionAdd extends PureComponent {
               label="付款人"
             >
               {getFieldDecorator('payer', {
-                rules: [{  message: '请选择付款人' }],
+                rules: [{ required: true,message:"请选择付款人"}],
               })(
                 <Select placeholder="请选择付款人">
                   <Option value="FIBRANT CO., LTD.">FIBRANT CO., LTD.</Option>
@@ -325,38 +346,42 @@ class ListFictionAdd extends PureComponent {
       loading,
     } = this.props;
 
+    const {priceMaking} = this.state;
     const {  selectedRowKeys } = this.state;
+
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
-    };
-
-
+      getCheckboxProps: record => ({
+        disabled: record.process !== '已定价', // Column configuration not to be checked
+        process: record.process,
+      }),
+    }
 
     return (
       <PageHeaderWrapper title="清单拟制">
-        <Card bordered={false}>
-          <Row gutter={8}>
-            <Col span={2}>
-              <Button type="primary" onClick={this.handleSubmit}>拟制</Button>
-            </Col>
-            <Col span={2}>
-              <Button type="primary" onClick={this.handleFormReset} style={{ marginLeft: 1 }}>重置</Button>
-            </Col>
-            <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 1 }} onClick={this.back}>
-                返回
-              </Button>
+        <Card bordered={false} size="small">
+
+          <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+            <Col md={8} sm={20}>
+              <span className={styles.submitButtons}>
+                <Button type="primary" htmlType="submit" onClick={this.handleSubmit}>
+                  拟制
+                </Button>
+                <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+                  重置
+                </Button>
+                <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>返回</Button>
+              </span>
             </Col>
           </Row>
-        </Card>
-        <Card bordered={false}>
+
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <div className={styles.tableListForm}><Query dispatch={this.props.dispatch} init={this.init} /></div>
             <Table
               loading={loading}
-              dataSource={reports}
+              dataSource={priceMaking}
               columns={this.columns}
               rowKey="reportno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
