@@ -861,7 +861,7 @@ class ModifyForEntrustment extends PureComponent {
                   {getFieldDecorator('inspplace1', {
                     rules: [{required: true, message: '请选择检验地点'}],
                   })(
-                    <Cascader options={areaOptions} placeholder="请选择检验地点"/>
+                    <Cascader options={areaOptions} placeholder="请选择检验地点" />
                   )}
                 </Form.Item>
               </Col>
