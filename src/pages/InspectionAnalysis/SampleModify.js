@@ -322,7 +322,7 @@ class SampleModify extends PureComponent {
         <Card bordered={false}>
             <Row>
             <Col sm={22}>
-              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddMany}>批量添加</Button>
+              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddMany}>添加</Button>
               <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showDelete}>批量删除</Button>
               <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.show}>导入</Button>
             </Col>

@@ -1,6 +1,6 @@
 
 import {getAllReports,getInspway,getProject,addInspway,deleteInspway,getRecordList,getRecordInfo,
-  deleteRecordInfo,uploadFile,getRecord ,getModelSelectName,downloadPlatFromTemp} from '@/services/TestRecord'
+  deleteRecordInfo,uploadFile,getRecord ,getModelSelectName,downloadPlatFromTemp,updateInspway} from '@/services/TestRecord'
 
 
 
@@ -72,6 +72,14 @@ export default {
     },
     *addInspway({ payload,callback }, { call, put }) {
       const response = yield call(addInspway, payload);
+      yield put({
+        type: 'add',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+    *updateInspway({ payload,callback }, { call, put }) {
+      const response = yield call(updateInspway, payload);
       yield put({
         type: 'add',
         payload: response,

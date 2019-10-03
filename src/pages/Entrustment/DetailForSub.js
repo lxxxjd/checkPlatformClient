@@ -14,13 +14,14 @@ import {
   Checkbox,
   Radio,
   Table,
-  Icon
+  Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForSub.less';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
+const {TextArea} = Input;
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
@@ -190,7 +191,7 @@ class DetailForSub extends PureComponent {
     return (
       <PageHeaderWrapper text = {reprotText}>
         <Modal
-          title="新建转委托"
+          title="转委托"
           visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -254,8 +255,8 @@ class DetailForSub extends PureComponent {
             </Form.Item>
             <Form.Item label="转委托要求">
               {getFieldDecorator('inspwaymemo1')(
-                  <Input />
-                )}
+                <TextArea style={{minHeight: 32}} rows={4}/>                
+              )}
             </Form.Item>
           </Form>
         </Modal>

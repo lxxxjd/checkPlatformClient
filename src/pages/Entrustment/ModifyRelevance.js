@@ -186,8 +186,8 @@ class ModifyRelevance extends PureComponent {
     } = this.props;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={3} sm={20}>
+        <Row gutter={8}>
+          <Col span={3}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
@@ -206,13 +206,12 @@ class ModifyRelevance extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col md={6} sm={20}>
+          <Col span={6}>
             <FormItem>
               {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-
-          <Col md={8} sm={20}>
+          <Col span={13}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -222,6 +221,14 @@ class ModifyRelevance extends PureComponent {
               </Button>
             </span>
           </Col>
+          <Col span={2}>
+            <span className={styles.submitButtons}>
+              <Button type="primary" onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </span>
+          </Col> 
         </Row>
       </Form>
     );
@@ -241,20 +248,7 @@ class ModifyRelevance extends PureComponent {
     };
     return (
       <PageHeaderWrapper text={reprotText}>
-        <Card bordered={false} className={styles.card}  size="small">
-          <Row gutter={16}>
-            <Col span={5}>
-              <Title level={4}> 已关联委托</Title>
-            </Col>
-            <Col span={17}>
-            </Col>
-            <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
-              </Button>
-            </Col>  
-          </Row>
+        <Card title="已关联委托" bordered={false} className={styles.card}  size="small">
           <div className={styles.tableList}>
             <Table
               size="middle"
@@ -266,7 +260,7 @@ class ModifyRelevance extends PureComponent {
             />
           </div>
         </Card>
-        <Card bordered={false} className={styles.card}  size="small">
+        <Card title="请选择需关联的委托" bordered={false} className={styles.card}  size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
