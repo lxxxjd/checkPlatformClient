@@ -53,7 +53,7 @@ class RecordUpload extends PureComponent {
       title: '证书名称',
       dataIndex: 'recordname',
       render: (text, record) => {
-        if(text === null){
+        if(text === null || text === undefined){
           return;
         }
         var  contentStr = [];

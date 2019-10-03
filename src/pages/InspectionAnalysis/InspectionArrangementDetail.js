@@ -18,17 +18,11 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
+import moment from 'moment'
 
-
-const FormItem = Form.Item;
-const { Option } = Select;
 const  columns1 = [
     {
       title: '人员',
-      dataIndex: 'itemC',
-    },
-    {
-      title: '指标名称',
       dataIndex: 'itemC',
     },
     {
@@ -61,28 +55,27 @@ const  columns1 = [
   ];
 const  columns2 = [
     {
-      title: '分包',
-      dataIndex: 'itemC',
+      title: '人员',
+      dataIndex: 'testman',
     },
     {
-      title: '指标名称',
-      dataIndex: 'itemC',
+      title: '分包时间',
+      dataIndex: 'assigndate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
-      title: '英文名称',
-      dataIndex: 'itemE',
+      title: '计价方式',
+      dataIndex: 'priceway',
     },
     {
-      title: '检测标准',
-      dataIndex: 'shipname',
+      title: '单价',
+      dataIndex: 'price',
     },
     {
-      title: '单位',
-      dataIndex: 'unit',
-    },
-    {
-      title: '结果',
-      dataIndex: 'result',
+      title: '总价',
+      dataIndex: 'totalfee',
     },
     {
       title: '操作',
@@ -116,11 +109,7 @@ const  operationTabList = [
 @Form.create()
 class InspectionArrangementDetail extends PureComponent {
   state = {
-    formValues: {},
-    visible:false,
-    showPrice:false,
     operationkey: 'tab1',
-    allCompanyName:[]
   };
   onOperationTabChange = key => {
     this.setState({ operationkey: key });
@@ -128,74 +117,34 @@ class InspectionArrangementDetail extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const reportno = sessionStorage.getItem('reportno');
+    const sampleno = sessionStorage.getItem('sampleno');
     dispatch({
-      type: 'inspectionAnalysis/getDetail',
+      type: 'inspectionAnalysis/getTestBySampleNo',
       payload:{
-         certCode : certCode,
-      }
-    });
-    dispatch({
-      type: 'inspectionAnalysis/getCompany',
-      payload: {
-        certCode : certCode,
-      },
-      callback: (response) => {
-        this.setState({allCompanyName:response})
+         reportno,
+         sampleno,
       }
     });
   }
 
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.setState({
-       formValues: {},
-    });
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'testInfo/getReports',
-      payload:{
-         certCode : certCode,
-      }
-    });
-  };
-
-  handleSearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const values = {
-        ...fieldsValue,
-        certCode : certCode,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-      };
-      dispatch({
-        type: 'testInfo/getReports',
-        payload: values,
-      });
-    });
-  };
-
   back = () =>{
-    router.push({
-      pathname:'/InspectionAnalysis/InspectionArrangement',
-    });
+    this.props.history.goBack();
   };
   render() {
     const {
-      inspectionAnalysis: {data},
+      inspectionAnalysis: {testInfo},
       loading,
-      form: { getFieldDecorator },
     } = this.props;
-    const {visible,showPrice,operationkey,allCompanyName} = this.state;
+    const {operationkey} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
-    const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
+    const applicant = sessionStorage.getItem('applicant');
+    const reprotText= {
+      reportno,
+      shipname,
+      applicant,
+    };
     const contentList = {
       tab1: (
         <Table
@@ -209,20 +158,16 @@ class InspectionArrangementDetail extends PureComponent {
         <Table
           pagination={false}
           loading={loading}
-          //dataSource={}
+          dataSource={testInfo}
           columns={columns2}
         />
       ),
     };
     return (
-      <PageHeaderWrapper title="样品结果登记">
+      <PageHeaderWrapper text={reprotText}>
         <Card bordered={false}>
-            <Row>
-            <Col sm={5}>
-              <span level={4}> 委托编号：{reportno} </span>
-            </Col>
-            <Col sm={17}>
-              <span> 运输工具：{shipname} </span>
+          <Row>
+            <Col sm={22}>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>

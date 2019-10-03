@@ -14,7 +14,8 @@ import {
   Table,
   Checkbox,
   DatePicker,
-  Radio
+  Radio,
+  notification
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -123,14 +124,59 @@ class InspectionArrangement extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('sampleno',text.sampleno);
     router.push({
       pathname:'/InspectionAnalysis/InspectionArrangementDetail',
     });
   };
   handleOk = () =>{
-    this.setState({ visible: false });
+    const {
+      form: {validateFieldsAndScroll},
+      dispatch,
+    } = this.props;
+    validateFieldsAndScroll((error, values) => {
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const reportno =  sessionStorage.getItem('reportno');
+      const sampleno =  sessionStorage.getItem('sampleno');
+      if (!error) {
+        // submit the values
+        dispatch({
+          type: 'inspectionAnalysis/assign',
+          payload: {
+            ...values,
+            assignman: user.nameC,
+            assignsort:'品质分包',
+            reportno,
+            sampleno,
+          },
+          callback: (response) => {
+            if (response.code === 200) {
+              const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+              dispatch({
+                type: 'inspectionAnalysis/getAllSample',
+                payload:{
+                   certCode : certCode,
+                }
+              });
+              notification.open({
+                message: '添加成功',
+              });
+            } else {
+              notification.open({
+                message: '添加失败',
+                description: response.data,
+              });
+            }
+          }
+        });
+        form.resetFields();
+        this.setState({ visible: false });
+      }
+    });
   };
   show = text =>{
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('sampleno',text.sampleno);
     this.setState({ visible: true });
   };
   onChange = e =>{

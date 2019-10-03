@@ -1,4 +1,4 @@
-import {getAllSample,getCompany,getDetails,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,getAllDetails,addResult} from '@/services/InspectionAnalysis'
+import {getAllSample,getCompany,getDetails,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,getAllDetails,addResult,assign,getTestBySampleNo} from '@/services/InspectionAnalysis'
 
 
 
@@ -9,6 +9,7 @@ export default {
       list : [],
       pagination : {},
     },
+    testInfo: [],
     companyName : [],
     detail : [],
     items : [],
@@ -94,6 +95,17 @@ export default {
       const response = yield call(addDetails, payload);
       if (callback) callback(response);
     },
+    *assign({ payload,callback }, { call, put }) {
+      const response = yield call(assign, payload);
+      if (callback) callback(response);
+    },
+    *getTestBySampleNo({ payload }, { call, put }) {
+      const response = yield call(getTestBySampleNo, payload);
+      yield put({
+        type: 'getTestBySampleNos',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -101,6 +113,12 @@ export default {
       return {
         ...state,
         samples: payload.data,
+      };
+    },
+    getTestBySampleNos(state, { payload }) {
+      return {
+        ...state,
+        testInfo: payload.data,
       };
     },
     getCompanyName(state, { payload }) {
