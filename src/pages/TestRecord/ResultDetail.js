@@ -36,7 +36,7 @@ class ResultDetail extends PureComponent {
     visible:false,
     checkProject:[],
     allCompanyName:[],
-    selectEntrustment:null,
+    selectEntrustment:false,
     showPrice:false,
   };
 
@@ -67,8 +67,9 @@ class ResultDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteItem(text, record)} >删除</a>
+          <a onClick={() => this.modifyItem(text, record)} >编辑</a>
           &nbsp;&nbsp;
+          <a onClick={() => this.deleteItem(text, record)} >删除</a>
         </Fragment>
       ),
     },
@@ -85,6 +86,15 @@ class ResultDetail extends PureComponent {
       }
     });
   }
+  modifyItem = text => {
+    const { form } = this.props;
+    this.setState({visible:true});
+    this.setState({selectEntrustment:true});
+    form.setFieldsValue({['inspway']:text.inspway});
+    form.setFieldsValue({['result']:text.result});
+    form.setFieldsValue({['begindate']:moment(text.begindate,"YYYY-MM-DD")});
+    form.setFieldsValue({['finishdate']:moment(text.finishdate,"YYYY-MM-DD")});
+  };
   deleteItem = text => {
     const {
       dispatch,
@@ -122,6 +132,7 @@ class ResultDetail extends PureComponent {
       form: { validateFieldsAndScroll },
       dispatch,
     } = this.props;
+    const {selectEntrustment} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     validateFieldsAndScroll((error, values) => {
       if (!error) {
@@ -129,25 +140,48 @@ class ResultDetail extends PureComponent {
           ...values,
           reportno:reportno
         };
-        dispatch({
-          type: 'testRecord/addInspway',
-          payload : params,
-          callback: (response) => {
-            if(response.code === 400){
-              notification.open({
-                message: '添加失败',
-                description:response.data,
-              });
-            }else{
-              dispatch({
-                type: 'testRecord/getInspway',
-                payload:{
-                  reportno : reportno,
-                }
-              });
+        if(selectEntrustment){
+          dispatch({
+            type: 'testRecord/updateInspway',
+            payload : params,
+            callback: (response) => {
+              if(response.code === 400){
+                notification.open({
+                  message: '添加失败',
+                  description:response.data,
+                });
+              }else{
+                dispatch({
+                  type: 'testRecord/getInspway',
+                  payload:{
+                    reportno : reportno,
+                  }
+                });
+              }
             }
-          }
-        });
+          });
+        }else{
+          dispatch({
+            type: 'testRecord/addInspway',
+            payload : params,
+            callback: (response) => {
+              if(response.code === 400){
+                notification.open({
+                  message: '添加失败',
+                  description:response.data,
+                });
+              }else{
+                dispatch({
+                  type: 'testRecord/getInspway',
+                  payload:{
+                    reportno : reportno,
+                  }
+                });
+              }
+            }
+          });
+        }
+        this.setState({ selectEntrustment: false });
         this.setState({ visible: false });
         form.resetFields();
       }
@@ -211,7 +245,7 @@ class ResultDetail extends PureComponent {
     return (
       <PageHeaderWrapper text={reprotText}>
         <Modal
-          title="上传记录"
+          title="结果登记"
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}

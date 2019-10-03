@@ -48,6 +48,15 @@ export async function addInspway(params) {
     },
   });
 }
+export async function updateInspway(params) {
+  return request(`/api/inspway/update_inspway`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
 export async function deleteInspway(params) {
 	return request(`/api/inspway/delete_inspway`,{
     method: 'POST',
