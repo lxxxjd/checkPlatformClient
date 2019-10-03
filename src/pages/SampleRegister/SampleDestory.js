@@ -93,9 +93,9 @@ class SampleDestory extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>浏览</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>查看</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.removeExistItem(text, record)}>删除</a>
+          <a onClick={() => this.removeExistItem(text, record)}>页面删除</a>
         </Fragment>
       ),
     },
@@ -269,7 +269,7 @@ class SampleDestory extends PureComponent {
               <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">
                 查询
               </Button>
-              <Button onClick={this.handleFormReset} style={{ marginLeft: 8 }}> 
+              <Button onClick={this.handleFormReset} style={{ marginLeft: 8 }}>
                 重置
               </Button>
             </Col>

@@ -452,7 +452,7 @@ class InspectorDetail extends PureComponent {
       loading,
     } = this.props;
 
-    const {taskData} = this.state;
+    const {taskData} = this;
 
     const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"));
     const Info = ({ title, value, bordered }) => (
