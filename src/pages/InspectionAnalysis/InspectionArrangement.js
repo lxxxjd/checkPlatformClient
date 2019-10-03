@@ -80,8 +80,7 @@ class InspectionArrangement extends PureComponent {
         <Fragment>
           <a onClick={() => this.mobileItem(text, record)}>人员</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.show(text, record)}>分包</a>
-          &nbsp;&nbsp;
+          {text.state==="已登记"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.detailItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
