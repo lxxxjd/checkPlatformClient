@@ -1,22 +1,19 @@
-import {} from '@/services/InspectionAnalysis'
+import {getCertReports} from '@/services/Certificate'
 
 
 
 export default {
   namespace: 'certificate',
   state: {
-    data: {
-      list: [],
-      pagination: {},
-    },
+    data:[],
     recordData:[],
   },
 
   effects: {
-    *getSampleRegister({ payload,callback }, { call, put }) {
-      const response = yield call(getAllSampleRegister, payload);
+    *getCertReports({ payload,callback }, { call, put }) {
+      const response = yield call(getCertReports, payload);
       yield put({
-        type: 'getSampleRegisterInfo',
+        type: 'getCertReport',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -24,7 +21,7 @@ export default {
   },
 
   reducers: {
-    getSampleRegisterInfo(state, { payload }) {
+    getCertReport(state, { payload }) {
       return {
         ...state,
         data: payload.data,

@@ -42,7 +42,7 @@ class CertificateUpload extends PureComponent {
       dataIndex: 'shipname',
     },
     {
-      title: '货号',
+      title: '货名',
       dataIndex: 'cargoname',
     },
     {
@@ -51,7 +51,7 @@ class CertificateUpload extends PureComponent {
     },
     {
       title: '证书名称',
-      dataIndex: 'recordname',
+      dataIndex: 'certnames',
       render: (text, record) => {
         if(text === null){
           return;
@@ -98,7 +98,7 @@ class CertificateUpload extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'certificate/getRecordList',
+      type: 'certificate/getCertReports',
       payload:{
         certCode:user.certCode
       }
@@ -117,7 +117,7 @@ class CertificateUpload extends PureComponent {
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     router.push({
-      pathname:'/TestRecord/UploadDetail',
+      pathname:'/Certificate/CertificateUpload',
     });
   };
 
@@ -133,7 +133,7 @@ class CertificateUpload extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'testRecord/getRecordList',
+        type: 'certificate/getCertReports',
         payload: values,
       });
     });
@@ -145,7 +145,7 @@ class CertificateUpload extends PureComponent {
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const { dispatch } = this.props;
     dispatch({
-      type: 'testRecord/getRecordList',
+      type: 'certificate/getCertReports',
       payload:{
          certCode : certCode,
       }
@@ -208,7 +208,7 @@ class CertificateUpload extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={data.list}
+              dataSource={data}
               columns={this.columns}
               rowKey="reportno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
