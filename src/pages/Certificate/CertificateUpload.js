@@ -140,16 +140,7 @@ class CertificateUpload extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'certificate/getCertReports',
-      payload:{
-         certCode : certCode,
-      }
-    });
+    this.componentDidMount();
   };
 
   renderSimpleForm() {
@@ -201,7 +192,7 @@ class CertificateUpload extends PureComponent {
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="证书上传" > 
+      <PageHeaderWrapper > 
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>

@@ -515,7 +515,7 @@ class CertificateUploadDetail extends PureComponent {
               loading={loading}
               dataSource={recordData}
               columns={this.columns}
-              rowKey="recordname"
+              rowKey="name"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
