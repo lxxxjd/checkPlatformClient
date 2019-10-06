@@ -1,4 +1,4 @@
-import {getCertReports} from '@/services/Certificate'
+import {getCertReports,getCertFiles} from '@/services/Certificate'
 
 
 
@@ -18,6 +18,14 @@ export default {
       });
       if (callback) callback(response.data);
     },
+    *getCertFiles({ payload,callback }, { call, put }) {
+      const response = yield call(getCertFiles, payload);
+      yield put({
+        type: 'getCertFile',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
   },
 
   reducers: {
@@ -25,6 +33,12 @@ export default {
       return {
         ...state,
         data: payload.data,
+      };
+    },
+    getCertFile(state, { payload }) {
+      return {
+        ...state,
+        recordData: payload.data,
       };
     },
   },

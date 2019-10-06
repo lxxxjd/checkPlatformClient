@@ -393,9 +393,10 @@ export default [
             component: './Certificate/CertificateUpload',
           },
           {
-            path: '/Certificate/UploadDetail',
-            name: 'UploadDetail',
-            component: './Certificate/UploadDetail',
+            path: '/Certificate/CertificateUploadDetail',
+            name: 'CertificateUploadDetail',
+            component: './Certificate/CertificateUploadDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
       },

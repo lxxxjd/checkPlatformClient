@@ -57,7 +57,7 @@ class CertificateUpload extends PureComponent {
           return;
         }
         var  contentStr = [];
-        contentStr = text.split(" ");
+        contentStr = text.split("|");
         if (contentStr.length < 2) {
           return text;
         }
@@ -86,7 +86,7 @@ class CertificateUpload extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>记录制作</a>
+          <a onClick={() => this.modifyItem(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -117,7 +117,7 @@ class CertificateUpload extends PureComponent {
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     router.push({
-      pathname:'/Certificate/CertificateUpload',
+      pathname:'/Certificate/CertificateUploadDetail',
     });
   };
 

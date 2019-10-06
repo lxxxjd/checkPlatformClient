@@ -14,7 +14,9 @@ export async function getCertReports(params) {
     },
   });
 }
-
+export async function getCertFiles(params) {
+  return request(`/api/cert_report/getCertFiles?reportno=${params.reportno}`);
+}
 
 
 

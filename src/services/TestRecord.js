@@ -21,7 +21,6 @@ export async function getRecordList(params) {
 }
 export async function getRecordInfo(params) {
 	return request(`/api/recordinfo/get_recordInfo?reportno=${params.reportno}`);
-
 }
 export async function getRecord(params) {
   return request(`/api/recordinfo/get_record?recordname=${params.recordname}&reportno=${params.reportno}`);

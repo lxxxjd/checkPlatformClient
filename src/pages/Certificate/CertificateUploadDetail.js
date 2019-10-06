@@ -113,7 +113,7 @@ function getBase64(file) {
   certificate,
   loading: loading.models.certificate,
 }))
-class UploadDetail extends PureComponent {
+class CertificateUploadDetail extends PureComponent {
   state = {
     formValues: {},
     visible:false,
@@ -131,7 +131,7 @@ class UploadDetail extends PureComponent {
   columns = [
     {
       title: '记录名',
-      dataIndex: 'recordname',
+      dataIndex: 'name',
       render: val => {
         //取文件名
         var pattern = /\.{1}[a-z]{1,}$/;
@@ -175,7 +175,7 @@ class UploadDetail extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'certificate/getRecordInfo',
+      type: 'certificate/getCertFiles',
       payload:{
          reportno : reportno,
       }
@@ -527,4 +527,4 @@ class UploadDetail extends PureComponent {
 /*         <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
           <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>批量上传</Button>
           <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>工作目录</Button>*/
-export default UploadDetail;
+export default CertificateUploadDetail;
