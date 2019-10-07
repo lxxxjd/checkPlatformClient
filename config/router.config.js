@@ -91,7 +91,8 @@ export default [
           //   component: "./Entrustment/CopyForEntrustment",
           //   hideInMenu: 'true',//添加页不需要在menu上显示
           // },
-y            path: "/Entrustment/CopyForEntrustmentList",
+          {
+            path: "/Entrustment/CopyForEntrustmentList",
             name: "CopyForEntrustmentList",
             component: "./Entrustment/CopyForEntrustmentList",
           },
