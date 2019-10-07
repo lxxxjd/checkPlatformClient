@@ -80,7 +80,7 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://localhost:81/',
+      target: 'http://localhost:8181/',
       changeOrigin: true,
     },
   },
