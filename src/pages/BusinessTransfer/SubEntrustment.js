@@ -75,7 +75,7 @@ class SubEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.detailItem(text, record)}>转委托</a>
+          <a onClick={() => this.detailItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

@@ -14,7 +14,7 @@ import {
   Table,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './SampleRegister.less';
+import styles from '../table.less';
 
 
 
@@ -67,7 +67,7 @@ class SampleRegister extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>样品登记</a>
+          <a onClick={() => this.toRegisterDetail(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -114,7 +114,7 @@ class SampleRegister extends PureComponent {
       type: 'sample/getSampleRegister',
       payload: params,
     });
-  }
+  };
 
 
 
@@ -190,9 +190,6 @@ class SampleRegister extends PureComponent {
     );
   }
 
-
-
-
   render() {
     const {
       sample: {data},
@@ -200,10 +197,11 @@ class SampleRegister extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="样品登记">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowKey="reportno"
               loading={loading}
               dataSource={data.list}

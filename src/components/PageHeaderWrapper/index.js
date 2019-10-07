@@ -45,6 +45,7 @@ const PageHeaderWrapper = ({
   logo,
   extraContent,
   hiddenBreadcrumb,
+  text,
   ...restProps
 }) => {
   return (
@@ -55,16 +56,6 @@ const PageHeaderWrapper = ({
           return (
             <PageHeader
               wide={contentWidth === 'Fixed'}
-              title={
-                <Title
-                  level={4}
-                  style={{
-                    marginBottom: 0,
-                  }}
-                >
-                  {title}
-                </Title>
-              }
               key="pageheader"
               {...restProps}
               breadcrumb={
@@ -72,6 +63,7 @@ const PageHeaderWrapper = ({
                 conversionBreadcrumbList({
                   ...value,
                   ...restProps,
+                  text,
                   home: <FormattedMessage id="menu.home" defaultMessage="Home" />,
                 })
               }

@@ -13,7 +13,7 @@ import {
   Table, message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ListFiction.less';
+import styles from '../table.less';
 
 const { Option } = Select;
 
@@ -57,14 +57,9 @@ class ListFiction extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteBylistno(text, record)}>删除</a>
+          {(record.invoiceStatus==='未审核'||text.invoiceStatus==='已退回')?[ <span><a onClick={() => this.deleteBylistno(text, record)}>删除</a></span>]:null}
           &nbsp;&nbsp;
-          <a onClick={() => this.toListFictionReview(text, record)}>审核</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>浏览</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text)}>查看</a>
         </Fragment>
       ),
     },
@@ -114,6 +109,7 @@ class ListFiction extends PureComponent {
   };
 
   previewItem = text => {
+    console.log(text.invoiceStatus);
     // sessionStorage.setItem('reportno',text.reportno);
     // router.push({
     //   pathname:'/Entrustment/DetailForEntrustment',
@@ -206,11 +202,12 @@ class ListFiction extends PureComponent {
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper >
-        <Card bordered={false}>
+      <PageHeaderWrapper>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data}
               columns={this.columns}

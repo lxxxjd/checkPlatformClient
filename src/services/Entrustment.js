@@ -78,11 +78,19 @@ export async function getCheckProject() {
   return request('/api/check_project/get_project');
 }
 
-
-export async function getCargos() {
-  return request('/api/cargo/get_cargos');
+export async function getCnasInfo(params) {
+  return request(`/api/cnas/getCnasInfo?checkCode=${params.checkCode}`);
+}
+export async function getCnasCheckInfo(params) {
+  return request(`/api/cnas/getCnasCheckInfo?subdomaincode=${params.subdomaincode}`);
 }
 
+export async function getCargos(params) {
+  return request(`/api/cargo/get_cargos?certCode=${params.certCode}`);
+}
+export async function searchCargos(params) {
+  return request(`/api/cargo/search_cargos?certCode=${params.certCode}&value=${params.value}`);
+}
 export async function cancelReportItem(params) {
   return request(`/api/report/delete_report`,{
     method: 'POST',

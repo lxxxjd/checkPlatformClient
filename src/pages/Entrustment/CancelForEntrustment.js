@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SearchForEntrustment.less';
-
+import moment from 'moment';
 
 
 
@@ -57,9 +57,9 @@ class CancelForEntrustment extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
@@ -78,6 +78,8 @@ class CancelForEntrustment extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.cancelItem(text, record)}>撤销</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -90,7 +92,13 @@ class CancelForEntrustment extends PureComponent {
       reportNo:text.reportno
     });
   };
-
+  previewItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    localStorage.setItem('reportDetailNo',text.reportno);
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
+    });
+  };
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -265,7 +273,7 @@ class CancelForEntrustment extends PureComponent {
 
     return (
       <PageHeaderWrapper title="撤销委托">
-        <Card bordered={false}>
+        <Card bordered={false}               size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Modal
@@ -279,6 +287,7 @@ class CancelForEntrustment extends PureComponent {
             </Modal>
             <Table
               //selectedRows={selectedRows}
+              size="middle"
               loading={loading}
               dataSource={data.list}
               columns={this.columns}

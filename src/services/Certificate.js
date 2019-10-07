@@ -4,6 +4,28 @@ import { stringify } from "qs";
 import request from "@/utils/request";
 
 
+export async function getCertReports(params) {
+  // stringify这个将json序列化 比如 {"a"：1，"b":2} 转换成 a=1&b=2
+  return request(`/api/cert_report/getCertReports`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+export async function getCertFiles(params) {
+  return request(`/api/cert_report/getCertFiles?reportno=${params.reportno}`);
+}
+
+
+
+
+
+
+
+
+
 // get请求 注意 ` 这个符号 不是这种 ’号
 export async function queryUser1(params) {
   // stringify这个将json序列化 比如 {"a"：1，"b":2} 转换成 a=1&b=2

@@ -69,3 +69,12 @@ export async function setSampleStatus(params) {
 }
 
 
+
+export async function updateSampleRegisters(params) {
+  return request(`/api/sampleRegister/updateSampleRegisters`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}

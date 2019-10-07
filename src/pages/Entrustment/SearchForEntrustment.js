@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './SearchForEntrustment.less';
-
+import moment from 'moment';
 
 
 
@@ -47,9 +47,9 @@ class SearchForEntrustment extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
@@ -67,11 +67,9 @@ class SearchForEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.copyItem(text, record)}>复制</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
@@ -242,11 +240,14 @@ class SearchForEntrustment extends PureComponent {
     } = this.props;
     const { selectedRows, } = this.state;
     return (
-      <PageHeaderWrapper title="撤销查询">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+      <PageHeaderWrapper>
+        <Card size='small' bordered={false}>
+          <div>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
+              className={styles.antTable}
+              rowClassName={styles.antTable2}
               loading={loading}
               rowKey='reportno'
               dataSource={data.list}

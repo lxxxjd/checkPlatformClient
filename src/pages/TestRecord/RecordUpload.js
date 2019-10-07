@@ -13,8 +13,8 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ResultRegistration.less';
-
+import styles from '../table.less';
+import moment from 'moment';
 const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
@@ -35,6 +35,7 @@ class RecordUpload extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
+      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>
     },
     {
       title: '运输工具',
@@ -51,12 +52,41 @@ class RecordUpload extends PureComponent {
     {
       title: '证书名称',
       dataIndex: 'recordname',
+      render: (text, record) => {
+        if(text === null || text === undefined){
+          return;
+        }
+        var  contentStr = [];
+        contentStr = text.split(" ");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        var result = null;
+        const br = <br></br>;
+        var pattern = /\.{1}[a-z]{1,}$/;
+        for( var  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            if (pattern.exec(contentStr[j]) !== null) {
+              result=contentStr[j].slice(0, pattern.exec(contentStr[j]).index);
+            } else {
+              result=contentStr[j];
+            }
+          }else{
+            if (pattern.exec(contentStr[j]) !== null) {
+              result=<span>{result}{br}{contentStr[j].slice(0, pattern.exec(contentStr[j]).index)}</span>;
+            } else {
+              result=<span>{result}{br}{contentStr[j]}</span>;
+            }
+          }
+        }
+        return <div>{result}</div>;
+      },
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>记录制作</a>
+          <a onClick={() => this.modifyItem(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -85,6 +115,7 @@ class RecordUpload extends PureComponent {
   modifyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',text.applicant);
     router.push({
       pathname:'/TestRecord/UploadDetail',
     });
@@ -170,11 +201,12 @@ class RecordUpload extends PureComponent {
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="证书上传">
-        <Card bordered={false}>
+      <PageHeaderWrapper title="证书上传" > 
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data.list}
               columns={this.columns}

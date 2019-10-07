@@ -10,11 +10,10 @@ import {
   Input,
   Button,
   Select,
-  Table, message,Modal
-
+  Table, message, Modal, Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CustomerServiceDetail.less';
+import styles from '../table.less';
 import task from './models/task';
 
 
@@ -147,6 +146,10 @@ class CustomerServiceDetail extends PureComponent {
       dataIndex: 'tel',
     },
     {
+      title: '住址',
+      dataIndex: 'place',
+    },
+    {
       title: '岗位',
       dataIndex: 'position',
     },
@@ -190,9 +193,7 @@ class CustomerServiceDetail extends PureComponent {
 
 
   back = () => {
-    router.push({
-      pathname:'/TaskAppoint/CustomerService',
-    });
+    this.props.history.goBack();
   };
 
   save = () => {
@@ -267,7 +268,7 @@ class CustomerServiceDetail extends PureComponent {
         }
       }
     });
-  }
+  };
 
   handleFormReset = () => {
     this.init();
@@ -279,7 +280,6 @@ class CustomerServiceDetail extends PureComponent {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const values = {
         ...fieldsValue,
@@ -296,12 +296,12 @@ class CustomerServiceDetail extends PureComponent {
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
-  }
+  };
 
   handleEdit = (flag,text) => {
     this.handleModalVisible(flag);
     this.state.modalInfo = text;
-  }
+  };
 
   handleModalVisible = (flag) => {
     this.setState({
@@ -364,12 +364,8 @@ class CustomerServiceDetail extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="applicant">委托人</Option>
-                  <Option value="agent">代理人</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
-
+                  <Option value="reportno">姓名</Option>
+                  <Option value="applicant">联系人</Option>
                 </Select>
               )}
             </Form.Item>
@@ -388,6 +384,8 @@ class CustomerServiceDetail extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.save}>保存</Button>
+              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.back}><Icon type="left" />返回</Button>
             </span>
           </Col>
         </Row>
@@ -428,44 +426,22 @@ class CustomerServiceDetail extends PureComponent {
       handleModalVisible: this.handleModalVisible,
     };
 
+    const reprotText= {
+      reportno:reportinfo.reportno,
+      applicant:reportinfo.applicant,
+      shipname:reportinfo.shipname,
+      inspway:reportinfo.inspway,
+    };
 
     return (
-
-      <PageHeaderWrapper title="指派编辑">
-
-        <div className={styles.standardList}>
-          <Card bordered={false}>
-          <Row gutter={16}>
-            <Col span={2}>
-              <Button type="primary" onClick={this.save}>保存</Button>
-            </Col>
-            <Col span={2}>
-              <Button type="primary" onClick={this.back}>返回</Button>
-            </Col>
-            <Col span={10} />
-          </Row>
-        </Card>
-
-          <Card bordered={false}>
-            <Row>
-              <Col sm={8} xs={24}>
-                <Info title="委托编号" value={reportinfo.reportno} bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="委托人" value={reportinfo.applicant} bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="运输工具" value={reportinfo.shipname} />
-              </Col>
-            </Row>
-          </Card>
-
+      <PageHeaderWrapper text={reprotText}>
+        <div>
           <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
-
-          <Card bordered={false} style={{ marginTop: 24 }}>
+          <Card bordered={false} style={{ marginTop: 24 }} size="small">
             <div className={styles.tableList}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Table
+                size="middle"
                 rowKey="inspman"
                 loading={loading}
                 dataSource={taskCustomers.list}
@@ -475,7 +451,6 @@ class CustomerServiceDetail extends PureComponent {
               />
             </div>
           </Card>
-
         </div>
       </PageHeaderWrapper>
     );

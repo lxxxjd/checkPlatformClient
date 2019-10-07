@@ -14,8 +14,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './EntrustmentRelevance.less';
-
-
+import moment from 'moment';
 const FormItem = Form.Item;
 const { Option } = Select;
 
@@ -41,9 +40,9 @@ class EntrustmentRelevance extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
@@ -82,7 +81,7 @@ class EntrustmentRelevance extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>修改委托关联</a>
+          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

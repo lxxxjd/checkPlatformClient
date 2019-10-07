@@ -21,7 +21,6 @@ export async function getRecordList(params) {
 }
 export async function getRecordInfo(params) {
 	return request(`/api/recordinfo/get_recordInfo?reportno=${params.reportno}`);
-
 }
 export async function getRecord(params) {
   return request(`/api/recordinfo/get_record?recordname=${params.recordname}&reportno=${params.reportno}`);
@@ -41,6 +40,15 @@ export async function getInspway(params) {
 }
 export async function addInspway(params) {
 	return request(`/api/inspway/add_inspway`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+export async function updateInspway(params) {
+  return request(`/api/inspway/update_inspway`,{
     method: 'POST',
     data: {
       ...params,

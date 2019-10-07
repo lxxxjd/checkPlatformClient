@@ -14,10 +14,11 @@ import {
   Table,
   Checkbox,
   DatePicker,
-  Radio
+  Radio,
+  notification
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './InspectionArrangement.less';
+import styles from '../table.less';
 import moment from 'moment'
 const CheckboxGroup = Checkbox.Group;
 const FormItem = Form.Item;
@@ -79,8 +80,7 @@ class InspectionArrangement extends PureComponent {
         <Fragment>
           <a onClick={() => this.mobileItem(text, record)}>人员</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.show(text, record)}>分包</a>
-          &nbsp;&nbsp;
+          {text.state==="已登记"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.detailItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
@@ -123,14 +123,59 @@ class InspectionArrangement extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('sampleno',text.sampleno);
     router.push({
       pathname:'/InspectionAnalysis/InspectionArrangementDetail',
     });
   };
   handleOk = () =>{
-    this.setState({ visible: false });
+    const {
+      form: {validateFieldsAndScroll},
+      dispatch,
+    } = this.props;
+    validateFieldsAndScroll((error, values) => {
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const reportno =  sessionStorage.getItem('reportno');
+      const sampleno =  sessionStorage.getItem('sampleno');
+      if (!error) {
+        // submit the values
+        dispatch({
+          type: 'inspectionAnalysis/assign',
+          payload: {
+            ...values,
+            assignman: user.nameC,
+            assignsort:'品质分包',
+            reportno,
+            sampleno,
+          },
+          callback: (response) => {
+            if (response.code === 200) {
+              const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+              dispatch({
+                type: 'inspectionAnalysis/getAllSample',
+                payload:{
+                   certCode : certCode,
+                }
+              });
+              notification.open({
+                message: '添加成功',
+              });
+            } else {
+              notification.open({
+                message: '添加失败',
+                description: response.data,
+              });
+            }
+          }
+        });
+        form.resetFields();
+        this.setState({ visible: false });
+      }
+    });
   };
   show = text =>{
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('sampleno',text.sampleno);
     this.setState({ visible: true });
   };
   onChange = e =>{
@@ -153,10 +198,11 @@ class InspectionArrangement extends PureComponent {
     const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="检验安排">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm></SearchForm></div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={samples.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

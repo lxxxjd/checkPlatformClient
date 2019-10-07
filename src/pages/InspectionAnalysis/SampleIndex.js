@@ -13,7 +13,7 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './InspectionArrangement.less';
+import styles from '../table.less';
 import moment from 'moment'
 import Search from './Search.js'
 
@@ -72,7 +72,7 @@ class SampleIndex extends PureComponent {
         <Fragment>
           <a onClick={() => this.mobileItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.mobileItem(text, record)}>详情</a>
+          <a onClick={() => this.detailItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -104,10 +104,17 @@ class SampleIndex extends PureComponent {
     sessionStorage.setItem('sampleno',text.sampleno);
     sessionStorage.setItem('cargoname',text.cargoname);
     router.push({
+      pathname:'/InspectionAnalysis/SampleModify',
+    });
+  };
+  detailItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('sampleno',text.sampleno);
+    sessionStorage.setItem('cargoname',text.cargoname);
+    router.push({
       pathname:'/InspectionAnalysis/SampleDetail',
     });
   };
-
   render() {
     const {
       inspectionAnalysis: {samples},
@@ -115,10 +122,11 @@ class SampleIndex extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="样品指标">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm></SearchForm></div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={samples.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

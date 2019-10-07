@@ -14,7 +14,7 @@ import {
   Table, message, Modal, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './Cost.less';
+import styles from '../table.less';
 
 
 
@@ -442,10 +442,11 @@ class Cost extends PureComponent {
 
     return (
       <PageHeaderWrapper title="成本支出">
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={costInfoData}
               rowKey="keyno"

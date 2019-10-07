@@ -80,8 +80,9 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://localhost:8181/',
+      target: 'https://localhost:81/',
       changeOrigin: true,
+      secure: false, //配置关闭证书签名验证
     },
   },
   ignoreMomentLocale: true,

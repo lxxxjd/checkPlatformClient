@@ -13,8 +13,8 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ResultRegistration.less';
-
+import styles from '../table.less';
+import moment from 'moment'
 const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
@@ -35,6 +35,7 @@ class ResultRegistration extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
+      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>
     },
     {
       title: '运输工具',
@@ -52,7 +53,7 @@ class ResultRegistration extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>结果登记</a>
+          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -82,6 +83,7 @@ class ResultRegistration extends PureComponent {
   modifyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',text.applicant);
     router.push({
       pathname:'/TestRecord/ResultDetail',
     });
@@ -170,10 +172,11 @@ class ResultRegistration extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="结果登记">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+        <Card bordered={false} size="small">
+          <div className={styles.tableList} >
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
               dataSource={data.list}
               columns={this.columns}

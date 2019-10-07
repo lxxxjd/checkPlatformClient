@@ -15,7 +15,8 @@ import {
   Radio,
   Table,
   DatePicker,
-  notification
+  notification,
+  Icon
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultDetail.less';
@@ -35,7 +36,7 @@ class ResultDetail extends PureComponent {
     visible:false,
     checkProject:[],
     allCompanyName:[],
-    selectEntrustment:null,
+    selectEntrustment:false,
     showPrice:false,
   };
 
@@ -66,8 +67,9 @@ class ResultDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteItem(text, record)} >删除</a>
+          <a onClick={() => this.modifyItem(text, record)} >编辑</a>
           &nbsp;&nbsp;
+          <a onClick={() => this.deleteItem(text, record)} >删除</a>
         </Fragment>
       ),
     },
@@ -84,6 +86,15 @@ class ResultDetail extends PureComponent {
       }
     });
   }
+  modifyItem = text => {
+    const { form } = this.props;
+    this.setState({visible:true});
+    this.setState({selectEntrustment:true});
+    form.setFieldsValue({['inspway']:text.inspway});
+    form.setFieldsValue({['result']:text.result});
+    form.setFieldsValue({['begindate']:moment(text.begindate,"YYYY-MM-DD")});
+    form.setFieldsValue({['finishdate']:moment(text.finishdate,"YYYY-MM-DD")});
+  };
   deleteItem = text => {
     const {
       dispatch,
@@ -112,12 +123,16 @@ class ResultDetail extends PureComponent {
         }
       }
     });
-  }
+  };
+  back = () =>{
+    this.props.history.goBack();
+  };
   handleOk = () =>{
     const {
       form: { validateFieldsAndScroll },
       dispatch,
     } = this.props;
+    const {selectEntrustment} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     validateFieldsAndScroll((error, values) => {
       if (!error) {
@@ -125,25 +140,48 @@ class ResultDetail extends PureComponent {
           ...values,
           reportno:reportno
         };
-        dispatch({
-          type: 'testRecord/addInspway',
-          payload : params,
-          callback: (response) => {
-            if(response.code === 400){
-              notification.open({
-                message: '添加失败',
-                description:response.data,
-              });
-            }else{
-              dispatch({
-                type: 'testRecord/getInspway',
-                payload:{
-                  reportno : reportno,
-                }
-              });
+        if(selectEntrustment){
+          dispatch({
+            type: 'testRecord/updateInspway',
+            payload : params,
+            callback: (response) => {
+              if(response.code === 400){
+                notification.open({
+                  message: '添加失败',
+                  description:response.data,
+                });
+              }else{
+                dispatch({
+                  type: 'testRecord/getInspway',
+                  payload:{
+                    reportno : reportno,
+                  }
+                });
+              }
             }
-          }
-        });
+          });
+        }else{
+          dispatch({
+            type: 'testRecord/addInspway',
+            payload : params,
+            callback: (response) => {
+              if(response.code === 400){
+                notification.open({
+                  message: '添加失败',
+                  description:response.data,
+                });
+              }else{
+                dispatch({
+                  type: 'testRecord/getInspway',
+                  payload:{
+                    reportno : reportno,
+                  }
+                });
+              }
+            }
+          });
+        }
+        this.setState({ selectEntrustment: false });
         this.setState({ visible: false });
         form.resetFields();
       }
@@ -197,11 +235,17 @@ class ResultDetail extends PureComponent {
     } = testRecord
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
+    const applicant = sessionStorage.getItem('applicant');
+    const reprotText= {
+      reportno,
+      shipname,
+      applicant,
+    };
     const projectOptions = projectData.map(d => <Option key={d}  value={d}>{d}</Option>);
     return (
-      <PageHeaderWrapper title="结果登记">
+      <PageHeaderWrapper text={reprotText}>
         <Modal
-          title="上传记录"
+          title="结果登记"
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -251,19 +295,21 @@ class ResultDetail extends PureComponent {
             </Form.Item>
           </Form>
         </Modal>
-        <Card bordered={false}>
-            <Row>
-            <Col sm={5} xs={24}>
-              <span level={4} > 委托编号：{reportno} </span>
+        <Card bordered={false} size="small">
+          <Row>
+            <Col span={22}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
             </Col>
-            <Col sm={8} xs={24}>
-              <span> 运输工具：{shipname} </span>
-            </Col>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </Col> 
           </Row>
-          <br></br>
-          <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               loading={loading}
               dataSource={inspwayData}
               columns={this.columns}

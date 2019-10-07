@@ -1,6 +1,30 @@
 @import '~antd/lib/style/themes/default.less';
 @import '~@/utils/utils.less';
 
+.rowClass{
+  z-index: -100;
+  position: relative;
+}
+
+.dynamic-delete-button {
+  cursor: pointer;
+  position: relative;
+  top: 10px;
+  font-size: 400px;
+  color: #999;
+  transition: all 0.3s;
+  width:24px;
+  height:24px;
+}
+.dynamic-delete-button:hover {
+  color: #777;
+}
+.dynamic-delete-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+
 .tableList {
   .tableListOperator {
     margin-bottom: 16px;
@@ -15,7 +39,7 @@
     .ant-form-item {
       display: flex;
       margin-right: 0;
-      margin-bottom: 24px;
+      margin-bottom: 1px;
       > .ant-form-item-label {
         width: auto;
         padding-right: 8px;
@@ -29,16 +53,6 @@
       flex: 1;
     }
   }
-  .submitButtons {
-    display: block;
-    margin-bottom: 24px;
-    margin-left: 30px;
-    white-space: nowrap;
-  }
-  .searchCondition{
-    margin-left: 30px;
-  }
-
 }
 
 
@@ -54,3 +68,4 @@
     margin-right: 8px;
   }
 }
+

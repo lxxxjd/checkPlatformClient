@@ -1,6 +1,6 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
-        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts} from '@/services/Entrustment';
+        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,getCnasInfo,getCnasCheckInfo} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -110,7 +110,14 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
+    *searchCargos({ payload ,callback}, { call, put }) {
+      const response = yield call(searchCargos, payload);
+      yield put({
+        type: 'getCargosName',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(cancelReportItem, payload);
       yield put({
@@ -121,6 +128,14 @@ export default {
     },
     *getContacts({ payload, callback }, { call, put }) {
       const response = yield call(getContacts, payload);
+      if (callback) callback(response);
+    },
+    *getCnasInfo({ payload ,callback}, { call, put }) {
+      const response = yield call(getCnasInfo, payload);
+      if (callback) callback(response);
+    },
+    *getCnasCheckInfo({ payload ,callback}, { call, put }) {
+      const response = yield call(getCnasCheckInfo, payload);
       if (callback) callback(response);
     },
   },

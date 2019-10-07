@@ -146,8 +146,9 @@
   ],
   "proxy": {
     "/api": {
-      "target": "http://localhost:8181/",
-      "changeOrigin": true
+      "target": "https://localhost:81/",
+      "changeOrigin": true,
+      "secure": false
     }
   }
 }

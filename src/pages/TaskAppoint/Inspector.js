@@ -14,8 +14,8 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CustomerService.less';
-
+import styles from '../table.less';
+import moment from 'moment'
 
 
 
@@ -47,9 +47,9 @@ class Inspector extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
@@ -71,7 +71,7 @@ class Inspector extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toInspectDetail(text, record)}>指派编辑</a>
+          <a onClick={() => this.toInspectDetail(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -242,13 +242,11 @@ class Inspector extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="检验指派">
-
-
-
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowKey="reportno"
               loading={loading}
               dataSource={dataInspect.list}

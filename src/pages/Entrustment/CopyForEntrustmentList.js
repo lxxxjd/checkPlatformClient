@@ -13,24 +13,31 @@ import {
   Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './FinalPrice.less';
+import moment from 'moment';
+import styles from './SearchForEntrustment.less';
+
+
+
 
 
 const FormItem = Form.Item;
 const { Option } = Select;
-
+const getValue = obj =>
+  Object.keys(obj)
+    .map(key => obj[key])
+    .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ certificate, loading }) => ({
-  certificate,
-  loading: loading.models.certificate,
+@connect(({ entrustment, loading }) => ({
+  entrustment,
+  loading: loading.models.entrustment,
 }))
 
 @Form.create()
-class FinalPrice extends PureComponent {
+class CopyForEntrustmentList extends PureComponent {
   state = {
+    selectedRows: [],
     formValues: {},
-    visible:false,
   };
 
   columns = [
@@ -41,9 +48,9 @@ class FinalPrice extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
@@ -58,16 +65,10 @@ class FinalPrice extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '状态',
-      dataIndex: 'state',
-    },
-    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>定价</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.mobileItem(text, record)}>详情</a>
+          <a onClick={() => this.copyItem(text, record)}>复制</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -75,67 +76,69 @@ class FinalPrice extends PureComponent {
     },
   ];
 
-
   componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const params = {
+      certCode:user.certCode
+    };
     dispatch({
-      type: 'testInfo/getReports',
-      payload:{
-         certCode : certCode,
-      }
+      type: 'entrustment/fetch',
+      payload: params,
     });
-  }
+  };
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
+    localStorage.setItem('reportDetailNo',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
-    localStorage.setItem('reportDetailNo',text.reportno);
   };
-  mobileItem = text => {
+
+  copyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
-    sessionStorage.setItem('shipname',text.shipname);
-    sessionStorage.setItem('applicant',text.applicant);
     router.push({
-      pathname:'/BusinessTransfer/ModifyRelevance',
+      pathname:'/Entrustment/CopyForEntrustment',
     });
   };
 
   handleFormReset = () => {
+
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const params = {
+      certCode:user.certCode
+    };
     const { form } = this.props;
     form.resetFields();
     this.setState({
-       formValues: {},
+      formValues: {},
     });
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const { dispatch } = this.props;
     dispatch({
-      type: 'testInfo/getReports',
-      payload:{
-         certCode : certCode,
-      }
+      type: 'entrustment/fetch',
+      payload: params,
     });
   };
 
 
 
   handleSearch = e => {
+
     e.preventDefault();
     const { dispatch, form } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
-        certCode : certCode,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
+        certCode:user.certCode,
       };
       dispatch({
-        type: 'testInfo/getReports',
+        type: 'entrustment/fetch',
         payload: values,
       });
     });
@@ -188,34 +191,28 @@ class FinalPrice extends PureComponent {
       </Form>
     );
   }
-  handleOk = () =>{
-    this.setState({ visible: false });
-  };
 
-  handleCancel = () =>{
-    this.setState({ visible: false });
-  };
 
-  showModal = () => {
-    this.setState({ visible: true });
-  };
+
 
   render() {
     const {
-      certificate: {data},
+      entrustment: {data},
       loading,
     } = this.props;
+    const { selectedRows, } = this.state;
     return (
-      <PageHeaderWrapper title="样品指标">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
+      <PageHeaderWrapper>
+        <Card size='small' bordered={false}>
+          <div>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               loading={loading}
+              rowKey='reportno'
               dataSource={data.list}
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
-              rowKey="reportno"
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
         </Card>
@@ -224,4 +221,4 @@ class FinalPrice extends PureComponent {
   }
 }
 
-export default FinalPrice;
+export default CopyForEntrustmentList;

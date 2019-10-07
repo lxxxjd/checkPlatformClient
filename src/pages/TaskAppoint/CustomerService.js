@@ -12,10 +12,9 @@ import {
   Select,
   Table,
 } from 'antd';
-import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './CustomerService.less';
-
+import styles from '../table.less';
+import moment from 'moment'
 
 
 
@@ -47,9 +46,7 @@ class CustomerService extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>
     },
     {
       title: '委托人',
@@ -71,7 +68,7 @@ class CustomerService extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>指派编辑</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -205,7 +202,6 @@ class CustomerService extends PureComponent {
                   <Option value="applicant">委托人</Option>
                   <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
-
                 </Select>
               )}
             </Form.Item>
@@ -241,13 +237,11 @@ class CustomerService extends PureComponent {
     } = this.props;
     return (
       <PageHeaderWrapper title="客服指派">
-
-
-
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
+              size="middle"
               rowKey="reportno"
               loading={loading}
               dataSource={data.list}

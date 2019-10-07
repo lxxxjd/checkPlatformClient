@@ -33,6 +33,7 @@ class ResultUpdateDetail extends PureComponent {
     formValues: {},
     visible:false,
     editingKey: '' ,
+    testDetail:null,
   };
   columns = [
     {
@@ -45,7 +46,7 @@ class ResultUpdateDetail extends PureComponent {
     },
     {
       title: '检测标准',
-      dataIndex: 'standard',
+      dataIndex: 'teststandard',
     },
     {
       title: '单位',
@@ -53,15 +54,13 @@ class ResultUpdateDetail extends PureComponent {
     },
     {
       title: '结果',
-      dataIndex: 'result',
+      dataIndex: 'testresult',
     },
     {
       title: '操作',
-      dataIndex: 'operation',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.modifyItem(text, record)}>录入</a>
         </Fragment>
       ),
     },
@@ -72,7 +71,7 @@ class ResultUpdateDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const sampleno = sessionStorage.getItem('sampleno');
     dispatch({
-      type: 'inspectionAnalysis/getDetails',
+      type: 'inspectionAnalysis/getAllDetails',
       payload:{
          reportno : reportno,
          sampleno : sampleno ,
@@ -80,56 +79,47 @@ class ResultUpdateDetail extends PureComponent {
     });
   }
 
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.setState({
-       formValues: {},
-    });
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'testInfo/getReports',
-      payload:{
-         certCode : certCode,
-      }
-    });
+  back = () =>{
+    this.props.history.goBack();
   };
 
-  handleSearch = e => {
-    e.preventDefault();
+  handleOk = () => {
+    const {testDetail} = this.state;
+    console.log(testDetail);
+    var value = testDetail;
     const { dispatch, form } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
-      const values = {
-        ...fieldsValue,
-        certCode : certCode,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-      };
+      value.testresult =  form.getFieldValue('result');
       dispatch({
-        type: 'testInfo/getReports',
-        payload: values,
+        type: 'inspectionAnalysis/addResult',
+        payload: value,
+        callback:response => {
+          if(response.code === 200){
+            notification.open({
+              message: '录入成功',
+            });
+          }else{
+            notification.open({
+              message: '录入失败',
+              description:response.data,
+            });
+          }
+        }
       });
     });
-  };
-
-  back = () =>{
-    router.push({
-      pathname:'/InspectionAnalysis/ResultUpdate',
-    });
-  };
-  handleOk = () =>{
     this.setState({ visible: false });
+
   };
 
   handleCancel = () =>{
     this.setState({ visible: false });
   };
 
-  showModal = text => {
+  modifyItem = text => {
+    console.log(text);
+    this.setState({ testDetail: text});
     this.setState({ visible: true });
   };
 
@@ -142,15 +132,17 @@ class ResultUpdateDetail extends PureComponent {
     const {visible,} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
+    const sampleno = sessionStorage.getItem('sampleno');
+    const reprotText= {
+      reportno,
+      shipname,
+      sampleno,
+    };
     return (
-      <PageHeaderWrapper title="样品结果登记">
-        <Card bordered={false}>
+      <PageHeaderWrapper text={reprotText}>
+        <Card bordered={false} size="small">
             <Row>
-            <Col sm={5}>
-              <span level={4}> 委托编号：{reportno} </span>
-            </Col>
-            <Col sm={17}>
-              <span> 运输工具：{shipname} </span>
+            <Col sm={22}>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
@@ -161,11 +153,12 @@ class ResultUpdateDetail extends PureComponent {
           </Row>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               loading={loading}
               dataSource={detail}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
-              rowKey="reportno"
+              rowKey="keyno"
             />
           </div>
           <Modal
@@ -176,7 +169,7 @@ class ResultUpdateDetail extends PureComponent {
               > 
                 <Form>
                   <Form.Item label="结果">
-                    {getFieldDecorator('itemC', {
+                    {getFieldDecorator('result', {
                       rules: [{ required: true, message: '请输入结果' }],
                     })(
                         <Input placeholder="请输入结果" />

@@ -42,24 +42,7 @@ class SampleDetail extends PureComponent {
     standard:[],
     itemName: [],
   };
-  columns1 = [
-    {
-      title: '指标名称',
-      dataIndex: 'itemC',
-    },
-    {
-      title: '英文名称',
-      dataIndex: 'itemE',
-    },
-    {
-      title: '检测标准',
-      dataIndex: 'standard',
-    },
-    {
-      title: '单位',
-      dataIndex: 'unit',
-    },
-  ];
+
   columns = [
     {
       title: '指标名称',
@@ -77,15 +60,6 @@ class SampleDetail extends PureComponent {
       title: '单位',
       dataIndex: 'unit',
     },
-    {
-      title: '操作',
-      render: (text, record) => (
-        <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
-          &nbsp;&nbsp;
-        </Fragment>
-      ),
-    },
   ];
 
 
@@ -102,16 +76,6 @@ class SampleDetail extends PureComponent {
     });
   }
 
-  save = () =>{
-    // const {
-    //   inspectionAnalysis: {items},
-    // } = this.props;
-
-    // var data = [];
-    // for( item in items){
-    //   if(item.keyno )
-    // }
-  };
   back = () =>{
     router.push({
       pathname:'/InspectionAnalysis/SampleIndex',
@@ -121,7 +85,7 @@ class SampleDetail extends PureComponent {
   handleCancel = () =>{
     this.setState({ addOne: false });
     this.setState({ addMany: false });
-    this.setState({ onDelete: false });  
+    this.setState({ onDelete: false });
   };
 
   showAddOne = () => {
@@ -160,7 +124,7 @@ class SampleDetail extends PureComponent {
       }
     });
     this.setState({selectedRowKeys:[]});
-  };  
+  };
   showDelete = () => {
     this.setState({ onDelete: true });
     this.setState({deleteRowKeys:[]});
@@ -267,8 +231,8 @@ class SampleDetail extends PureComponent {
     const sampleno = sessionStorage.getItem('sampleno');
     const cargonameC = sessionStorage.getItem('cargoname');
     const {selectedRowKeys} = this.state;
-    const { 
-      dispatch ,    
+    const {
+      dispatch ,
       inspectionAnalysis: {items},
     } = this.props;
     dispatch({
@@ -300,6 +264,7 @@ class SampleDetail extends PureComponent {
       }
     });
     this.setState({ addMany: false });
+    this.props.history.goBack();
   };
   render() {
     const {
@@ -307,46 +272,30 @@ class SampleDetail extends PureComponent {
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const {addMany,addOne,onDelete,selectedRowKeys,standard,itemName,deleteRowKeys} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const cargoname = sessionStorage.getItem('cargoname');
     const sampleno = sessionStorage.getItem('sampleno');
-    const standardOptions = standard.map(d => <Option key={d} value={d}>{d}</Option>);
-    const itemNameOptions = itemName.map(d => <Option key={d} value={d}>{d}</Option>);
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    };
-    const rowDeteleSelection = {
-      deleteRowKeys,
-      onChange: this.onDeleteChange,
+    const reprotText= {
+      reportno,
+      cargoname,
+      sampleno,
     };
     return (
-      <PageHeaderWrapper title="样品结果登记">
-        <Card bordered={false}>
+      <PageHeaderWrapper text={reprotText}>
+        <Card bordered={false} size="small">
             <Row>
-            <Col sm={5}>
-              <span level={4}> 委托编号：{reportno} </span>
-            </Col>
-            <Col sm={5}>
-              <span level={4}> 样品编号：{sampleno} </span>
-            </Col>
-            <Col sm={12}>
-              <span> 货名：{cargoname} </span>
+            <Col sm={22}>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
                 <Icon type="left" />
                 返回
               </Button>
-            </Col>  
+            </Col>
           </Row>
           <div className={styles.tableList}>
-            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddOne}>单项添加</Button>
-            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddMany}>批量添加</Button>
-            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showDelete}>批量删除</Button>
-            <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.show}>导入</Button>
             <Table
+              size='middle'
               loading={loading}
               dataSource={detail}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
@@ -354,74 +303,6 @@ class SampleDetail extends PureComponent {
               rowKey="reportno"
             />
           </div>
-          <Modal
-                title="新建样品指标"
-                visible={addOne}
-                onOk={this.onAddOne}
-                onCancel={this.handleCancel}
-              > 
-                <Form>
-                  <Form.Item label="指标名称">
-                    {getFieldDecorator('itemC', {
-                      rules: [{ required: true, message: '请选择指标名称' }],
-                    })(
-                        <Select
-                          showSearch
-                          placeholder="请选择"
-                          filterOption={false}
-                          onChange={this.handleChange}
-                          //onSearch={this.handleSearch}
-                        >
-                        {itemNameOptions}
-                        </Select>
-                      )}
-                  </Form.Item>
-                  <Form.Item label="检测标准">
-                    {getFieldDecorator('teststandard', {
-                      rules: [{ required: true, message: '请选择检测标准' }],
-                    })(
-                        <Select
-                          showSearch
-                          placeholder="请选择"
-                          filterOption={false}
-                          //onSearch={this.handleSearch}
-                        >
-                        {standardOptions}
-                        </Select>
-                      )}
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Modal
-                title="批量添加"
-                visible={addMany}
-                onOk={this.addMany}
-                onCancel={this.handleCancel}
-              >               
-                <Table
-                  rowKey="keyno"
-                  loading={loading}
-                  dataSource={items}
-                  pagination={{showQuickJumper:true,showSizeChanger:true}}
-                  columns={this.columns1}
-                  rowSelection={rowSelection}
-                />
-              </Modal>
-              <Modal
-                title="删除"
-                visible={onDelete}
-                onOk={this.delete}
-                onCancel={this.handleCancel}
-              > 
-                <Table
-                  rowKey="keyno"
-                  loading={loading}
-                  dataSource={detail}
-                  pagination={{showQuickJumper:true,showSizeChanger:true}}
-                  columns={this.columns1}
-                  rowSelection={rowDeteleSelection}
-                />
-              </Modal>
         </Card>
       </PageHeaderWrapper>
     );

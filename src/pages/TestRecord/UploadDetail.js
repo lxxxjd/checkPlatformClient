@@ -82,7 +82,6 @@ const CreateUploadForm = Form.create()(props => {
           </Select>
         )}
       </Form.Item>
-
       <Form.Item label="模板名称">
         {form.getFieldDecorator('tempName', {
           rules: [{ required: true, message: '请选择模板名称' }],
@@ -149,6 +148,10 @@ class UploadDetail extends PureComponent {
       render: val => <span>{
          moment(val).format('YYYY-MM-DD')
       }</span>
+    },
+    {
+      title: '状态',
+      dataIndex: 'state',
     },
     {
       title: '操作',
@@ -414,9 +417,11 @@ class UploadDetail extends PureComponent {
         }
       }
     });
-  }
+  };
 
-
+  back = () =>{
+    this.props.history.goBack();
+  };
 
   render() {
     const uploadButton = (
@@ -444,8 +449,14 @@ class UploadDetail extends PureComponent {
 
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
+    const applicant = sessionStorage.getItem('applicant');
+    const reprotText= {
+      reportno,
+      shipname,
+      applicant,
+    };
     return (
-      <PageHeaderWrapper title="检验记录">
+      <PageHeaderWrapper text={reprotText}>
         <Modal
           title="记录上传"
           visible={visible}
@@ -485,22 +496,21 @@ class UploadDetail extends PureComponent {
 
         <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
 
-        <Card bordered={false}>
+        <Card bordered={false} size="small">
           <Row>
-            <Col sm={5} xs={24}>
-              <span level={4}> 委托编号：{reportno} </span>
+            <Col span={22}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
             </Col>
-            <Col sm={8} xs={24}>
-              <span> 运输工具：{shipname} </span>
-            </Col>
+            <Col span={2}>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
+            </Col> 
           </Row>
-          <br />
-          <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
-          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
-          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>批量上传</Button>
-          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>工作目录</Button>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               loading={loading}
               dataSource={recordData}
               columns={this.columns}
@@ -513,5 +523,7 @@ class UploadDetail extends PureComponent {
     );
   }
 }
-
+/*         <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
+          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>批量上传</Button>
+          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>工作目录</Button>*/
 export default UploadDetail;
