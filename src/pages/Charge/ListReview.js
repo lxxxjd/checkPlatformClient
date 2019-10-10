@@ -57,7 +57,7 @@ class ListReview extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toListFictionReview(text, record)}>审核</a>
+          {text.invoiceStatus==="未审核"||text.invoiceStatus==="已退回"?[<a onClick={() => this.toListFictionReview(text, record)}>审核&nbsp;&nbsp;</a>]:[]}
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>查看</a>
           &nbsp;&nbsp;
@@ -182,7 +182,6 @@ class ListReview extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toListFictionAdd}>新建</Button>
             </span>
           </Col>
         </Row>
@@ -190,11 +189,6 @@ class ListReview extends PureComponent {
     );
   }
 
-  toListFictionAdd= () => {
-    router.push({
-      pathname:'/Charge/ListFictionAdd',
-    });
-  };
 
   render() {
     const {

@@ -24,8 +24,9 @@ class Query  extends PureComponent {
   handleQuerySearch = e => {
     e.preventDefault();
     const { dispatch, form} = this.props;
+    const {handleStateData} = this.props;
+
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
@@ -38,6 +39,9 @@ class Query  extends PureComponent {
       dispatch({
         type: 'charge/getReportsFetch',
         payload:values,
+        callback: (response) => {
+          handleStateData(response);
+        }
       });
     });
   };
@@ -337,6 +341,12 @@ class ListFictionAdd extends PureComponent {
     this.setState({ selectedRowKeys });
   }
 
+  handleStateData =(res)=>{
+    this.state.priceMaking = res;
+    console.log("test");
+    console.log(this.state.priceMaking);
+  }
+
 
 
 
@@ -378,7 +388,7 @@ class ListFictionAdd extends PureComponent {
 
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <div className={styles.tableListForm}><Query dispatch={this.props.dispatch} init={this.init} /></div>
+            <div className={styles.tableListForm}><Query dispatch={this.props.dispatch} handleStataData={this.handleStateData} init={this.init} /></div>
             <Table
               loading={loading}
               dataSource={priceMaking}

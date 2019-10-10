@@ -173,10 +173,6 @@ class ListFictionReview extends PureComponent {
         <Fragment>
           <a onClick={() => this.toRegisterDetail(text, record)}>定价</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
           &nbsp;&nbsp;
         </Fragment>

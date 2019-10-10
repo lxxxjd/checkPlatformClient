@@ -196,12 +196,9 @@ class ListPay extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleArrivalInvoice(text, true)}>到账</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.handleRefundInvoice(text, record)}>退款</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
-          &nbsp;&nbsp;
+          {(text.invoiceStatus==="已开"||text.invoiceStatus==="已开票") ?[<a onClick={() => this.handleArrivalInvoice(text, record)}>到账&nbsp;&nbsp;</a>]:[]}
+          {(text.invoiceStatus==="已到账") ?[<a onClick={() => this.handleRefundInvoice(text, record)}>退款&nbsp;&nbsp;</a>]:[]}
+          <a onClick={() => this.previewItem(text, record)}>详情</a> &nbsp;&nbsp;
         </Fragment>
       ),
     },
