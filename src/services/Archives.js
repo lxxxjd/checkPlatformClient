@@ -23,6 +23,13 @@ export async function updateReport(params) {
 }
 
 
-
+export async function getReportsForArchives(params) {
+  return request(`/api/report/get_reports_for_archives`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
 
 
