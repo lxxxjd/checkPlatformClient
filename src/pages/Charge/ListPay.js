@@ -61,7 +61,6 @@ const ArrivalInvoiceForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择到账时间"
             />
@@ -117,7 +116,6 @@ const RefundInvoiceForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择退款时间"
             />

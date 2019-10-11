@@ -102,6 +102,7 @@ export default {
       });
       if (callback) callback();
     },
+
     *getCargos({ payload ,callback}, { call, put }) {
       const response = yield call(getCargos, payload);
       yield put({

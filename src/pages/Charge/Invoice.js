@@ -90,7 +90,6 @@ const CreateInvoiceForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择开具发票时间"
             />

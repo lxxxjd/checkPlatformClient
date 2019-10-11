@@ -128,12 +128,14 @@ class SearchForEntrustment extends PureComponent {
       pathname:'/Entrustment/DetailForEntrustment',
     });
   };
+
   modifyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
       pathname:'/Entrustment/ModifyForEntrustment',
     });
   };
+
   copyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({

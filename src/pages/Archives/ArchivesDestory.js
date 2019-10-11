@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import moment from 'moment';
 
 import {
   Row,
@@ -11,61 +10,161 @@ import {
   Input,
   Button,
   Select,
-  Table,
+  Table, message, Modal, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import moment from 'moment';
 import styles from '../table.less';
-
-
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@Form.create()
+
+
+
+const CreateForm = Form.create()(props => {
+
+  const { modalVisible, form, handleAdd, handleModalVisible,modalInfo } = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      form.resetFields();
+      handleAdd(fieldsValue,modalInfo);
+    });
+  };
+  return (
+    <Modal
+      destroyOnClose
+      title="编辑归档"
+      visible={modalVisible}
+      onOk={okHandle}
+      onCancel={() => handleModalVisible()}
+    >
+      <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15}} label="退档时间">
+        {form.getFieldDecorator('archivesdate', {
+          initialValue: moment(new Date(), "YYYY-MM-DD"),
+        })(
+          <DatePicker
+            style={{ width: '100%' }}
+            format="YYYY-MM-DD"
+            placeholder="退档时间"
+          />
+        )}
+      </Form.Item>
+    </Modal>
+  );
+});
+
+
+/* eslint react/no-multi-comp:0 */
 @connect(({ archives, loading }) => ({
   archives,
   loading: loading.models.archives,
 }))
+
+@Form.create()
 class ArchivesDestory extends PureComponent {
   state = {
-    formValues: {},
+    modalVisible: false,
+    modalInfo :{},
   };
 
   columns = [
     {
-      title: '归档位置',
+      title: '委托编号',
       dataIndex: 'reportno',
     },
     {
-      title: '归档日期',
+      title: '委托日期',
       dataIndex: 'reportdate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>
     },
-
     {
-      title: '委托编号',
+      title: '委托人',
+      dataIndex: 'applicant',
+    },
+    {
+      title: '运输工具',
       dataIndex: 'shipname',
     },
     {
-      title: '操作人',
+      title: '货名',
       dataIndex: 'cargoname',
     },
-
+    {
+      title: '归档位置',
+      dataIndex: 'archiveplace',
+    },
+    {
+      title: '归档/退档日期',
+      dataIndex: 'archivesdate',
+      render: val => this.isValidDate(val),
+    },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          <a onClick={() => this.modifyItem(text, record)}>退档</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>档案详情</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
   ];
 
 
+
+
   componentDidMount() {
-    this.init();
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const { dispatch } = this.props;
+    const params = {
+      certCode:user.certCode
+    };
+    dispatch({
+      type: 'archives/getAllReports',
+      payload: params,
+    });
+  }
+
+  handleFormReset = () => {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const params = {
+      certCode:user.certCode
+    };
+    const { form } = this.props;
+    form.resetFields();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'archives/getAllReports',
+      payload: params,
+    });
+  }
+
+  handleSearch = e=> {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const values = {
+        ...fieldsValue,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
+        certCode:user.certCode,
+      };
+      dispatch({
+        type: 'archives/getAllReports',
+        payload: values,
+      });
+    });
+  }
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
   }
 
 
@@ -77,54 +176,45 @@ class ArchivesDestory extends PureComponent {
     });
   };
 
-
-
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
-    });
-    this.init();
+  modifyItem = text => {
+    console.log(text.archiveplace);
+    if(text.archiveplace !==undefined && text.archiveplace !==null && text.archiveplace !==""){
+      this.setState({
+        modalInfo:text,
+      });
+      this.handleModalVisible(true);
+    }else{
+      message.success("未归档，无需退档");
+    }
   };
 
-  init =() =>{
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+
+  handleModalVisible = (flag) => {
+    this.setState({
+      modalVisible: !!flag,
+    });
+  };
+
+  handleAdd = (fields,modalInfo) => {
     const { dispatch } = this.props;
-    const params = {
-      certCode:user.certCode
+    let prams = modalInfo;
+    prams.archiveplace =  "";
+    prams.archivesdate =  fields.archivesdate;
+    const values = {
+      ...prams,
     };
     dispatch({
-      type: 'charge/getCostsFetch',
-      payload: params,
+      type: 'archives/updateArchivesFetch',
+      payload:values,
+      callback: (response) => {
+        if(response)
+          message.success("保存成功");
+      }
+    });
+    this.setState({
+      modalVisible: false,
     });
   }
-
-
-
-
-
-  handleSearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-        certCode:user.certCode,
-      };
-      dispatch({
-        type: 'charge/getCostsFetch',
-        payload: values,
-      });
-    });
-  };
-
-
 
   renderSimpleForm() {
     const {
@@ -144,8 +234,10 @@ class ArchivesDestory extends PureComponent {
               })(
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
+                  <Option value="applicant">委托人</Option>
                   <Option value="shipname">运输工具</Option>
                   <Option value="cargoname">货名</Option>
+                  <Option value="archiveplace">归档位置</Option>
                 </Select>
               )}
             </Form.Item>
@@ -176,21 +268,31 @@ class ArchivesDestory extends PureComponent {
 
   render() {
     const {
-      // charge: {costData},
+      archives: {report},
       loading,
+      dispatch,
     } = this.props;
+
+    const {  modalVisible,modalInfo } = this.state;
+    const parentMethods = {
+      handleAdd: this.handleAdd,
+      handleModalVisible: this.handleModalVisible,
+    };
+
+
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
+            <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} />
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"
-              rowKey="reportno"
               loading={loading}
-              //dataSource={costData}
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              dataSource={report.list}
               columns={this.columns}
+              rowKey="reportno"
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
         </Card>

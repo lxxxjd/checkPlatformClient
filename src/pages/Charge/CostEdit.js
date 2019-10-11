@@ -71,7 +71,6 @@ const CostAddUpdateForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择实际日期"
             />
@@ -84,7 +83,6 @@ const CostAddUpdateForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择申请日期"
             />
@@ -184,7 +182,6 @@ const CostAddNewForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择实际日期"
             />
@@ -196,7 +193,6 @@ const CostAddNewForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择申请日期"
             />

@@ -1,9 +1,12 @@
-import { getAllArchives} from '@/services/Archives';
+import { getAllArchives,updateReport} from '@/services/Archives';
+import { queryAllReports } from '@/services/Entrustment';
 
 export default {
   namespace: 'archives',
   state: {
     data: [],
+    report: [],
+    updateArchivesResult:{},
   },
   effects: {
     *fetch({ payload,callback }, { call, put }) {
@@ -15,6 +18,22 @@ export default {
       if (callback) callback(response.data);
     },
 
+    *getAllReports({ payload }, { call, put }) {
+      const response = yield call(queryAllReports, payload);
+      yield put({
+        type: 'queryReports',
+        payload: response,
+      });
+    },
+
+    *updateArchivesFetch({ payload, callback }, { call, put }) {
+      const response = yield call(updateReport, payload);
+      yield put({
+        type: 'updateArchives',
+        payload:response,
+      });
+      if (callback) callback(response);
+    },
 
   },
 
@@ -23,6 +42,20 @@ export default {
       return {
         ...state,
         data: payload.data,
+      };
+    },
+
+    queryReports(state, { payload }) {
+      return {
+        ...state,
+        report: payload.data,
+      };
+    },
+
+    updateArchives(state, { payload }) {
+      return {
+        ...state,
+        updateArchivesResult: payload,
       };
     },
 

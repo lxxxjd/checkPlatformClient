@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import moment from 'moment';
 
 import {
   Row,
@@ -11,78 +10,167 @@ import {
   Input,
   Button,
   Select,
-  Table,
+  Table, message, Modal, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import moment from 'moment';
 import styles from '../table.less';
-
-
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@Form.create()
+
+
+
+const CreateForm = Form.create()(props => {
+
+  const { modalVisible, form, handleAdd, handleModalVisible,modalInfo } = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      form.resetFields();
+      handleAdd(fieldsValue,modalInfo);
+    });
+  };
+  return (
+    <Modal
+      destroyOnClose
+      title="编辑归档"
+      visible={modalVisible}
+      onOk={okHandle}
+      onCancel={() => handleModalVisible()}
+    >
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="归档位置">
+        {form.getFieldDecorator('archiveplace', {
+          initialValue: modalInfo.archiveplace,
+        })(<Input placeholder="请输入归档位置" />)}
+      </FormItem>
+
+      <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15}} label="归档时间">
+        {form.getFieldDecorator('archivesdate', {
+          initialValue: moment(modalInfo.archivesdate, "YYYY-MM-DD"),
+        })(
+          <DatePicker
+            style={{ width: '100%' }}
+            format="YYYY-MM-DD"
+            placeholder="请选择归档时间"
+          />
+        )}
+      </Form.Item>
+    </Modal>
+  );
+});
+
+
+/* eslint react/no-multi-comp:0 */
 @connect(({ archives, loading }) => ({
   archives,
   loading: loading.models.archives,
 }))
+
+@Form.create()
 class ArchivesQuery extends PureComponent {
   state = {
-    formValues: {},
+    modalVisible: false,
+    modalInfo :{},
   };
 
   columns = [
     {
+      title: '委托编号',
+      dataIndex: 'reportno',
+    },
+    {
+      title: '委托日期',
+      dataIndex: 'reportdate',
+      render: val => <span>{moment(val).format('YYYY-MM-DD')}</span>
+    },
+    {
+      title: '委托人',
+      dataIndex: 'applicant',
+    },
+    {
+      title: '运输工具',
+      dataIndex: 'shipname',
+    },
+    {
+      title: '货名',
+      dataIndex: 'cargoname',
+    },
+    {
       title: '归档位置',
-      dataIndex: 'place',
+      dataIndex: 'archiveplace',
     },
     {
       title: '归档日期',
-      dataIndex: 'archivesDate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+      dataIndex: 'archivesdate',
+       render: val => this.isValidDate(val),
     },
-
-    {
-      title: '委托编号',
-      dataIndex: 'reportnos',
-      render: (text, record) => {
-        let  contentStr = [];
-        contentStr = text.split("|");
-        if (contentStr.length < 2) {
-          return text;
-        }
-        let result = null;
-        const br = <br></br>;
-        for( let  j=0 ; j < contentStr.length ; j++){
-          if(j===0){
-            result=contentStr[j];
-          }else{
-            result=<span>{result}{br}{contentStr[j]}</span>;
-          }
-        }
-        return <div>{result}</div>;
-      },
-    },
-    {
-      title: '操作人',
-      dataIndex: 'applyman',
-    },
-
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>档案详情</a>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
     },
   ];
 
 
+
+
   componentDidMount() {
-    this.init();
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const { dispatch } = this.props;
+    const params = {
+      certCode:user.certCode
+    };
+    dispatch({
+      type: 'archives/getAllReports',
+      payload: params,
+    });
+  }
+
+  handleFormReset = () => {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const params = {
+      certCode:user.certCode
+    };
+    const { form } = this.props;
+    form.resetFields();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'archives/getAllReports',
+      payload: params,
+    });
+  }
+
+  handleSearch = e=> {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const values = {
+        ...fieldsValue,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
+        certCode:user.certCode,
+      };
+      dispatch({
+        type: 'archives/getAllReports',
+        payload: values,
+      });
+    });
+  }
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
   }
 
 
@@ -94,49 +182,40 @@ class ArchivesQuery extends PureComponent {
     });
   };
 
-
-
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
-    this.init();
+  modifyItem = text => {
+    this.setState({
+      modalInfo:text,
+    });
+    this.handleModalVisible(true);
   };
 
-  init =() =>{
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+
+  handleModalVisible = (flag) => {
+    this.setState({
+      modalVisible: !!flag,
+    });
+  };
+
+  handleAdd = (fields,modalInfo) => {
     const { dispatch } = this.props;
-    const params = {
-      certCode:user.certCode
+    let prams = modalInfo;
+    prams.archiveplace =  fields.archiveplace;
+    prams.archivesdate =  fields.archivesdate;
+    const values = {
+      ...prams,
     };
     dispatch({
-      type: 'archives/fetch',
-      payload: params,
+      type: 'archives/updateArchivesFetch',
+      payload:values,
+      callback: (response) => {
+        if(response)
+          message.success("保存成功");
+      }
+    });
+    this.setState({
+      modalVisible: false,
     });
   }
-
-
-
-
-
-  handleSearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-        certcode:user.certCode,
-      };
-      dispatch({
-        type: 'archives/fetch',
-        payload: values,
-      });
-    });
-  };
 
 
 
@@ -157,8 +236,11 @@ class ArchivesQuery extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="place">归档位置</Option>
-                  <Option value="applyman">操作人</Option>
+                  <Option value="reportno">委托编号</Option>
+                  <Option value="applicant">委托人</Option>
+                  <Option value="shipname">运输工具</Option>
+                  <Option value="cargoname">货名</Option>
+                  <Option value="archiveplace">归档位置</Option>
                 </Select>
               )}
             </Form.Item>
@@ -189,21 +271,31 @@ class ArchivesQuery extends PureComponent {
 
   render() {
     const {
-      archives: {data},
+      archives: {report},
       loading,
+      dispatch,
     } = this.props;
+
+    const {  modalVisible,modalInfo } = this.state;
+    const parentMethods = {
+      handleAdd: this.handleAdd,
+      handleModalVisible: this.handleModalVisible,
+    };
+
+
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
+            <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} />
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"
-              rowKey="reportno"
               loading={loading}
-              dataSource={data}
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              dataSource={report.list}
               columns={this.columns}
+              rowKey="reportno"
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
         </Card>

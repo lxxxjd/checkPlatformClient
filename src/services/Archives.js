@@ -13,3 +13,16 @@ export async function getAllArchives(params) {
 }
 
 
+export async function updateReport(params) {
+  return request(`/api/report/update_report`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
+
+
+

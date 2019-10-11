@@ -1,4 +1,5 @@
 import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getCostInfos ,addCost} from '@/services/Charge';
+import { getAllClientName } from '@/services/Entrustment';
 
 export default {
   namespace: 'charge',
@@ -98,6 +99,16 @@ export default {
       if (callback) callback(response.data);
     },
 
+    // 付款公司
+    *getClientName({ payload ,callback}, { call, put }) {
+      const response = yield call(getAllClientName, payload);
+      yield put({
+        type: 'getName',
+        payload:response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -161,6 +172,13 @@ export default {
       return {
         ...state,
         costAddResult: payload.data,
+      };
+    },
+
+    getName(state, { payload }) {
+      return {
+        ...state,
+        clientName: payload.data,
       };
     },
 

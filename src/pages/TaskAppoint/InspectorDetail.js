@@ -119,8 +119,6 @@ const CreateForm = Form.create()(props => {
           initialValue: modalInfo.otherfee,
         })(<Input placeholder="请输入其他费用" />)}
       </FormItem>
-
-
     </Modal>
   );
 });
