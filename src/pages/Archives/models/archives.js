@@ -1,4 +1,4 @@
-import { getAllArchives,updateReport,getReportsForArchives} from '@/services/Archives';
+import { getAllArchives,updateReport,getReportsForArchives,addArchives} from '@/services/Archives';
 import { queryAllReports } from '@/services/Entrustment';
 
 export default {
@@ -8,6 +8,7 @@ export default {
     report: [],
     updateArchivesResult:{},
     getReportsForArchivesByConditionResult:[],
+    addResult:{},
   },
   effects: {
     *fetch({ payload,callback }, { call, put }) {
@@ -45,6 +46,17 @@ export default {
       if (callback) callback(response);
     },
 
+
+
+    *addArchivesFetch({ payload, callback }, { call, put }) {
+      const response = yield call(addArchives, payload);
+      yield put({
+        type: 'addArchivesList',
+        payload:response,
+      });
+      if (callback) callback(response);
+    },
+
   },
 
   reducers: {
@@ -74,6 +86,14 @@ export default {
         getReportsForArchivesByConditionResult: payload.data,
       };
     },
+
+    addArchivesList(state, { payload }) {
+      return {
+        ...state,
+        addResult: payload.data,
+      };
+    },
+
 
 
   }

@@ -33,3 +33,16 @@ export async function getReportsForArchives(params) {
 }
 
 
+
+
+export async function addArchives(params) {
+  const values = params.values;
+  return request(`/api/report/add_archives`, {
+    method: 'POST',
+    data: values
+  });
+}
+
+
+
+

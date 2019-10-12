@@ -44,11 +44,13 @@ const CreateForm = Form.create()(props => {
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="归档位置">
         {form.getFieldDecorator('archiveplace', {
+          rules: [{ required: true}],
         })(<Input placeholder="请输入归档位置" />)}
       </FormItem>
 
       <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15}} label="归档时间">
         {form.getFieldDecorator('archivesdate', {
+          rules: [{ required: true}],
         })(
           <DatePicker
             style={{ width: '100%' }}
@@ -254,21 +256,26 @@ class ArchivesAdd extends PureComponent {
     for (const value of selectedRowKeys) {
       dataSource.map(item => {
         if (item.reportno === value) {
+          // eslint-disable-next-line no-param-reassign
+          item.archiveplace = fields.archiveplace;
+          // eslint-disable-next-line no-param-reassign
+          item.archivesdate = fields.archivesdate;
           values.push(item);
           return item;
         }
         return item;
       });
     }
-    console.log(values);
-    console.log(fields);
-    console.log(selectedRowKeys);
+
     dispatch({
-      type: 'archives/updateArchivesFetch',
-      payload:values,
+      type: 'archives/addArchivesFetch',
+      payload:{values},
       callback: (response) => {
         if(response)
           message.success("保存成功");
+        else{
+          message.success("保存失败");
+        }
       }
     });
     this.setState({
