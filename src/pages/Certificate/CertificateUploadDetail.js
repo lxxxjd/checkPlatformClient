@@ -157,7 +157,7 @@ class CertificateUploadDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>编辑</a>
+          <a href="index.html">编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>签署</a>
           &nbsp;&nbsp;
@@ -182,31 +182,9 @@ class CertificateUploadDetail extends PureComponent {
     });
   }
 
-  previewItem = text => {
-    const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const params = {
-      ...text,
-      reportno:reportno
-    };
-    dispatch({
-      type: 'testRecord/getRecord',
-      payload:params,
-      callback:(response) =>{
-        if(response.code === 400){
-          notification.open({
-            message: '打开失败',
-            description:response.data,
-          });
-        }else{
-          const url = response.data;
-          console.log(url);
-          window.open(url);
-        }
-      }
-    });
-    console.log("true")
-    //this.setState({previewPDFVisible:true});
+  editCerticate = text => {
+    //window.open('about:blank').location.href="http://localhost:82/index.html";
+    console.log(text);
   };
 
   deleteItem = text => {
@@ -507,7 +485,7 @@ class CertificateUploadDetail extends PureComponent {
                 <Icon type="left" />
                 返回
               </Button>
-            </Col> 
+            </Col>
           </Row>
           <div className={styles.tableList}>
             <Table
