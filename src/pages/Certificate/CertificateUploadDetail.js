@@ -157,7 +157,7 @@ class CertificateUploadDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a href="index.html">编辑</a>
+          <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>签署</a>
           &nbsp;&nbsp;
@@ -183,7 +183,7 @@ class CertificateUploadDetail extends PureComponent {
   }
 
   editCerticate = text => {
-    //window.open('about:blank').location.href="http://localhost:82/index.html";
+    window.open('about:blank').location.href="https://localhost:81/certificate";
     console.log(text);
   };
 
