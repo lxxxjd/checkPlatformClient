@@ -205,10 +205,8 @@ class CertificateUploadDetail extends PureComponent {
             // eslint-disable-next-line camelcase
             const wpsUrl = `https://localhost:81/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
             window.open('about:blank').location.href=wpsUrl;
-            console.log();
           } else {
            message.success("加载失败")
-            console.log(response.data);
           }
         }
       });
