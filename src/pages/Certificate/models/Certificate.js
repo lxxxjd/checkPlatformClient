@@ -1,4 +1,4 @@
-import {getCertReports,getCertFiles} from '@/services/Certificate'
+import {getCertReports,getCertFiles,getSignature} from '@/services/Certificate'
 
 
 
@@ -7,6 +7,7 @@ export default {
   state: {
     data:[],
     recordData:[],
+    signData:{},
   },
 
   effects: {
@@ -26,6 +27,16 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+    *getSignature({ payload,callback }, { call, put }) {
+      const response = yield call(getSignature, payload);
+      yield put({
+        type: 'getSignatureInfo',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
   },
 
   reducers: {
@@ -39,6 +50,13 @@ export default {
       return {
         ...state,
         recordData: payload.data,
+      };
+    },
+
+    getSignatureInfo(state, { payload }) {
+      return {
+        ...state,
+        signData: payload.data,
       };
     },
   },

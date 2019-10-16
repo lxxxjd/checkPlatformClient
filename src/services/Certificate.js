@@ -21,11 +21,6 @@ export async function getCertFiles(params) {
 
 
 
-
-
-
-
-
 // get请求 注意 ` 这个符号 不是这种 ’号
 export async function queryUser1(params) {
   // stringify这个将json序列化 比如 {"a"：1，"b":2} 转换成 a=1&b=2
@@ -91,3 +86,13 @@ export async function searchCertificate(params) {
     },
   });
 }
+
+
+
+export async function getSignature(params) {
+  console.log(`/api/getSignature?${stringify(params.params)}`)
+  return request(`/api/getSignature?${stringify(params.params)}`);
+}
+
+
+

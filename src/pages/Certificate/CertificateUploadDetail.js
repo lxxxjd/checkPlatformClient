@@ -177,14 +177,42 @@ class CertificateUploadDetail extends PureComponent {
     dispatch({
       type: 'certificate/getCertFiles',
       payload:{
-         reportno : reportno,
+         reportno,
       }
     });
   }
 
   editCerticate = text => {
-    window.open('about:blank').location.href="https://localhost:81/certificate";
-    console.log(text);
+
+    // var wpsUrl = 'https://wwo.wps.cn/office/w/111?_w_signature=JFUosMy%2bG2Q2lWYOZ2h8I3YjwlE%3d&_w_userid=320318060202&_w_fname=test.doc&_w_appid=0af07f041df14ca27c68a2d9449d7f9f'
+    // eslint-disable-next-line camelcase,no-underscore-dangle
+    // eslint-disable-next-line camelcase,no-underscore-dangle
+    const _w_userid = text.reportno;
+    // eslint-disable-next-line camelcase,no-underscore-dangle
+    const _w_fname = text.name;
+    const { dispatch } = this.props;
+    const params={
+      _w_userid,
+      _w_fname
+    };
+    dispatch({
+        type: 'certificate/getSignature',
+        payload: {params},
+        callback: (response) => {
+          if (response.code === 200) {
+            // eslint-disable-next-line camelcase,no-underscore-dangle
+            const _w_signature = response.data;
+            // eslint-disable-next-line camelcase
+            const wpsUrl = `https://localhost:81/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
+            window.open('about:blank').location.href=wpsUrl;
+            console.log();
+          } else {
+           message.success("加载失败")
+            console.log(response.data);
+          }
+        }
+      });
+
   };
 
   deleteItem = text => {
