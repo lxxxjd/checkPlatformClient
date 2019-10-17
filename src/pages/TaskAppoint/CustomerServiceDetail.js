@@ -272,6 +272,8 @@ class CustomerServiceDetail extends PureComponent {
 
   handleFormReset = () => {
     this.init();
+    const { form } = this.props;
+    form.resetFields();
   };
 
 
@@ -281,14 +283,32 @@ class CustomerServiceDetail extends PureComponent {
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      const values = {
-        ...fieldsValue,
+      if (fieldsValue.kind ===undefined ||fieldsValue.value ===undefined) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+      const params = {
+        certCode:user.certCode,
+        reportNo:reportinfo.reportno,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
       };
       dispatch({
-        type: 'entrustment/filter',
-        payload: values,
+        type: 'task/getCustomers',
+        payload: params,
+        callback: (response) => {
+          if (response){
+            this.taskData =  response.list;
+            const data = response.list;
+            const {state} = this
+            // eslint-disable-next-line no-plusplus
+            for(let i=0;i<data.length;i++) {
+              if(data[i].state === 1){
+                state.selectedRowKeys.push(data[i].inspman);
+                this.exist.push(data[i].inspman);
+              }
+            }
+          }
+        }
       });
     });
   };
@@ -364,8 +384,8 @@ class CustomerServiceDetail extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="reportno">姓名</Option>
-                  <Option value="applicant">联系人</Option>
+                  <Option value="nameC">客服姓名</Option>
+                  <Option value="tel">联系方式</Option>
                 </Select>
               )}
             </Form.Item>

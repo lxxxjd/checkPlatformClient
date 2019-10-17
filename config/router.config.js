@@ -382,7 +382,7 @@ export default [
             path: '/Charge/DetailList',
             name: 'DetailList',
             component: './Charge/DetailList',
-           // hideInMenu: 'true',//添加页不需要在menu上显示
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
         ],
