@@ -196,7 +196,7 @@ class ListPay extends PureComponent {
         <Fragment>
           {(text.invoiceStatus==="已开"||text.invoiceStatus==="已开票") ?[<a onClick={() => this.handleArrivalInvoice(text, record)}>到账&nbsp;&nbsp;</a>]:[]}
           {(text.invoiceStatus==="已到账") ?[<a onClick={() => this.handleRefundInvoice(text, record)}>退款&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.previewItem(text, record)}>详情</a> &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>查看</a> &nbsp;&nbsp;
         </Fragment>
       ),
     },
@@ -207,7 +207,10 @@ class ListPay extends PureComponent {
   }
 
   previewItem = text => {
-    console.log(text);
+    sessionStorage.setItem('reportnoForList',JSON.stringify(text));
+    router.push({
+      pathname:'/Charge/DetailList',
+    });
   };
 
 

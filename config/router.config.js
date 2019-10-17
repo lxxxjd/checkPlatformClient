@@ -378,6 +378,13 @@ export default [
             component: './Charge/CostEdit',
           },
 
+          {
+            path: '/Charge/DetailList',
+            name: 'DetailList',
+            component: './Charge/DetailList',
+           // hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
         ],
       },
 
