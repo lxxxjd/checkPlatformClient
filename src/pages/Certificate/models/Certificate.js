@@ -1,4 +1,4 @@
-import {getCertReports,getCertFiles} from '@/services/Certificate'
+import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile} from '@/services/Certificate'
 
 
 
@@ -25,6 +25,14 @@ export default {
         payload: response,
       });
       if (callback) callback(response.data);
+    },
+    *uploadCertFile({ payload,callback }, { call, put }) {
+      const response = yield call(uploadCertFile, payload);
+      if (callback) callback(response);
+    },
+    *deleteCertFile({ payload,callback }, { call, put }) {
+      const response = yield call(deleteCertFile, payload);
+      if (callback) callback(response);
     },
   },
 
