@@ -157,7 +157,7 @@ class CertificateUploadDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>编辑</a>
+          <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>签署</a>
           &nbsp;&nbsp;
@@ -177,36 +177,42 @@ class CertificateUploadDetail extends PureComponent {
     dispatch({
       type: 'certificate/getCertFiles',
       payload:{
-         reportno : reportno,
+         reportno,
       }
     });
   }
 
-  previewItem = text => {
+  editCerticate = text => {
+
+    // var wpsUrl = 'https://wwo.wps.cn/office/w/111?_w_signature=JFUosMy%2bG2Q2lWYOZ2h8I3YjwlE%3d&_w_userid=320318060202&_w_fname=test.doc&_w_appid=0af07f041df14ca27c68a2d9449d7f9f'
+    // eslint-disable-next-line camelcase,no-underscore-dangle
+    // eslint-disable-next-line camelcase,no-underscore-dangle
+    const _w_userid = text.reportno;
+    // eslint-disable-next-line camelcase,no-underscore-dangle
+    const _w_fname = text.name;
     const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const params = {
-      ...text,
-      reportno:reportno
+    const params={
+      _w_userid,
+      _w_fname
     };
     dispatch({
-      type: 'testRecord/getRecord',
-      payload:params,
-      callback:(response) =>{
-        if(response.code === 400){
-          notification.open({
-            message: '打开失败',
-            description:response.data,
-          });
-        }else{
-          const url = response.data;
-          console.log(url);
-          window.open(url);
+        type: 'certificate/getSignature',
+        payload: {params},
+        callback: (response) => {
+          if (response.code === 200) {
+            // eslint-disable-next-line camelcase,no-underscore-dangle
+            const _w_signature = response.data;
+            // eslint-disable-next-line camelcase
+            const wpsUrl = `https://localhost:81/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
+            window.open('about:blank').location.href=wpsUrl;
+            console.log();
+          } else {
+           message.success("加载失败")
+            console.log(response.data);
+          }
         }
-      }
-    });
-    console.log("true")
-    //this.setState({previewPDFVisible:true});
+      });
+
   };
 
   deleteItem = text => {
@@ -510,7 +516,7 @@ class CertificateUploadDetail extends PureComponent {
                 <Icon type="left" />
                 返回
               </Button>
-            </Col> 
+            </Col>
           </Row>
           <div className={styles.tableList}>
             <Table

@@ -90,7 +90,6 @@ const CreateInvoiceForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择开具发票时间"
             />
@@ -215,10 +214,8 @@ class Invoice extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleCreateInvoice(text, true)}>开具</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.handleDestoryInvoice(text, record)}>作废</a>
-          &nbsp;&nbsp;
+          {text.invoiceStatus==="已审核"||text.invoiceStatus==="发票作废"?[<a onClick={() => this.handleCreateInvoice(text, record)}>开具&nbsp;&nbsp;</a>]:[]}
+          {text.invoiceStatus==='已退款'?[<a onClick={() => this.handleDestoryInvoice(text, record)}>作废&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>详情</a>
           &nbsp;&nbsp;
         </Fragment>

@@ -98,3 +98,13 @@ export async function searchCertificate(params) {
     },
   });
 }
+
+
+
+export async function getSignature(params) {
+  console.log(`/api/getSignature?${stringify(params.params)}`)
+  return request(`/api/getSignature?${stringify(params.params)}`);
+}
+
+
+

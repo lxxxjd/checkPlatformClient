@@ -92,7 +92,6 @@ const CreateInvoiceForm = Form.create()(props => {
           })(
             <DatePicker
               style={{ width: '100%' }}
-              showTime
               format="YYYY-MM-DD"
               placeholder="选择开具发票时间"
             />
@@ -172,10 +171,6 @@ class ListFictionReview extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.toRegisterDetail(text, record)}>定价</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
           &nbsp;&nbsp;

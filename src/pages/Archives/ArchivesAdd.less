@@ -1,6 +1,11 @@
 @import '~antd/lib/style/themes/default.less';
 @import '~@/utils/utils.less';
 
+.rowClass{
+  z-index: -100;
+  position: relative;
+}
+
 .tableList {
   .tableListOperator {
     margin-bottom: 16px;
@@ -10,14 +15,12 @@
   }
 }
 
-
-
 .tableListForm {
   :global {
     .ant-form-item {
       display: flex;
       margin-right: 0;
-      margin-bottom: 24px;
+      margin-bottom: 1px;
       > .ant-form-item-label {
         width: auto;
         padding-right: 8px;
@@ -31,12 +34,10 @@
       flex: 1;
     }
   }
-  .submitButtons {
-    display: block;
-    margin-bottom: 24px;
-    white-space: nowrap;
-  }
 }
+
+
+
 
 @media screen and (max-width: @screen-lg) {
   .tableListForm :global(.ant-form-item) {

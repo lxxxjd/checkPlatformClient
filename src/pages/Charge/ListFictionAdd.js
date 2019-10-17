@@ -24,8 +24,10 @@ class Query  extends PureComponent {
   handleQuerySearch = e => {
     e.preventDefault();
     const { dispatch, form} = this.props;
+    const {handleStateData} = this.props;
+
+
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
@@ -38,6 +40,9 @@ class Query  extends PureComponent {
       dispatch({
         type: 'charge/getReportsFetch',
         payload:values,
+        callback: (response) => {
+          handleStateData(response);
+        }
       });
     });
   };
@@ -50,8 +55,9 @@ class Query  extends PureComponent {
 
   // eslint-disable-next-line react/require-render-return
   render() {
-    const { form} = this.props
+    const { form,allReporterName} = this.props
     const { getFieldDecorator } = form;
+    const reportNameOptions = allReporterName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <Form onSubmit={this.handleQuerySearch} layout="inline">
 
@@ -104,8 +110,7 @@ class Query  extends PureComponent {
                 rules: [{  message: '请选择付款人' }],
               })(
                 <Select placeholder="请选择付款人">
-                  <Option value="FIBRANT CO., LTD.">FIBRANT CO., LTD.</Option>
-                  <Option value="applicant">委托人</Option>
+                  {reportNameOptions}
                 </Select>
               )}
             </Form.Item>
@@ -133,7 +138,7 @@ Query = Form.create()(Query)
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ charge, loading }) => ({
+@connect(({ charge,loading }) => ({
   charge,
   loading: loading.models.charge,
 }))
@@ -141,6 +146,7 @@ class ListFictionAdd extends PureComponent {
   state = {
     selectedRowKeys: [],
     priceMaking:[],
+    allReporterName: [],
   };
 
   columns = [
@@ -165,10 +171,10 @@ class ListFictionAdd extends PureComponent {
       title: '申请项目',
       dataIndex: 'inspway',
     },
-    // {
-    //   title: '付款人',
-    //   dataIndex: 'payer',
-    // },
+    {
+      title: '付款人',
+      dataIndex: 'payer',
+    },
     {
       title: '价格',
       dataIndex: 'price',
@@ -212,6 +218,15 @@ class ListFictionAdd extends PureComponent {
         }
       }
     });
+
+    dispatch({
+      type: 'charge/getClientName',
+      payload: {},
+      callback: (response) => {
+        this.setState({allReporterName: response})
+      }
+    });
+
   }
 
   handleFormReset = ()=>{
@@ -290,51 +305,60 @@ class ListFictionAdd extends PureComponent {
   };
 
 
-    renderSimpleForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={6}>
-            <Form.Item
-              label="清单号"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              colon={false} >
-              {getFieldDecorator('listno', {
-                rules: [{ required: true,message:"请输入清单" }],
-              })(<Input title="清单号" style={{ width: '100%' }} placeholder="请输入清单号" />)}
-            </Form.Item>
-          </Col>
+  renderSimpleForm() {
+  const {
+    form: { getFieldDecorator },
+  } = this.props;
 
-          <Col span={6}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-              label="付款人"
-            >
-              {getFieldDecorator('payer', {
-                rules: [{ required: true,message:"请选择付款人"}],
-              })(
-                <Select placeholder="请选择付款人">
-                  <Option value="FIBRANT CO., LTD.">FIBRANT CO., LTD.</Option>
-                  <Option value="applicant">委托人</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
+    const {allReporterName} = this.state;
+    const reportNameOptions = allReporterName.map(d => <Option key={d} value={d}>{d}</Option>);
 
-        </Row>
-      </Form>
-    );
+  return (
+    <Form onSubmit={this.handleSearch} layout="inline">
+      <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+        <Col span={6}>
+          <Form.Item
+            label="清单号"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            colon={false}>
+            {getFieldDecorator('listno', {
+              rules: [{ required: true,message:"请输入清单" }],
+            })(<Input title="清单号" style={{ width: '100%' }} placeholder="请输入清单号" />)}
+          </Form.Item>
+        </Col>
+
+        <Col span={6}>
+          <Form.Item
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 6 }}
+            colon={false}
+            label="付款人"
+          >
+            {getFieldDecorator('payer', {
+              rules: [{ required: true,message:"请选择付款人"}],
+            })(
+              <Select placeholder="请选择付款人">
+                {reportNameOptions}
+              </Select>
+            )}
+          </Form.Item>
+        </Col>
+
+      </Row>
+    </Form>
+  );
   }
 
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
+  }
+
+  handleStateData =(res)=>{
+    this.state.priceMaking = res;
+    console.log("test");
+    console.log(this.state.priceMaking);
   }
 
 
@@ -346,8 +370,12 @@ class ListFictionAdd extends PureComponent {
       loading,
     } = this.props;
 
+      const parentMethods = {
+        handleStateData: this.handleStateData,
+      };
+
     const {priceMaking} = this.state;
-    const {  selectedRowKeys } = this.state;
+    const {  selectedRowKeys,allReporterName } = this.state;
 
     const rowSelection = {
       selectedRowKeys,
@@ -378,7 +406,7 @@ class ListFictionAdd extends PureComponent {
 
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <div className={styles.tableListForm}><Query dispatch={this.props.dispatch} init={this.init} /></div>
+            <div className={styles.tableListForm}><Query dispatch={this.props.dispatch} {...parentMethods} init={this.init} allReporterName={allReporterName} /></div>
             <Table
               loading={loading}
               dataSource={priceMaking}

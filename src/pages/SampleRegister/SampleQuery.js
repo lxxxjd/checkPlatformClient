@@ -21,33 +21,6 @@ import styles from '../table.less';
 
 
 let id = 0;
-//
-// class DynamicFieldSet extends React.Component {
-//
-//
-//   render() {
-//
-//
-//     return (
-      {/*<Form onSubmit={this.handleSubmit}>*/}
-      {/*  {formItems}*/}
-      {/*  <Form.Item {...formItemLayoutWithOutLabel}>*/}
-      {/*    <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>*/}
-      {/*      <Icon type="plus" /> Add field*/}
-      {/*    </Button>*/}
-      {/*  </Form.Item>*/}
-      {/*  <Form.Item {...formItemLayoutWithOutLabel}>*/}
-      {/*    <Button type="primary" htmlType="submit">*/}
-      {/*      Submit*/}
-      {/*    </Button>*/}
-      {/*  </Form.Item>*/}
-      {/*</Form>*/}
-//     );
-//   }
-// }
-//
-// const WrappedDynamicFieldSet = Form.create({ name: 'dynamic_form_item' })(DynamicFieldSet);
-
 
 //正文页面
 const FormItem = Form.Item;
@@ -325,17 +298,6 @@ class SampleQuery extends PureComponent {
       keys: nextKeys,
     });
   };
-
-  // handleSubmit = e => {
-  //   e.preventDefault();
-  //   this.props.form.validateFields((err, values) => {
-  //     if (!err) {
-  //       const { keys, names } = values;
-  //       console.log('Received values of form: ', values);
-  //       console.log('Merged values:', keys.map(key => names[key]));
-  //     }
-  //   });
-  // };
 
 
   render() {
