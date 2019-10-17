@@ -18,6 +18,18 @@ export async function getCertFiles(params) {
   return request(`/api/cert_report/getCertFiles?reportno=${params.reportno}`);
 }
 
+export async function uploadCertFile(params) {
+    return request(`/api/cert_report/uploadCertFile`,{
+    method: 'POST',
+    // headers: { 'Content-Type': 'multipart/form-data;'},
+    data:params,
+  });
+}
+
+export async function deleteCertFile(params) {
+    return request(`/api/cert_report/deleteCertFile?keyno=${params.keyno}`);
+}
+
 
 
 

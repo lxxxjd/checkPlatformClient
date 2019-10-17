@@ -217,13 +217,12 @@ class CertificateUploadDetail extends PureComponent {
     const {
       dispatch,
     } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
     const params = {
-      ...text,
-      reportno:reportno
-    };
+      keyno:text.keyno
+    }
+    const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testRecord/deleteRecordInfo',
+      type: 'certificate/deleteCertFile',
       payload:params,
       callback: (response) => {
         if(response.code === 400){
@@ -233,7 +232,7 @@ class CertificateUploadDetail extends PureComponent {
           });
         }else{
           dispatch({
-            type: 'testRecord/getRecordInfo',
+            type: 'certificate/getCertFiles',
             payload:{
               reportno : reportno,
             }
@@ -249,17 +248,21 @@ class CertificateUploadDetail extends PureComponent {
       dispatch,
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         let formData = new FormData();
         values.MultipartFile.fileList.forEach(file => {
-          formData.append('files', file.originFileObj);
+          formData.append('file', file.originFileObj);
+          formData.append('size', file.size);
         });
+        formData.append('creator', user.nameC);
+        formData.append('modifier', user.nameC);
         formData.append('reportno', reportno);
-        formData.append('fileName', values.recordname);
+        formData.append('name', values.recordname);
         console.log(formData.get('files'));
         dispatch({
-          type: 'testRecord/uploadFile',
+          type: 'certificate/uploadCertFile',
           payload : formData,
           callback: (response) => {
             if(response.code === 400){
@@ -269,7 +272,7 @@ class CertificateUploadDetail extends PureComponent {
               });
             }else{
               dispatch({
-                type: 'testRecord/getRecordInfo',
+                type: 'certificate/getCertFiles',
                 payload:{
                   reportno : reportno,
                 }
