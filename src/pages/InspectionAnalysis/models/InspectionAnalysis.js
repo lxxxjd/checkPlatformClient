@@ -1,4 +1,5 @@
-import {getAllSample,getCompany,getDetails,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,getAllDetails,addResult,assign,getTestBySampleNo} from '@/services/InspectionAnalysis'
+import {getAllSample,getCompany,getDetails,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
+  getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan} from '@/services/InspectionAnalysis'
 
 
 
@@ -19,10 +20,10 @@ export default {
   },
 
   effects: {
-    *getAllSample({ payload,callback }, { call, put }) {
-      const response = yield call(getAllSample, payload);
+    *getAllSampleAndTestMan({ payload,callback }, { call, put }) {
+      const response = yield call(getAllSampleAndTestMan, payload);
       yield put({
-        type: 'getAllSamples',
+        type: 'getAllSampleAndTestManInfo',
         payload:response,
       });
       if (callback) callback(response.data);
@@ -109,7 +110,7 @@ export default {
   },
 
   reducers: {
-    getAllSamples(state, { payload }) {
+    getAllSampleAndTestManInfo(state, { payload }) {
       return {
         ...state,
         samples: payload.data,
