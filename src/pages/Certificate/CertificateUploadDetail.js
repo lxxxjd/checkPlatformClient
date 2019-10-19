@@ -330,15 +330,12 @@ class CertificateUploadDetail extends PureComponent {
 
   handleChange = ({ file,fileList }) => {
     //限制图片 格式、size、分辨率
-    const isJPG = file.type === 'image/jpg';
-    const isJPEG = file.type === 'image/jpeg';
-    const isGIF = file.type === 'image/gif';
-    const isPNG = file.type === 'image/png';
-    const isPDF = file.type === 'application/pdf'
+    const isDOC = file.type === 'application/msword';
+    const isDOCX = file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     const size = file.size / 1024 / 1024 < 20;
-    if (!(isJPG || isJPEG || isGIF || isPNG || isPDF)) {
+    if (!(isDOC || isDOCX )) {
       Modal.error({
-        title: '只能上传JPG 、JPEG 、GIF、 PNG、 PDF格式的图片~',
+        title: '只能上传DOC 、DOCX 格式的图片~',
       });
       return;
     } else if (!size) {

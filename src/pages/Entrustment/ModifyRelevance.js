@@ -61,7 +61,7 @@ class ModifyRelevance extends PureComponent {
       dataIndex: 'reportlink',
       render: (text, record) => {
         let  contentStr = [];
-        contentStr = text.split(",");
+        contentStr = text.split(" ");
         if (contentStr.length < 2) {
           return text;
         }
