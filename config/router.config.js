@@ -85,12 +85,12 @@ export default [
             component: "./Entrustment/ModifyForEntrustment",
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
-          // {
-          //   path: "/Entrustment/CopyForEntrustment",
-          //   name: "CopyForEntrustment",
-          //   component: "./Entrustment/CopyForEntrustment",
-          //   hideInMenu: 'true',//添加页不需要在menu上显示
-          // },
+          {
+            path: "/Entrustment/CopyForEntrustment",
+            name: "CopyForEntrustment",
+            component: "./Entrustment/CopyForEntrustment",
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
           {
             path: "/Entrustment/CopyForEntrustmentList",
             name: "CopyForEntrustmentList",
