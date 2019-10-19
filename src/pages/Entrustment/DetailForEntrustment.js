@@ -102,7 +102,7 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
             <Descriptions.Item label="运输工具">{report.shipname}</Descriptions.Item>
             <Descriptions.Item label="申报数量和单位">{report.quantityd+report.unit}</Descriptions.Item>
-            <Descriptions.Item label="检验时间">{report.inspdate}</Descriptions.Item>
+            <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
             <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
             <Descriptions.Item label="到达地点">{report.inspplace1}</Descriptions.Item>
           </Descriptions>

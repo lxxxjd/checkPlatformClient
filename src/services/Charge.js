@@ -49,6 +49,24 @@ export async function getReportListBylistno(params) {
   });
 }
 
+export async function updatePriceMaking(params) {
+  return request(`/api/pricemaking/updatePriceMaking`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function getReportPriceMaking(params) {
+  return request(`/api/pricemaking/getReportPriceMaking`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 export async function passListFiction(params) {
   return request(`/api/list/updateList`, {
     method: 'POST',
@@ -57,7 +75,7 @@ export async function passListFiction(params) {
     },
   });
 }
-
+//
 
 // 成本支出
 export async function getCosts(params) {

@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
-
+import moment from 'moment'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -41,9 +41,9 @@ class FinalPrice extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
@@ -58,16 +58,18 @@ class FinalPrice extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '总价',
+      dataIndex: 'total',
+    },
+    {
       title: '状态',
-      dataIndex: 'state',
+      dataIndex: 'status',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.mobileItem(text, record)}>定价</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.mobileItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -80,7 +82,7 @@ class FinalPrice extends PureComponent {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
-      type: 'testInfo/getReports',
+      type: 'charge/getReportPriceMaking',
       payload:{
          certCode : certCode,
       }
@@ -89,17 +91,19 @@ class FinalPrice extends PureComponent {
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
+    localStorage.setItem('reportDetailNo',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
-    localStorage.setItem('reportDetailNo',text.reportno);
   };
   mobileItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
-    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('reportdate',text.reportdate);
     sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('cargoname',text.cargoname);
+    sessionStorage.setItem('inspway',text.inspway);
     router.push({
-      pathname:'/BusinessTransfer/ModifyRelevance',
+      pathname:'/Charge/FinalPriceDetail',
     });
   };
 
@@ -112,7 +116,7 @@ class FinalPrice extends PureComponent {
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const { dispatch } = this.props;
     dispatch({
-      type: 'testInfo/getReports',
+      type: 'charge/getReportPriceMaking',
       payload:{
          certCode : certCode,
       }
@@ -135,7 +139,7 @@ class FinalPrice extends PureComponent {
         value: fieldsValue.value,
       };
       dispatch({
-        type: 'testInfo/getReports',
+        type: 'charge/getReportPriceMaking',
         payload: values,
       });
     });
@@ -188,17 +192,6 @@ class FinalPrice extends PureComponent {
       </Form>
     );
   }
-  handleOk = () =>{
-    this.setState({ visible: false });
-  };
-
-  handleCancel = () =>{
-    this.setState({ visible: false });
-  };
-
-  showModal = () => {
-    this.setState({ visible: true });
-  };
 
   render() {
     const {
@@ -213,7 +206,7 @@ class FinalPrice extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              //dataSource={data.list}
+              dataSource={data}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
               rowKey="reportno"

@@ -1,4 +1,4 @@
-import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getCostInfos ,addCost} from '@/services/Charge';
+import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getCostInfos ,addCost,getReportPriceMaking,updatePriceMaking} from '@/services/Charge';
 import { getAllClientName } from '@/services/Entrustment';
 
 export default {
@@ -49,7 +49,18 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
+    *updatePriceMaking({ payload,callback }, { call, put }) {
+      const response = yield call(updatePriceMaking, payload);
+      if (callback) callback(response);
+    },
+    *getReportPriceMaking({ payload,callback }, { call, put }) {
+      const response = yield call(getReportPriceMaking, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
     *getReportListBylistnoFetch({ payload,callback }, { call, put }) {
       const response = yield call(getReportListBylistno, payload);
       yield put({

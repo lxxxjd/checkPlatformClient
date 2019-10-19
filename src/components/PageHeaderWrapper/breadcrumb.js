@@ -5,6 +5,8 @@ import { formatMessage } from 'umi-plugin-react/locale';
 import { urlToList } from '../_utils/pathTools';
 import { menu } from '../../defaultSettings';
 import marginLeft from 'antd/es/tag';
+import moment from 'moment';
+
 
 // 渲染Breadcrumb 子节点
 // Render the Breadcrumb child node
@@ -15,6 +17,7 @@ const itemRender = (route, params, routes, paths) => {
           return (
             <div>
               {(params.text.reportno===undefined ||params.text.reportno==="")?[]:[<span>委托编号：{params.text.reportno}</span>]}
+              {(params.text.reportdate===undefined ||params.text.reportdate==="")?[]:[<span style={{ marginLeft: 40 }}>委托日期：{moment(params.text.reportdate).format('YYYY-MM-DD')}</span>]}
               {(params.text.applicant===undefined ||params.text.applicant==="")?[]:[<span style={{ marginLeft: 40 }}>委托人：{params.text.applicant}</span>]}
               {(params.text.inspway===undefined ||params.text.inspway==="")?[]:[<span style={{ marginLeft: 40 }}>申请项目：{params.text.inspway}</span>]}
               {(params.text.shipname===undefined ||params.text.shipname==="")?[]:[<span style={{ marginLeft: 40 }}>运输工具：{params.text.shipname}</span>]}
