@@ -107,6 +107,7 @@ class DetailForSub extends PureComponent {
     const allInspway = sessionStorage.getItem('inspway').split(" ");
 
     this.setState({ checkProject : allInspway });
+    console.log(this.state.checkProject);
     form.setFieldsValue({['testman']:text.testman});
     form.setFieldsValue({['price']:text.price});
     form.setFieldsValue({['priceway']:text.priceway});
@@ -153,6 +154,8 @@ class DetailForSub extends PureComponent {
     });
   };
   show = () => {
+    const allInspway = sessionStorage.getItem('inspway').split(" ");
+    this.setState({ checkProject : allInspway });
     const {
       form,
     } = this.props;

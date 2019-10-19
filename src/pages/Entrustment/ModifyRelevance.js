@@ -16,6 +16,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ModifyRelevance.less';
+import moment from 'moment'
 
 const { Title  } = Typography;
 const FormItem = Form.Item;
@@ -40,9 +41,9 @@ class ModifyRelevance extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',
@@ -94,9 +95,9 @@ class ModifyRelevance extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      // render: val => <span>{
-      //   moment(val).format('YYYY-MM-DD HH:mm:ss')
-      // }</span>
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '委托人',

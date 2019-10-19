@@ -330,6 +330,7 @@ export default [
             path: '/Charge/FinalPriceDetail',
             name: 'FinalPriceDetail',
             component: './Charge/FinalPriceDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
             path: '/Charge/ListFiction',
