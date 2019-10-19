@@ -11,11 +11,60 @@ import {
   Button,
   Select,
   Table, message,
-  Radio, Popconfirm, Icon,
+  Radio, Popconfirm, Icon, Modal, Descriptions,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
 import queryStyles from './SampleDestory.less';
+
+
+
+
+// 查看框
+const ReviewFrom = (props => {
+  const { modalReviewVisible, handleModalReviewVisible,modalInfo  } = props;
+
+  // 处理操作时间
+  const handleDate = (val) => {
+    if(val!==undefined && val!==null){
+      return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+    }
+    return null;
+  };
+  // 处理操作时间
+  const date = handleDate(modalInfo.makingdate);
+  return (
+    <Modal
+      destroyOnClose
+      title="查看样品详情"
+      visible={modalReviewVisible}
+      style={{ top: 100 }}
+      width={800}
+      onCancel={() => handleModalReviewVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleModalReviewVisible()}>
+          关闭
+        </Button>
+      ]}
+    >
+      <Descriptions bordered>
+        <Descriptions.Item label="委托编号">{modalInfo.reportno}</Descriptions.Item>
+        <Descriptions.Item label="船名标识">{modalInfo.shipname}</Descriptions.Item>
+        <Descriptions.Item label="检查品名">{modalInfo.cargoname}</Descriptions.Item>
+        <Descriptions.Item label="样品编号">{modalInfo.cargoname}</Descriptions.Item>
+        <Descriptions.Item label="样品名称">{modalInfo.samplename}</Descriptions.Item>
+        <Descriptions.Item label="样品用途">{modalInfo.sampleuse}</Descriptions.Item>
+        <Descriptions.Item label="持有人">{modalInfo.duration}</Descriptions.Item>
+        <Descriptions.Item label="保存天数">{modalInfo.reportno}</Descriptions.Item>
+        <Descriptions.Item label="存放位置">{modalInfo.position}</Descriptions.Item>
+        <Descriptions.Item label="制备日期">{date}</Descriptions.Item>
+        <Descriptions.Item label="状态">{modalInfo.status}</Descriptions.Item>
+      </Descriptions>
+    </Modal>
+  );
+});
+
+
 
 let id = 0;
 
@@ -38,6 +87,8 @@ class SampleDestory extends PureComponent {
     formValues: {},
     exist:[],
     dataSource:[],
+    modalReviewVisible:false,
+    modalInfo :{},
   };
 
 
@@ -94,7 +145,7 @@ class SampleDestory extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>查看</a>
+          <a onClick={() =>  this.handleReview(true,text)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.removeExistItem(text, record)}>删除</a>
         </Fragment>
@@ -293,6 +344,21 @@ class SampleDestory extends PureComponent {
   };
 
 
+  handleReview = (flag,text) => {
+    this.handleModalReviewVisible(flag);
+    this.state.modalInfo = text;
+  };
+
+
+
+  handleModalReviewVisible = (flag) => {
+    this.setState({
+      modalReviewVisible: !!flag,
+    });
+  };
+
+
+
 
   renderSimpleForm() {
     const {
@@ -431,6 +497,11 @@ class SampleDestory extends PureComponent {
     const { getFieldDecorator, getFieldValue } = this.props.form;
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
+    const { modalReviewVisible,modalInfo } = this.state;
+    const parentMethods = {
+      handleModalReviewVisible:this.handleModalReviewVisible,
+    };
+
 
     const formItems = keys.map((k, index) => (
       <div>
@@ -497,6 +568,7 @@ class SampleDestory extends PureComponent {
 
     return (
       <PageHeaderWrapper title="样品查询">
+        <ReviewFrom {...parentMethods} modalReviewVisible={modalReviewVisible} modalInfo={modalInfo} />
         <Card bordered={false} size="small">
           <div>
             <Form onSubmit={this.handleSubmit}>
