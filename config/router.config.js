@@ -311,6 +311,13 @@ export default [
             component: './InspectionAnalysis/ResultUpdateDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
+          {
+            path: '/InspectionAnalysis/InspmanDetail',
+            name: 'InspmanDetail',
+            component: './TaskAppoint/InspmanDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 

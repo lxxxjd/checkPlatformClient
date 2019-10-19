@@ -33,6 +33,16 @@ export async function queryCustomers(params) {
 }
 
 // post请求 注意 ` 这个符号 不是这种 ’号
+export async function queryAllInspmans(params) {
+  return request(`/api/task_info/get_all_taskinspman`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+// post请求 注意 ` 这个符号 不是这种 ’号
 export async function queryInspects(params) {
   return request(`/api/task_info/get_all_inspect`,{
     method: 'POST',
@@ -82,6 +92,28 @@ export async function updateInspect(params) {
     },
   });
 }
+
+
+// post请求 注意 ` 这个符号 不是这种 ’号
+export async function dealnspman(params) {
+  const param = params.params;
+  return request(`/api/task_info/deal_inspman`,{
+    method: 'POST',
+    data:param,
+  });
+}
+
+// post请求 注意 ` 这个符号 不是这种 ’号
+export async function updateInspman(params) {
+  return request(`/api/task_info/update_inspman`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
 
 
 

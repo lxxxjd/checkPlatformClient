@@ -137,7 +137,11 @@ class InspectionArrangement extends PureComponent {
   }
 
   mobileItem = text => {
-
+    console.log(text)
+    localStorage.setItem('taskInspmanDetail',JSON.stringify(text));
+    router.push({
+      pathname:'/InspectionAnalysis/InspmanDetail',
+    });
   };
 
   previewItem = text => {

@@ -44,7 +44,7 @@ const ReviewFrom = (props => {
   return (
     <Modal
       destroyOnClose
-      title="查看客服"
+      title="查看检测人员"
       visible={modalReviewVisible}
       style={{ top: 100 }}
       width={800}
@@ -56,7 +56,7 @@ const ReviewFrom = (props => {
       ]}
     >
       <Descriptions bordered>
-        <Descriptions.Item label="客服姓名">{modalInfo.inspman}</Descriptions.Item>
+        <Descriptions.Item label="检员姓名">{modalInfo.inspman}</Descriptions.Item>
         <Descriptions.Item label="联系方式">{modalInfo.tel}</Descriptions.Item>
         <Descriptions.Item label="住址">{modalInfo.place}</Descriptions.Item>
         <Descriptions.Item label="岗位">{modalInfo.position}</Descriptions.Item>
@@ -86,7 +86,7 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="编辑客服"
+      title="编辑检测人员"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
@@ -116,7 +116,7 @@ const CreateForm = Form.create()(props => {
           initialValue: modalInfo.inspway,
         })(
           <Select placeholder="请选择工作任务" style={{ width: 295 }}>
-            <Option value="客服">客服</Option>
+            <Option value="检测">检测</Option>
           </Select>
         )}
       </FormItem>
@@ -187,7 +187,7 @@ class InspmanDetail extends PureComponent {
 
   columns = [
     {
-      title: '客服姓名',
+      title: '检测人员姓名',
       dataIndex: 'inspman',
     },
     {
@@ -248,7 +248,7 @@ class InspmanDetail extends PureComponent {
   save = () => {
     const {selectedRowKeys} = this.state;
     const params = [];
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const reportinfo = JSON.parse(localStorage.getItem("taskInspmanDetail"))
     const user = JSON.parse(localStorage.getItem("userinfo"));
 
     // eslint-disable-next-line no-restricted-syntax
@@ -259,6 +259,7 @@ class InspmanDetail extends PureComponent {
       }
       itemtask.reportno = reportinfo.reportno;
       itemtask.taskman =user.nameC;
+      itemtask.sampleno =reportinfo.sampleno;
       params.push(itemtask);
     }
 
@@ -272,12 +273,13 @@ class InspmanDetail extends PureComponent {
       if(!params.find(item =>item.inspman ===i)) {
         itemtask.reportno = reportinfo.reportno;
         itemtask.taskman =user.nameC;
+        itemtask.sampleno =reportinfo.sampleno;
         params.push(itemtask);
       }
     }
     const {dispatch} = this.props;
     dispatch({
-      type: 'task/dealTask',
+      type: 'task/dealInspmans',
       payload: {params},
       callback: (response) => {
         if(response){
@@ -294,13 +296,14 @@ class InspmanDetail extends PureComponent {
   init = () =>{
     const { dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const reportinfo = JSON.parse(localStorage.getItem("taskInspmanDetail"))
     const params = {
       certCode:user.certCode,
-      reportNo:reportinfo.reportno
+      reportNo:reportinfo.reportno,
+      sampleno:reportinfo.sampleno,
     };
     dispatch({
-      type: 'task/getCustomers',
+      type: 'task/queryInspmans',
       payload: params,
       callback: (response) => {
         if (response){
@@ -334,15 +337,16 @@ class InspmanDetail extends PureComponent {
       if (err) return;
       if (fieldsValue.kind ===undefined ||fieldsValue.value ===undefined) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
-      const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+      const reportinfo = JSON.parse(localStorage.getItem("taskInspmanDetail"))
       const params = {
         certCode:user.certCode,
         reportNo:reportinfo.reportno,
+        sampleno:reportinfo.sampleno,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
       };
       dispatch({
-        type: 'task/getCustomers',
+        type: 'task/queryInspmans',
         payload: params,
         callback: (response) => {
           if (response){
@@ -408,12 +412,13 @@ class InspmanDetail extends PureComponent {
     params.trafficfee = fields.trafficfee;
     params.otherfee = fields.otherfee;
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+    const reportinfo = JSON.parse(localStorage.getItem("taskInspmanDetail"))
     params.taskman = user.nameC;
     params.reportno = reportinfo.reportno;
+    params.sampleno = reportinfo.sampleno;
 
     dispatch({
-      type: 'task/updateTask',
+      type: 'task/updateInspmans',
       payload: params,
       callback: (response) => {
         if (response) {
@@ -446,7 +451,7 @@ class InspmanDetail extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="nameC">客服姓名</Option>
+                  <Option value="nameC">检员姓名</Option>
                   <Option value="tel">联系方式</Option>
                 </Select>
               )}
@@ -480,12 +485,12 @@ class InspmanDetail extends PureComponent {
 
   render() {
     const {
-      task: {taskCustomers},
+      task: {taskInspman},
       loading,
     } = this.props;
 
 
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"));
+    const reportinfo = JSON.parse(localStorage.getItem("taskInspmanDetail"));
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
@@ -528,7 +533,7 @@ class InspmanDetail extends PureComponent {
                 size="middle"
                 rowKey="inspman"
                 loading={loading}
-                dataSource={taskCustomers.list}
+                dataSource={taskInspman.list}
                 pagination={{showQuickJumper:true,showSizeChanger:true}}
                 columns={this.columns}
                 rowSelection={rowSelection}
