@@ -60,6 +60,9 @@ class EntrustmentRelevance extends PureComponent {
       title: '关联委托号',
       dataIndex: 'reportlink',
       render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
         let  contentStr = [];
         contentStr = text.split(",");
         if (contentStr.length < 2) {

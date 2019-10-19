@@ -45,9 +45,7 @@ class FinalPriceDetail extends PureComponent {
   }
 
   back = () =>{
-    router.push({
-      pathname:'/Certificate/FinalPrice',
-    });
+    this.props.history.goBack();
   };
 
   onChange = e => {

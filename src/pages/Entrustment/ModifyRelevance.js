@@ -61,6 +61,9 @@ class ModifyRelevance extends PureComponent {
       title: '关联委托号',
       dataIndex: 'reportlink',
       render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
         let  contentStr = [];
         contentStr = text.split(" ");
         if (contentStr.length < 2) {
@@ -123,27 +126,27 @@ class ModifyRelevance extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    const reportno = sessionStorage.getItem('reportno');
+    const reportNo = sessionStorage.getItem('reportno');
     dispatch({
       type: 'testInfo/getReportexceptLink',
       payload:{
          certCode : certCode,
-         reportno : reportno,
+         reportNo : reportNo,
       }
     });
     dispatch({
       type: 'testInfo/getReportLink',
       payload:{
-         reportno : reportno,
+         reportno : reportNo,
       }
     });
   }
   addRelevance = text =>{
     const { dispatch } = this.props;
-    var reportno = sessionStorage.getItem('reportno');
+    var reportNo = sessionStorage.getItem('reportno');
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     var value = [];
-    value.push(reportno);
+    value.push(reportNo);
     value.push(text.reportno);
     dispatch({
       type: 'testInfo/addReportLink',
@@ -153,34 +156,78 @@ class ModifyRelevance extends PureComponent {
       type: 'testInfo/getReportexceptLink',
       payload:{
          certCode : certCode,
-         reportno : reportno,
+         reportNo : reportNo,
       }
     });
   };
   deleteRelevance = text =>{
     const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
+    const reportNo = sessionStorage.getItem('reportno');
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     let value = [];
-    value.push(reportno);
+    value.push(reportNo);
     value.push(text.reportno);
     dispatch({
       type: 'testInfo/deleteReportLink',
       payload:{value},
-      callback: () => {
-        dispatch({
-          type: 'testInfo/getReportexceptLink',
-          payload:{
-             certCode : certCode,
-             reportno : reportno,
-          }
-        });
+      callback: (response) => {
+        if (response.code === 200) {
+              this.componentDidMount();
+              notification.open({
+                message: '删除成功',
+              });
+            } else {
+              notification.open({
+                message: '删除失败',
+                description: response.data,
+              });
+            }
       }
     });
   };
+
   back = () =>{
     this.props.history.goBack();
   };
+
+  handleSearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    form.validateFields((err, fieldsValue) => {
+      console.log(err);
+      if (err) return;
+      const values = {
+        ...fieldsValue,
+        certCode : certCode,
+        reportNo : reportno,
+      };
+      dispatch({
+        type : 'testInfo/getReportexceptLink',
+        payload : values
+      });
+    });
+  };
+
+  handleFormReset = () => {
+    const { form } = this.props;
+    form.resetFields();
+    this.setState({
+       formValues: {},
+    });
+    const { dispatch } = this.props;
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const reportNo = sessionStorage.getItem('reportno');
+    dispatch({
+      type: 'testInfo/getReportexceptLink',
+      payload:{
+         certCode : certCode,
+         reportNo : reportNo,
+      }
+    });
+  };
+
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -256,7 +303,8 @@ class ModifyRelevance extends PureComponent {
               columns={this.deleteColumns}
               dataSource={link}
               showHeader={false}
-              pagination={false}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              rowKey="reportno"
             />
           </div>
         </Card>
@@ -270,6 +318,7 @@ class ModifyRelevance extends PureComponent {
               columns={this.addColumns}
               onSelectRow={this.handleSelectRows}
               dataSource={report}
+              rowKey="reportno"              
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>

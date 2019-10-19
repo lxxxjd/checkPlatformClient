@@ -84,11 +84,7 @@ export default {
     },
     *deleteReportLink({ payload,callback }, { call, put }) {
       const response = yield call(deleteReportLink, payload);
-      yield put({
-        type: 'getLink',
-        payload: response,
-      });
-      if (callback) callback();
+      if (callback) callback(response);
     },
     *getCheckProject({ payload,callback }, { call, put }) {
       const response = yield call(getCheckProject, payload);
