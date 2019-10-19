@@ -260,7 +260,7 @@ class Cost extends PureComponent {
     },
 
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
@@ -396,8 +396,8 @@ class Cost extends PureComponent {
               })(
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
+                  <Option value="shipname">船名标识</Option>
+                  <Option value="cargoname">检查品名</Option>
                 </Select>
               )}
             </Form.Item>

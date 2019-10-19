@@ -49,11 +49,11 @@ class ModifyRelevance extends PureComponent {
       dataIndex: 'applicant',
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
@@ -103,11 +103,11 @@ class ModifyRelevance extends PureComponent {
       dataIndex: 'applicant',
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
@@ -202,8 +202,8 @@ class ModifyRelevance extends PureComponent {
                   <Option value="reportno">委托编号</Option>
                   <Option value="applicant">委托人</Option>
                   <Option value="reportdate">委托日期</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
+                  <Option value="shipname">船名标识</Option>
+                  <Option value="cargoname">检查品名</Option>
                 </Select>
               )}
             </Form.Item>
@@ -243,14 +243,13 @@ class ModifyRelevance extends PureComponent {
               <span level={4}> 委托编号：{reportno} </span>
             </Col>
             <Col sm={17}>
-              <span> 运输工具：{shipname} </span>
+              <span> 船名标识：{shipname} </span>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
-            </Col>  
+            </Col>
           </Row>
           <br></br>
           <Row gutter={16}>

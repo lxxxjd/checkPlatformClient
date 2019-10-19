@@ -48,11 +48,11 @@ class SampleQuery extends PureComponent {
       dataIndex: 'reportno',
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
@@ -209,8 +209,8 @@ class SampleQuery extends PureComponent {
               })(
                 <Select placeholder="选择字段">
                   <Option value="reportno"> 委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
+                  <Option value="shipname">船名标识</Option>
+                  <Option value="cargoname">检查品名</Option>
                   <Option value="sampleno">样品编号</Option>
                   <Option value="samplename">样品名称</Option>
                   <Option value="sampleuse">样品用途</Option>
@@ -326,8 +326,8 @@ class SampleQuery extends PureComponent {
             })(
               <Select placeholder="选择字段">
                 <Option value="reportno"> 委托编号</Option>
-                <Option value="shipname">运输工具</Option>
-                <Option value="cargoname">货名</Option>
+                <Option value="shipname">船名标识</Option>
+                <Option value="cargoname">检查品名</Option>
                 <Option value="sampleno">样品编号</Option>
                 <Option value="samplename">样品名称</Option>
                 <Option value="sampleuse">样品用途</Option>

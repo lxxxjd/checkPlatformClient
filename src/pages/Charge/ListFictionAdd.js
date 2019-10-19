@@ -160,11 +160,11 @@ class ListFictionAdd extends PureComponent {
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
@@ -399,7 +399,7 @@ class ListFictionAdd extends PureComponent {
                 <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                   重置
                 </Button>
-                <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>返回</Button>
+                <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15}} onClick={this.back}>  <Icon type="left" />返回</Button>
               </span>
             </Col>
           </Row>

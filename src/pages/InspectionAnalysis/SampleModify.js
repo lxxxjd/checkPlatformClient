@@ -112,7 +112,7 @@ class SampleModify extends PureComponent {
   handleCancel = () =>{
     this.setState({ addOne: false });
     this.setState({ addMany: false });
-    this.setState({ onDelete: false });  
+    this.setState({ onDelete: false });
   };
 
   showAddOne = () => {
@@ -151,7 +151,7 @@ class SampleModify extends PureComponent {
       }
     });
     this.setState({selectedRowKeys:[]});
-  };  
+  };
   showDelete = () => {
     this.setState({ onDelete: true });
     this.setState({deleteRowKeys:[]});
@@ -258,8 +258,8 @@ class SampleModify extends PureComponent {
     const sampleno = sessionStorage.getItem('sampleno');
     const cargonameC = sessionStorage.getItem('cargoname');
     const {selectedRowKeys} = this.state;
-    const { 
-      dispatch ,    
+    const {
+      dispatch ,
       inspectionAnalysis: {items},
     } = this.props;
     dispatch({
@@ -327,11 +327,10 @@ class SampleModify extends PureComponent {
               <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.show}>导入</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
-            </Col>  
+            </Col>
           </Row>
           <div className={styles.tableList}>
             <Table
@@ -348,7 +347,7 @@ class SampleModify extends PureComponent {
                 visible={addOne}
                 onOk={this.onAddOne}
                 onCancel={this.handleCancel}
-              > 
+              >
                 <Form>
                   <Form.Item label="指标名称">
                     {getFieldDecorator('itemC', {
@@ -386,7 +385,7 @@ class SampleModify extends PureComponent {
                 visible={addMany}
                 onOk={this.addMany}
                 onCancel={this.handleCancel}
-              >               
+              >
                 <Table
                   size='middle'
                   rowKey="keyno"
@@ -402,7 +401,7 @@ class SampleModify extends PureComponent {
                 visible={onDelete}
                 onOk={this.delete}
                 onCancel={this.handleCancel}
-              > 
+              >
                 <Table
                   size='middle'
                   rowKey="keyno"

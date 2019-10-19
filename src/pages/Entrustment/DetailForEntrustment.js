@@ -64,11 +64,10 @@ class DetailForEnturstment extends Component {
             <Col span={19}>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
-            </Col>  
+            </Col>
           </Row>
           <Modal
           title="确认"
@@ -79,7 +78,7 @@ class DetailForEnturstment extends Component {
             <p>是否撤销</p>
           </Modal>
           <Divider style={{ marginBottom: 32 }} />
-          <Descriptions  size="large" title="业务信息" style={{ marginBottom: 32 }} bordered>
+          <Descriptions size="large" title="业务信息" style={{ marginBottom: 32 }} bordered>
             <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
             <Descriptions.Item label="委托日期">{moment(report.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
             <Descriptions.Item label="检验费">{report.price}</Descriptions.Item>
@@ -100,7 +99,7 @@ class DetailForEnturstment extends Component {
           <Descriptions size="large" title="检查对象" style={{ marginBottom: 32 }} bordered>
             <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
             <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
-            <Descriptions.Item label="运输工具">{report.shipname}</Descriptions.Item>
+            <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
             <Descriptions.Item label="申报数量和单位">{report.quantityd+report.unit}</Descriptions.Item>
             <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
             <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>

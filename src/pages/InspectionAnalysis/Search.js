@@ -73,8 +73,8 @@ class Search  extends PureComponent {
 	              })(
 	                <Select placeholder="搜索类型">
 	                 <Option value="reportno">委托编号</Option>
-	                  <Option value="shipname">运输工具</Option>
-	                  <Option value="cargoname">货名</Option>
+	                  <Option value="shipname">船名标识</Option>
+	                  <Option value="cargoname">检查品名</Option>
 	                  <Option value="sampleno">样品编号</Option>
 	                  <Option value="samplename">样品名称</Option>
 	                  <Option value="state">状态</Option>

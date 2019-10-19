@@ -447,9 +447,8 @@ class SampleRegisterDetail extends PureComponent {
               <Button type="primary" onClick={this.show}>新建</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
             </Col>
           </Row>
