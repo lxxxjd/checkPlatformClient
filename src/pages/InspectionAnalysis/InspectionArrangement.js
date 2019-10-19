@@ -71,6 +71,32 @@ class InspectionArrangement extends PureComponent {
       dataIndex: 'samplename',
     },
     {
+      title: '检测人员',
+      dataIndex: 'testmans',
+      render: (text, record) => {
+        let  contentStr = [];
+        if(text===undefined || text ===null ||text ===""){
+          return null;
+        }
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j = 0 ; j < contentStr.length ; j ++){
+          if(j===0){
+            result=contentStr[j];
+          }else if(j%3===0){
+              result=<span>{result}{br}{contentStr[j]}</span>;
+            }else{
+            result=<span>{result}&nbsp;{contentStr[j]}</span>;
+            }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
       title: '状态',
       dataIndex: 'state',
     },
@@ -94,7 +120,7 @@ class InspectionArrangement extends PureComponent {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
-      type: 'inspectionAnalysis/getAllSample',
+      type: 'inspectionAnalysis/getAllSampleAndTestMan',
       payload:{
          certCode : certCode,
       }
@@ -109,9 +135,15 @@ class InspectionArrangement extends PureComponent {
       }
     });
   }
-  mobileItem = text => {
 
+  mobileItem = text => {
+    console.log(text)
+    localStorage.setItem('taskInspmanDetail',JSON.stringify(text));
+    router.push({
+      pathname:'/InspectionAnalysis/InspmanDetail',
+    });
   };
+
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
@@ -119,6 +151,7 @@ class InspectionArrangement extends PureComponent {
     });
     localStorage.setItem('reportDetailNo',text.reportno);
   };
+
   detailItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
@@ -128,6 +161,7 @@ class InspectionArrangement extends PureComponent {
       pathname:'/InspectionAnalysis/InspectionArrangementDetail',
     });
   };
+
   handleOk = () =>{
     const {
       form: {validateFieldsAndScroll},

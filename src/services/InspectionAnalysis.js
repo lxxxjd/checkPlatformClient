@@ -9,6 +9,20 @@ export async function getAllSample(params) {
     },
   });
 }
+
+export async function getAllSampleAndTestMan(params) {
+  return request(`/api/sampleRegister/getAllSampleAndTestMan`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+
+
+
 export async function addResult(params) {
   return request(`/api/testdetail/addResult`,{
     method: 'POST',
@@ -67,7 +81,7 @@ export async function addDetails(params) {
   delete params.cargonameC;
   return request(`/api/testdetail/addDetails?reportno=${reportno}&sampleno=${sampleno}&cargonameC=${cargonameC}`,{
     method: 'POST',
-    data: params.selectedRowKeys, 
+    data: params.selectedRowKeys,
   });
 }
 export async function addDetail(params) {

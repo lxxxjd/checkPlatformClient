@@ -442,7 +442,7 @@ class SampleRegisterDetail extends PureComponent {
         <ArrivalInvoiceForm {...parentMethods} modifyModalVisble={modifyModalVisble} sampledata={sampledata} dispatch={dispatch} init={this.init} />
 
         <Card bordered={false}>
-          <Row gutter={16}>
+          <Row gutter={16} style={{ marginBottom: 5 }}>
             <Col span={22}>
               <Button type="primary" onClick={this.show}>新建</Button>
             </Col>

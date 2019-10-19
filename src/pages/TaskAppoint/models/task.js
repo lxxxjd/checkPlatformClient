@@ -1,5 +1,5 @@
-import { queryAllTaskAndCustomers,queryAllTaskAndInspects ,queryCustomers,queryInspects,
-  dealTask,dealnspect,updateTask,updateInspect} from '@/services/Task';
+import { queryAllTaskAndCustomers,queryAllTaskAndInspects ,queryCustomers,queryInspects,queryAllInspmans,
+  dealTask,dealnspect,updateTask,updateInspect,dealnspman,updateInspman} from '@/services/Task';
 
 export default {
   namespace: 'task',
@@ -22,6 +22,11 @@ export default {
       pagination: {},
     },
 
+    taskInspman:{
+      list: [],
+      pagination: {},
+    },
+
 
     dealCustomers:[],
     updateCustomers:{},
@@ -29,6 +34,10 @@ export default {
 
     dealInspects:[],
     updateInspects:{},
+
+    dealInspman:[],
+    updateInspman:{},
+
 
   },
 
@@ -49,10 +58,10 @@ export default {
       });
     },
 
-    *getCustomers({ payload,callback }, { call, put }) {
-      const response = yield call(queryCustomers, payload);
+    *queryInspmans({ payload,callback }, { call, put }) {
+      const response = yield call(queryAllInspmans, payload);
       yield put({
-        type: 'getTask',
+        type: 'queryInspmansInfo',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -62,6 +71,15 @@ export default {
       const response = yield call(queryInspects, payload);
       yield put({
         type: 'getInspectsInfo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *getCustomers({ payload,callback }, { call, put }) {
+      const response = yield call(queryCustomers, payload);
+      yield put({
+        type: 'getTask',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -104,6 +122,23 @@ export default {
       if (callback) callback(response.data);
     },
 
+    *dealInspmans({ payload,callback }, { call, put }) {
+      const response = yield call(dealnspman, payload);
+      yield put({
+        type: 'dealnspmanInfo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+    *updateInspmans({ payload,callback }, { call, put }) {
+      const response = yield call(updateInspman, payload);
+      yield put({
+        type: 'updateInspmanInfo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -134,6 +169,15 @@ export default {
       };
     },
 
+    queryInspmansInfo(state, { payload }) {
+      return {
+        ...state,
+        taskInspman: payload.data,
+      };
+    },
+
+
+
     updateTaskInfo(state, { payload }) {
       return {
         ...state,
@@ -161,6 +205,21 @@ export default {
       return {
         ...state,
         dealInspects: payload.data,
+      };
+    },
+
+    dealnspmanInfo(state, { payload }) {
+      return {
+        ...state,
+        dealInspman: payload.data,
+      };
+    },
+
+
+    updateInspmanInfo(state, { payload }) {
+      return {
+        ...state,
+        updateInspman: payload.data,
       };
     },
 

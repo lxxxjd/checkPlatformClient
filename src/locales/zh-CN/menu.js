@@ -1,3 +1,5 @@
+import InspmanDetail from '../../pages/TaskAppoint/InspmanDetail';
+
 export default {
   'menu.home': '首页',
   'menu.login': '登录',
@@ -52,6 +54,7 @@ export default {
   'menu.InspectionAnalysis':'分析测试',
   'menu.InspectionAnalysis.InspectionArrangement':'检测安排',
   'menu.InspectionAnalysis.InspectionArrangementDetail':'检验安排详情',
+  'menu.InspectionAnalysis.InspmanDetail':'检验人员安排详情',
   'menu.InspectionAnalysis.SampleIndex':'样品指标',
   'menu.InspectionAnalysis.SampleModify':'样品结果登记',
   'menu.InspectionAnalysis.SampleDetail':'样品结果详情',
