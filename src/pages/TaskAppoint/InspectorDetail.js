@@ -301,15 +301,53 @@ class InspectorDetail extends PureComponent {
 
   handleFormReset = () => {
     this.init();
+    const { form } = this.props;
+    form.resetFields();
   };
 
 
 
   handleSearch = e => {
     e.preventDefault();
-    const taskInspects = [...this.state.taskInspects];
-    this.setState({ taskInspects: taskInspects.filter(item => item.sampleno === "雷华俊") });
-    console.log(taskInspects);
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      if (fieldsValue.kind ===undefined ||fieldsValue.value ===undefined) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
+      const {state} = this
+      let insway = reportinfo.inspway;
+      const inswayArray = insway.split(" ");
+      for(let i=0;i<inswayArray.length;i++){
+        if(inswayArray[i] !== ""){
+          state.checkProject.push(inswayArray[i]);
+        }
+      }
+      const params = {
+        certCode:user.certCode,
+        reportNo:reportinfo.reportno,
+        kind :fieldsValue.kind,
+        value: fieldsValue.value,
+      };
+      dispatch({
+        type: 'task/getInspects',
+        payload: params,
+        callback: (response) => {
+          if (response){
+            this.taskData =  response.list;
+            const data = response.list;
+            const {state} = this;
+            // eslint-disable-next-line no-plusplus
+            for(let i=0;i<data.length;i++) {
+              if(data[i].state === 1){
+                state.selectedRowKeys.push(data[i].inspman);
+                this.exist.push(data[i].inspman);
+              }
+            }
+          }
+        }
+      });
+    });
   };
 
 
@@ -407,8 +445,8 @@ class InspectorDetail extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="reportno">姓名</Option>
-                  <Option value="applicant">联系人</Option>
+                  <Option value="nameC">检员姓名</Option>
+                  <Option value="tel">联系方式</Option>
                 </Select>
               )}
             </Form.Item>

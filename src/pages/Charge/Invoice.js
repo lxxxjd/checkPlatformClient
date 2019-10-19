@@ -216,7 +216,7 @@ class Invoice extends PureComponent {
         <Fragment>
           {text.invoiceStatus==="已审核"||text.invoiceStatus==="发票作废"?[<a onClick={() => this.handleCreateInvoice(text, record)}>开具&nbsp;&nbsp;</a>]:[]}
           {text.invoiceStatus==='已退款'?[<a onClick={() => this.handleDestoryInvoice(text, record)}>作废&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
+          <a onClick={() => this.previewItem(text, record)}>查看</a>
           &nbsp;&nbsp;
         </Fragment>
       ),
@@ -228,7 +228,10 @@ class Invoice extends PureComponent {
   }
 
   previewItem = text => {
-    console.log(text);
+    sessionStorage.setItem('reportnoForList',JSON.stringify(text));
+    router.push({
+      pathname:'/Charge/DetailList',
+    });
   };
 
 

@@ -101,20 +101,12 @@ class ListFiction extends PureComponent {
     });
   }
 
-  toListFictionReview = text => {
-    localStorage.setItem('listListFictionReview',JSON.stringify(text));
-    router.push({
-      pathname:'/Charge/ListFictionReview',
-    });
-  };
 
   previewItem = text => {
-    console.log(text.invoiceStatus);
-    // sessionStorage.setItem('reportno',text.reportno);
-    // router.push({
-    //   pathname:'/Entrustment/DetailForEntrustment',
-    // });
-    // localStorage.setItem('reportDetailNo',text.reportno);
+    sessionStorage.setItem('reportnoForList',JSON.stringify(text));
+    router.push({
+      pathname:'/Charge/DetailList',
+    });
   };
 
   handleSearch = e => {

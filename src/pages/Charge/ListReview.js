@@ -110,11 +110,10 @@ class ListReview extends PureComponent {
   };
 
   previewItem = text => {
-    // sessionStorage.setItem('reportno',text.reportno);
-    // router.push({
-    //   pathname:'/Entrustment/DetailForEntrustment',
-    // });
-    // localStorage.setItem('reportDetailNo',text.reportno);
+    sessionStorage.setItem('reportnoForList',JSON.stringify(text));
+    router.push({
+      pathname:'/Charge/DetailList',
+    });
   };
 
   handleSearch = e => {
