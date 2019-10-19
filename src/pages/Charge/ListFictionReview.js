@@ -45,11 +45,11 @@ class ListFictionReview extends PureComponent {
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
@@ -208,8 +208,8 @@ class ListFictionReview extends PureComponent {
             </Col>
 
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 1 }} onClick={this.back}>
-                返回
+              <Button type="primary" style={{ marginLeft: 1  ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
             </Col>
           </Row>

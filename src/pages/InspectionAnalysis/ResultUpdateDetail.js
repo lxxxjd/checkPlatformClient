@@ -145,11 +145,10 @@ class ResultUpdateDetail extends PureComponent {
             <Col sm={22}>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
-            </Col>  
+            </Col>
           </Row>
           <div className={styles.tableList}>
             <Table
@@ -166,7 +165,7 @@ class ResultUpdateDetail extends PureComponent {
                 visible={visible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
-              > 
+              >
                 <Form>
                   <Form.Item label="结果">
                     {getFieldDecorator('result', {

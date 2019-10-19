@@ -52,11 +52,11 @@ class SampleRegister extends PureComponent {
       dataIndex: 'applicant',
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
@@ -162,8 +162,8 @@ class SampleRegister extends PureComponent {
                   <Option value="reportno">委托编号</Option>
                   <Option value="applicant">委托人</Option>
                   <Option value="agent">代理人</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
+                  <Option value="shipname">船名标识</Option>
+                  <Option value="cargoname">检查品名</Option>
 
                 </Select>
               )}

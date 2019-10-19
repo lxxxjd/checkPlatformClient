@@ -502,11 +502,10 @@ class UploadDetail extends PureComponent {
               <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
-            </Col> 
+            </Col>
           </Row>
           <div className={styles.tableList}>
             <Table

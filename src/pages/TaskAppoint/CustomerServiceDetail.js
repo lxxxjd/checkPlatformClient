@@ -10,10 +10,11 @@ import {
   Input,
   Button,
   Select,
-  Table, message, Modal, Icon,
+  Table, message, Modal, Icon,Descriptions
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
+import moment from 'moment'
 import task from './models/task';
 
 
@@ -26,8 +27,54 @@ const getValue = obj =>
     .join(',');
 
 
-const CreateForm = Form.create()(props => {
+// 查看框
+const ReviewFrom = (props => {
+  const { modalReviewVisible, handleModalReviewVisible,modalInfo  } = props;
 
+  // 处理操作时间
+  const handleDate = (val) => {
+    if(val!==undefined && val!==null){
+        return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+      }
+      return null;
+  };
+  // 处理操作时间
+  const date = handleDate(modalInfo.taskdate);
+
+  return (
+    <Modal
+      destroyOnClose
+      title="查看客服"
+      visible={modalReviewVisible}
+      style={{ top: 100 }}
+      width={800}
+      onCancel={() => handleModalReviewVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleModalReviewVisible()}>
+          关闭
+        </Button>
+      ]}
+    >
+      <Descriptions bordered>
+        <Descriptions.Item label="客服姓名">{modalInfo.inspman}</Descriptions.Item>
+        <Descriptions.Item label="联系方式">{modalInfo.tel}</Descriptions.Item>
+        <Descriptions.Item label="住址">{modalInfo.place}</Descriptions.Item>
+        <Descriptions.Item label="岗位">{modalInfo.position}</Descriptions.Item>
+        <Descriptions.Item label="工作任务">{modalInfo.inspway}</Descriptions.Item>
+        <Descriptions.Item label="工时">{modalInfo.manhour}</Descriptions.Item>
+        <Descriptions.Item label="劳务">{modalInfo.labourfee}</Descriptions.Item>
+        <Descriptions.Item label="餐饮">{modalInfo.lunchfee}</Descriptions.Item>
+        <Descriptions.Item label="交通">{modalInfo.trafficfee}</Descriptions.Item>
+        <Descriptions.Item label="编辑人">{modalInfo.taskman}</Descriptions.Item>
+        <Descriptions.Item label="编辑时间">{date}</Descriptions.Item>
+      </Descriptions>
+    </Modal>
+  );
+});
+
+
+
+const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible,modalInfo  } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -43,6 +90,7 @@ const CreateForm = Form.create()(props => {
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
+      style={{ top: 10 }}
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
         {form.getFieldDecorator('inspman', {
@@ -128,6 +176,7 @@ class CustomerServiceDetail extends PureComponent {
     // eslint-disable-next-line react/no-unused-state
     formValues: {},
     modalVisible: false,
+    modalReviewVisible:false,
     modalInfo :{},
   };
 
@@ -180,7 +229,7 @@ class CustomerServiceDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.handleEdit(true,text)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.handleEdit(true)}>在岗</a>
+          <a onClick={() => this.handleReview(true,text)}>查看</a>
         </Fragment>
       ),
     },
@@ -323,11 +372,24 @@ class CustomerServiceDetail extends PureComponent {
     this.state.modalInfo = text;
   };
 
+  handleReview = (flag,text) => {
+    this.handleModalReviewVisible(flag);
+    this.state.modalInfo = text;
+  };
+
+
   handleModalVisible = (flag) => {
     this.setState({
       modalVisible: !!flag,
     });
   };
+
+  handleModalReviewVisible = (flag) => {
+    this.setState({
+      modalReviewVisible: !!flag,
+    });
+  };
+
 
 
   handleAdd = (fields,modalInfo) => {
@@ -405,7 +467,7 @@ class CustomerServiceDetail extends PureComponent {
                 重置
               </Button>
               <Button style={{ marginLeft: 8 }} type="primary" onClick={this.save}>保存</Button>
-              <Button style={{ marginLeft: 8 }} type="primary" onClick={this.back}><Icon type="left" />返回</Button>
+              <Button style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} type="primary" onClick={this.back}><Icon type="left" />返回</Button>
             </span>
           </Col>
         </Row>
@@ -439,11 +501,12 @@ class CustomerServiceDetail extends PureComponent {
     };
 
 
-    const {  modalVisible,modalInfo } = this.state;
+    const {  modalVisible,modalInfo ,handleModalReviewVisible,modalReviewVisible} = this.state;
 
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      handleModalReviewVisible:this.handleModalReviewVisible,
     };
 
     const reprotText= {
@@ -456,6 +519,7 @@ class CustomerServiceDetail extends PureComponent {
     return (
       <PageHeaderWrapper text={reprotText}>
         <div>
+          <ReviewFrom {...parentMethods} modalReviewVisible={modalReviewVisible} modalInfo={modalInfo} />
           <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} />
           <Card bordered={false} style={{ marginTop: 24 }} size="small">
             <div className={styles.tableList}>

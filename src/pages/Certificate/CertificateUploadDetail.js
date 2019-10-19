@@ -510,9 +510,8 @@ class CertificateUploadDetail extends PureComponent {
               <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
             </Col>
           </Row>

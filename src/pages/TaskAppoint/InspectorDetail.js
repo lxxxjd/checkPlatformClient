@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-
 import {
   Row,
   Col,
@@ -11,10 +10,11 @@ import {
   Button,
   Select,
   Table, message, Modal, Checkbox,
-  Icon,
+  Icon, Descriptions,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
+import moment from 'moment'
 import task from './models/task';
 
 
@@ -41,6 +41,56 @@ const CheckboxGroup = Checkbox.Group;
 // ];
 
 
+
+
+// 查看框
+const ReviewFrom = (props => {
+  const { modalReviewVisible, handleModalReviewVisible,modalInfo  } = props;
+
+  // 处理操作时间
+  const handleDate = (val) => {
+    if(val!==undefined && val!==null){
+      return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+    }
+    return null;
+  };
+  // 处理操作时间
+  const date = handleDate(modalInfo.taskdate);
+  return (
+    <Modal
+      destroyOnClose
+      title="查看客服"
+      visible={modalReviewVisible}
+      style={{ top: 100 }}
+      width={800}
+      onCancel={() => handleModalReviewVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleModalReviewVisible()}>
+          关闭
+        </Button>
+      ]}
+    >
+      <Descriptions bordered>
+        <Descriptions.Item label="客服姓名">{modalInfo.inspman}</Descriptions.Item>
+        <Descriptions.Item label="联系方式">{modalInfo.tel}</Descriptions.Item>
+        <Descriptions.Item label="住址">{modalInfo.place}</Descriptions.Item>
+        <Descriptions.Item label="岗位">{modalInfo.position}</Descriptions.Item>
+        <Descriptions.Item label="工作任务">{modalInfo.inspway}</Descriptions.Item>
+        <Descriptions.Item label="工时">{modalInfo.manhour}</Descriptions.Item>
+        <Descriptions.Item label="劳务">{modalInfo.labourfee}</Descriptions.Item>
+        <Descriptions.Item label="餐饮">{modalInfo.lunchfee}</Descriptions.Item>
+        <Descriptions.Item label="交通">{modalInfo.trafficfee}</Descriptions.Item>
+        <Descriptions.Item label="编辑人">{modalInfo.taskman}</Descriptions.Item>
+        <Descriptions.Item label="编辑时间">{date}</Descriptions.Item>
+      </Descriptions>
+    </Modal>
+  );
+});
+
+
+
+
+
 const CreateForm = Form.create()(props => {
 
   const { modalVisible, form, handleAdd, handleModalVisible,modalInfo ,checkProject} = props;
@@ -56,6 +106,7 @@ const CreateForm = Form.create()(props => {
       destroyOnClose
       title="编辑检验人员"
       visible={modalVisible}
+      style={{ top: 10 }}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
@@ -136,6 +187,7 @@ class InspectorDetail extends PureComponent {
     // eslint-disable-next-line react/no-unused-state
     formValues: {},
     modalVisible: false,
+    modalReviewVisible:false,
     modalInfo :{},
     checkProject:[],
   };
@@ -189,7 +241,7 @@ class InspectorDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.handleEdit(true,text)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.handleEdit(true)}>在岗</a>
+          <a onClick={() => this.handleReview(true,text)}>查看</a>
         </Fragment>
       ),
     },
@@ -360,11 +412,25 @@ class InspectorDetail extends PureComponent {
     this.state.modalInfo = text;
   }
 
+
+  handleReview = (flag,text) => {
+    this.handleModalReviewVisible(flag);
+    this.state.modalInfo = text;
+  };
+
+
   handleModalVisible = (flag) => {
     this.setState({
       modalVisible: !!flag,
     });
   };
+
+  handleModalReviewVisible = (flag) => {
+    this.setState({
+      modalReviewVisible: !!flag,
+    });
+  };
+
 
 
   handleAdd = (fields,modalInfo) => {
@@ -466,14 +532,9 @@ class InspectorDetail extends PureComponent {
                 重置
               </Button>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.save}>保存</Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}><Icon type="left" />
-                返回
-              </Button>
+              <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} onClick={this.back}><Icon type="left" />返回</Button>
             </span>
           </Col>
-
-
-
         </Row>
       </Form>
     );
@@ -504,25 +565,22 @@ class InspectorDetail extends PureComponent {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
-
-
-    const {  modalVisible,modalInfo,checkProject } = this.state;
+    const {  modalVisible,modalInfo,checkProject,modalReviewVisible } = this.state;
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      handleModalReviewVisible:this.handleModalReviewVisible,
     };
-
     const reprotText= {
       reportno:reportinfo.reportno,
       applicant:reportinfo.applicant,
       shipname:reportinfo.shipname,
       inspway:reportinfo.inspway,
     };
-
     return (
-
       <PageHeaderWrapper text={reprotText}>
         <div className={styles.standardList}>
+          <ReviewFrom {...parentMethods} modalReviewVisible={modalReviewVisible} modalInfo={modalInfo} />
           <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} checkProject={checkProject} />
           <Card bordered={false} style={{ marginTop: 24 }} size="small">
             <div className={styles.tableList}>
@@ -538,7 +596,6 @@ class InspectorDetail extends PureComponent {
               />
             </div>
           </Card>
-
         </div>
       </PageHeaderWrapper>
     );

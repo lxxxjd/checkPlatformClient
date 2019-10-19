@@ -62,7 +62,7 @@ const fieldLabels = {
   reportdate: '委托日期',
   tradeway: '贸易方式',
   businesssource: '业务来源',
-  shipname: '运输工具',
+  shipname: '船名标识',
   inspplace: '装卸港',
   insplinkway: '现场联系方式',
   inspdate: '检验时间',

@@ -237,7 +237,7 @@ class DetailForSub extends PureComponent {
                   { getFieldDecorator('price', {
                     rules:
                     showPrice === true
-                    ? [{ required: 'true', message: '请输入单价比例' }] 
+                    ? [{ required: 'true', message: '请输入单价比例' }]
                     : []
                   })(
                     <Input />
@@ -255,7 +255,7 @@ class DetailForSub extends PureComponent {
             </Form.Item>
             <Form.Item label="转委托要求">
               {getFieldDecorator('inspwaymemo1')(
-                <TextArea style={{minHeight: 32}} rows={4}/>                
+                <TextArea style={{minHeight: 32}} rows={4}/>
               )}
             </Form.Item>
           </Form>
@@ -266,9 +266,8 @@ class DetailForSub extends PureComponent {
               <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
             </Col>
           </Row>

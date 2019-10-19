@@ -63,7 +63,7 @@ const fieldLabels = {
   reportdate: '委托日期',
   tradeway: '贸易方式',
   businesssource: '业务来源',
-  shipname: '运输工具',
+  shipname: '船名标识',
   inspplace: '装卸港',
   insplinkway: '现场联系方式',
   inspdate: '检验时间',
@@ -887,7 +887,7 @@ class ModifyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('inspplace3')(
-                    <Input placeholder="请输入补充"/>
+                    <Input placeholder="请输入补充" />
                   )}
                 </Form.Item>
               </Col>
@@ -899,8 +899,7 @@ class ModifyForEntrustment extends PureComponent {
             <tr>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可领域及代码</td>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可子领域代码</td>
-              <td width="15%"
-                  style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
+              <td width="15%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
               </td>
               <td width="12%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>检查项目及代码
               </td>

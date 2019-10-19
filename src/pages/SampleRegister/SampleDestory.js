@@ -47,11 +47,11 @@ class SampleDestory extends PureComponent {
       dataIndex: 'reportno',
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
@@ -94,7 +94,7 @@ class SampleDestory extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>浏览</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.removeExistItem(text, record)}>删除</a>
         </Fragment>
@@ -367,8 +367,8 @@ class SampleDestory extends PureComponent {
               })(
                 <Select placeholder="选择字段">
                   <Option value="reportno"> 委托编号</Option>
-                  <Option value="shipname">运输工具</Option>
-                  <Option value="cargoname">货名</Option>
+                  <Option value="shipname">船名标识</Option>
+                  <Option value="cargoname">检查品名</Option>
                   <Option value="sampleno">样品编号</Option>
                   <Option value="samplename">样品名称</Option>
                   <Option value="sampleuse">样品用途</Option>
@@ -448,8 +448,8 @@ class SampleDestory extends PureComponent {
             })(
               <Select placeholder="选择字段">
                 <Option value="reportno"> 委托编号</Option>
-                <Option value="shipname">运输工具</Option>
-                <Option value="cargoname">货名</Option>
+                <Option value="shipname">船名标识</Option>
+                <Option value="cargoname">检查品名</Option>
                 <Option value="sampleno">样品编号</Option>
                 <Option value="samplename">样品名称</Option>
                 <Option value="sampleuse">样品用途</Option>

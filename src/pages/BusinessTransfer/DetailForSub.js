@@ -232,7 +232,7 @@ class DetailForSub extends PureComponent {
                   { getFieldDecorator('price', {
                     rules:
                     showPrice === true
-                    ? [{ required: 'true', message: '请输入单价比例' }] 
+                    ? [{ required: 'true', message: '请输入单价比例' }]
                     : []
                   })(
                     <Input />
@@ -261,12 +261,11 @@ class DetailForSub extends PureComponent {
               <span level={4}> 委托编号：{reportno} </span>
             </Col>
             <Col span={17}>
-              <span> 运输工具：{shipname} </span>
+              <span> 船名标识：{shipname} </span>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
             </Col>
           </Row>

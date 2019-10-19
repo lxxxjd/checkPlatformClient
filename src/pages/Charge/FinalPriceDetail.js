@@ -72,9 +72,8 @@ class FinalPriceDetail extends PureComponent {
             <Button type="primary" onClick={this.submit}>
               保存
             </Button>
-            <Button type="primary" style={{ marginLeft: 16 }} onClick={this.back}>
-              <Icon type="left" />
-              返回
+            <Button type="primary" style={{ marginLeft: 16 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+              <Icon type="left" />返回
             </Button>
             <br></br>
             <br></br>
@@ -89,7 +88,7 @@ class FinalPriceDetail extends PureComponent {
               <span> 委托人：{reportno} </span>
             </Col>
             <Col sm={3}>
-              <span> 货名：{reportno} </span>
+              <span> 检查品名：{reportno} </span>
             </Col>
             <Col sm={4}>
               <span> 检验地点：{reportno} </span>

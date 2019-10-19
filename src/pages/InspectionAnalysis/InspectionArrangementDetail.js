@@ -170,11 +170,10 @@ class InspectionArrangementDetail extends PureComponent {
             <Col sm={22}>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
-                <Icon type="left" />
-                返回
+              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
+                <Icon type="left" />返回
               </Button>
-            </Col>  
+            </Col>
           </Row>
           <Card
             className={styles.tabsCard}

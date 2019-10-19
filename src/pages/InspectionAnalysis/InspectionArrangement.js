@@ -55,11 +55,11 @@ class InspectionArrangement extends PureComponent {
       }</span>
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
@@ -216,7 +216,7 @@ class InspectionArrangement extends PureComponent {
             visible={visible}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
-          > 
+          >
             <Form>
               <Form.Item label="分包实验室">
                 {getFieldDecorator('testman', {
@@ -261,7 +261,7 @@ class InspectionArrangement extends PureComponent {
                     { getFieldDecorator('price', {
                       rules:
                       showPrice === true
-                      ? [{ required: 'true', message: '请输入单价比例' }] 
+                      ? [{ required: 'true', message: '请输入单价比例' }]
                       : []
                     })(
                       <Input />

@@ -43,11 +43,11 @@ class SubEntrustment extends PureComponent {
       }</span>
     },
     {
-      title: '运输工具',
+      title: '船名标识',
       dataIndex: 'shipname',
     },
     {
-      title: '货名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
