@@ -97,10 +97,16 @@ const CreateForm = Form.create()(props => {
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      form.resetFields();
       handleAdd(fieldsValue,modalInfo);
     });
   };
+
+  const onChange =(checkedValue)=>{
+    form.setFieldsValue({'inspway': checkedValue});
+    console.log(checkedValue);
+  }
+
+
   return (
     <Modal
       destroyOnClose
@@ -131,7 +137,7 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
         {form.getFieldDecorator('inspway', {
           initialValue: modalInfo.inspway,
-        })(<CheckboxGroup options={checkProject} />)}
+        })(<CheckboxGroup options={checkProject} onChange={onChange} />)}
       </FormItem>
 
 
@@ -309,6 +315,7 @@ class InspectorDetail extends PureComponent {
     const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
 
     const {state} = this
+    state.checkProject=[];
     let insway = reportinfo.inspway;
     const inswayArray = insway.split(" ");
     for(let i=0;i<inswayArray.length;i++){
@@ -368,6 +375,7 @@ class InspectorDetail extends PureComponent {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
       const {state} = this
+      state.checkProject=[];
       let insway = reportinfo.inspway;
       const inswayArray = insway.split(" ");
       for(let i=0;i<inswayArray.length;i++){
@@ -455,6 +463,7 @@ class InspectorDetail extends PureComponent {
         params.inspway = inspway;
       }
     }
+
     params.position = fields.position;
     params.tel = fields.tel;
     params.manhour = fields.manhour;
@@ -532,7 +541,9 @@ class InspectorDetail extends PureComponent {
                 重置
               </Button>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.save}>保存</Button>
-              <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} onClick={this.back}><Icon type="left" />返回</Button>
+              <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} onClick={this.back}><Icon type="left" />
+              返回
+              </Button>
             </span>
           </Col>
         </Row>
