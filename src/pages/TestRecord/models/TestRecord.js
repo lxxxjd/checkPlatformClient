@@ -54,6 +54,10 @@ export default {
       });
       if (callback) callback(response);
     },
+    *getInstrument({ payload,callback }, { call, put }) {
+      const response = yield call(getInstrument, payload);
+      if (callback) callback(response);
+    },
     *getInspway({ payload,callback }, { call, put }) {
       const response = yield call(getInspway, payload);
       yield put({
@@ -128,8 +132,10 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
-
+    *getStandard({ payload,callback }, { call, put }) {
+      const response = yield call(getStandard, payload);
+      if (callback) callback(response);
+    },
 
   },
 
