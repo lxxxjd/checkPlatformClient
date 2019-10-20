@@ -102,6 +102,7 @@ class FinalPrice extends PureComponent {
     sessionStorage.setItem('applicant',text.applicant);
     sessionStorage.setItem('cargoname',text.cargoname);
     sessionStorage.setItem('inspway',text.inspway);
+    sessionStorage.setItem('FinalPriceOrigin','FinalPrice');
     router.push({
       pathname:'/Charge/FinalPriceDetail',
     });
@@ -195,7 +196,7 @@ class FinalPrice extends PureComponent {
 
   render() {
     const {
-      charge: {data},
+      charge: {finalData},
       loading,
     } = this.props;
     return (
@@ -206,7 +207,7 @@ class FinalPrice extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={data}
+              dataSource={finalData}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
               rowKey="reportno"

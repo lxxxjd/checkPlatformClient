@@ -5,6 +5,7 @@ export default {
   namespace: 'charge',
   state: {
     data: [],
+    finalData:[],
     reports:[], // listAdd reports
     addresult:{},  // 添加返回值
     deleteinfo:{}, // 删除返回信息
@@ -56,7 +57,7 @@ export default {
     *getReportPriceMaking({ payload,callback }, { call, put }) {
       const response = yield call(getReportPriceMaking, payload);
       yield put({
-        type: 'save',
+        type: 'saveFinalPrice',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -127,6 +128,13 @@ export default {
       return {
         ...state,
         data: payload.data,
+      };
+    },
+
+    saveFinalPrice(state, { payload }) {
+      return {
+        ...state,
+        finalData: payload.data,
       };
     },
 

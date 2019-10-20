@@ -79,7 +79,8 @@ class FinalPriceDetail extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const reportno = sessionStorage.getItem('reportno');
-      const {value} = this.state; 
+      const FinalPriceOrigin = sessionStorage.getItem('FinalPriceOrigin');
+      const {value} = this.state;
       if (!error) {
         // submit the values
         dispatch({
@@ -95,9 +96,17 @@ class FinalPriceDetail extends PureComponent {
               notification.open({
                 message: '定价成功',
               });
-              router.push({
-                pathname: '/Charge/FinalPrice',
-              });
+              // 判断页面来源
+              if(FinalPriceOrigin==='ListFictionAdd'){
+                router.push({
+                  pathname: '/Charge/ListFictionAdd',
+                });
+              }else if(FinalPriceOrigin==='FinalPrice'){
+                router.push({
+                  pathname: '/Charge/FinalPrice',
+                });
+              }
+
             } else {
               notification.open({
                 message: '添加失败',
@@ -142,7 +151,7 @@ class FinalPriceDetail extends PureComponent {
               <Button type="primary" style={{ marginLeft: 16 }} onClick={this.back}>
                 <Icon type="left" />
                 返回
-              </Button>            
+              </Button>
             </Col>
           </Row>
           <br></br>
@@ -167,7 +176,7 @@ class FinalPriceDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="单价" >
               {getFieldDecorator('price', {
-                rules: value==='按单价' ? [{                       
+                rules: value==='按单价' ? [{
                   required: true,
                   whitespace: true,
                   type: 'number',
@@ -182,7 +191,7 @@ class FinalPriceDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="数量" >
               {getFieldDecorator('quantity', {
-                rules: value==='按单价' ? [{                       
+                rules: value==='按单价' ? [{
                   required: true,
                   whitespace: true,
                   type: 'number',
@@ -197,7 +206,7 @@ class FinalPriceDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="总价">
               {getFieldDecorator('total', {
-                rules: value==='按单价' ? [{                       
+                rules: value==='按单价' ? [{
                   required: true,
                   whitespace: true,
                   type: 'number',
@@ -216,7 +225,7 @@ class FinalPriceDetail extends PureComponent {
             value==='按批次' ? [<Form >
             <Form.Item label="检验费">
               {getFieldDecorator('total', {
-                rules: value==='按批次' ? [{                       
+                rules: value==='按批次' ? [{
                   required: true,
                   whitespace: true,
                   type: 'number',
@@ -242,7 +251,7 @@ class FinalPriceDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="总价">
               {getFieldDecorator('total', {
-                rules: value==='按协议' ? [{                       
+                rules: value==='按协议' ? [{
                   required: true,
                   whitespace: true,
                   type: 'number',
@@ -261,7 +270,7 @@ class FinalPriceDetail extends PureComponent {
             value==='按项目' ? [<Form >
             <Form.Item label="总价">
               {getFieldDecorator('total', {
-                rules: value==='按项目' ? [{                       
+                rules: value==='按项目' ? [{
                   required: true,
                   whitespace: true,
                   type: 'number',

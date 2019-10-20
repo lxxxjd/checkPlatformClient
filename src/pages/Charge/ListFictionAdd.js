@@ -150,6 +150,7 @@ class ListFictionAdd extends PureComponent {
   };
 
   columns = [
+
     {
       title: '委托编号',
       dataIndex: 'reportno',
@@ -177,17 +178,17 @@ class ListFictionAdd extends PureComponent {
     },
     {
       title: '价格',
-      dataIndex: 'price',
+      dataIndex: 'total',
     },
     {
       title: '状态',
-      dataIndex: 'process',
+      dataIndex: 'status',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.baoliu(text, record)}>定价</a>
+          <a onClick={() => this.mobileItem(text)}>定价</a>
           &nbsp;&nbsp;
           <a onClick={() => this.removeExistItem(text, record)}>删除</a>
           &nbsp;&nbsp;
@@ -361,10 +362,25 @@ class ListFictionAdd extends PureComponent {
     console.log(this.state.priceMaking);
   }
 
+  // 定价
+  mobileItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('reportdate',text.reportdate);
+    sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('cargoname',text.cargoname);
+    sessionStorage.setItem('inspway',text.inspway);
+    sessionStorage.setItem('FinalPriceOrigin','ListFictionAdd');
+
+    router.push({
+      pathname:'/Charge/FinalPriceDetail',
+    });
+  };
 
 
 
-    render(){
+
+
+  render(){
     const {
       charge:{reports},
       loading,
@@ -381,7 +397,7 @@ class ListFictionAdd extends PureComponent {
       selectedRowKeys,
       onChange: this.onSelectChange,
       getCheckboxProps: record => ({
-        disabled: record.process !== '已定价', // Column configuration not to be checked
+        disabled: record.process !== '已定价' || record.price==="", // Column configuration not to be checked
         process: record.process,
       }),
     }
