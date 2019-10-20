@@ -16,7 +16,8 @@ import {
   Table,
   DatePicker,
   notification,
-  Icon
+  Icon,
+  Transfer
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './ResultDetail.less';
@@ -26,18 +27,22 @@ const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ testRecord, loading }) => ({
-  testRecord,
-  loading: loading.models.testRecord,
+@connect(({ checkResult, loading }) => ({
+  checkResult,
+  loading: loading.models.checkResult,
 }))
 class ResultDetail extends PureComponent {
   state = {
-    formValues: {},
-    visible:false,
-    checkProject:[],
-    allCompanyName:[],
-    selectEntrustment:false,
-    showPrice:false,
+    standards:[],
+    targetStandards : [],
+    selectedStandards : [],
+    instrument : [] ,
+    targetInstrument : [],
+    selectedInstrument : [],
+    people:[],
+    targetPeople : [],
+    selectedPeople : [],
+    keyno:null,
   };
 
   columns = [
@@ -46,8 +51,80 @@ class ResultDetail extends PureComponent {
       dataIndex: 'inspway',
     },
     {
-      title: '分量',
-      dataIndex: 'result',
+      title: '重量',
+      dataIndex: 'weight',
+    },
+    {
+      title: '人员',
+      dataIndex: 'inspman',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+             result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
+      title: '仪器',
+      dataIndex: 'instrument',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+             result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
+      title: '标准',
+      dataIndex: 'standard',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+             result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
     },
     {
       title: '开始日期',
@@ -62,6 +139,10 @@ class ResultDetail extends PureComponent {
       render: val => <span>{
          moment(val).format('YYYY-MM-DD')
       }</span>
+    },
+    {
+      title: '结果',
+      dataIndex: 'result',
     },
     {
       title: '操作',
@@ -80,33 +161,115 @@ class ResultDetail extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testRecord/getInspway',
+      type: 'checkResult/getCheckResult',
       payload:{
          reportno : reportno,
       }
     });
+    dispatch({
+      type: 'checkResult/getStandard',
+      payload:{
+      },
+      callback : (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '获取失败',
+            description:response.data,
+          });
+        }else{
+          const standardsData = response.data;
+          var standards = [];
+          for (var i = 0 ;i < standardsData.length ; i ++ ) {
+              standards.push({
+                key: standardsData[i],
+              });
+          }
+        }
+        this.setState({standards:standards});
+      }
+    });
+    dispatch({
+      type: 'checkResult/getInstrument',
+      payload:{
+      },
+      callback :(response) =>{
+        if(response.code === 400){
+          notification.open({
+            message: '获取失败',
+            description:response.data,
+          });
+        }else{
+          const instrumentData = response.data;
+          var instrument = [];
+          for (var i = 0 ;i < instrumentData.length ; i ++ ) {
+              instrument.push({
+                key: instrumentData[i],
+              });
+          }
+        }
+        this.setState({instrument:instrument});
+      }
+    });
   }
   modifyItem = text => {
-    const { form } = this.props;
-    this.setState({visible:true});
-    this.setState({selectEntrustment:true});
+    const { form ,dispatch} = this.props;
     form.setFieldsValue({['inspway']:text.inspway});
     form.setFieldsValue({['result']:text.result});
+    const standardsData = text.standard.split("|");
+    this.setState({targetStandards:standardsData});
+    const instrumentData = text.instrument.split("|");
+    this.setState({targetInstrument:instrumentData});
+    const peopleData = text.inspman.split("|");
+    this.setState({targetPeople:peopleData});
+    form.setFieldsValue({['inspman']:text.inspman.split("|")});
+    form.setFieldsValue({['instrument']:text.instrument.split("|")});
+    form.setFieldsValue({['standard']:text.standard.split("|")});
     form.setFieldsValue({['begindate']:moment(text.begindate,"YYYY-MM-DD")});
     form.setFieldsValue({['finishdate']:moment(text.finishdate,"YYYY-MM-DD")});
+    const reportno = sessionStorage.getItem('reportno');
+    dispatch({
+      type: 'checkResult/getProject',
+      payload:{
+         reportno : reportno,
+      }
+    });
+    dispatch({
+      type: 'checkResult/getTaskByReportNoAndInspway',
+      payload:{
+        reportno : reportno,
+        inspway : text.inspway,
+      },
+      callback : (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '获取失败',
+            description:response.data,
+          });
+        }else{
+          const peopleData = response.data;
+          var people = [];
+          for (var i = 0 ;i < peopleData.length ; i ++ ) {
+              people.push({
+                key: peopleData[i],
+              });
+          }
+        }
+        this.setState({people:people});
+      }
+    });
+    this.setState({visible:true});
+    this.setState({keyno:text.keyno});
   };
   deleteItem = text => {
     const {
       dispatch,
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    const params = {
-      ...text,
-      reportno:reportno
-    };
     dispatch({
-      type: 'testRecord/deleteInspway',
-      payload:params,
+      type: 'checkResult/deleteCheckResult',
+      payload:{
+        keyno:text.keyno
+      },
       callback: (response) => {
         if(response.code === 400){
           notification.open({
@@ -115,7 +278,7 @@ class ResultDetail extends PureComponent {
           });
         }else{
           dispatch({
-            type: 'testRecord/getInspway',
+            type: 'checkResult/getCheckResult',
             payload:{
               reportno : reportno,
             }
@@ -132,17 +295,18 @@ class ResultDetail extends PureComponent {
       form: { validateFieldsAndScroll },
       dispatch,
     } = this.props;
-    const {selectEntrustment} = this.state;
+    const {keyno} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         const params = {
           ...values,
-          reportno:reportno
+          reportno,
         };
-        if(selectEntrustment){
+        if(keyno !== null){
+          params.keyno = keyno;
           dispatch({
-            type: 'testRecord/updateInspway',
+            type: 'checkResult/updateCheckResult',
             payload : params,
             callback: (response) => {
               if(response.code === 400){
@@ -152,7 +316,7 @@ class ResultDetail extends PureComponent {
                 });
               }else{
                 dispatch({
-                  type: 'testRecord/getInspway',
+                  type: 'checkResult/getCheckResult',
                   payload:{
                     reportno : reportno,
                   }
@@ -162,7 +326,7 @@ class ResultDetail extends PureComponent {
           });
         }else{
           dispatch({
-            type: 'testRecord/addInspway',
+            type: 'checkResult/addCheckResult',
             payload : params,
             callback: (response) => {
               if(response.code === 400){
@@ -172,7 +336,7 @@ class ResultDetail extends PureComponent {
                 });
               }else{
                 dispatch({
-                  type: 'testRecord/getInspway',
+                  type: 'checkResult/getCheckResult',
                   payload:{
                     reportno : reportno,
                   }
@@ -181,8 +345,11 @@ class ResultDetail extends PureComponent {
             }
           });
         }
-        this.setState({ selectEntrustment: false });
+        this.setState({ keyno : null });
         this.setState({ visible: false });
+        this.setState({ targetPeople: [] });
+        this.setState({ targetInstrument: [] });
+        this.setState({ targetStandards: [] });
         form.resetFields();
       }
       console.log(error);
@@ -195,7 +362,7 @@ class ResultDetail extends PureComponent {
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testRecord/getProject',
+      type: 'checkResult/getProject',
       payload:{
          reportno : reportno,
       }
@@ -203,6 +370,7 @@ class ResultDetail extends PureComponent {
     form.resetFields();
     this.setState({ visible: true });
   };
+
   handleCancel = () =>{
     const {
       form
@@ -210,13 +378,61 @@ class ResultDetail extends PureComponent {
     form.resetFields();
     this.setState({ visible: false });
   };
+
+  onInspwayChange = e => {
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    dispatch({
+      type: 'checkResult/getTaskByReportNoAndInspway',
+      payload:{
+        reportno : reportno,
+        inspway : e,
+      },
+      callback : (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '获取失败',
+            description:response.data,
+          });
+        }else{
+          const peopleData = response.data;
+          var people = [];
+          for (var i = 0 ;i < peopleData.length ; i ++ ) {
+              people.push({
+                key: peopleData[i],
+              });
+          }
+        }
+        this.setState({people:people});
+      }
+    });
+  };
+
   onChange = e =>{
     if(e.target.value === "按单价"  || e.target.value ==="按比例"){
       this.setState({showPrice:true});
     }else{
       this.setState({showPrice:false});
     }
-  }
+  };
+  handleChange = (nextTargetKeys, direction, moveKeys) => {
+    this.setState({ targetStandards: nextTargetKeys });
+  };
+  handleSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    this.setState({ selectedStandards: [...sourceSelectedKeys, ...targetSelectedKeys] });
+  };
+  handleChangeInstrument = (nextTargetKeys, direction, moveKeys) => {
+    this.setState({ targetInstrument: nextTargetKeys });
+  };
+  handleSelectChangeInstrument = (sourceSelectedKeys, targetSelectedKeys) => {
+    this.setState({ selectedInstrument: [...sourceSelectedKeys, ...targetSelectedKeys] });
+  };
+  handleChangePeople = (nextTargetKeys, direction, moveKeys) => {
+    this.setState({ targetPeople: nextTargetKeys });
+  };
+  handleSelectChangePeople = (sourceSelectedKeys, targetSelectedKeys) => {
+    this.setState({ selectedPeople: [...sourceSelectedKeys, ...targetSelectedKeys] });
+  };
   render() {
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
@@ -226,13 +442,11 @@ class ResultDetail extends PureComponent {
       </div>
     );
     const {
-      testRecord,
+      checkResult :{ data , projectData },
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const　{
-      inspwayData,projectData
-    } = testRecord
+    const { targetStandards , selectedStandards , standards , instrument , targetInstrument , selectedInstrument ,people,targetPeople,selectedPeople} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const applicant = sessionStorage.getItem('applicant');
@@ -249,6 +463,7 @@ class ResultDetail extends PureComponent {
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
+          width={800}
         >
           <Form>
             <Form.Item label="申请项目">
@@ -258,15 +473,68 @@ class ResultDetail extends PureComponent {
                       showSearch
                       placeholder="请选择"
                       filterOption={false}
-                      onSearch={this.handleSearch}
+                      onChange={this.onInspwayChange}
                     >
                     {projectOptions}
                     </Select>
                 )}
             </Form.Item>
+            <Form.Item label="人员">
+              {getFieldDecorator('inspman', {
+                rules: [{ required: true, message: '请选择人员' }],
+              })(
+                  <Transfer
+                    listStyle={{
+                      width: 350,
+                    }}
+                    dataSource={people}
+                    titles={['Source', 'Target']}
+                    targetKeys={targetPeople}
+                    selectedKeys={selectedPeople}
+                    onChange={this.handleChangePeople}
+                    onSelectChange={this.handleSelectChangePeople}
+                    render={item => item.key}
+                  />
+                )}
+            </Form.Item>
+            <Form.Item label="标准">
+              {getFieldDecorator('standard', {
+                rules: [{ required: true, message: '请选择标准' }],
+              })(
+                  <Transfer
+                    listStyle={{
+                      width: 350,
+                    }}
+                    dataSource={standards}
+                    titles={['Source', 'Target']}
+                    targetKeys={targetStandards}
+                    selectedKeys={selectedStandards}
+                    onChange={this.handleChange}
+                    onSelectChange={this.handleSelectChange}
+                    render={item => item.key}
+                  />
+                )}
+            </Form.Item>
+            <Form.Item label="仪器">
+              {getFieldDecorator('instrument', {
+                rules: [{ required: true, message: '请选择仪器' }],
+              })(
+                  <Transfer
+                    listStyle={{
+                      width: 350,
+                    }}
+                    dataSource={instrument}
+                    titles={['Source', 'Target']}
+                    targetKeys={targetInstrument}
+                    selectedKeys={selectedInstrument}
+                    onChange={this.handleChangeInstrument}
+                    onSelectChange={this.handleSelectChangeInstrument}
+                    render={item => item.key}
+                  />
+                )}
+            </Form.Item>
             <Form.Item label="重量">
-              {getFieldDecorator('result', {
-                rules: [{ required: true, message: '请输入重量' }],
+              {getFieldDecorator('weight', {
               })(
                   <Input />
                 )}
@@ -293,6 +561,13 @@ class ResultDetail extends PureComponent {
                   />
                 )}
             </Form.Item>
+            <Form.Item label="结果">
+              {getFieldDecorator('result', {
+                rules: [{ required: true, message: '请输入结果' }],
+              })(
+                  <Input />
+                )}
+            </Form.Item>
           </Form>
         </Modal>
         <Card bordered={false} size="small">
@@ -310,7 +585,7 @@ class ResultDetail extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={inspwayData}
+              dataSource={data}
               columns={this.columns}
               rowKey="testman"
               pagination={{showQuickJumper:true,showSizeChanger:true}}

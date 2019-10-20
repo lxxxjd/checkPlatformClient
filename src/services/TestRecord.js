@@ -19,6 +19,7 @@ export async function getRecordList(params) {
     },
   });
 }
+
 export async function getRecordInfo(params) {
 	return request(`/api/recordinfo/get_recordInfo?reportno=${params.reportno}`);
 }
