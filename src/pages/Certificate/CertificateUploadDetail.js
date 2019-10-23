@@ -151,7 +151,7 @@ class CertificateUploadDetail extends PureComponent {
     },
     {
       title: '状态',
-      dataIndex: 'state',
+      dataIndex: 'status',
     },
     {
       title: '操作',
@@ -159,7 +159,7 @@ class CertificateUploadDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>签署</a>
+          <a onClick={() => this.signCertFile(text, record)}>签署</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>复核</a>
           &nbsp;&nbsp;
@@ -181,6 +181,18 @@ class CertificateUploadDetail extends PureComponent {
       }
     });
   }
+
+  signCertFile = text =>{
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    text.signer = "test";
+    dispatch({
+      type: 'certificate/signCertFile',
+      payload:{
+         ...text,
+      }
+    });
+  };
 
   editCerticate = text => {
 
