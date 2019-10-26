@@ -1,4 +1,4 @@
-import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getSignature,signCertFile} from '@/services/Certificate'
+import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getSignature,signCertFile,reviewCertFile,sealCertFile} from '@/services/Certificate'
 
 
 
@@ -38,6 +38,14 @@ export default {
     },
     *signCertFile({ payload,callback }, { call, put }) {
       const response = yield call(signCertFile, payload);
+      if (callback) callback(response);
+    },
+    *reviewCertFile({ payload,callback }, { call, put }) {
+      const response = yield call(reviewCertFile, payload);
+      if (callback) callback(response);
+    },
+    *sealCertFile({ payload,callback }, { call, put }) {
+      const response = yield call(sealCertFile, payload);
       if (callback) callback(response);
     },
     *getSignature({ payload,callback }, { call, put }) {

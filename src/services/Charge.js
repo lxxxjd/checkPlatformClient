@@ -58,6 +58,10 @@ export async function updatePriceMaking(params) {
   });
 }
 
+export async function getPriceMaking(params) {
+  return request(`/api/pricemaking/getPriceMaking?reportNo=${params.reportNo}`);
+}
+
 export async function getReportPriceMaking(params) {
   return request(`/api/pricemaking/getReportPriceMaking`, {
     method: 'POST',

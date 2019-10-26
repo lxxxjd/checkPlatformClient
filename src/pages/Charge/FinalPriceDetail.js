@@ -36,12 +36,41 @@ class FinalPriceDetail extends PureComponent {
     value:'',
     checkProject:[],
   };
+
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch,form } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    const reportno = sessionStorage.getItem('reportno');
+    const reportNo = sessionStorage.getItem('reportno');
     const allInspway = sessionStorage.getItem('inspway').split(" ");
     this.setState({ checkProject : allInspway });
+    dispatch({
+      type: 'charge/getPriceMaking',
+      payload:{
+         reportNo,
+      },
+      callback : (response) =>{
+        if (response.code === 200) {
+          if(response.data != null){
+            this.setState({value:response.data.priceway.trim()});
+            form.setFieldsValue({
+              'total': response.data.total,
+            });
+            if(response.data.priceway.trim() === "按单价"){
+              form.setFieldsValue({
+                'choose': response.data.choose.trim(),
+                'price': parseInt(response.data.price.trim()),
+                'quantity': parseInt(response.data.quantity.trim()),
+              });
+            }
+          }
+        } else {
+          notification.open({
+            message: '获取失败',
+            description: response.data,
+          });
+        }
+      }
+    });
   }
 
   back = () =>{
@@ -64,15 +93,14 @@ class FinalPriceDetail extends PureComponent {
     } = this.props;
     const price = form.getFieldValue('price');
     const quantity = form.getFieldValue('quantity');
-    console.log(price);
-    console.log(quantity);
     if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
       form.setFieldsValue({['total']: price * quantity});
     }
   };
 
   submit = () => {
-     const {
+    this.sum();
+    const {
       form: {validateFieldsAndScroll},
       dispatch,
     } = this.props;
@@ -81,6 +109,7 @@ class FinalPriceDetail extends PureComponent {
       const reportno = sessionStorage.getItem('reportno');
       const FinalPriceOrigin = sessionStorage.getItem('FinalPriceOrigin');
       const {value} = this.state;
+
       if (!error) {
         // submit the values
         dispatch({

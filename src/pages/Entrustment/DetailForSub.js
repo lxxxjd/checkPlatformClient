@@ -229,7 +229,6 @@ class DetailForSub extends PureComponent {
                 <Radio.Group onChange={this.onChange}>
                   <Radio value="按单价">按单价</Radio>
                   <Radio value="按批次">按批次</Radio>
-                  <Radio value="按协议">按协议</Radio>
                   <Radio value="按比例">按比例</Radio>
                 </Radio.Group>
               )}
