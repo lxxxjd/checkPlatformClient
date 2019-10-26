@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import moment from 'moment';
 
 import {
   Row,
@@ -11,24 +10,26 @@ import {
   Input,
   Button,
   Select,
-  Table,
+  Table
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
-
-
+import moment from 'moment'
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@Form.create()
+
+/* eslint react/no-multi-comp:0 */
 @connect(({ charge, loading }) => ({
   charge,
   loading: loading.models.charge,
 }))
+
+@Form.create()
 class Cost extends PureComponent {
   state = {
-    formValues: {},
+
   };
 
   columns = [
@@ -39,9 +40,14 @@ class Cost extends PureComponent {
     {
       title: '委托日期',
       dataIndex: 'reportdate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
     },
-
+    {
+      title: '委托人',
+      dataIndex: 'applicant',
+    },
     {
       title: '船名标识',
       dataIndex: 'shipname',
@@ -51,28 +57,18 @@ class Cost extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '收入',
+      title: '总价',
       dataIndex: 'total',
     },
     {
-      title: '已支出',
-      dataIndex: 'amount',
-    },
-    {
-      title: '直接利润',
-      dataIndex: 'profit',
-    },
-    {
-      title: '利润率',
-      dataIndex: 'profitrate',
+      title: '状态',
+      dataIndex: 'status',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>支出</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
+          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -82,9 +78,16 @@ class Cost extends PureComponent {
 
 
   componentDidMount() {
-    this.init();
+    const { dispatch } = this.props;
+    // eslint-disable-next-line prefer-destructuring
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    dispatch({
+      type: 'charge/getReportPriceMaking',
+      payload:{
+        certCode,
+      }
+    });
   }
-
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -94,48 +97,50 @@ class Cost extends PureComponent {
     });
   };
 
-
+  mobileItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('reportdate',text.reportdate);
+    sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('cargoname',text.cargoname);
+    sessionStorage.setItem('inspway',text.inspway);
+    sessionStorage.setItem('FinalPriceOrigin','FinalPrice');
+    router.push({
+      pathname:'/Charge/FinalPriceDetail',
+    });
+  };
 
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
-    this.setState({
-      formValues: {},
-    });
-    this.init();
-  };
-
-  init =() =>{
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+    // eslint-disable-next-line prefer-destructuring
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const { dispatch } = this.props;
-    const params = {
-      certCode:user.certCode
-    };
     dispatch({
-      type: 'charge/getCostsFetch',
-      payload: params,
+      type: 'charge/getReportPriceMaking',
+      payload:{
+        certCode,
+      }
     });
-  }
-
-
+  };
 
 
 
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
+    // eslint-disable-next-line prefer-destructuring
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     form.validateFields((err, fieldsValue) => {
       console.log(err);
       if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
+        certCode,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
-        certCode:user.certCode,
       };
       dispatch({
-        type: 'charge/getCostsFetch',
+        type: 'charge/getReportPriceMaking',
         payload: values,
       });
     });
@@ -161,6 +166,7 @@ class Cost extends PureComponent {
               })(
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
+                  <Option value="applicant">委托人</Option>
                   <Option value="shipname">船名标识</Option>
                   <Option value="cargoname">检查品名</Option>
                 </Select>
@@ -188,26 +194,23 @@ class Cost extends PureComponent {
     );
   }
 
-
-
-
   render() {
     const {
-      charge: {costData},
+      charge: {finalData},
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="成本支出">
+      <PageHeaderWrapper>
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"
-              rowKey="keyno"
               loading={loading}
-              dataSource={costData}
+              dataSource={finalData}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
+              rowKey="reportno"
             />
           </div>
         </Card>
