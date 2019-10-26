@@ -118,6 +118,12 @@ export default [
             component: './Entrustment/ModifyRelevance',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: '/Entrustment/EntrustmentRecord',
+            name: 'EntrustmentRecord',
+            component: './Entrustment/EntrustmentRecord',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 

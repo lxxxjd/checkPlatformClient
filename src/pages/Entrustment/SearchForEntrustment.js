@@ -69,6 +69,8 @@ class SearchForEntrustment extends PureComponent {
         <Fragment>
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
+          <a onClick={() => this.uploadItem(text, record)}>上传文件</a>
+          &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -120,7 +122,12 @@ class SearchForEntrustment extends PureComponent {
     });
 
   };
-
+  uploadItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    router.push({
+      pathname:'/Entrustment/EntrustmentRecord',
+    });
+  };
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);

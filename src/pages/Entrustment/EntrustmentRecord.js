@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
+import styles from './ModifyRelevance.less';
 
 import {
   Row,
@@ -21,83 +22,9 @@ import {
   message
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './ResultDetail.less';
 import moment from 'moment'
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
-
-
-// 表单组件
-const CreateUploadForm = Form.create()(props => {
-
-
-  const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect } = props;
-
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err){
-        console.log(err);
-        return;
-      }
-      form.resetFields();
-      handleDownloadAdd(fieldsValue);
-    });
-  };
-  const handleChange =()=>{
-    form.resetFields(`tempName`,[]);
-  }
-
-  return (
-    <Modal
-      destroyOnClose
-      title="模板下载"
-      visible={downloadVisible}
-      onOk={okHandle}
-      onCancel={() => handleDownloadCancel()}
-      footer={[
-        // 定义右下角 按钮的地方 可根据需要使用 一个或者 2个按钮
-        <Button key="back" type="primary" onClick={() => handleDownloadCancel()}> 取消</Button>,
-        <Button key="submit" type="primary" onClick={okHandle}>下载</Button>,
-      ]}
-    >
-
-
-      <Form.Item label="记录名称">
-        {form.getFieldDecorator('downloadRecordName', {
-          rules: [{ required: true, message: '请输入记录名称' }],
-        })(
-          <Input style={{ width: '100%' }} placeholder="记录名称" />
-        )}
-      </Form.Item>
-
-      <Form.Item label="文件来源">
-        {form.getFieldDecorator('type', {
-          rules: [{ required: true, message: '请选择文件来源' }],
-        })(
-          <Select style={{ width: '100%' }} placeholder="请选择文件来源" onSelect={handleOnSelect} onChange={handleChange}>
-            <Option value="platform">平台模板</Option>
-            <Option value="company">公司模板</Option>
-            <Option value="person">个人模板</Option>
-            <Option value="blank">空白模板</Option>
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item label="模板名称">
-        {form.getFieldDecorator('tempName', {
-          rules: [{ required: true, message: '请选择模板名称' }],
-        })(
-          <Select style={{ width: '100%' }} placeholder="请选择模板名称">
-            {typeOptions}
-          </Select>
-        )}
-      </Form.Item>
-
-    </Modal>
-  );
-});
-
-
-
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -113,7 +40,7 @@ function getBase64(file) {
   testRecord,
   loading: loading.models.testRecord,
 }))
-class UploadDetail extends PureComponent {
+class EntrustmentRecord extends PureComponent {
   state = {
     formValues: {},
     visible:false,
@@ -151,10 +78,6 @@ class UploadDetail extends PureComponent {
          moment(val).format('YYYY-MM-DD')
       }</span>
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'state',
-    // },
     {
       title: '操作',
       render: (text, record) => (
@@ -176,7 +99,7 @@ class UploadDetail extends PureComponent {
       type: 'testRecord/getRecordInfo',
       payload:{
          reportno : reportno,
-         source : '检查记录',
+         source : '委托',
       }
     });
   }
@@ -245,7 +168,7 @@ class UploadDetail extends PureComponent {
           formData.append('files', file.originFileObj);
         });
         formData.append('reportno', reportno);
-        formData.append('source', '检查记录');
+        formData.append('source', '委托');
         formData.append('fileName', values.recordname);
         console.log(formData.get('files'));
         dispatch({
@@ -255,7 +178,7 @@ class UploadDetail extends PureComponent {
             if(response.code === 400){
               notification.open({
                 message: '添加失败',
-                description:response.data,
+                description:response.message,
               });
             }else{
               this.componentDidMount();
@@ -430,13 +353,6 @@ class UploadDetail extends PureComponent {
     const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
-    // 下载模板 模态框方法
-    const parentMethods = {
-      handleDownloadAdd: this.handleDownloadAdd,
-      showDownloadVisible: this.showDownloadVisible,
-      handleDownloadCancel:this.handleDownloadCancel,
-      handleOnSelect :this.handleOnSelect,
-    };
 
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
@@ -460,8 +376,6 @@ class UploadDetail extends PureComponent {
                 rules: [{ required: true, message: '请选择上传文件' }],
               })(
                 <Upload
-                  //action="http://localhost:8000/api/recordinfo/upload"
-                  //data={{'reportno':reportno}}
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={this.handlePreview}
@@ -484,9 +398,6 @@ class UploadDetail extends PureComponent {
             </Modal>
           </Form>
         </Modal>
-
-        <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
-
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
@@ -525,4 +436,4 @@ class UploadDetail extends PureComponent {
 /*         <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
           <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>批量上传</Button>
           <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>工作目录</Button>*/
-export default UploadDetail;
+export default EntrustmentRecord;
