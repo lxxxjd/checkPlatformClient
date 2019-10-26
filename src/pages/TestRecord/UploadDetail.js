@@ -159,10 +159,6 @@ class UploadDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.previewItem(text, record)}>详情</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>签署</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>复核</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
         </Fragment>

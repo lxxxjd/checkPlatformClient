@@ -159,10 +159,9 @@ class CertificateUploadDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.signCertFile(text, record)}>签署</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>复核</a>
-          &nbsp;&nbsp;
+          {(typeof(text.status)===undefined || text.status === "" || text.status === null ||text.status==="未签")?[<a onClick={() => this.signCertFile(text, record)}>签署&nbsp;&nbsp;</a>]:[]}
+          {text.status==="已签署"?[<a onClick={() => this.reviewCertFile(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
+          {text.status==="已复核"?[<a onClick={() => this.sealCertFile(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
         </Fragment>
@@ -190,6 +189,75 @@ class CertificateUploadDetail extends PureComponent {
       type: 'certificate/signCertFile',
       payload:{
          ...text,
+      },
+      callback: (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '签署失败',
+            description:response.message,
+          });
+        }else{
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+               reportno,
+            }
+          });
+        }
+      }
+    });
+  };
+
+  reviewCertFile = text =>{
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    text.signer = "test";
+    dispatch({
+      type: 'certificate/reviewCertFile',
+      payload:{
+         ...text,
+      },
+      callback: (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '复核失败',
+            description:response.message,
+          });
+        }else{
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+               reportno,
+            }
+          });
+        }
+      }
+    });
+  };
+
+  sealCertFile = text =>{
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    text.signer = "test";
+    dispatch({
+      type: 'certificate/sealCertFile',
+      payload:{
+         ...text,
+      },
+      callback: (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '签名失败',
+            description:response.message,
+          });
+        }else{
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+               reportno,
+            }
+          });
+        }
       }
     });
   };
@@ -218,7 +286,10 @@ class CertificateUploadDetail extends PureComponent {
             const wpsUrl = `https://localhost:81/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
             window.open('about:blank').location.href=wpsUrl;
           } else {
-           message.success("加载失败")
+            notification.open({
+              message: '加载失败',
+              description:response.message,
+            });          
           }
         }
       });

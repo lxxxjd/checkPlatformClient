@@ -10,7 +10,10 @@ import {
   Input,
   Button,
   Select,
-  Table
+  Table,
+  notification,
+  Modal,
+  Descriptions
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -31,6 +34,7 @@ class FinalPrice extends PureComponent {
   state = {
     formValues: {},
     visible:false,
+    priceMaking:{}
   };
 
   columns = [
@@ -69,8 +73,9 @@ class FinalPrice extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>定价</a>
+          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
+          {text.status==="已定价"?[<a onClick={() => this.detailItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -88,6 +93,28 @@ class FinalPrice extends PureComponent {
       }
     });
   }
+
+  detailItem = text => {
+    const { dispatch } = this.props;
+    const reportNo = text.reportno;
+    dispatch({
+      type: 'charge/getPriceMaking',
+      payload:{
+         reportNo,
+      },
+      callback : (response) =>{
+        if (response.code === 200) {
+          this.setState({priceMaking:response.data});
+          this.setState({visible:true});
+        } else {
+          notification.open({
+            message: '获取失败',
+            description: response.message,
+          });
+        }
+      }
+    });
+  };
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -146,8 +173,9 @@ class FinalPrice extends PureComponent {
     });
   };
 
-
-
+  handleCancel = () =>{
+    this.setState({ visible: false });
+  };
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -199,6 +227,7 @@ class FinalPrice extends PureComponent {
       charge: {finalData},
       loading,
     } = this.props;
+    const {visible,priceMaking} = this.state;
     return (
       <PageHeaderWrapper title="样品指标">
         <Card bordered={false} size="small">
@@ -214,6 +243,21 @@ class FinalPrice extends PureComponent {
             />
           </div>
         </Card>
+        <Modal
+          title="定价详情"
+          visible={visible}
+          onCancel={this.handleCancel}
+          footer={null}
+          width={800}
+        >
+          <Descriptions size="large" title="定价" style={{ marginBottom: 32 }} bordered >
+            <Descriptions.Item label="定价方式" >{priceMaking.priceway}</Descriptions.Item>
+            <Descriptions.Item label="项目" >{priceMaking.choose}</Descriptions.Item>            
+            <Descriptions.Item label="单价" >{priceMaking.price}</Descriptions.Item>
+            <Descriptions.Item label="数量" >{priceMaking.quantity}</Descriptions.Item>
+            <Descriptions.Item label="总价" >{priceMaking.total}</Descriptions.Item>
+          </Descriptions>
+        </Modal>
       </PageHeaderWrapper>
     );
   }

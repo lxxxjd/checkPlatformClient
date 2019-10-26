@@ -33,6 +33,22 @@ export async function signCertFile(params) {
   });
 }
 
+export async function reviewCertFile(params) {
+    return request(`/api/cert_report/reviewCertFile`,{
+    method: 'POST',
+    // headers: { 'Content-Type': 'multipart/form-data;'},
+    data:params,
+  });
+}
+
+export async function sealCertFile(params) {
+    return request(`/api/cert_report/sealCertFile`,{
+    method: 'POST',
+    // headers: { 'Content-Type': 'multipart/form-data;'},
+    data:params,
+  });
+}
+
 export async function deleteCertFile(params) {
     return request(`/api/cert_report/deleteCertFile?keyno=${params.keyno}`);
 }
