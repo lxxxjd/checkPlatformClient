@@ -211,7 +211,7 @@ class CertificateUploadDetail extends PureComponent {
   reviewCertFile = text =>{
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    text.signer = "test";
+    text.reviewer = "test";
     dispatch({
       type: 'certificate/reviewCertFile',
       payload:{
@@ -238,7 +238,6 @@ class CertificateUploadDetail extends PureComponent {
   sealCertFile = text =>{
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    text.signer = "test";
     dispatch({
       type: 'certificate/sealCertFile',
       payload:{
