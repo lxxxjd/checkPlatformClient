@@ -126,6 +126,8 @@ class UploadDetail extends PureComponent {
     previewImage: '',
     fileList: [],
     modelName:[],
+    url:null,
+    showVisible:false,
   };
 
   columns = [
@@ -196,13 +198,12 @@ class UploadDetail extends PureComponent {
           });
         }else{
           const url = response.data;
-          console.log(url);
-          window.open(url);
+          this.setState({url:url});
+          //window.open(url);
         }
       }
     });
-    console.log("true")
-    //this.setState({previewPDFVisible:true});
+    this.setState({showVisible:true});
   };
 
   deleteItem = text => {
@@ -418,7 +419,9 @@ class UploadDetail extends PureComponent {
   back = () =>{
     this.props.history.goBack();
   };
-
+  showCancel = () =>{
+    this.setState({showVisible:false});
+  }
   render() {
     const uploadButton = (
       <div>
@@ -432,7 +435,7 @@ class UploadDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
     // 下载模板 模态框方法
@@ -514,6 +517,15 @@ class UploadDetail extends PureComponent {
             />
           </div>
         </Card>
+        <Modal
+          title="记录详情"
+          visible={showVisible}
+          onCancel={this.showCancel}
+          footer={null}
+          width={800}
+        >
+          <embed src={url} width="700" height="700"/>
+        </Modal>
       </PageHeaderWrapper>
     );
   }
