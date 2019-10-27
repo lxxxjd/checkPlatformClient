@@ -57,7 +57,7 @@ class Cost extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '总价',
+      title: '总成本',
       dataIndex: 'total',
     },
     {
