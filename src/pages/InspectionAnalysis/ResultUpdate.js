@@ -32,7 +32,6 @@ const { Option } = Select;
   inspectionAnalysis,
   loading: loading.models.inspectionAnalysis,
 }))
-
 @Form.create()
 class ResultUpdate extends PureComponent {
   state = {

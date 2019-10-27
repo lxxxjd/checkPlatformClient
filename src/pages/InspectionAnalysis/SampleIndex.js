@@ -26,7 +26,6 @@ const SearchForm = Form.create()(Search);
   inspectionAnalysis,
   loading: loading.models.inspectionAnalysis,
 }))
-
 @Form.create()
 class SampleIndex extends PureComponent {
   state = {

@@ -2,9 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 
-
 import {
-  Layout,
   Row,
   Col,
   Card,
@@ -18,21 +16,15 @@ import {
   Table,
   DatePicker,
   notification,
-  Descriptions,
   Upload,
   Icon,
-  message,
-  Tree, Divider,
+  message
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import moment from 'moment'
 import styles from './Certificate.less';
-import { SiderTheme } from 'antd/lib/layout/Sider';
-
+import moment from 'moment'
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
-const { TreeNode } = Tree;
-const { Header, Footer, Sider, Content } = Layout;
 
 
 // 表单组件
@@ -121,7 +113,7 @@ function getBase64(file) {
   certificate,
   loading: loading.models.certificate,
 }))
-class CertificateUploadDetail extends PureComponent {
+class CertificateFinalDetail extends PureComponent {
   state = {
     formValues: {},
     visible:false,
@@ -134,13 +126,6 @@ class CertificateUploadDetail extends PureComponent {
     previewImage: '',
     fileList: [],
     modelName:[],
-    showVisible:false,
-    urls:{},
-
-    report:[],
-    // 切换tab签署页面
-    value:'0-0-0',
-
   };
 
   columns = [
@@ -148,13 +133,13 @@ class CertificateUploadDetail extends PureComponent {
       title: '记录名',
       dataIndex: 'name',
       render: val => {
-        // 取文件名
-        const pattern = /\.{1}[a-z]{1,}$/;
+        //取文件名
+        var pattern = /\.{1}[a-z]{1,}$/;
         if (pattern.exec(val) !== null) {
           return <span>{val.slice(0, pattern.exec(val).index)}</span>;
-        }
+        } else {
           return <span>{val}</span>;
-
+        }
       }
     },
     {
@@ -162,8 +147,7 @@ class CertificateUploadDetail extends PureComponent {
       dataIndex: 'recorddate',
       render: val => <span>{
          moment(val).format('YYYY-MM-DD')
-      }
-      </span>
+      }</span>
     },
     {
       title: '状态',
@@ -195,68 +179,33 @@ class CertificateUploadDetail extends PureComponent {
          reportno,
       }
     });
-
-    const reportnNo =reportno;
-    console.log(reportnNo);
-    dispatch({
-      type: 'certificate/getReport',
-      payload: reportnNo,
-      callback: (response) => {
-        console.log(response);
-        this.setState({report:response});
-      }
-    });
-
-
   }
 
   signCertFile = text =>{
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     text.signer = "test";
-
-    const params ={
-      osspath:text.pdfpath
-    }
-
-    console.log(params);
-
     dispatch({
-      type: 'certificate/getOssPdf',
-      payload:params,
+      type: 'certificate/signCertFile',
+      payload:{
+         ...text,
+      },
       callback: (response) => {
-        console.log(response);
-        if(response.code === 200){
-          this.setState({urls:response.data});
-          this.setState({showVisible:true});
-        }else {
-          message.success("打开签署文件失败");
+        if(response.code === 400){
+          notification.open({
+            message: '签署失败',
+            description:response.message,
+          });
+        }else{
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+               reportno,
+            }
+          });
         }
       }
     });
-
-    // dispatch({
-    //   type: 'certificate/signCertFile',
-    //   payload:{
-    //      ...text,
-    //   },
-    //   callback: (response) => {
-    //     if(response.code === 400){
-    //       notification.open({
-    //         message: '签署失败',
-    //         description:response.message,
-    //       });
-    //     }else{
-    //       dispatch({
-    //         type: 'certificate/getCertFiles',
-    //         payload:{
-    //            reportno,
-    //         }
-    //       });
-    //     }
-    //   }
-    // });
-
   };
 
   reviewCertFile = text =>{
@@ -367,7 +316,7 @@ class CertificateUploadDetail extends PureComponent {
           dispatch({
             type: 'certificate/getCertFiles',
             payload:{
-              reportno,
+              reportno : reportno,
             }
           });
         }
@@ -384,7 +333,7 @@ class CertificateUploadDetail extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     validateFieldsAndScroll((error, values) => {
       if (!error) {
-        const formData = new FormData();
+        let formData = new FormData();
         values.MultipartFile.fileList.forEach(file => {
           formData.append('file', file.originFileObj);
           formData.append('size', file.size);
@@ -407,7 +356,7 @@ class CertificateUploadDetail extends PureComponent {
               dispatch({
                 type: 'certificate/getCertFiles',
                 payload:{
-                  reportno,
+                  reportno : reportno,
                 }
               });
             }
@@ -462,7 +411,7 @@ class CertificateUploadDetail extends PureComponent {
   };
 
   handleChange = ({ file,fileList }) => {
-    // 限制图片 格式、size、分辨率
+    //限制图片 格式、size、分辨率
     const isDOC = file.type === 'application/msword';
     const isDOCX = file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     const size = file.size / 1024 / 1024 < 20;
@@ -471,13 +420,13 @@ class CertificateUploadDetail extends PureComponent {
         title: '只能上传DOC 、DOCX 格式的图片~',
       });
       return;
-    } if (!size) {
+    } else if (!size) {
       Modal.error({
         title: '超过20M限制，不允许上传~',
       });
       return;
     }
-    this.setState({ fileList});
+    this.setState({ fileList:fileList});
     console.log(fileList)
   };
 
@@ -560,80 +509,6 @@ class CertificateUploadDetail extends PureComponent {
     this.props.history.goBack();
   };
 
-  showCancel = () =>{
-    this.setState({showVisible:false});
-  }
-
-  // 树控件的目录数据
-  onSelect = (selectedKeys, info) => {
-    this.setState({value:selectedKeys[0]});
-    console.log( this.state.value ==='0-0-1');
-  };
-
-  renderTreeNodes = data =>
-    data.map(item => {
-      if (item.children) {
-        return (
-          <TreeNode title={item.title} key={item.key} dataRef={item}>
-            {this.renderTreeNodes(item.children)}
-          </TreeNode>
-        );
-      }
-      return <TreeNode key={item.key} {...item} dataRef={item} />;
-    });
-
-  // eslint-disable-next-line class-methods-use-this
-  renderReportForm() {
-    const {report} = this.state;
-    return (
-      <div style={{width:620,backgroundColor:'white'}}>
-        <Descriptions style={{ marginBottom: 10 }} size='small' title="业务信息" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-          <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
-          <Descriptions.Item label="委托日期">{moment(report.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
-          <Descriptions.Item label="检验费">{report.price}</Descriptions.Item>
-          <Descriptions.Item label="申请人">{report.applicant}</Descriptions.Item>
-          <Descriptions.Item label="联系人">{report.applicantname}</Descriptions.Item>
-          <Descriptions.Item label="联系电话">{report.applicanttel}</Descriptions.Item>
-          <Descriptions.Item label="代理人">{report.agent}</Descriptions.Item>
-          <Descriptions.Item label="联系人">{report.agentname}</Descriptions.Item>
-          <Descriptions.Item label="联系电话">{report.agenttel}</Descriptions.Item>
-          <Descriptions.Item label="付款人">{report.payer}</Descriptions.Item>
-          <Descriptions.Item label="业务来源">{report.businesssource}</Descriptions.Item>
-          <Descriptions.Item label="贸易方式">{report.tradeway}</Descriptions.Item>
-          <Descriptions.Item label="证书要求">{report.certstyle}</Descriptions.Item>
-          <Descriptions.Item label="自编号">{report.reportno20}</Descriptions.Item>
-          <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
-        </Descriptions>
-        <Descriptions style={{ marginBottom: 10 }} size='small' title="检查对象" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-          <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
-          <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
-          <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
-          <Descriptions.Item label="申报数量和单位">{report.quantityd+report.unit}</Descriptions.Item>
-          <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
-          <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
-          <Descriptions.Item label="到达地点">{report.inspplace1}</Descriptions.Item>
-        </Descriptions>
-        <Descriptions style={{ marginBottom: 10 }} size='small' title="检查项目" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-          <Descriptions.Item label="申请项目">{report.inspway}</Descriptions.Item>
-          <Descriptions.Item label="检验备注">{report.inspwaymemo1}</Descriptions.Item>
-        </Descriptions>
-      </div>
-    );
-  }
-
-
-  renderLinkFileForm() {
-    const {urls} = this.state;
-    return (
-      <div style={{width:620,backgroundColor:'white'}}>
-        <embed src={urls} width={620} height="600" />
-      </div>
-    );
-  }
-
-
-
-
   render() {
     const uploadButton = (
       <div>
@@ -647,7 +522,7 @@ class CertificateUploadDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,urls,value} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
     // 下载模板 模态框方法
@@ -680,8 +555,8 @@ class CertificateUploadDetail extends PureComponent {
                 rules: [{ required: true, message: '请选择上传文件' }],
               })(
                 <Upload
-                  // action="http://localhost:8000/api/recordinfo/upload"
-                  // data={{'reportno':reportno}}
+                  //action="http://localhost:8000/api/recordinfo/upload"
+                  //data={{'reportno':reportno}}
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={this.handlePreview}
@@ -707,52 +582,10 @@ class CertificateUploadDetail extends PureComponent {
 
         <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
 
-        <Modal
-          title="签署"
-          visible={showVisible}
-          onCancel={this.showCancel}
-          style={{ top: 10 }}
-          width={1450}
-        >
-          <Layout>
-            <Content>
-              <div style={{backgroundColor:'white'}}>
-                <Row>
-                  <Form>
-                    <Col span={12}>  <embed src={urls} width={620} height="600" /></Col>
-                    <Col span={12}>
-                      {value === '0-0-0'?[this.renderReportForm()]:[]}
-                      {value === '0-0-1'?[this.renderLinkFileForm()]:[]}
-                    </Col>
-                  </Form>
-                </Row>
-              </div>
-            </Content>
-            <Sider theme='light' width={130} style={{paddingLeft:15}}>
-              <Tree showLine defaultExpandedKeys={['0-0-1']} defaultExpandParent onSelect={this.onSelect}>
-                <TreeNode title="本委托" key="0-0">
-                  <TreeNode title="委托" key="0-0-0" />
-                  <TreeNode title="品质" key="0-0-1" />
-                  <TreeNode title="检验" key="0-0-2" />
-                </TreeNode>
-                <TreeNode title="关联委托" key="0-1">
-                  <TreeNode title="品质" key="0-1-0" />
-                  <TreeNode title="检验" key="0-1-1" />
-                </TreeNode>
-                <TreeNode title="附件" key="0-2">
-                  <TreeNode title="品质" key="0-2-0" />
-                  <TreeNode title="检验" key="0-2-1" />
-                </TreeNode>
-              </Tree>
-            </Sider>
-          </Layout>
-        </Modal>
-
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
-              <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
+
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
@@ -776,4 +609,4 @@ class CertificateUploadDetail extends PureComponent {
   }
 }
 
-export default CertificateUploadDetail;
+export default CertificateFinalDetail;

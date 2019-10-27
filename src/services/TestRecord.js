@@ -19,13 +19,24 @@ export async function getRecordList(params) {
     },
   });
 }
+//get_pdf
+
 
 export async function getRecordInfo(params) {
-	return request(`/api/recordinfo/get_recordInfo?reportno=${params.reportno}`);
+  return request(`/api/recordinfo/get_recordInfo?reportno=${params.reportno}`);
 }
+
+
+
 export async function getRecord(params) {
   return request(`/api/recordinfo/get_record?recordname=${params.recordname}&reportno=${params.reportno}`);
 }
+
+export async function getOssPdf(params) {
+  console.log(params.osspath);
+  return request(`/api/cert_report/get_pdf?osspath=${params.osspath}`);
+}
+
 export async function uploadFile(params) {
     return request(`/api/recordinfo/upload`,{
     method: 'POST',

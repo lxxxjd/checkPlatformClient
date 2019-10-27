@@ -1,5 +1,7 @@
 import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getSignature,signCertFile,reviewCertFile,sealCertFile} from '@/services/Certificate'
 
+import {getOssPdf} from '@/services/TestRecord'
+import { queryReport} from '@/services/Entrustment';
 
 
 
@@ -9,6 +11,8 @@ export default {
     data:[],
     recordData:[],
     signData:{},
+    ossPdfResult:{},
+    report:[],
   },
 
   effects: {
@@ -57,6 +61,25 @@ export default {
       if (callback) callback(response);
     },
 
+
+    *getOssPdf({ payload,callback }, { call, put }) {
+      const response = yield call(getOssPdf, payload);
+      yield put({
+        type: 'getOssPdfInfo',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+    *getReport({ payload,callback }, { call, put }) {
+      const response = yield call(queryReport, payload);
+      yield put({
+        type: 'get',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
   },
 
   reducers: {
@@ -73,10 +96,24 @@ export default {
       };
     },
 
+    get(state, { payload }) {
+      return {
+        ...state,
+        report: payload.data,
+      };
+    },
+
     getSignatureInfo(state, { payload }) {
       return {
         ...state,
         signData: payload.data,
+      };
+    },
+
+    getOssPdfInfo(state, { payload }) {
+      return {
+        ...state,
+        ossPdfResult: payload.data,
       };
     },
   },

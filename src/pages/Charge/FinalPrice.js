@@ -176,6 +176,7 @@ class FinalPrice extends PureComponent {
   handleCancel = () =>{
     this.setState({ visible: false });
   };
+
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -252,7 +253,7 @@ class FinalPrice extends PureComponent {
         >
           <Descriptions size="large" title="定价" style={{ marginBottom: 32 }} bordered >
             <Descriptions.Item label="定价方式" >{priceMaking.priceway}</Descriptions.Item>
-            <Descriptions.Item label="项目" >{priceMaking.choose}</Descriptions.Item>            
+            <Descriptions.Item label="项目" >{priceMaking.choose}</Descriptions.Item>
             <Descriptions.Item label="单价" >{priceMaking.price}</Descriptions.Item>
             <Descriptions.Item label="数量" >{priceMaking.quantity}</Descriptions.Item>
             <Descriptions.Item label="总价" >{priceMaking.total}</Descriptions.Item>

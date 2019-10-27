@@ -522,9 +522,10 @@ class UploadDetail extends PureComponent {
           visible={showVisible}
           onCancel={this.showCancel}
           footer={null}
+          style={{ top: 10 }}
           width={800}
         >
-          <embed src={url} width="700" height="700"/>
+          <embed src={url} width="700" height="600"/>
         </Modal>
       </PageHeaderWrapper>
     );

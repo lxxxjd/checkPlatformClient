@@ -62,8 +62,10 @@ export default {
   'menu.InspectionAnalysis.ResultUpdateDetail':'结果录入详情',
 
   'menu.Certificate':'证稿证书',
-  'menu.Certificate.CertificateUpload':'证稿证书',
+  'menu.Certificate.CertificateUpload':'证稿拟制',
   'menu.Certificate.CertificateUploadDetail':'证稿证书详情',
+  'menu.Certificate.CertificateFinal':'证书缮制',
+  'menu.Certificate.CertificateFinalDetail':'证稿证书详情',
 
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',

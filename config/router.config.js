@@ -413,6 +413,17 @@ export default [
             component: './Certificate/CertificateUploadDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: '/Certificate/CertificateFinal',
+            name: 'CertificateFinal',
+            component: './Certificate/CertificateFinal',
+          },
+          {
+            path: '/Certificate/CertificateFinalDetail',
+            name: 'CertificateFinalDetail',
+            component: './Certificate/CertificateFinalDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 
