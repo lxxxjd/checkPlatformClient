@@ -69,11 +69,11 @@ const ArrivalInvoiceForm = Form.create()(props => {
           })(<Input placeholder="请输入样品编号" />)}
         </Form.Item>
 
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="取样点">
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品名称">
           {form.getFieldDecorator('samplename', {
             initialValue:sampledata.samplename
           })(
-            <Select placeholder="请选择取样点">
+            <Select placeholder="请选择样品名称">
               <Option value="堆场">堆场</Option>
               <Option value="皮带机">皮带机</Option>
               <Option value="卸货平台">卸货平台</Option>
@@ -356,20 +356,17 @@ class SampleRegisterDetail extends PureComponent {
               })(<Input placeholder="请输入样品编号" />)}
             </Form.Item>
 
-            <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="取样点">
+            <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品名称">
               {getFieldDecorator('samplename', {
               })(
-                <Select placeholder="请选择取样点">
-                  <Option value="堆场">堆场</Option>
-                  <Option value="皮带机">皮带机</Option>
-                  <Option value="卸货平台">卸货平台</Option>
-                  <Option value="散货船">散货船</Option>
-                  <Option value="驳船">驳船</Option>
-                  <Option value="船舱">船舱</Option>
-                  <Option value="岸罐">岸罐</Option>
-                  <Option value="管线">管线</Option>
+                <Select placeholder="请选择样品名称">
+                  <Option value="分析样">分析样</Option>
+                  <Option value="水份样">水份样</Option>
+                  <Option value="船舱样">船舱样</Option>
+                  <Option value="岸罐样">岸罐样</Option>
+                  <Option value="槽车样">槽车样</Option>
+                  <Option value="管线样">管线样</Option>
                   <Option value="一英尺样">一英尺样</Option>
-                  <Option value="槽东">槽东</Option>
                 </Select>,
               )}
             </Form.Item>
@@ -378,9 +375,10 @@ class SampleRegisterDetail extends PureComponent {
               {getFieldDecorator('sampleuse', {
               })(
                 <Select placeholder="请选择样品用途">
-                  <Option value="水份">水份</Option>
-                  <Option value="指标测试">指标测试</Option>
+                  <Option value="仲裁">仲裁</Option>
+                  <Option value="测试">测试</Option>
                   <Option value="留存">留存</Option>
+                  <Option value="寄送">寄送</Option>
                   <Option value="其他">其他</Option>
                 </Select>,
               )}
