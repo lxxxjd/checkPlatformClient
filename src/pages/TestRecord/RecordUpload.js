@@ -100,7 +100,8 @@ class RecordUpload extends PureComponent {
     dispatch({
       type: 'testRecord/getRecordList',
       payload:{
-        certCode:user.certCode
+        certCode:user.certCode,
+        source:'检查记录'
       }
     });
   }

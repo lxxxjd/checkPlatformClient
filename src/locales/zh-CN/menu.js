@@ -22,6 +22,7 @@ export default {
   'menu.UEditor': '文本编辑',
   'menu.UEditor.UEditorText':'编辑器',
   'menu.Entrustment.EntrustmentRelevance':'委托关联',
+  'menu.Entrustment.EntrustmentRecord':'上传文件',
   'menu.Entrustment.SubEntrustment':'转委托',
   'menu.Entrustment.ModifyRelevance':'修改委托关联',
   'menu.Entrustment.DetailForSub':'转委托详情',

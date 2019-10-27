@@ -1,17 +1,51 @@
-import React, { Component } from 'react';
+import React, { Component,Fragment } from 'react';
 import { connect } from 'dva';
-import { Card, Divider ,Descriptions,Row, Col,  Button,Typography ,Modal,Icon} from 'antd';
+import { Card, Divider ,Descriptions,Row, Col,  Button,Typography ,Modal,Icon,Table} from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForEntrustment.less';
 import moment from 'moment'
-const { Title } = Typography;
-@connect(({ entrustment, loading }) => ({
+const { Title} = Typography;
+@connect(({ entrustment,testRecord, loading }) => ({
   entrustment,
+  testRecord,
   loading: loading.models.entrustment,
 }))
 class DetailForEnturstment extends Component {
-  state = { visible: false };
-
+  state = { 
+    visible: false ,
+    showVisible:false,
+    url:"",
+  };
+  columns = [
+    {
+      title: '记录名',
+      dataIndex: 'recordname',
+      render: val => {
+        //取文件名
+        var pattern = /\.{1}[a-z]{1,}$/;
+        if (pattern.exec(val) !== null) {
+          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
+        } else {
+          return <span>{val}</span>;
+        }
+      }
+    },
+    {
+      title: '上传日期',
+      dataIndex: 'recorddate',
+      render: val => <span>{
+         moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '操作',
+      render: (text, record) => (
+        <Fragment>
+          <a onClick={() => this.previewItem(text, record)}>详情</a>
+        </Fragment>
+      ),
+    },
+  ];
 
   componentWillMount() {
     const reportnNo = sessionStorage.getItem("reportno");
@@ -20,7 +54,40 @@ class DetailForEnturstment extends Component {
       type: 'entrustment/getReport',
       payload: reportnNo,
     });
+    dispatch({
+      type: 'testRecord/getRecordInfo',
+      payload:{
+         reportno : reportnNo,
+         source : '委托',
+      }
+    });
   }
+
+  previewItem = text => {
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const params = {
+      ...text,
+      reportno:reportno
+    };
+    dispatch({
+      type: 'testRecord/getRecord',
+      payload:params,
+      callback:(response) =>{
+        if(response.code === 400){
+          notification.open({
+            message: '打开失败',
+            description:response.data,
+          });
+        }else{
+          const url = response.data;
+          this.setState({url:url});
+          //window.open(url);
+        }
+      }
+    });
+    this.setState({showVisible:true});
+  };
 
   handleOk = e => {
     console.log(e);
@@ -47,13 +114,22 @@ class DetailForEnturstment extends Component {
       visible: true,
     });
   };
+
   back = () =>{
     this.props.history.goBack();
   };
 
+  showCancel = () =>{
+    this.setState({showVisible:false});
+  }
   render() {
-    const { entrustment = {}, loading } = this.props;
-    const { report = { } } = entrustment;
+    const { 
+      entrustment,
+      testRecord:{recordData}, 
+      loading 
+    } = this.props;
+    const { report  } = entrustment;
+    const { showVisible ,url} = this.state; 
     return (
       <PageHeaderWrapper loading={loading}>
         <Card bordered={false}>
@@ -111,6 +187,27 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="检验备注" >{report.inspwaymemo1}</Descriptions.Item>
           </Descriptions>
         </Card>
+        <Card bordered={false}  title="附件">
+          <div>
+            <Table
+              size="middle"
+              loading={loading}
+              dataSource={recordData}
+              columns={this.columns}
+              rowKey="recordname"
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+            />
+          </div>
+        </Card>
+        <Modal
+          title="记录详情"
+          visible={showVisible}
+          onCancel={this.showCancel}
+          footer={null}
+          width={800}
+        >
+          <embed src={url} width="700" height="700"/>
+        </Modal>
       </PageHeaderWrapper>
     );
   }

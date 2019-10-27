@@ -11,7 +11,7 @@ export async function getAllReports(params) {
   });
 }
 export async function getRecordList(params) {
-  return request(`/api/recordinfo/get_recordList`,{
+  return request(`/api/recordinfo/get_recordList?source=${params.source}`,{
     method: 'POST',
     data: {
       ...params,
@@ -19,11 +19,11 @@ export async function getRecordList(params) {
     },
   });
 }
+
+
 //get_pdf
-
-
 export async function getRecordInfo(params) {
-  return request(`/api/recordinfo/get_recordInfo?reportno=${params.reportno}`);
+	return request(`/api/recordinfo/get_recordInfo?reportno=${params.reportno}&source=${params.source}`);
 }
 
 
