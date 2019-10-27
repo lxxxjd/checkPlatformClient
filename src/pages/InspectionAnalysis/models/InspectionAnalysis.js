@@ -1,5 +1,5 @@
 import {getAllSample,getCompany,getDetails,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
-  getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan} from '@/services/InspectionAnalysis'
+  getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,deleteTestBySampleNo,updateTestInfo} from '@/services/InspectionAnalysis'
 
 
 
@@ -16,7 +16,7 @@ export default {
     items : [],
     standard : [],
     itemName : [],
-
+    inspman:[],
   },
 
   effects: {
@@ -36,6 +36,14 @@ export default {
       });
       if (callback) callback(response.data);
     },
+    *updateTestInfo({ payload,callback }, { call, put }) {
+      const response = yield call(updateTestInfo, payload);
+      if (callback) callback(response);
+    },
+    *deleteTestBySampleNo({ payload,callback }, { call, put }) {
+      const response = yield call(deleteTestBySampleNo, payload);
+      if (callback) callback(response);
+    },
     *getDetails({ payload,callback }, { call, put }) {
       const response = yield call(getDetails, payload);
       yield put({
@@ -43,6 +51,13 @@ export default {
         payload:response,
       });
       if (callback) callback(response.data);
+    },
+    *getAllTaskInspman({ payload,callback }, { call, put }) {
+      const response = yield call(getAllTaskInspman, payload);
+      yield put({
+        type: 'getAllTaskInspmans',
+        payload:response,
+      });
     },
     *getAllDetails({ payload,callback }, { call, put }) {
       const response = yield call(getAllDetails, payload);
@@ -59,6 +74,10 @@ export default {
         payload:response,
       });
       if (callback) callback(response.data);
+    },
+    *getReport({ payload,callback }, { call, put }) {
+      const response = yield call(getReport, payload);
+      if (callback) callback(response);
     },
     *addDetail({ payload,callback }, { call, put }) {
       const response = yield call(addDetail, payload);
@@ -114,6 +133,12 @@ export default {
       return {
         ...state,
         samples: payload.data,
+      };
+    },
+    getAllTaskInspmans(state, { payload }) {
+      return {
+        ...state,
+        inspman: payload.data,
       };
     },
     getTestBySampleNos(state, { payload }) {

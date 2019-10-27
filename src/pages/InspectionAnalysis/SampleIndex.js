@@ -84,7 +84,7 @@ class SampleIndex extends PureComponent {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
-      type: 'inspectionAnalysis/getAllSample',
+      type: 'inspectionAnalysis/getAllSampleAndTestMan',
       payload:{
          certCode : certCode,
       }

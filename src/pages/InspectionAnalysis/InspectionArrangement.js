@@ -106,7 +106,7 @@ class InspectionArrangement extends PureComponent {
         <Fragment>
           <a onClick={() => this.mobileItem(text, record)}>人员</a>
           &nbsp;&nbsp;
-          {text.state==="已登记"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[]}
+          {text.state==="已添加"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.detailItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
@@ -208,8 +208,23 @@ class InspectionArrangement extends PureComponent {
     });
   };
   show = text =>{
+    const {
+      form,
+      dispatch,
+    } = this.props;
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('sampleno',text.sampleno);
+    dispatch({
+      type: 'inspectionAnalysis/getReport',
+      payload: {
+        reportno:text.reportno,
+      },
+      callback: (response) => {
+        if (response.code === 200) {
+          form.setFieldsValue({'inspwaymemo1':response.data.inspwaymemo1});
+        }
+      }
+    });
     this.setState({ visible: true });
   };
   onChange = e =>{
@@ -246,7 +261,7 @@ class InspectionArrangement extends PureComponent {
           </div>
         </Card>
         <Modal
-            title="新建转委托"
+            title="分包"
             visible={visible}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
@@ -284,7 +299,6 @@ class InspectionArrangement extends PureComponent {
                   <Radio.Group onChange={this.onChange}>
                     <Radio value="按单价">按单价</Radio>
                     <Radio value="按批次">按批次</Radio>
-                    <Radio value="按协议">按协议</Radio>
                     <Radio value="按比例">按比例</Radio>
                   </Radio.Group>,
                 )}
@@ -307,6 +321,13 @@ class InspectionArrangement extends PureComponent {
               <Form.Item label="总计费用">
                 {getFieldDecorator('totalfee', {
                   rules: [{ required: true, message: '请输入总计费用' }],
+                })(
+                      <Input />
+                  )}
+              </Form.Item>
+              <Form.Item label=" 备注">
+                {getFieldDecorator('inspwaymemo1', {
+                  rules: [{ required: true, message: '请输入备注' }],
                 })(
                       <Input />
                   )}
