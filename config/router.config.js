@@ -324,6 +324,12 @@ export default [
             component: './TaskAppoint/InspmanDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: '/InspectionAnalysis/ResultRecord',
+            name: 'ResultRecord',
+            component: './InspectionAnalysis/ResultRecord',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 

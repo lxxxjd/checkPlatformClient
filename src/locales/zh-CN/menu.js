@@ -61,7 +61,7 @@ export default {
   'menu.InspectionAnalysis.SampleDetail':'样品结果详情',
   'menu.InspectionAnalysis.ResultUpdate':'结果录入',
   'menu.InspectionAnalysis.ResultUpdateDetail':'结果录入详情',
-
+  'menu.InspectionAnalysis.ResultRecord':'测试结果文件',
   'menu.Certificate':'证稿证书',
   'menu.Certificate.CertificateUpload':'证稿拟制',
   'menu.Certificate.CertificateUploadDetail':'证稿证书详情',

@@ -80,6 +80,8 @@ class ResultUpdate extends PureComponent {
         <Fragment>
           <a onClick={() => this.mobileItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
+          <a onClick={() => this.uploadItem(text, record)}>上传文件</a>
+          &nbsp;&nbsp;
           <a onClick={() => this.mobileItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
@@ -93,13 +95,18 @@ class ResultUpdate extends PureComponent {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
-      type: 'inspectionAnalysis/getAllSample',
+      type: 'inspectionAnalysis/getAllSampleAndTestMan',
       payload:{
          certCode : certCode,
       }
     });
   }
-
+  uploadItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    router.push({
+      pathname:'/InspectionAnalysis/ResultRecord',
+    });
+  };
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
