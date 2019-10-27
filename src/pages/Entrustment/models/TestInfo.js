@@ -1,4 +1,4 @@
-import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject,getCompany,getTestByReportNo,addTestInfo,updateTestInfo} from '@/services/TestInfo'
+import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject,getCompany,getTestByReportNo,addTestInfo,updateTestInfo,deleteTestBySampleNo} from '@/services/TestInfo'
 
 
 
@@ -59,6 +59,10 @@ export default {
         payload: response,
       });
       if (callback) callback();
+    },
+    *deleteTestBySampleNo({ payload,callback }, { call, put }) {
+      const response = yield call(deleteTestBySampleNo, payload);
+      if (callback) callback(response);
     },
     *getTestInfos({ payload }, { call, put }) {
       const response = yield call(getTestInfo, payload);

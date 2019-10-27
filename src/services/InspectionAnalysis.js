@@ -32,6 +32,7 @@ export async function addResult(params) {
     },
   });
 }
+
 export async function assign(params) {
   return request(`/api/TestInfo/assign`,{
     method: 'POST',
@@ -42,9 +43,38 @@ export async function assign(params) {
   });
 }
 
+export async function updateTestInfo(params) {
+  return request(`/api/TestInfo/updateTestInfo`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function getAllTaskInspman(params) {
+  return request(`/api/task_info/get_all_taskinspmanExist`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function getReport(params) {
+  return request(`/api/report/get_report?reportNo=${params.reportno}`);
+}
+
 export async function getTestBySampleNo(params) {
   return request(`/api/TestInfo/getTestBySampleNo?reportno=${params.reportno}&sampleno=${params.sampleno}`);
 }
+
+export async function deleteTestBySampleNo(params) {
+  return request(`/api/TestInfo/deleteAssign?keyno=${params.keyno}&reportno=${params.reportno}&sampleno=${params.sampleno}`);
+}
+
 export async function getCompany(params) {
   return request(`/api/TestInfo/getCompany?certCode=${params.certCode}`);
 }

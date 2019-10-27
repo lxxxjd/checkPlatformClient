@@ -137,7 +137,7 @@ class CopyForEntrustment extends PureComponent {
           payload: reportno,
           callback: (response) => {
             form.setFieldsValue({
-              'reportdate': moment(now, "YYYY-MM-DD HH:mm:ss"),
+              'reportdate': moment(response.reportdate, "YYYY-MM-DD"),
               'tradeway': response.tradeway,
               'payer': response.payer,
               'shipname': response.shipname,
@@ -149,7 +149,7 @@ class CopyForEntrustment extends PureComponent {
               //'inspplace1':response.inspplace1,
               'inspplace2': response.inspplace2,
               'inspplace3': response.inspplace3,
-              'inspdate': moment(now, "YYYY-MM-DD HH:mm:ss"),
+              'inspdate': moment(response.inspdate, "YYYY-MM-DD"),
               'insplinkway': response.insplinkway,
               'price': response.price,
               'unit': response.unit,

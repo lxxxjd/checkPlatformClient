@@ -27,6 +27,7 @@ export async function addTestInfo(params) {
     },
   });
 }
+
 export async function updateTestInfo(params) {
   return request(`/api/TestInfo/updateTestInfo`,{
     method: 'POST',
@@ -36,6 +37,11 @@ export async function updateTestInfo(params) {
     },
   });
 }
+
+export async function deleteTestBySampleNo(params) {
+  return request(`/api/TestInfo/deleteTest?keyno=${params.keyno}`);
+}
+
 export async function getAllClientName(params) {
   if(params.content != null){
     return request(`/api/client/getAllClientName?content=${params.content}`);

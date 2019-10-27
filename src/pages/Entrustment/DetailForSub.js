@@ -15,6 +15,7 @@ import {
   Radio,
   Table,
   Icon,
+  notification
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForSub.less';
@@ -69,6 +70,8 @@ class DetailForSub extends PureComponent {
         <Fragment>
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
+          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          &nbsp;&nbsp;
         </Fragment>
       ),
     },
@@ -95,7 +98,28 @@ class DetailForSub extends PureComponent {
       }
     });
   }
-
+  deleteItem = text => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'testInfo/deleteTestBySampleNo',
+      payload:{
+         keyno : text.keyno,
+      },
+      callback: (response) => {
+        if (response.code === 200) {
+          this.componentDidMount();
+          notification.open({
+            message: '删除成功',
+          });
+        } else {
+          notification.open({
+            message: '删除失败',
+            description: response.data,
+          });
+        }
+      }
+    });
+  };
   modifyItem = text => {
     const { form } = this.props;
     this.setState({visible:true});
@@ -144,6 +168,18 @@ class DetailForSub extends PureComponent {
           dispatch({
             type: 'testInfo/addTestInfo',
             payload: values,
+            callback: (response) => {
+              if (response.code === 200) {
+                notification.open({
+                  message: '添加成功',
+                });
+              } else {
+                notification.open({
+                  message: '添加失败',
+                  description: response.data,
+                });
+              }
+            }
           });
         }
         this.setState({ selectEntrustment: null });
