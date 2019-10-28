@@ -82,7 +82,7 @@ class ResultUpdate extends PureComponent {
           &nbsp;&nbsp;
           <a onClick={() => this.uploadItem(text, record)}>上传文件</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.mobileItem(text, record)}>详情</a>
+          <a onClick={() => this.detailItem(text, record)}>详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -90,7 +90,28 @@ class ResultUpdate extends PureComponent {
     },
   ];
 
-
+  columns1 = [
+    {
+      title: '指标名称',
+      dataIndex: 'itemC',
+    },
+    {
+      title: '英文名称',
+      dataIndex: 'itemE',
+    },
+    {
+      title: '检测标准',
+      dataIndex: 'teststandard',
+    },
+    {
+      title: '单位',
+      dataIndex: 'unit',
+    },
+    {
+      title: '结果',
+      dataIndex: 'testresult',
+    },
+  ];
   componentDidMount() {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
@@ -100,6 +121,17 @@ class ResultUpdate extends PureComponent {
          certCode : certCode,
       }
     });
+  }
+  detailItem = text => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'inspectionAnalysis/getAllDetails',
+      payload:{
+         reportno : text.reportno ,
+         sampleno : text.sampleno ,
+      }
+    });
+    this.setState({ visible : true });
   }
   uploadItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -124,7 +156,7 @@ class ResultUpdate extends PureComponent {
   };
   render() {
     const {
-      inspectionAnalysis: {samples},
+      inspectionAnalysis: {samples,detail},
       form: { getFieldDecorator },
       loading,
     } = this.props;
@@ -145,6 +177,21 @@ class ResultUpdate extends PureComponent {
             />
           </div>
         </Card>
+        <Modal
+            title="新建样品指标"
+            visible={visible}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+          >
+            <Table
+              size="middle"
+              loading={loading}
+              dataSource={detail}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              columns={this.columns1}
+              rowKey="keyno"
+            />
+          </Modal>
       </PageHeaderWrapper>
     );
   }

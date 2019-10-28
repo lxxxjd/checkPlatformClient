@@ -109,6 +109,7 @@ class ResultUpdateDetail extends PureComponent {
         }
       });
     });
+    form.resetFields();
     this.setState({ visible: false });
 
   };
@@ -161,21 +162,21 @@ class ResultUpdateDetail extends PureComponent {
             />
           </div>
           <Modal
-                title="新建样品指标"
-                visible={visible}
-                onOk={this.handleOk}
-                onCancel={this.handleCancel}
-              >
-                <Form>
-                  <Form.Item label="结果">
-                    {getFieldDecorator('result', {
-                      rules: [{ required: true, message: '请输入结果' }],
-                    })(
-                        <Input placeholder="请输入结果" />
-                      )}
-                  </Form.Item>
-                </Form>
-              </Modal>
+            title="新建样品指标"
+            visible={visible}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+          >
+            <Form>
+              <Form.Item label="结果">
+                {getFieldDecorator('result', {
+                  rules: [{ required: true, message: '请输入结果' }],
+                })(
+                    <Input placeholder="请输入结果" />
+                  )}
+              </Form.Item>
+            </Form>
+          </Modal>
         </Card>
       </PageHeaderWrapper>
     );

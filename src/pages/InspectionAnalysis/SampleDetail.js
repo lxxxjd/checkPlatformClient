@@ -68,7 +68,7 @@ class SampleDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const sampleno = sessionStorage.getItem('sampleno');
     dispatch({
-      type: 'inspectionAnalysis/getDetails',
+      type: 'inspectionAnalysis/getAllDetails',
       payload:{
          reportno : reportno,
          sampleno : sampleno ,
