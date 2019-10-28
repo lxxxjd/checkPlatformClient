@@ -1,4 +1,5 @@
-import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getCostInfos ,addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking} from '@/services/Charge';
+import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getAllCost ,
+  addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost} from '@/services/Charge';
 import { getAllClientName } from '@/services/Entrustment';
 
 export default {
@@ -14,6 +15,8 @@ export default {
     costData:[],  // 成本信息
     costInfoData:[],  // 成本信息
     costAddResult:{}, // 添加成本返回信息
+    costDeleteResult:{},// 删除成本返回信息
+    costUpdateResult:{}, // 更新成本信息
   },
   effects: {
     *fetch({ payload,callback }, { call, put }) {
@@ -98,7 +101,7 @@ export default {
 
     // 成本信息
     *getCostInfosFetch({ payload,callback }, { call, put }) {
-      const response = yield call(getCostInfos, payload);
+      const response = yield call(getAllCost, payload);
       yield put({
         type: 'saveGetCostInfosFetch',
         payload: response,
@@ -111,6 +114,25 @@ export default {
       const response = yield call(addCost, payload);
       yield put({
         type: 'saveAddCost',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    // 删除成本信息
+    *deleteCostFetch({ payload,callback }, { call, put }) {
+      const response = yield call(deleteCost, payload);
+      yield put({
+        type: 'saveDeleteCost',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+    // 修改成本信息
+    *updateCostFetch({ payload,callback }, { call, put }) {
+      const response = yield call(updateCost, payload);
+      yield put({
+        type: 'saveUpdateCostFetch',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -196,6 +218,19 @@ export default {
       return {
         ...state,
         costAddResult: payload.data,
+      };
+    },
+    saveDeleteCost(state, { payload }) {
+      return {
+        ...state,
+        costDeleteResult: payload.data,
+      };
+    },
+
+    saveUpdateCostFetch(state, { payload }) {
+      return {
+        ...state,
+        costUpdateResult: payload.data,
       };
     },
 

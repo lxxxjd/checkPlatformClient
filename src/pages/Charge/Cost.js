@@ -98,14 +98,10 @@ class Cost extends PureComponent {
   };
 
   mobileItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
-    sessionStorage.setItem('reportdate',text.reportdate);
-    sessionStorage.setItem('applicant',text.applicant);
-    sessionStorage.setItem('cargoname',text.cargoname);
-    sessionStorage.setItem('inspway',text.inspway);
-    sessionStorage.setItem('FinalPriceOrigin','FinalPrice');
+    sessionStorage.setItem('reportNoForCostEdit',text.reportno);
+    sessionStorage.setItem('reportinfoCost',JSON.stringify(text));
     router.push({
-      pathname:'/Charge/FinalPriceDetail',
+      pathname:'/Charge/CostEdit',
     });
   };
 

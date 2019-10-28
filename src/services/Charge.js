@@ -91,15 +91,39 @@ export async function getCosts(params) {
   });
 }
 
-// 成本支出
-export async function getCostInfos(params) {
-  return request(`/api/cost/getCostInfos`, {
+// 成本删除
+export async function deleteCost(params) {
+  return request(`/api/cost/deleteCost`, {
     method: 'POST',
     data: {
       ...params,
     },
   });
 }
+
+
+// 成本删除
+export async function updateCost(params) {
+  return request(`/api/cost/updateCost`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
+// 成本支出
+export async function getAllCost(params) {
+  return request(`/api/cost/getAllCost`, {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
 
 // 成本支出
 export async function addCost(params) {

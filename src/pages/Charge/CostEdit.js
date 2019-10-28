@@ -11,7 +11,7 @@ import {
   Input,
   Button,
   Select,
-  Table, message, Modal, DatePicker,
+  Table, message, Modal, DatePicker, Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -30,23 +30,25 @@ const CostAddUpdateForm = Form.create()(props => {
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log(fieldsValue);
-      // values.invoiceTitle= fieldsValue.invoiceTitle;
-      // values.invoiceStatus ='已开票';
-      // const values={
-      //
-      // }
-      // dispatch({
-      //   type: 'charge/addCostFetch',
-      //   payload:values,
-      //   callback: (response) => {
-      //     if(response==="success"){
-      //       message.success("开具发票成功");
-      //     }else{
-      //       message.success('开具发票失败');
-      //     }
-      //   }
-      // });
+      let paramCost = CostItemData;
+      paramCost.amout =fieldsValue.amout;
+      paramCost.costmoney =fieldsValue.costmoney;
+      paramCost.costname =fieldsValue.costname;
+      paramCost.costtype =fieldsValue.costtype;
+      paramCost.occurdate =fieldsValue.occurdate;
+      paramCost.reciever =fieldsValue.reciever;
+      paramCost.remark =fieldsValue.remark;
+      dispatch({
+        type: 'charge/updateCostFetch',
+        payload:paramCost,
+        callback: (response) => {
+          if(response==="success"){
+            message.success("修改成功");
+          }else{
+            message.success('修改失败');
+          }
+        }
+      });
       handleModalVisible();
       init();
     });
@@ -62,24 +64,34 @@ const CostAddUpdateForm = Form.create()(props => {
       width={500}
       style={{ top: 100 }}
     >
-
       <Form>
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="实际产生">
-          {form.getFieldDecorator('inCurDate', {
-            initialValue:moment(CostItemData.inCurDate, 'YYYY-MM-DD'),
-            // rules: [{ required: true, message:  '选择开具发票时间！' }],
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="费用种类">
+          {form.getFieldDecorator('costtype', {
+            initialValue:CostItemData.costtype,
+            rules: [{ required: true,message: '选择费用种类'}],
           })(
-            <DatePicker
-              style={{ width: '100%' }}
-              format="YYYY-MM-DD"
-              placeholder="选择实际日期"
-            />
+            <Select placeholder="请选择费用种类">
+              <Option value="车辆">劳务费.</Option>
+              <Option value="耗材">差旅费</Option>
+              <Option value="餐饮费">邮寄费</Option>
+              <Option value="住宿费">误支费</Option>
+              <Option value="交通费">分包费</Option>
+              <Option value="外聘劳务">交通费</Option>
+              <Option value="仪器设备">其他费</Option>
+              <Option value="药品试剂">其他费</Option>
+            </Select>
           )}
         </Form.Item>
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="申请日期">
-          {form.getFieldDecorator('applyDate', {
-            initialValue:moment(CostItemData.applyDate, 'YYYY-MM-DD'),
-            // rules: [{ required: true, message: '选择开具发票时间！' }],
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="费用名称">
+          {form.getFieldDecorator('costname', {
+            initialValue:CostItemData.costname,
+            rules: [{ required: true ,message: '请填写费用名称'}],
+          })(<Input placeholder="请输入费用名称" />)}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="发生/使用日期">
+          {form.getFieldDecorator('occurdate', {
+            initialValue:(CostItemData.occurdate===undefined|| CostItemData.occurdate!==null)? moment(CostItemData.occurdate,"YYYY-MM-DD"):{},
+            rules: [{ required: true ,message: '请填写发生日期'}],
           })(
             <DatePicker
               style={{ width: '100%' }}
@@ -88,38 +100,30 @@ const CostAddUpdateForm = Form.create()(props => {
             />
           )}
         </Form.Item>
-
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} label="费用种类">
-          {form.getFieldDecorator('costSort', {
-            initialValue:CostItemData.costSort,
-            // rules: [{ required: true,message: '选择付款方式！'}],
-          })(
-            <Select placeholder="请选择付款方式">
-              <Option value="劳务费">劳务费.</Option>
-              <Option value="差旅费">差旅费</Option>
-              <Option value="邮寄费">邮寄费</Option>
-              <Option value="误支费">误支费</Option>
-              <Option value="分包费">分包费</Option>
-              <Option value="交通费">交通费</Option>
-              <Option value="其他费">其他费</Option>
-            </Select>
-          )}
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="接收/使用人">
+          {form.getFieldDecorator('reciever', {
+            initialValue:CostItemData.reciever,
+            rules: [{ required: true,message: '请输入接收人'}],
+          })(<Input placeholder="请输入接收人" />)}
         </Form.Item>
-
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="金额">
-          {form.getFieldDecorator('amount', {
-            initialValue:CostItemData.amount,
-            // rules: [{ required: true ,message: '选择发票号码！'}],
-          })(<Input placeholder="请输入" />)}
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="金额">
+          {form.getFieldDecorator('costmoney', {
+            initialValue:CostItemData.costmoney,
+            rules: [{ required: true,message: '请输入金额'}],
+          })(<Input placeholder="请输入金额" />)}
         </Form.Item>
-
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="备注">
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="数量">
+          {form.getFieldDecorator('amout', {
+            initialValue:CostItemData.amout,
+            rules: [{ message: '请输入数量'}],
+          })(<Input placeholder="请输入数量" />)}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="备注">
           {form.getFieldDecorator('remark', {
             initialValue:CostItemData.remark,
             // rules: [{ required: true ,message: '选择发票号码！'}],
-          })(<Input placeholder="请输入" />)}
+          })(<Input placeholder="请输入备注" />)}
         </Form.Item>
-
       </Form>
     </Modal>
   );
@@ -130,18 +134,22 @@ const CostAddUpdateForm = Form.create()(props => {
 // 新建组件
 const CostAddNewForm = Form.create()(props => {
   const { modalAddNewVisble, form,handleModalAddNewVisible,dispatch,init} = props;
+  const reportno = sessionStorage.getItem('reportNoForCostEdit');
+  const user = JSON.parse(localStorage.getItem("userinfo"));
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log(fieldsValue);
       const values={
-        amount: fieldsValue.amount,
-        applyDate: fieldsValue.applyDate,
-        costSort: fieldsValue.costSort,
-        inCurDate: fieldsValue.inCurDate,
+        amout: fieldsValue.amout,
+        costmoney: fieldsValue.costmoney,
+        costname: fieldsValue.costname,
+        costtype: fieldsValue.costtype,
+        occurdate: fieldsValue.occurdate,
+        reciever: fieldsValue.reciever,
         remark: fieldsValue.remark,
-        reportno: fieldsValue.reportno,
-        status:"未审核",
+        register:user.nameC,
+        reportno,
+        status:"已登记",
       }
       dispatch({
         type: 'charge/addCostFetch',
@@ -167,29 +175,33 @@ const CostAddNewForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalAddNewVisible()}
       width={500}
-      style={{ top: 100 }}
+      style={{ top: 10 }}
     >
-
       <Form>
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="委托编号">
-          {form.getFieldDecorator('reportno', {
-             rules: [{ required: true ,message: '请填写委托编号'}],
-          })(<Input placeholder="请输入" />)}
-        </Form.Item>
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="实际产生">
-          {form.getFieldDecorator('inCurDate', {
-            rules: [{ required: true ,message: '请填写实际产生时间'}],
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="费用种类">
+          {form.getFieldDecorator('costtype', {
+            rules: [{ required: true,message: '选择费用种类'}],
           })(
-            <DatePicker
-              style={{ width: '100%' }}
-              format="YYYY-MM-DD"
-              placeholder="选择实际日期"
-            />
+            <Select placeholder="请选择费用种类">
+              <Option value="车辆">劳务费.</Option>
+              <Option value="耗材">差旅费</Option>
+              <Option value="餐饮费">邮寄费</Option>
+              <Option value="住宿费">误支费</Option>
+              <Option value="交通费">分包费</Option>
+              <Option value="外聘劳务">交通费</Option>
+              <Option value="仪器设备">其他费</Option>
+              <Option value="药品试剂">其他费</Option>
+            </Select>
           )}
         </Form.Item>
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="申请日期">
-          {form.getFieldDecorator('applyDate', {
-            rules: [{ required: true ,message: '请填写申请时间'}],
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="费用名称">
+          {form.getFieldDecorator('costname', {
+             rules: [{ required: true ,message: '请填写费用名称'}],
+          })(<Input placeholder="请输入费用名称" />)}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="发生/使用日期">
+          {form.getFieldDecorator('occurdate', {
+            rules: [{ required: true ,message: '请填写发生日期'}],
           })(
             <DatePicker
               style={{ width: '100%' }}
@@ -198,33 +210,25 @@ const CostAddNewForm = Form.create()(props => {
             />
           )}
         </Form.Item>
-
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} label="费用种类">
-          {form.getFieldDecorator('costSort', {
-            rules: [{ required: true,message: '选择费用种类'}],
-          })(
-            <Select placeholder="请选择付款方式">
-              <Option value="劳务费">劳务费.</Option>
-              <Option value="差旅费">差旅费</Option>
-              <Option value="邮寄费">邮寄费</Option>
-              <Option value="误支费">误支费</Option>
-              <Option value="分包费">分包费</Option>
-              <Option value="交通费">交通费</Option>
-              <Option value="其他费">其他费</Option>
-            </Select>
-          )}
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="接收/使用人">
+          {form.getFieldDecorator('reciever', {
+            rules: [{ required: true,message: '请输入接收人'}],
+          })(<Input placeholder="请输入接收人" />)}
         </Form.Item>
-
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="金额">
-          {form.getFieldDecorator('amount', {
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="金额">
+          {form.getFieldDecorator('costmoney', {
             rules: [{ required: true,message: '请输入金额'}],
-          })(<Input placeholder="请输入" />)}
+          })(<Input placeholder="请输入金额" />)}
         </Form.Item>
-
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="备注">
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="数量">
+          {form.getFieldDecorator('amout', {
+            rules: [{message: '请输入数量'}],
+          })(<Input placeholder="请输入数量" />)}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="备注">
           {form.getFieldDecorator('remark', {
             // rules: [{ required: true ,message: '选择发票号码！'}],
-          })(<Input placeholder="请输入" />)}
+          })(<Input placeholder="请输入备注" />)}
         </Form.Item>
       </Form>
     </Modal>
@@ -250,30 +254,36 @@ class Cost extends PureComponent {
 
   columns = [
     {
-      title: '委托编号',
-      dataIndex: 'reportno',
-    },
-    {
-      title: '委托日期',
-      dataIndex: 'reportdate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
-    },
-
-    {
-      title: '船名标识',
-      dataIndex: 'shipname',
-    },
-    {
-      title: '检验地点',
-      dataIndex: 'inspplace2',
+      title: '费用名称',
+      dataIndex: 'costname',
     },
     {
       title: '费用种类',
-      dataIndex: 'costSort',
+      dataIndex: 'costtype',
+    },
+
+    {
+      title: '发生日期',
+      dataIndex: 'occurdate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
       title: '金额',
-      dataIndex: 'amount',
+      dataIndex: 'costmoney',
+    },
+    {
+      title: '接收人',
+      dataIndex: 'reciever',
+    },
+
+    {
+      title: '登记日期',
+      dataIndex: 'registdate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+    },
+    {
+      title: '登记人',
+      dataIndex: 'register',
     },
     {
       title: '状态',
@@ -285,11 +295,7 @@ class Cost extends PureComponent {
         <Fragment>
           <a onClick={() => this.handleAddUpdateCost(text, true)}>修改</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>审批</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>支付</a>
+          <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>详情</a>
         </Fragment>
@@ -304,11 +310,30 @@ class Cost extends PureComponent {
 
 
   previewItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('reportNoForCostEdit',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
+  };
+
+  deleteItem = text => {
+    const { dispatch } = this.props;
+    const params = {
+      ...text
+    }
+    dispatch({
+      type: 'charge/deleteCostFetch',
+      payload: params,
+      callback: (response) => {
+        if(response==="success"){
+          message.success("删除成功");
+        }else{
+          message.success('删除失败');
+        }
+      }
+    });
+    this.init();
   };
 
   // 处理发票开具 显示模态框
@@ -342,14 +367,14 @@ class Cost extends PureComponent {
   };
 
   init =()=>{
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const reportNo=sessionStorage.getItem("reportNoForCostEdit");
     const { dispatch } = this.props;
-    const params = {
-      certCode:user.certCode
-    };
+    const params ={
+      reportNo
+    }
     dispatch({
       type: 'charge/getCostInfosFetch',
-      payload: params,
+      payload: params
     });
   }
 
@@ -360,14 +385,14 @@ class Cost extends PureComponent {
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
+    const reportNo=sessionStorage.getItem("reportNoForCostEdit");
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
+      // const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
-        ...fieldsValue,
+        reportNo,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
-        certCode:user.certCode,
       };
       dispatch({
         type: 'charge/getCostInfosFetch',
@@ -376,7 +401,9 @@ class Cost extends PureComponent {
     });
   };
 
-
+  back = () =>{
+    this.props.history.goBack();
+  };
 
   renderSimpleForm() {
     const {
@@ -395,9 +422,11 @@ class Cost extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="shipname">船名标识</Option>
-                  <Option value="cargoname">检查品名</Option>
+                  <Option value="costname">费用名称</Option>
+                  <Option value="costtype">费用种类</Option>
+                  <Option value="reciever">接收人</Option>
+                  <Option value="register">登记人</Option>
+                  <Option value="status">状态</Option>
                 </Select>
               )}
             </Form.Item>
@@ -419,6 +448,10 @@ class Cost extends PureComponent {
               <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit" onClick={this.handleModalAddNewVisible}>
                 新建
               </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>
+                <Icon type="left" />
+                返回
+              </Button>
             </span>
           </Col>
         </Row>
@@ -433,11 +466,17 @@ class Cost extends PureComponent {
       loading,
       dispatch,
     } = this.props;
-
-    const { modalVisible,CostItemData,modalAddNewVisble} = this.state;
+    const{modalAddNewVisble,modalVisible,CostItemData}  = this.state;
+    const reportinfo = JSON.parse(sessionStorage.getItem("reportinfoCost"));
+    const reprotText= {
+      reportno:reportinfo.reportno,
+      applicant:reportinfo.applicant,
+      shipname:reportinfo.shipname,
+      inspway:reportinfo.inspway,
+    };
 
     return (
-      <PageHeaderWrapper title="成本支出">
+      <PageHeaderWrapper text={reprotText} title="成本支出">
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
@@ -451,7 +490,6 @@ class Cost extends PureComponent {
             />
           </div>
         </Card>
-
         <CostAddNewForm modalAddNewVisble={modalAddNewVisble} handleModalAddNewVisible={this.handleModalAddNewVisible} dispatch={dispatch} init={this.init} />
         <CostAddUpdateForm modalVisible={modalVisible} handleModalVisible={this.handleModalVisible} CostItemData={CostItemData} dispatch={dispatch} init={this.init}  />
       </PageHeaderWrapper>
