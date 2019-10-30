@@ -42,24 +42,6 @@ class SampleModify extends PureComponent {
     standard:[],
     itemName: [],
   };
-  columns1 = [
-    {
-      title: '指标名称',
-      dataIndex: 'itemC',
-    },
-    {
-      title: '英文名称',
-      dataIndex: 'itemE',
-    },
-    {
-      title: '检测标准',
-      dataIndex: 'standard',
-    },
-    {
-      title: '单位',
-      dataIndex: 'unit',
-    },
-  ];
   columns = [
     {
       title: '指标名称',
@@ -71,7 +53,7 @@ class SampleModify extends PureComponent {
     },
     {
       title: '检测标准',
-      dataIndex: 'standard',
+      dataIndex: 'teststandard',
     },
     {
       title: '单位',
@@ -85,7 +67,7 @@ class SampleModify extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const sampleno = sessionStorage.getItem('sampleno');
     dispatch({
-      type: 'inspectionAnalysis/getDetails',
+      type: 'inspectionAnalysis/getAllDetails',
       payload:{
          reportno : reportno,
          sampleno : sampleno ,
@@ -174,15 +156,9 @@ class SampleModify extends PureComponent {
       },
       callback:response => {
         if(response.code === 200){
+          this.componentDidMount();
           notification.open({
             message: '删除成功',
-          });
-          dispatch({
-            type: 'inspectionAnalysis/getDetails',
-            payload:{
-               reportno : reportno,
-               sampleno : sampleno ,
-            }
           });
         }else{
           notification.open({
@@ -408,7 +384,7 @@ class SampleModify extends PureComponent {
                   loading={loading}
                   dataSource={detail}
                   pagination={{showQuickJumper:true,showSizeChanger:true}}
-                  columns={this.columns1}
+                  columns={this.columns}
                   rowSelection={rowDeteleSelection}
                 />
               </Modal>

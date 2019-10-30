@@ -1,4 +1,4 @@
-import {getAllSample,getCompany,getDetails,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
+import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
   getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,deleteTestBySampleNo,updateTestInfo} from '@/services/InspectionAnalysis'
 
 
@@ -43,14 +43,6 @@ export default {
     *deleteTestBySampleNo({ payload,callback }, { call, put }) {
       const response = yield call(deleteTestBySampleNo, payload);
       if (callback) callback(response);
-    },
-    *getDetails({ payload,callback }, { call, put }) {
-      const response = yield call(getDetails, payload);
-      yield put({
-        type: 'getDetail',
-        payload:response,
-      });
-      if (callback) callback(response.data);
     },
     *getAllTaskInspman({ payload,callback }, { call, put }) {
       const response = yield call(getAllTaskInspman, payload);
