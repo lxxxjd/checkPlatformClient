@@ -1,5 +1,5 @@
 import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
-  getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,deleteTestBySampleNo,updateTestInfo} from '@/services/InspectionAnalysis'
+  getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,deleteTestBySampleNo,updateTestInfo,getSamplesByApplicant,loadDetails} from '@/services/InspectionAnalysis'
 
 
 
@@ -17,9 +17,23 @@ export default {
     standard : [],
     itemName : [],
     inspman:[],
+    reportSample:[],
+    details:[]
   },
 
   effects: {
+    *getSamplesByApplicant({ payload,callback }, { call, put }) {
+      const response = yield call(getSamplesByApplicant, payload);
+      yield put({
+        type: 'getSamples',
+        payload:response,
+      });
+      if (callback) callback(response.data);
+    },
+    *loadDetails({ payload,callback }, { call, put }) {
+      const response = yield call(loadDetails, payload);
+      if (callback) callback(response);
+    },
     *getAllSampleAndTestMan({ payload,callback }, { call, put }) {
       const response = yield call(getAllSampleAndTestMan, payload);
       yield put({
@@ -55,6 +69,14 @@ export default {
       const response = yield call(getAllDetails, payload);
       yield put({
         type: 'getDetail',
+        payload:response,
+      });
+      if (callback) callback(response.data);
+    },
+    *getDetails({ payload,callback }, { call, put }) {
+      const response = yield call(getAllDetails, payload);
+      yield put({
+        type: 'getDetaila',
         payload:response,
       });
       if (callback) callback(response.data);
@@ -121,6 +143,12 @@ export default {
   },
 
   reducers: {
+    getSamples(state, { payload }) {
+      return {
+        ...state,
+        reportSample: payload.data,
+      };
+    },
     getAllSampleAndTestManInfo(state, { payload }) {
       return {
         ...state,
@@ -149,6 +177,12 @@ export default {
       return {
         ...state,
         detail: payload.data,
+      };
+    },
+    getDetaila(state, { payload }) {
+      return {
+        ...state,
+        details: payload.data,
       };
     },
     addDetail(state, { payload }) {

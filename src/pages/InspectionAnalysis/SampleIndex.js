@@ -102,6 +102,7 @@ class SampleIndex extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('sampleno',text.sampleno);
     sessionStorage.setItem('cargoname',text.cargoname);
+    sessionStorage.setItem( 'applicant' , text.applicant);
     router.push({
       pathname:'/InspectionAnalysis/SampleModify',
     });

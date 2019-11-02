@@ -33,7 +33,7 @@ const { Option } = Select;
 class SampleModify extends PureComponent {
   state = {
     formValues: {},
-    addOne:false,
+    // addOne:false,
     addMany:false,
     onDelete:false,
     selectedRowKeys:[],
@@ -41,6 +41,8 @@ class SampleModify extends PureComponent {
     data:[],
     standard:[],
     itemName: [],
+    onLoad:false,
+    onDetail:false,
   };
   columns = [
     {
@@ -60,7 +62,82 @@ class SampleModify extends PureComponent {
       dataIndex: 'unit',
     },
   ];
+  columns1 = [
+    {
+      title: '委托日期',
+      dataIndex: 'reportdate',
+    },
+    {
+      title: '委托人',
+      dataIndex: 'applicant',
+    },
+    {
+      title: '检查品名',
+      dataIndex: 'cargoname',
+    },
+    {
+      title: '样品名称',
+      dataIndex: 'samplename',
+    },
+    {
+      title: '样品编号',
+      dataIndex: 'sampleno',
+    },
+    { title: '操作',
+      render: (text, record) => (
+        <Fragment>
+          <a onClick={() => this.loadItem(text, record)}>导入</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.detailItem(text, record)}>详情</a>
+        </Fragment>
+      ),
+    },
+  ];
 
+  loadItem = text =>{
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const sampleno = sessionStorage.getItem('sampleno');
+    const cargoname = sessionStorage.getItem('cargoname');
+    dispatch({
+      type: 'inspectionAnalysis/loadDetails',
+      payload:{
+        targetReportNo : reportno ,
+        targetSampleNo : sampleno ,
+        sourceReportNo : text.reportno,
+        sourceSampleNo : text.sampleno,
+        cargonameC : cargoname
+      },
+      callback:response => {
+        if(response.code === 200){
+          this.componentDidMount();
+          notification.open({
+            message: '导入成功',
+          });
+        }else{
+          notification.open({
+            message: '导入失败',
+            description:response.message,
+          });
+        }
+      }
+    });
+    this.handleCancel();
+  };
+
+  detailItem = text =>{
+    const { dispatch } = this.props;
+    const reportno = text.reportno;
+    const sampleno = text.sampleno;
+    dispatch({
+      type: 'inspectionAnalysis/getDetails',
+      payload:{
+         reportno : reportno,
+         sampleno : sampleno ,
+      }
+    });
+    this.setState({onDetail:true});
+  };
 
   componentDidMount () {
     const { dispatch } = this.props;
@@ -75,16 +152,6 @@ class SampleModify extends PureComponent {
     });
   }
 
-  save = () =>{
-    // const {
-    //   inspectionAnalysis: {items},
-    // } = this.props;
-
-    // var data = [];
-    // for( item in items){
-    //   if(item.keyno )
-    // }
-  };
   back = () =>{
     router.push({
       pathname:'/InspectionAnalysis/SampleIndex',
@@ -92,31 +159,14 @@ class SampleModify extends PureComponent {
   };
 
   handleCancel = () =>{
-    this.setState({ addOne: false });
+    // this.setState({ addOne: false });
     this.setState({ addMany: false });
     this.setState({ onDelete: false });
+    this.setState({ onLoad: false });
+    this.componentDidMount ();
   };
-
-  showAddOne = () => {
-    const { dispatch,form} = this.props;
-    form.resetFields();
-    const reportno = sessionStorage.getItem('reportno');
-    const sampleno = sessionStorage.getItem('sampleno');
-    const cargonameC = sessionStorage.getItem('cargoname');
-
-    console.log(cargonameC);
-    dispatch({
-      type: 'inspectionAnalysis/getItemNames',
-      payload:{
-        reportno,
-        sampleno,
-        cargonameC,
-      },
-      callback : response => {
-        this.setState({itemName:response.data})
-      }
-    });
-    this.setState({ addOne: true });
+  handleCancelDetail = () =>{
+    this.setState({ onDetail: false });
   };
   showAddMany = () => {
     const { dispatch, form } = this.props;
@@ -170,48 +220,6 @@ class SampleModify extends PureComponent {
     });
     this.setState({ onDelete: false });
   };
-  onAddOne = () => {
-    const { dispatch, form } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const sampleno = sessionStorage.getItem('sampleno');
-    const cargonameC = sessionStorage.getItem('cargoname');
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const values = {
-        ...fieldsValue,
-        reportno,
-        sampleno,
-        cargonameC,
-      };
-      dispatch({
-        type : 'inspectionAnalysis/addDetail',
-        payload : {
-          ...values
-        },
-        callback : response =>{
-          if(response.code === 200){
-            notification.open({
-              message: '添加成功',
-            });
-            dispatch({
-              type: 'inspectionAnalysis/getDetails',
-              payload:{
-                 reportno : reportno,
-                 sampleno : sampleno ,
-              }
-            });
-          }else{
-            notification.open({
-              message: '添加失败',
-              description:response.data,
-            });
-          }
-        }
-      });
-    });
-    this.setState({addOne:false});
-  };
 
   handleChange = value =>{
     const { dispatch,form} = this.props;
@@ -251,13 +259,7 @@ class SampleModify extends PureComponent {
           notification.open({
             message: '添加成功',
           });
-          dispatch({
-            type: 'inspectionAnalysis/getDetails',
-            payload:{
-               reportno : reportno,
-               sampleno : sampleno ,
-            }
-          });
+          this.componentDidMount();
         }else{
           notification.open({
             message: '添加失败',
@@ -268,20 +270,35 @@ class SampleModify extends PureComponent {
     });
     this.setState({ addMany: false });
   };
+
+  showLoad = ()=>{
+    this.setState({onLoad:true}) ;
+    const applicant = sessionStorage.getItem('applicant');
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'inspectionAnalysis/getSamplesByApplicant',
+      payload:{
+        kind: 'applicant',
+        value: applicant
+      }
+    });
+  };
   render() {
     const {
-      inspectionAnalysis: {detail,items},
+      inspectionAnalysis: {detail,items,reportSample,details},
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const {addMany,addOne,onDelete,selectedRowKeys,standard,itemName,deleteRowKeys} = this.state;
+    const {addMany,onDelete,selectedRowKeys,standard,itemName,deleteRowKeys,onLoad,onDetail} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const cargoname = sessionStorage.getItem('cargoname');
     const sampleno = sessionStorage.getItem('sampleno');
+    const applicant = sessionStorage.getItem('applicant');
     const reprotText= {
       reportno,
       cargoname,
       sampleno,
+      applicant
     };
     const standardOptions = standard.map(d => <Option key={d} value={d}>{d}</Option>);
     const itemNameOptions = itemName.map(d => <Option key={d} value={d}>{d}</Option>);
@@ -300,7 +317,7 @@ class SampleModify extends PureComponent {
             <Col sm={22}>
               <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showAddMany}>添加</Button>
               <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showDelete}>批量删除</Button>
-              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.show}>导入</Button>
+              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.showLoad}>导入</Button>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
@@ -319,79 +336,173 @@ class SampleModify extends PureComponent {
             />
           </div>
           <Modal
-                title="新建样品指标"
-                visible={addOne}
-                onOk={this.onAddOne}
-                onCancel={this.handleCancel}
-              >
-                <Form>
-                  <Form.Item label="指标名称">
-                    {getFieldDecorator('itemC', {
-                      rules: [{ required: true, message: '请选择指标名称' }],
-                    })(
-                        <Select
-                          showSearch
-                          placeholder="请选择"
-                          filterOption={false}
-                          onChange={this.handleChange}
-                          //onSearch={this.handleSearch}
-                        >
-                        {itemNameOptions}
-                        </Select>
-                      )}
-                  </Form.Item>
-                  <Form.Item label="检测标准">
-                    {getFieldDecorator('teststandard', {
-                      rules: [{ required: true, message: '请选择检测标准' }],
-                    })(
-                        <Select
-                          showSearch
-                          placeholder="请选择"
-                          filterOption={false}
-                          //onSearch={this.handleSearch}
-                        >
-                        {standardOptions}
-                        </Select>
-                      )}
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Modal
-                title="批量添加"
-                visible={addMany}
-                onOk={this.addMany}
-                onCancel={this.handleCancel}
-              >
-                <Table
-                  size='middle'
-                  rowKey="keyno"
-                  loading={loading}
-                  dataSource={items}
-                  pagination={{showQuickJumper:true,showSizeChanger:true}}
-                  columns={this.columns1}
-                  rowSelection={rowSelection}
-                />
-              </Modal>
-              <Modal
-                title="删除"
-                visible={onDelete}
-                onOk={this.delete}
-                onCancel={this.handleCancel}
-              >
-                <Table
-                  size='middle'
-                  rowKey="keyno"
-                  loading={loading}
-                  dataSource={detail}
-                  pagination={{showQuickJumper:true,showSizeChanger:true}}
-                  columns={this.columns}
-                  rowSelection={rowDeteleSelection}
-                />
-              </Modal>
+            title="批量添加"
+            visible={addMany}
+            onOk={this.addMany}
+            onCancel={this.handleCancel}
+          >
+            <Table
+              size='middle'
+              rowKey="keyno"
+              loading={loading}
+              dataSource={items}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              columns={this.columns}
+              rowSelection={rowSelection}
+            />
+          </Modal>
+          <Modal
+            title="删除"
+            visible={onDelete}
+            onOk={this.delete}
+            onCancel={this.handleCancel}
+          >
+            <Table
+              size='middle'
+              rowKey="keyno"
+              loading={loading}
+              dataSource={detail}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              columns={this.columns}
+              rowSelection={rowDeteleSelection}
+            />
+          </Modal>
+          <Modal
+            title="导入"
+            visible={onLoad}
+            onOk={this.handleCancel}
+            onCancel={this.handleCancel}
+            width={800}
+          >
+            <Table
+              size='middle'
+              rowKey="keyno"
+              loading={loading}
+              dataSource={reportSample}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              columns={this.columns1}
+            />
+          </Modal>
+          <Modal
+            title="指标详情"
+            visible={onDetail}
+            onCancel={this.handleCancelDetail}
+            footer={null}
+            width={500}
+          >
+            <Table
+              size='middle'
+              rowKey="keyno"
+              loading={loading}
+              dataSource={details}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              columns={this.columns}
+            />
+          </Modal>
         </Card>
       </PageHeaderWrapper>
     );
   }
 }
+  // showAddOne = () => {
+  //   const { dispatch,form} = this.props;
+  //   form.resetFields();
+  //   const reportno = sessionStorage.getItem('reportno');
+  //   const sampleno = sessionStorage.getItem('sampleno');
+  //   const cargonameC = sessionStorage.getItem('cargoname');
 
+  //   console.log(cargonameC);
+  //   dispatch({
+  //     type: 'inspectionAnalysis/getItemNames',
+  //     payload:{
+  //       reportno,
+  //       sampleno,
+  //       cargonameC,
+  //     },
+  //     callback : response => {
+  //       this.setState({itemName:response.data})
+  //     }
+  //   });
+  //   this.setState({ addOne: true });
+  // };
+            /*<Modal
+              title="新建样品指标"
+              visible={addOne}
+              onOk={this.onAddOne}
+              onCancel={this.handleCancel}
+            >
+            <Form>
+              <Form.Item label="指标名称">
+                {getFieldDecorator('itemC', {
+                  rules: [{ required: true, message: '请选择指标名称' }],
+                })(
+                    <Select
+                      showSearch
+                      placeholder="请选择"
+                      filterOption={false}
+                      onChange={this.handleChange}
+                      //onSearch={this.handleSearch}
+                    >
+                    {itemNameOptions}
+                    </Select>
+                  )}
+              </Form.Item>
+              <Form.Item label="检测标准">
+                {getFieldDecorator('teststandard', {
+                  rules: [{ required: true, message: '请选择检测标准' }],
+                })(
+                    <Select
+                      showSearch
+                      placeholder="请选择"
+                      filterOption={false}
+                      //onSearch={this.handleSearch}
+                    >
+                    {standardOptions}
+                    </Select>
+                  )}
+              </Form.Item>
+            </Form>
+          </Modal>*/
+  //          onAddOne = () => {
+  //   const { dispatch, form } = this.props;
+  //   const reportno = sessionStorage.getItem('reportno');
+  //   const sampleno = sessionStorage.getItem('sampleno');
+  //   const cargonameC = sessionStorage.getItem('cargoname');
+  //   form.validateFields((err, fieldsValue) => {
+  //     console.log(err);
+  //     if (err) return;
+  //     const values = {
+  //       ...fieldsValue,
+  //       reportno,
+  //       sampleno,
+  //       cargonameC,
+  //     };
+  //     dispatch({
+  //       type : 'inspectionAnalysis/addDetail',
+  //       payload : {
+  //         ...values
+  //       },
+  //       callback : response =>{
+  //         if(response.code === 200){
+  //           notification.open({
+  //             message: '添加成功',
+  //           });
+  //           dispatch({
+  //             type: 'inspectionAnalysis/getDetails',
+  //             payload:{
+  //                reportno : reportno,
+  //                sampleno : sampleno ,
+  //             }
+  //           });
+  //         }else{
+  //           notification.open({
+  //             message: '添加失败',
+  //             description:response.data,
+  //           });
+  //         }
+  //       }
+  //     });
+  //   });
+  //   this.setState({addOne:false});
+  // };
 export default SampleModify;

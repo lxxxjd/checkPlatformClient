@@ -146,6 +146,7 @@ class ResultUpdate extends PureComponent {
     });
     localStorage.setItem('reportDetailNo',text.reportno);
   };
+
   mobileItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
@@ -154,6 +155,7 @@ class ResultUpdate extends PureComponent {
       pathname:'/InspectionAnalysis/ResultUpdateDetail',
     });
   };
+  
   render() {
     const {
       inspectionAnalysis: {samples,detail},
@@ -180,7 +182,7 @@ class ResultUpdate extends PureComponent {
         <Modal
             title="新建样品指标"
             visible={visible}
-            onOk={this.handleOk}
+            footer={null}
             onCancel={this.handleCancel}
           >
             <Table

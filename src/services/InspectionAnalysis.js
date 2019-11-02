@@ -96,6 +96,15 @@ export async function getStandards(params) {
 export async function getItemNames(params) {
   return request(`/api/testdetail/getItemNames?reportno=${params.reportno}&sampleno=${params.sampleno}&cargonameC=${params.cargonameC}`);
 }
+
+export async function loadDetails(params) {
+  return request(`/api/testdetail/loadDetails?targetReportNo=${params.targetReportNo}&targetSampleNo=${params.targetSampleNo}&sourceReportNo=${params.sourceReportNo}&sourceSampleNo=${params.sourceSampleNo}&cargonameC=${params.cargonameC}`);
+}
+
+export async function getSamplesByApplicant(params) {
+  return request(`/api/sampleRegister/getSamplesByApplicant?kind=${params.kind}&value=${params.value}`);
+}
+
 export async function deleteDetails(params) {
   return request(`/api/testdetail/deleteDetails`,{
     method: 'POST',
