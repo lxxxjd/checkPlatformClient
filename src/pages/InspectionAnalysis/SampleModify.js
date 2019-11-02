@@ -35,6 +35,7 @@ class SampleModify extends PureComponent {
     formValues: {},
     // addOne:false,
     addMany:false,
+    modify:false,
     onDelete:false,
     selectedRowKeys:[],
     deleteRowKeys:[],
@@ -43,6 +44,7 @@ class SampleModify extends PureComponent {
     itemName: [],
     onLoad:false,
     onDetail:false,
+    testDetail:null,
   };
   columns = [
     {
@@ -61,7 +63,83 @@ class SampleModify extends PureComponent {
       title: '单位',
       dataIndex: 'unit',
     },
+    { title: '操作',
+      render: (text, record) => (
+        <Fragment>
+          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.modifyItem(text, record)}>修改</a>
+        </Fragment>
+      ),
+    },
   ];
+
+  modifyItem = text => {
+    const { dispatch ,form} = this.props;
+    const cargoname = sessionStorage.getItem('cargoname');
+    dispatch({
+      type: 'inspectionAnalysis/getTestStandard',
+      payload:{
+        cargoname,
+        item:text.itemC,
+      },
+    });
+    form.setFieldsValue({['teststandard']: text.teststandard});
+    this.setState({ testDetail : text});
+    this.setState({ modify: true });
+  };
+  modify = text =>{
+    const {testDetail} = this.state;
+    var value = testDetail;
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      console.log(err);
+      if (err) return;
+      value.teststandard =  form.getFieldValue('teststandard');
+      dispatch({
+        type: 'inspectionAnalysis/modifyDetail',
+        payload: value,
+        callback:response => {
+          if(response.code === 200){
+            notification.open({
+              message: '修改成功',
+            });
+          }else{
+            notification.open({
+              message: '修改失败',
+              description:response.message,
+            });
+          }
+        }
+      });
+    });
+    form.resetFields();
+    this.setState({ modify: false });
+  }
+  deleteItem = text => {
+    const { dispatch } = this.props;
+    var deleteRowKeys = [];
+    deleteRowKeys.push(text.keyno);
+    dispatch({
+      type: 'inspectionAnalysis/deleteDetails',
+      payload:{
+        deleteRowKeys,
+      },
+      callback:response => {
+        if(response.code === 200){
+          this.componentDidMount();
+          notification.open({
+            message: '删除成功',
+          });
+        }else{
+          notification.open({
+            message: '删除失败',
+            description:response.data,
+          });
+        }
+      }
+    });
+  }
   columns1 = [
     {
       title: '委托日期',
@@ -160,6 +238,7 @@ class SampleModify extends PureComponent {
 
   handleCancel = () =>{
     // this.setState({ addOne: false });
+    this.setState({ modify : false });
     this.setState({ addMany: false });
     this.setState({ onDelete: false });
     this.setState({ onLoad: false });
@@ -197,8 +276,6 @@ class SampleModify extends PureComponent {
   delete = () => {
     const {deleteRowKeys} = this.state;
     const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const sampleno = sessionStorage.getItem('sampleno');
     dispatch({
       type: 'inspectionAnalysis/deleteDetails',
       payload:{
@@ -285,11 +362,12 @@ class SampleModify extends PureComponent {
   };
   render() {
     const {
-      inspectionAnalysis: {detail,items,reportSample,details},
+      inspectionAnalysis: {detail,items,reportSample,details,testStandards},
       loading,
       form: { getFieldDecorator },
     } = this.props;
-    const {addMany,onDelete,selectedRowKeys,standard,itemName,deleteRowKeys,onLoad,onDetail} = this.state;
+    const {addMany,onDelete,selectedRowKeys,standard,itemName,deleteRowKeys,onLoad,onDetail,modify} = this.state;
+    const testStandardOptions = testStandards.map(d => <Option key={d} value={d}>{d}</Option>);
     const reportno = sessionStorage.getItem('reportno');
     const cargoname = sessionStorage.getItem('cargoname');
     const sampleno = sessionStorage.getItem('sampleno');
@@ -382,6 +460,27 @@ class SampleModify extends PureComponent {
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns1}
             />
+          </Modal>
+          <Modal
+            title="修改样品标准"
+            visible={modify}
+            onOk={this.modify}
+            onCancel={this.handleCancel}
+          >
+            <Form>
+              <Form.Item label="检验标准">
+                {getFieldDecorator('teststandard', {
+                  rules: [{ required: true, message: '请选择检验标准' }],
+                })(
+                    <Select
+                      showSearch
+                      placeholder="请选择"
+                    >
+                      {testStandardOptions}
+                    </Select>
+                  )}
+              </Form.Item>
+            </Form>
           </Modal>
           <Modal
             title="指标详情"

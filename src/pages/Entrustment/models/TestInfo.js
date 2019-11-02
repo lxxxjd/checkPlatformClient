@@ -1,4 +1,4 @@
-import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject,getCompany,getTestByReportNo,addTestInfo,updateTestInfo,deleteTestBySampleNo} from '@/services/TestInfo'
+import {getTestInfo,queryReport,getReportLink,addReportLink,deleteReportLink,getReportexceptLink,getCheckProject,getCompany,getTestByReportNo,addTestInfo,updateTestInfo,deleteTestBySampleNo,getReport,getPriceMaking} from '@/services/TestInfo'
 
 
 
@@ -25,9 +25,17 @@ export default {
     *getReports({ payload,callback }, { call, put }) {
       const response = yield call(queryReport, payload);
       yield put({
-        type: 'getReport',
+        type: 'getReportList',
         payload: response,
       });
+      if (callback) callback(response.data);
+    },
+    *getReport({ payload,callback }, { call, put }) {
+      const response = yield call(getReport, payload);
+      if (callback) callback(response.data);
+    },
+    *getPriceMaking({ payload,callback }, { call, put }) {
+      const response = yield call(getPriceMaking, payload);
       if (callback) callback(response.data);
     },
     *getReportexceptLink({ payload }, { call, put }) {
@@ -109,7 +117,7 @@ export default {
   },
 
   reducers: {
-    getReport(state, { payload }) {
+    getReportList(state, { payload }) {
       return {
         ...state,
         relevanceData: payload.data,

@@ -37,6 +37,8 @@ class DetailForSub extends PureComponent {
     allCompanyName:[],
     selectEntrustment:null,
     showPrice:false,
+    report:null,
+    priceMakeing:null,
   };
 
   columns = [
@@ -94,7 +96,25 @@ class DetailForSub extends PureComponent {
         certCode : certCode,
       },
       callback: (response) => {
-        this.setState({allCompanyName:response})
+        this.setState({allCompanyName:response});
+      }
+    });
+    dispatch({
+      type: 'testInfo/getPriceMaking',
+      payload: {
+        reportno : reportno,
+      },
+      callback: (response) => {
+        this.setState({priceMakeing:response});
+      }
+    });
+    dispatch({
+      type: 'testInfo/getReport',
+      payload: {
+        reportno : reportno,
+      },
+      callback: (response) => {
+        this.setState({report:response});
       }
     });
   }
@@ -137,11 +157,7 @@ class DetailForSub extends PureComponent {
     form.setFieldsValue({['priceway']:text.priceway});
     form.setFieldsValue({['totalfee']:text.totalfee});
     form.setFieldsValue({['inspwaymemo1']:text.inspwaymemo1});
-    if(text.priceway === "按单价"  || text.priceway ==="按比例"){
-      this.setState({showPrice:true});
-    }else{
-      this.setState({showPrice:false});
-    }
+    this.setState({showPrice:text.priceway });
   };
 
   handleOk = () =>{
@@ -191,27 +207,44 @@ class DetailForSub extends PureComponent {
       console.log(error);
     });
   };
+
   show = () => {
+    const { report } = this.state;
     const allInspway = sessionStorage.getItem('inspway').split(" ");
     this.setState({ checkProject : allInspway });
     const {
       form,
     } = this.props;
     form.resetFields();
+    form.setFieldsValue({['inspwaymemo1']:report.inspwaymemo1});
     this.setState({ visible: true });
   };
+
   handleCancel = () =>{
     this.setState({ visible: false });
   };
+
   onChange = e =>{
-    if(e.target.value === "按单价"  || e.target.value ==="按比例"){
-      this.setState({showPrice:true});
-    }else{
-      this.setState({showPrice:false});
-    }
+    this.setState({showPrice:e.target.value});
   };
+
   back = () =>{
     this.props.history.goBack();
+  };
+
+  sum = () =>{
+    const {
+      form
+    } = this.props;
+    const { report, priceMakeing} = this.state;
+    const price = form.getFieldValue('price');
+    if(price !=="" && price !== undefined){
+      if(priceMakeing.quantity !=="" && priceMakeing.quantity !== undefined){
+        form.setFieldsValue({['totalfee']: price * parseFloat(priceMakeing.quantity) });
+      }else if(report.quantity !=="" && report.quantity !== undefined) {
+        form.setFieldsValue({['totalfee']: price * parseFloat(report.quantityd) });
+      }
+    }
   };
   render() {
     const {
@@ -271,20 +304,47 @@ class DetailForSub extends PureComponent {
                 </Radio.Group>
               )}
             </Form.Item>
-            {
-              {true:
-                <Form.Item label="单价/比例">
-                  { getFieldDecorator('price', {
-                    rules:
-                    showPrice === true
-                    ? [{ required: 'true', message: '请输入单价比例' }]
-                    : []
-                  })(
-                    <Input />
-                   )
-                  }
-                </Form.Item>
-              }[showPrice]
+            {showPrice === "按单价" ?
+              [<Form.Item label="单价">
+                { getFieldDecorator('price', {
+                  rules:
+                  showPrice === "按单价"
+                  ? [{
+                      required: true,
+                      whitespace: true,
+                      type: 'number',
+                      transform(value) {
+                      if (value) {
+                        return Number(value);
+                      }
+                  }, message: '请输入数字' }]
+                  : []
+                })(
+                  <Input onBlur={this.sum}/>
+                 )
+                }
+              </Form.Item>] : []
+            }
+            {showPrice === "按比例" ?
+              [<Form.Item label="比例">
+                { getFieldDecorator('price', {
+                  rules:
+                  showPrice === "按比例"
+                  ? [{
+                  required: true,
+                  whitespace: true,
+                  type: 'number',
+                  transform(value) {
+                    if (value) {
+                      return Number(value);
+                    }
+                  }, message: '请输入数字' }]
+                  : []
+                })(
+                  <Input onBlur={this.sum}/>
+                 )
+                }
+              </Form.Item>] : []
             }
             <Form.Item label="总计费用">
               {getFieldDecorator('totalfee', {

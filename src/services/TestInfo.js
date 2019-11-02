@@ -53,6 +53,14 @@ export async function getReportLink(params) {
 	return request(`/api/report/get_links?reportno=${params.reportno}`);
 }
 
+export async function getReport(params) {
+  return request(`/api/report/get_report?reportNo=${params.reportno}`);
+}
+
+export async function getPriceMaking(params) {
+  return request(`/api/pricemaking//getPriceMaking?reportNo=${params.reportno}`);
+}
+
 export async function getReportexceptLink(params) {
 	return request(`/api/report/get_report_except_link?`,{
     method: 'POST',
