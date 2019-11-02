@@ -119,7 +119,6 @@ class ResultUpdateDetail extends PureComponent {
   };
 
   modifyItem = text => {
-    console.log(text);
     this.setState({ testDetail: text});
     this.setState({ visible: true });
   };

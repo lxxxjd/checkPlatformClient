@@ -1,5 +1,6 @@
 import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
-  getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,deleteTestBySampleNo,updateTestInfo,getSamplesByApplicant,loadDetails} from '@/services/InspectionAnalysis'
+  getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,
+  deleteTestBySampleNo,updateTestInfo,getSamplesByApplicant,loadDetails,getTestStandard,modifyDetail} from '@/services/InspectionAnalysis'
 
 
 
@@ -18,7 +19,8 @@ export default {
     itemName : [],
     inspman:[],
     reportSample:[],
-    details:[]
+    details:[],
+    testStandards:[],
   },
 
   effects: {
@@ -32,6 +34,14 @@ export default {
     },
     *loadDetails({ payload,callback }, { call, put }) {
       const response = yield call(loadDetails, payload);
+      if (callback) callback(response);
+    },
+    *getTestStandard({ payload,callback }, { call, put }) {
+      const response = yield call(getTestStandard, payload);
+      yield put({
+        type: 'getTestStandards',
+        payload:response,
+      });
       if (callback) callback(response);
     },
     *getAllSampleAndTestMan({ payload,callback }, { call, put }) {
@@ -105,6 +115,10 @@ export default {
       const response = yield call(addResult, payload);
       if (callback) callback(response);
     },
+    *modifyDetail({ payload,callback }, { call, put }) {
+      const response = yield call(modifyDetail, payload);
+      if (callback) callback(response);
+    },
     *getStandards({ payload,callback }, { call, put }) {
       const response = yield call(getStandards, payload);
       yield put({
@@ -147,6 +161,12 @@ export default {
       return {
         ...state,
         reportSample: payload.data,
+      };
+    },
+    getTestStandards(state, { payload }) {
+      return {
+        ...state,
+        testStandards: payload.data,
       };
     },
     getAllSampleAndTestManInfo(state, { payload }) {

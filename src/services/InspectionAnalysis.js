@@ -101,6 +101,10 @@ export async function loadDetails(params) {
   return request(`/api/testdetail/loadDetails?targetReportNo=${params.targetReportNo}&targetSampleNo=${params.targetSampleNo}&sourceReportNo=${params.sourceReportNo}&sourceSampleNo=${params.sourceSampleNo}&cargonameC=${params.cargonameC}`);
 }
 
+export async function getTestStandard(params) {
+  return request(`/api/TestStandard/getTestStandard?cargoname=${params.cargoname}&item=${params.item}`);
+}
+
 export async function getSamplesByApplicant(params) {
   return request(`/api/sampleRegister/getSamplesByApplicant?kind=${params.kind}&value=${params.value}`);
 }
@@ -123,6 +127,17 @@ export async function addDetails(params) {
     data: params.selectedRowKeys,
   });
 }
+
+export async function modifyDetail(params) {
+  return request(`/api/testdetail/modifyDetail`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
 export async function addDetail(params) {
   const cargonameC = params.cargonameC;
   delete params.cargonameC;
