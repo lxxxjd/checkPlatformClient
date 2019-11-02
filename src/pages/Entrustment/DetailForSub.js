@@ -152,6 +152,8 @@ class DetailForSub extends PureComponent {
     const {selectEntrustment} = this.state;
     validateFieldsAndScroll((error, values) => {
       if (!error) {
+        // 设置操作用户
+        values.nameC = JSON.parse(localStorage.getItem("userinfo")).nameC;
         if(selectEntrustment&&typeof(selectEntrustment) !== "undefined"){
           values.keyno = selectEntrustment.keyno;
           values.reportno = selectEntrustment.reportno;

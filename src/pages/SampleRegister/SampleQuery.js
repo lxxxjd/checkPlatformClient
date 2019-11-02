@@ -109,7 +109,9 @@ class SampleQuery extends PureComponent {
     {
       title: '样品编号',
       dataIndex: 'sampleno',
+
     },
+
     {
       title: '样品名称',
       dataIndex: 'samplename',

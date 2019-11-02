@@ -15,7 +15,8 @@ import {
   Checkbox,
   DatePicker,
   Radio,
-  notification
+  notification,
+  message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -179,6 +180,7 @@ class InspectionArrangement extends PureComponent {
             ...values,
             assignman: user.nameC,
             assignsort:'品质分包',
+            nameC:user.nameC,
             reportno,
             sampleno,
           },
@@ -191,19 +193,15 @@ class InspectionArrangement extends PureComponent {
                    certCode : certCode,
                 }
               });
-              notification.open({
-                message: '添加成功',
-              });
+              message.success("添加失败");
             } else {
-              notification.open({
-                message: '添加失败',
-                description: response.data,
-              });
+              message.success("添加失败");
             }
+            this.setState({ visible: false });
           }
         });
         form.resetFields();
-        this.setState({ visible: false });
+
       }
     });
   };
