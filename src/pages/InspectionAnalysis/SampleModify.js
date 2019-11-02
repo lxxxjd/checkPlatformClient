@@ -107,7 +107,7 @@ class SampleModify extends PureComponent {
           }else{
             notification.open({
               message: '修改失败',
-              description:response.data,
+              description:response.message,
             });
           }
         }

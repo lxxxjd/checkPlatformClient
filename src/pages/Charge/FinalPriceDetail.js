@@ -215,7 +215,7 @@ class FinalPriceDetail extends PureComponent {
                     }
                   }, message: '请输入数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} />
+                <Input style={{ width: '25%' }} onBlur={this.sum}/>
               )}
             </Form.Item>
             <Form.Item label="数量" >
@@ -230,7 +230,7 @@ class FinalPriceDetail extends PureComponent {
                     }
                   }, message: '请输入数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} />
+                <Input style={{ width: '25%' }} onBlur={this.sum}/>
               )}
             </Form.Item>
             <Form.Item label="总价">
@@ -245,7 +245,7 @@ class FinalPriceDetail extends PureComponent {
                     }
                   }, message: '请输入数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} onFocus={this.sum}/>
+                <Input style={{ width: '25%' }} />
               )}
             </Form.Item>
           </Form>]:[]
