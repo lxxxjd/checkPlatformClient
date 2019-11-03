@@ -54,6 +54,18 @@ export async function deleteCertFile(params) {
 }
 
 
+// 签署界面的品质信息
+export async function getSampleDetail(params) {
+  return request(`/api/sampleRegister/getSampleDetail?reportno=${params.reportno}`);
+}
+
+
+// 签署界面的检验信息
+export async function getCheckResult(params) {
+  return request(`/api/checkResult/getCheckResult?reportno=${params.reportno}`);
+}
+
+
 
 
 // get请求 注意 ` 这个符号 不是这种 ’号
@@ -125,7 +137,6 @@ export async function searchCertificate(params) {
 
 
 export async function getSignature(params) {
-  console.log(`/api/getSignature?${stringify(params.params)}`)
   return request(`/api/getSignature?${stringify(params.params)}`);
 }
 

@@ -37,10 +37,7 @@ const { Header, Footer, Sider, Content } = Layout;
 
 // 表单组件
 const CreateUploadForm = Form.create()(props => {
-
-
   const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect } = props;
-
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -141,6 +138,12 @@ class CertificateUploadDetail extends PureComponent {
     // 切换tab签署页面
     value:'0-0-0',
 
+    // 本委托品质信息
+    sampleData:[],
+
+    // 本委托检验信息
+    checkResultData:[],
+
   };
 
   columns = [
@@ -197,7 +200,6 @@ class CertificateUploadDetail extends PureComponent {
     });
 
     const reportnNo =reportno;
-    console.log(reportnNo);
     dispatch({
       type: 'certificate/getReport',
       payload: reportnNo,
@@ -219,13 +221,11 @@ class CertificateUploadDetail extends PureComponent {
       osspath:text.pdfpath
     }
 
-    console.log(params);
 
     dispatch({
       type: 'certificate/getOssPdf',
       payload:params,
       callback: (response) => {
-        console.log(response);
         if(response.code === 200){
           this.setState({urls:response.data});
           this.setState({showVisible:true});
@@ -284,6 +284,33 @@ class CertificateUploadDetail extends PureComponent {
         }
       }
     });
+
+    //
+    // // 获取品质信息
+    // dispatch({
+    //   type: 'certificate/getSampleDetailFetch',
+    //   payload:{reportno},
+    //   callback: (response) => {
+    //     console.log(response);
+    //     if(response){
+    //       this.state.sampleData = response.data;
+    //     }
+    //   }
+    // });
+
+    // 获取检验信息
+    dispatch({
+      type: 'certificate/getCheckResultFetch',
+      payload:{reportno},
+      callback: (response) => {
+        console.log(response);
+        if(response){
+          this.state.checkResultData = response.data;
+        }
+      }
+    });
+
+
   };
 
   sealCertFile = text =>{
@@ -393,7 +420,6 @@ class CertificateUploadDetail extends PureComponent {
         formData.append('modifier', user.nameC);
         formData.append('reportno', reportno);
         formData.append('name', values.recordname);
-        console.log(formData.get('files'));
         dispatch({
           type: 'certificate/uploadCertFile',
           payload : formData,
@@ -416,7 +442,6 @@ class CertificateUploadDetail extends PureComponent {
         this.setState({ visible: false });
         form.resetFields();
       }
-      console.log(error);
     });
   };
 
@@ -567,7 +592,35 @@ class CertificateUploadDetail extends PureComponent {
   // 树控件的目录数据
   onSelect = (selectedKeys, info) => {
     this.setState({value:selectedKeys[0]});
-    console.log( this.state.value ==='0-0-1');
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const params={
+      reportno,
+    }
+    if(selectedKeys[0] === '0-0-2'){
+      dispatch({
+        type: 'certificate/getCheckResultFetch',
+        payload:params,
+        callback: (response) => {
+          console.log(response);
+          if(response){
+            this.state.checkResultData = response.data;
+          }
+        }
+      });
+    }else if(selectedKeys[0] === '0-0-1'){
+      dispatch({
+        type: 'certificate/getSampleDetailFetch',
+        payload:params,
+        callback: (response) => {
+          if(response){
+            this.state.sampleData = response.data;
+          }
+        }
+      });
+
+
+    }
   };
 
   renderTreeNodes = data =>
@@ -583,6 +636,7 @@ class CertificateUploadDetail extends PureComponent {
     });
 
   // eslint-disable-next-line class-methods-use-this
+  // 委托的信息
   renderReportForm() {
     const {report} = this.state;
     return (
@@ -631,7 +685,93 @@ class CertificateUploadDetail extends PureComponent {
     );
   }
 
+  // 品质的信息
+  // eslint-disable-next-line react/sort-comp
+  sampleColumns = [
+    {
+      title: '样品编号',
+      dataIndex: 'sampleno',
+    },
+    {
+      title: '样品名称',
+      dataIndex: 'samplename',
+    },
+    {
+      title: '检查项目',
+      dataIndex: 'itemC',
+    },
+    {
+      title: '检验标准',
+      dataIndex: 'teststandard',
+    },
+    {
+      title: '结果',
+      dataIndex: 'weight',
+    }
+  ];
 
+  renderSampleForm(){
+    const {sampleData} = this.state;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={sampleData}
+          columns={this.sampleColumns}
+          rowKey="sampleno"
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
+
+  // 检验信息数据
+  // 品质的信息
+  checkColumns = [
+    {
+      title: '检验项目',
+      dataIndex: 'inspway',
+    },
+    {
+      title: '仪器名称',
+      dataIndex: 'instrument',
+    },
+    {
+      title: '检验人员',
+      dataIndex: 'inspman',
+    },
+    {
+      title: '开始日期',
+      dataIndex: 'begindate',
+    },
+    {
+      title: '结束日期',
+      dataIndex: 'finishdate',
+    },
+    {
+      title: '重量',
+      dataIndex: 'weight',
+    },
+    {
+      title: '结果',
+      dataIndex: 'result',
+    }
+  ];
+
+  renderCheckForm(){
+    const {checkResultData} = this.state;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={checkResultData}
+          columns={this.checkColumns}
+          rowKey="keyno"
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
 
 
   render() {
@@ -722,14 +862,15 @@ class CertificateUploadDetail extends PureComponent {
                     <Col span={12}>  <embed src={urls} width={620} height="600" /></Col>
                     <Col span={12}>
                       {value === '0-0-0'?[this.renderReportForm()]:[]}
-                      {value === '0-0-1'?[this.renderLinkFileForm()]:[]}
+                      {value === '0-0-1'?[this.renderSampleForm()]:[]}
+                      {value === '0-0-2'?[this.renderCheckForm()]:[]}
                     </Col>
                   </Form>
                 </Row>
               </div>
             </Content>
             <Sider theme='light' width={130} style={{paddingLeft:15}}>
-              <Tree showLine defaultExpandedKeys={['0-0-1']} defaultExpandParent onSelect={this.onSelect}>
+              <Tree showLine defaultExpandedKeys={['0-0-0']} defaultExpandParent onSelect={this.onSelect}>
                 <TreeNode title="本委托" key="0-0">
                   <TreeNode title="委托" key="0-0-0" />
                   <TreeNode title="品质" key="0-0-1" />

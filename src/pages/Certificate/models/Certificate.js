@@ -1,4 +1,4 @@
-import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getSignature,signCertFile,reviewCertFile,sealCertFile} from '@/services/Certificate'
+import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,getCheckResult} from '@/services/Certificate'
 
 import {getOssPdf} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
@@ -13,6 +13,10 @@ export default {
     signData:{},
     ossPdfResult:{},
     report:[],
+    // 品质信息的返回结果
+    sampleDataResult:[],
+    // 检查结果返回结果
+    checkResultData:{},
   },
 
   effects: {
@@ -80,6 +84,27 @@ export default {
       if (callback) callback(response.data);
     },
 
+
+    *getSampleDetailFetch({ payload,callback }, { call, put }) {
+      const response = yield call(getSampleDetail, payload);
+      yield put({
+        type: 'getSampleDetailResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+
+
+    *getCheckResultFetch({ payload,callback }, { call, put }) {
+      const response = yield call(getCheckResult, payload);
+      yield put({
+        type: 'getCheckResultData',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
   },
 
   reducers: {
@@ -114,6 +139,21 @@ export default {
       return {
         ...state,
         ossPdfResult: payload.data,
+      };
+    },
+
+    getSampleDetailResult(state, { payload }) {
+      return {
+        ...state,
+        sampleDataResult: payload.data,
+      };
+    },
+
+
+    getCheckResultData(state, { payload }) {
+      return {
+        ...state,
+        checkResultData: payload,
       };
     },
   },
