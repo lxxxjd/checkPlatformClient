@@ -278,6 +278,7 @@ class CopyForEntrustment extends PureComponent {
       form: {validateFieldsAndScroll},
       dispatch,
     } = this.props;
+    const { cnasInfo } = this.state;
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       values.inspplace1 = values.inspplace1[2];
@@ -290,7 +291,8 @@ class CopyForEntrustment extends PureComponent {
             username: user.nameC,
             certcode: user.certCode,
             section: user.section,
-            reportplace: user.place
+            reportplace: user.place,
+            cnasCode: cnasInfo.checkcode
           },
           callback: (response) => {
             if (response.code === 200) {
@@ -363,7 +365,7 @@ class CopyForEntrustment extends PureComponent {
     const {form, dispatch} = this.props;
     const {cargos} = this.state;
     for (const cargo in cargos) {
-      if (cargos[cargo].keyno === value) {
+      if (cargos[cargo].cargonamec === value) {
         const checkCode = cargos[cargo].checkCode;
         dispatch({
           type: 'entrustment/getCnasInfo',
@@ -446,7 +448,7 @@ class CopyForEntrustment extends PureComponent {
     const businessSortOptions = businessSort.map(d => <Option key={d} value={d}>{d}</Option>);
     const businessSourceOptions = businessSource.map(d => <Option key={d} value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d} value={d}>{d}</Option>);
-    const cargosOptions = cargos.map(d => <Option key={d.keyno} value={d.keyno}>{d.cargonamec}</Option>);
+    const cargosOptions = cargos.map(d => <Option key={d.cargonamec} value={d.cargonamec}>{d.cargonamec}</Option>);
     const applicantContactsOptions = applicantContacts.map(d => <Option key={d.keyno}
                                                                         value={d.keyno}>{d.contactName}</Option>);
     const agentContactsOptions = agentContacts.map(d => <Option key={d.keyno} value={d.keyno}>{d.contactName}</Option>);

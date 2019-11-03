@@ -15,6 +15,14 @@ class DetailForEnturstment extends Component {
     visible: false ,
     showVisible:false,
     url:"",
+    cnasInfo: {
+      checkcode: '',
+      checkname: '',
+      domaincode: '',
+      domainname: '',
+      subdomaincode: '',
+      subdomainname: '',
+    },
   };
   columns = [
     {
@@ -50,6 +58,7 @@ class DetailForEnturstment extends Component {
   componentWillMount() {
     const reportnNo = sessionStorage.getItem("reportno");
     const { dispatch } = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'entrustment/getReport',
       payload: reportnNo,
@@ -62,7 +71,23 @@ class DetailForEnturstment extends Component {
       }
     });
   }
-
+  componentDidMount(){
+    const {       
+      entrustment:{ report  },
+      dispatch 
+    } = this.props;
+    dispatch({
+      type: 'entrustment/getCnasInfo',
+      payload: {
+        checkCode:report.cnasCode,
+      },
+      callback: (response) => {
+        if (response.code === 200) {
+          this.setState({cnasInfo: response.data});
+        }
+      }
+    });
+  }
   previewItem = text => {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
@@ -129,7 +154,7 @@ class DetailForEnturstment extends Component {
       loading 
     } = this.props;
     const { report  } = entrustment;
-    const { showVisible ,url} = this.state; 
+    const { showVisible ,url, cnasInfo} = this.state; 
     return (
       <PageHeaderWrapper loading={loading}>
         <Card bordered={false}>
@@ -187,6 +212,39 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="检验备注" >{report.inspwaymemo1}</Descriptions.Item>
           </Descriptions>
         </Card>
+        <Card title="检查项目" className={styles.card} bordered={false}>
+          <table width="100%" border={1}>
+            <tr>
+              <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可领域及代码</td>
+              <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可子领域代码</td>
+              <td width="15%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
+              </td>
+              <td width="12%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>检查项目及代码
+              </td>
+              <td style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查项目</td>
+            </tr>
+            <tr>
+              <td style={{'padding': '10px'}}>{cnasInfo.domaincode}{<br />}{cnasInfo.domainname}</td>
+              <td style={{'padding': '10px'}}>{cnasInfo.subdomaincode}{<br />}{cnasInfo.subdomainname}</td>
+              <td style={{'padding': '10px'}}>{cnasInfo.checkcode}{<br />}{cnasInfo.checkname}</td>
+              <td style={{'padding': '10px'}}>
+              {report.cnasProject}
+              </td>
+              <td style={{'padding': '10px'}}>
+                <Row>
+                  <Col span={24}>
+                    <span>申请项目:{report.inspway}</span>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <span>检验备注:{report.inspwaymemo1}</span>
+                  </Col>
+                </Row>
+              </td>
+            </tr>
+          </table>
+        </Card>  
         <Card bordered={false}  title="附件">
           <div>
             <Table
