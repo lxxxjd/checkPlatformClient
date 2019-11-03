@@ -105,8 +105,8 @@ export async function getTestStandard(params) {
   return request(`/api/TestStandard/getTestStandard?cargoname=${params.cargoname}&item=${params.item}`);
 }
 
-export async function getSamplesByApplicant(params) {
-  return request(`/api/sampleRegister/getSamplesByApplicant?kind=${params.kind}&value=${params.value}`);
+export async function getSamplesByFilter(params) {
+  return request(`/api/sampleRegister/getSamplesByFilter?kind=${params.kind}&value=${params.value}&certCode=${params.certCode}`);
 }
 
 export async function deleteDetails(params) {

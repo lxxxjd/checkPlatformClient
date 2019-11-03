@@ -17,12 +17,13 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
+import Search from './SampleSearch.js'
 
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-
+const SearchForm = Form.create()(Search);
 /* eslint react/no-multi-comp:0 */
 @connect(({ inspectionAnalysis, loading }) => ({
   inspectionAnalysis,
@@ -216,7 +217,24 @@ class SampleModify extends PureComponent {
     });
     this.setState({onDetail:true});
   };
-
+  columns3 = [
+    {
+      title: '指标名称',
+      dataIndex: 'itemC',
+    },
+    {
+      title: '英文名称',
+      dataIndex: 'itemE',
+    },
+    {
+      title: '检测标准',
+      dataIndex: 'teststandard',
+    },
+    {
+      title: '单位',
+      dataIndex: 'unit',
+    },
+  ];
   componentDidMount () {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
@@ -351,12 +369,14 @@ class SampleModify extends PureComponent {
   showLoad = ()=>{
     this.setState({onLoad:true}) ;
     const applicant = sessionStorage.getItem('applicant');
+    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const { dispatch } = this.props;
     dispatch({
-      type: 'inspectionAnalysis/getSamplesByApplicant',
+      type: 'inspectionAnalysis/getSamplesByFilter',
       payload:{
         kind: 'applicant',
-        value: applicant
+        value: applicant ,
+        certCode ,
       }
     });
   };
@@ -452,6 +472,7 @@ class SampleModify extends PureComponent {
             onCancel={this.handleCancel}
             width={800}
           >
+            <div className={styles.tableListForm}><SearchForm></SearchForm></div>
             <Table
               size='middle'
               rowKey="keyno"
@@ -495,7 +516,7 @@ class SampleModify extends PureComponent {
               loading={loading}
               dataSource={details}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
-              columns={this.columns}
+              columns={this.columns3}
             />
           </Modal>
         </Card>

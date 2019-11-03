@@ -1,6 +1,6 @@
 import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
   getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,
-  deleteTestBySampleNo,updateTestInfo,getSamplesByApplicant,loadDetails,getTestStandard,modifyDetail} from '@/services/InspectionAnalysis'
+  deleteTestBySampleNo,updateTestInfo,getSamplesByFilter,loadDetails,getTestStandard,modifyDetail} from '@/services/InspectionAnalysis'
 
 
 
@@ -24,8 +24,8 @@ export default {
   },
 
   effects: {
-    *getSamplesByApplicant({ payload,callback }, { call, put }) {
-      const response = yield call(getSamplesByApplicant, payload);
+    *getSamplesByFilter({ payload,callback }, { call, put }) {
+      const response = yield call(getSamplesByFilter, payload);
       yield put({
         type: 'getSamples',
         payload:response,

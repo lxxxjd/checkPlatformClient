@@ -225,7 +225,12 @@ class DetailForSub extends PureComponent {
   };
 
   onChange = e =>{
+    const {
+      form
+    } = this.props;
     this.setState({showPrice:e.target.value});
+    form.setFieldsValue({['price']: null });
+    form.setFieldsValue({['totalfee']: null });
   };
 
   back = () =>{
@@ -236,13 +241,19 @@ class DetailForSub extends PureComponent {
     const {
       form
     } = this.props;
-    const { report, priceMakeing} = this.state;
+    const { report, priceMakeing,showPrice} = this.state;
     const price = form.getFieldValue('price');
     if(price !=="" && price !== undefined){
-      if(priceMakeing.quantity !=="" && priceMakeing.quantity !== undefined){
-        form.setFieldsValue({['totalfee']: price * parseFloat(priceMakeing.quantity) });
-      }else if(report.quantity !=="" && report.quantity !== undefined) {
-        form.setFieldsValue({['totalfee']: price * parseFloat(report.quantityd) });
+      if(showPrice === '按单价'){
+        if(priceMakeing.quantity !=="" && priceMakeing.quantity !== undefined){
+          form.setFieldsValue({['totalfee']: price * parseFloat(priceMakeing.quantity) });
+        }else if(report.quantity !=="" && report.quantity !== undefined) {
+          form.setFieldsValue({['totalfee']: price * parseFloat(report.quantityd) });
+        }
+      }else if(showPrice === '按比例'){
+        if(priceMakeing.total !=="" && priceMakeing.total !== undefined){
+          form.setFieldsValue({['totalfee']: price * parseFloat(priceMakeing.total) });
+        }
       }
     }
   };
