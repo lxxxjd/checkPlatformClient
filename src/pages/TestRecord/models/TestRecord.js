@@ -12,6 +12,10 @@ export default {
       list: [],
       pagination: {},
     },
+    report:{
+      list: [],
+      pagination: {},
+    },
     inspwayData:[],
     projectData:[],
     recordData:[],
@@ -33,7 +37,7 @@ export default {
     *getRecordList({ payload,callback }, { call, put }) {
       const response = yield call(getRecordList, payload);
       yield put({
-        type: 'getReport',
+        type: 'getRecordLists',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -146,6 +150,12 @@ export default {
         url : payload.data,
       };
     },
+    getRecordLists(state, { payload }) {
+      return {
+        ...state,
+        data : payload.data,
+      };
+    },
     getRecords(state, { payload }) {
       return {
         ...state,
@@ -155,7 +165,7 @@ export default {
     getReport(state, { payload }) {
       return {
         ...state,
-        data: payload.data,
+        report: payload.data,
       };
     },
     getProjects(state, { payload }) {

@@ -58,9 +58,6 @@ class CertificateFinal extends PureComponent {
         }
         var  contentStr = [];
         contentStr = text.split("|");
-        if (contentStr.length < 2) {
-          return text;
-        }
         var result = null;
         const br = <br></br>;
         var pattern = /\.{1}[a-z]{1,}$/;
