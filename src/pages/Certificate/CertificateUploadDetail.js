@@ -27,7 +27,6 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
 import { SiderTheme } from 'antd/lib/layout/Sider';
 import styles from './Certificate.less';
-import PDF from 'react-pdf-js';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
