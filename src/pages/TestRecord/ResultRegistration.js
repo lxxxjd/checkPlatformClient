@@ -167,7 +167,7 @@ class ResultRegistration extends PureComponent {
 
   render() {
     const {
-      testRecord:{data},
+      testRecord:{report},
       loading,
     } = this.props;
     return (
@@ -178,7 +178,7 @@ class ResultRegistration extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={data.list}
+              dataSource={report.list}
               columns={this.columns}
               rowKey="reportno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}

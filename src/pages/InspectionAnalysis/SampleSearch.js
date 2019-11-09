@@ -18,7 +18,7 @@ import styles from './Search.less';
   inspectionAnalysis,
   loading: loading.models.inspectionAnalysis,
 }))
-class Search  extends PureComponent {
+class SampleSearch  extends PureComponent {
 	handleSearch = e => {
 	    e.preventDefault();
 	    const { dispatch, form } = this.props;
@@ -30,11 +30,9 @@ class Search  extends PureComponent {
 	      const values = {
 	        ...fieldsValue,
 	        certCode:certCode,
-	        kind :fieldsValue.kind,
-	        value: fieldsValue.value,
 	      };
 	      dispatch({
-      		type: 'inspectionAnalysis/getAllSampleAndTestMan',
+      		type: 'inspectionAnalysis/getSamplesByFilter',
 	        payload: values,
 	      });
 	    });
@@ -48,7 +46,7 @@ class Search  extends PureComponent {
 	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
 	    const { dispatch } = this.props;
 	    dispatch({
-      		type: 'inspectionAnalysis/getAllSampleAndTestMan',
+      		type: 'inspectionAnalysis/getSamplesByFilter',
       		payload:{
          		certCode : certCode,
      		}
@@ -62,7 +60,7 @@ class Search  extends PureComponent {
 	    return (
 	      <Form onSubmit={this.handleSearch} layout="inline" >
 	        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-	          <Col md={3} sm={20}>
+	          <Col span={6}>
 	            <Form.Item
 	              labelCol={{ span: 5 }}
 	              wrapperCol={{ span: 6 }}
@@ -72,8 +70,7 @@ class Search  extends PureComponent {
 	                rules: [{  message: '搜索类型' }],
 	              })(
 	                <Select placeholder="搜索类型">
-	                 <Option value="reportno">委托编号</Option>
-	                  <Option value="shipname">船名标识</Option>
+	                 <Option value="applicant">委托人</Option>
 	                  <Option value="cargoname">检查品名</Option>
 	                  <Option value="sampleno">样品编号</Option>
 	                  <Option value="samplename">样品名称</Option>
@@ -81,7 +78,7 @@ class Search  extends PureComponent {
 	              )}
 	            </Form.Item>
 	          </Col>
-	          <Col md={6} sm={20}>
+	          <Col span={8}>
 	            <FormItem>
 	              {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
 	            </FormItem>
@@ -102,4 +99,4 @@ class Search  extends PureComponent {
 	    );
 	 }
 }
-export default Search;
+export default SampleSearch;

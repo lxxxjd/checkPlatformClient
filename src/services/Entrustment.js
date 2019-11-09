@@ -4,28 +4,32 @@ import { stringify } from 'qs';
 export async function submitApplication(params) {
 	const inspway = params.inspway.join(' ');
 	const certstyle = params.certstyle.join('');
-    params.inspway = inspway;
-    params.certstyle = certstyle;
-  	return request('/api/report/add_report', {
-    	method: 'POST',
-    	data: {
-      	...params,
-      	method: 'post',
-    	},
-  	});
+  const cnasProject = params.cnasProject.join(' ');
+  params.inspway = inspway;
+  params.certstyle = certstyle;
+  params.cnasProject = cnasProject;
+	return request('/api/report/add_report', {
+  	method: 'POST',
+  	data: {
+    	...params,
+    	method: 'post',
+  	},
+	});
 }
 export async function updateReport(params) {
   const inspway = params.inspway.join(' ');
   const certstyle = params.certstyle.join('');
-    params.inspway = inspway;
-    params.certstyle = certstyle;
-    return request('/api/report/update_report', {
-      method: 'POST',
-      data: {
-        ...params,
-        method: 'post',
-      },
-    });
+  const cnasProject = params.cnasProject.join(' ');
+  params.inspway = inspway;
+  params.certstyle = certstyle;
+  params.cnasProject = cnasProject;
+  return request('/api/report/update_report', {
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
 }
 
 export async function queryAllReports(params) {

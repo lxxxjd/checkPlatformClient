@@ -285,6 +285,7 @@ class ModifyForEntrustment extends PureComponent {
       form: {validateFieldsAndScroll},
       dispatch,
     } = this.props;
+    const { cnasInfo } = this.state;
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const reportno = sessionStorage.getItem('reportno');
@@ -300,6 +301,7 @@ class ModifyForEntrustment extends PureComponent {
             section: user.section,
             reportplace: user.place,
             reportno,
+            cnasCode: cnasInfo.checkcode
           },
           callback: (response) => {
             if (response.code === 200) {
@@ -373,7 +375,7 @@ class ModifyForEntrustment extends PureComponent {
     const {form, dispatch} = this.props;
     const {cargos} = this.state;
     for (const cargo in cargos) {
-      if (cargos[cargo].keyno === value) {
+      if (cargos[cargo].cargonamec === value) {
         const checkCode = cargos[cargo].checkCode;
         dispatch({
           type: 'entrustment/getCnasInfo',
@@ -429,7 +431,7 @@ class ModifyForEntrustment extends PureComponent {
     const {form} = this.props;
     const {applicantContacts} = this.state;
     for (const applicantContact in applicantContacts) {
-      if (applicantContacts[applicantContact].keyno === e) {
+      if (applicantContacts[applicantContact].keyno === value) {
         form.setFieldsValue({'applicanttel': applicantContacts[applicantContact].contactPhone});
         break;
       }
@@ -439,7 +441,7 @@ class ModifyForEntrustment extends PureComponent {
     const {form} = this.props;
     const {agentContacts} = this.state;
     for (const agentContact in agentContacts) {
-      if (agentContacts[agentContact].keyno === e) {
+      if (agentContacts[agentContact].keyno === value) {
         form.setFieldsValue({'agenttel': agentContacts[agentContact].contactPhone});
         break;
       }
@@ -456,7 +458,7 @@ class ModifyForEntrustment extends PureComponent {
     const businessSortOptions = businessSort.map(d => <Option key={d} value={d}>{d}</Option>);
     const businessSourceOptions = businessSource.map(d => <Option key={d} value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d} value={d}>{d}</Option>);
-    const cargosOptions = cargos.map(d => <Option key={d.keyno} value={d.keyno}>{d.cargonamec}</Option>);
+    const cargosOptions = cargos.map(d => <Option key={d.cargonamec} value={d.cargonamec}>{d.cargonamec}</Option>);
     const applicantContactsOptions = applicantContacts.map(d => <Option key={d.keyno}
                                                                         value={d.keyno}>{d.contactName}</Option>);
     const agentContactsOptions = agentContacts.map(d => <Option key={d.keyno} value={d.keyno}>{d.contactName}</Option>);
@@ -511,7 +513,6 @@ class ModifyForEntrustment extends PureComponent {
                       showSearch
                       placeholder="请选择联系人"
                       filterOption={false}
-                      onSearch={this.handleSearch}
                       onChange={this.onAppliantNameChange}
                     >
                       {applicantContactsOptions}
@@ -579,7 +580,7 @@ class ModifyForEntrustment extends PureComponent {
                       showSearch
                       placeholder="请选择联系人"
                       filterOption={false}
-                      onSearch={this.handleSearch}
+                      onChange={this.onAgentNameChange}
                     >
                       {agentContactsOptions}
                     </Select>
