@@ -464,6 +464,24 @@ export default [
         ],
       },
 
+      //Dict
+      {
+        path: '/DictMaintain',
+        icon: 'profile',
+        name: 'DictMaintain',
+        routes: [
+          {
+            path: '/DictMaintain/CargoList',
+            name: 'CargoList',
+            component: './DictMaintain/CargoList',
+          },
+
+        ],
+      },
+
+
+
+
       {
         component: '404',
       },

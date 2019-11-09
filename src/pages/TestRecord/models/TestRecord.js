@@ -12,10 +12,7 @@ export default {
       list: [],
       pagination: {},
     },
-    report:{
-      list: [],
-      pagination: {},
-    },
+    report:{},
     inspwayData:[],
     projectData:[],
     recordData:[],
