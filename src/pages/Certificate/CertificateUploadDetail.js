@@ -2,7 +2,6 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 
-
 import {
   Layout,
   Row,
@@ -26,8 +25,9 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
-import styles from './Certificate.less';
 import { SiderTheme } from 'antd/lib/layout/Sider';
+import styles from './Certificate.less';
+import PDF from 'react-pdf-js';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
@@ -41,7 +41,6 @@ const CreateUploadForm = Form.create()(props => {
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
-        console.log(err);
         return;
       }
       form.resetFields();
@@ -132,8 +131,9 @@ class CertificateUploadDetail extends PureComponent {
     fileList: [],
     modelName:[],
     showVisible:false,
-    urls:{},
 
+    Certurls:"",
+    urls:"",
     report:[],
     // 切换tab签署页面
     value:'0-0-0',
@@ -143,6 +143,28 @@ class CertificateUploadDetail extends PureComponent {
 
     // 本委托检验信息
     checkResultData:[],
+
+
+    // 关联委托的信息
+    sampleDataLink:[],
+
+    // 关联委托的检验信息
+    checkResultDataLink:[],
+
+    // 附件
+    treeData: [
+      { title: '本委托', key: '0-0',children: [
+          { title: '委托', key: '0-0-0', isLeaf: true },
+          { title: '品质', key: '0-0-1', isLeaf: true },
+          { title: '检验', key: '0-0-2', isLeaf: true },
+        ],},
+
+      { title: '关联委托', key: '0-1',children: [
+          { title: '委托', key: '0-1-0', isLeaf: true },
+          { title: '品质', key: '0-1-1', isLeaf: true },
+        ],},
+      { title: '附件', key: '0-2',children: [],},
+    ],
 
   };
 
@@ -204,8 +226,26 @@ class CertificateUploadDetail extends PureComponent {
       type: 'certificate/getReport',
       payload: reportnNo,
       callback: (response) => {
-        console.log(response);
         this.setState({report:response});
+      }
+    });
+
+    // 获取附件信息
+    dispatch({
+      type: 'certificate/getRecordInfo',
+      payload:{reportno:reportnNo},
+      callback: (response) => {
+        if(response){
+          if(response.data !==undefined && response.data !==null &&response.data.length>0){
+            for(const value of response.data) {
+              const data={
+                title: value.recordname,
+                key:value.id,
+              }
+              this.state.treeData[2].children.push(data);
+            }
+          }
+        }
       }
     });
 
@@ -227,35 +267,13 @@ class CertificateUploadDetail extends PureComponent {
       payload:params,
       callback: (response) => {
         if(response.code === 200){
-          this.setState({urls:response.data});
+          this.setState({Certurls:response.data});
           this.setState({showVisible:true});
         }else {
           message.success("打开签署文件失败");
         }
       }
     });
-
-    // dispatch({
-    //   type: 'certificate/signCertFile',
-    //   payload:{
-    //      ...text,
-    //   },
-    //   callback: (response) => {
-    //     if(response.code === 400){
-    //       notification.open({
-    //         message: '签署失败',
-    //         description:response.message,
-    //       });
-    //     }else{
-    //       dispatch({
-    //         type: 'certificate/getCertFiles',
-    //         payload:{
-    //            reportno,
-    //         }
-    //       });
-    //     }
-    //   }
-    // });
 
   };
 
@@ -285,30 +303,7 @@ class CertificateUploadDetail extends PureComponent {
       }
     });
 
-    //
-    // // 获取品质信息
-    // dispatch({
-    //   type: 'certificate/getSampleDetailFetch',
-    //   payload:{reportno},
-    //   callback: (response) => {
-    //     console.log(response);
-    //     if(response){
-    //       this.state.sampleData = response.data;
-    //     }
-    //   }
-    // });
 
-    // 获取检验信息
-    dispatch({
-      type: 'certificate/getCheckResultFetch',
-      payload:{reportno},
-      callback: (response) => {
-        console.log(response);
-        if(response){
-          this.state.checkResultData = response.data;
-        }
-      }
-    });
 
 
   };
@@ -503,7 +498,6 @@ class CertificateUploadDetail extends PureComponent {
       return;
     }
     this.setState({ fileList});
-    console.log(fileList)
   };
 
   handleBeforeUpload = file => {
@@ -546,7 +540,6 @@ class CertificateUploadDetail extends PureComponent {
         }
       }
     });
-    console.log(params);
     this.setState({
       downloadVisible: false,
     });
@@ -591,49 +584,77 @@ class CertificateUploadDetail extends PureComponent {
 
   // 树控件的目录数据
   onSelect = (selectedKeys, info) => {
-    this.setState({value:selectedKeys[0]});
+    this.setState({ value: selectedKeys[0] });
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    const params={
+    const params = {
       reportno,
     }
-    if(selectedKeys[0] === '0-0-2'){
+    if (selectedKeys[0] === '0-0-2') {
       dispatch({
         type: 'certificate/getCheckResultFetch',
-        payload:params,
+        payload: params,
         callback: (response) => {
-          console.log(response);
-          if(response){
+          if (response) {
             this.state.checkResultData = response.data;
           }
         }
       });
-    }else if(selectedKeys[0] === '0-0-1'){
+    } else if (selectedKeys[0] === '0-0-1') {
       dispatch({
         type: 'certificate/getSampleDetailFetch',
-        payload:params,
+        payload: params,
         callback: (response) => {
-          if(response){
+          if (response) {
             this.state.sampleData = response.data;
+          }
+        }
+      });
+    } else if (selectedKeys[0] === '0-1-0') {
+      dispatch({
+        type: 'certificate/getSampleDetailForLink',
+        payload: params,
+        callback: (response) => {
+          if (response) {
+            this.state.sampleDataLink = response.data;
+          }
+        }
+      });
+    } else if (selectedKeys[0] === '0-1-1') {
+      dispatch({
+        type: 'certificate/getCheckResultForLink',
+        payload: params,
+        callback: (response) => {
+          if (response) {
+            this.state.checkResultDataLink = response.data;
+          }
+        }
+      });
+    } else if (selectedKeys[0] === '0-0' || selectedKeys[0] === '0-1' || selectedKeys[0] === '0-2' || selectedKeys[0] === '0-0-0') {
+      return null;
+    } else {
+      // 附件的url
+      dispatch({
+        type: 'certificate/getPdfUrlFetch',
+        payload: { id: selectedKeys[0] },
+        callback: (pdfresponse) => {
+          if (pdfresponse) {
+            this.state.urls = pdfresponse.data;
           }
         }
       });
 
 
     }
-  };
+  }
 
-  renderTreeNodes = data =>
-    data.map(item => {
-      if (item.children) {
-        return (
-          <TreeNode title={item.title} key={item.key} dataRef={item}>
-            {this.renderTreeNodes(item.children)}
-          </TreeNode>
-        );
-      }
-      return <TreeNode key={item.key} {...item} dataRef={item} />;
-    });
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  }
 
   // eslint-disable-next-line class-methods-use-this
   // 委托的信息
@@ -676,11 +697,11 @@ class CertificateUploadDetail extends PureComponent {
   }
 
 
-  renderLinkFileForm() {
-    const {urls} = this.state;
+  renderLinkFileForm (){
+    const  {urls}  = this.state;
     return (
       <div style={{width:620,backgroundColor:'white'}}>
-        <embed src={urls} width={620} height="600" />
+        <embed runat="server" src={urls} width={620} height="600" />
       </div>
     );
   }
@@ -712,6 +733,7 @@ class CertificateUploadDetail extends PureComponent {
 
   renderSampleForm(){
     const {sampleData} = this.state;
+    const {loading} = this.props;
     return (
       <div style={{width:620,backgroundColor:'white'}}>
         <Table
@@ -719,13 +741,15 @@ class CertificateUploadDetail extends PureComponent {
           dataSource={sampleData}
           columns={this.sampleColumns}
           rowKey="sampleno"
+          loading={loading}
           pagination={{showQuickJumper:true,showSizeChanger:true}}
         />
       </div>
     );
   }
 
-  // 检验信息数据
+
+  // ---------------------检验信息数据
   // 品质的信息
   checkColumns = [
     {
@@ -735,6 +759,26 @@ class CertificateUploadDetail extends PureComponent {
     {
       title: '仪器名称',
       dataIndex: 'instrument',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
     },
     {
       title: '检验人员',
@@ -743,10 +787,13 @@ class CertificateUploadDetail extends PureComponent {
     {
       title: '开始日期',
       dataIndex: 'begindate',
+      render: val => this.isValidDate(val),
+
     },
     {
       title: '结束日期',
       dataIndex: 'finishdate',
+      render: val => this.isValidDate(val),
     },
     {
       title: '重量',
@@ -760,6 +807,7 @@ class CertificateUploadDetail extends PureComponent {
 
   renderCheckForm(){
     const {checkResultData} = this.state;
+    const {loading} = this.props;
     return (
       <div style={{width:620,backgroundColor:'white'}}>
         <Table
@@ -767,11 +815,168 @@ class CertificateUploadDetail extends PureComponent {
           dataSource={checkResultData}
           columns={this.checkColumns}
           rowKey="keyno"
+          loading={loading}
           pagination={{showQuickJumper:true,showSizeChanger:true}}
         />
       </div>
     );
   }
+
+
+  // 品质的信息 关联委托
+  // eslint-disable-next-line react/sort-comp
+  sampleColumnsLink = [
+    {
+      title: '委托编号',
+      dataIndex: 'reportno',
+    },
+    {
+      title: '样品编号',
+      dataIndex: 'sampleno',
+    },
+    {
+      title: '样品名称',
+      dataIndex: 'samplename',
+    },
+    {
+      title: '检查项目',
+      dataIndex: 'itemC',
+    },
+    {
+      title: '检验标准',
+      dataIndex: 'teststandard',
+    },
+    {
+      title: '结果',
+      dataIndex: 'weight',
+    }
+  ];
+
+  renderSampleFormLink(){
+    const {sampleDataLink} = this.state;
+    const {loading} = this.props;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={sampleDataLink}
+          columns={this.sampleColumnsLink}
+          rowKey="sampleno"
+          loading={loading}
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
+
+
+  // ---------------------检验信息数据，关联委托
+  // 品质的信息
+  checkColumnsLink = [
+    {
+      title: '委托编号',
+      dataIndex: 'reportno',
+    },
+    {
+      title: '检验项目',
+      dataIndex: 'inspway',
+    },
+    {
+      title: '仪器名称',
+      dataIndex: 'instrument',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
+      title: '检验人员',
+      dataIndex: 'inspman',
+    },
+
+    {
+      title: '开始日期',
+      dataIndex: 'begindate',
+      render: val => this.isValidDate(val),
+
+    },
+    {
+      title: '结束日期',
+      dataIndex: 'finishdate',
+      render: val => this.isValidDate(val),
+    },
+    {
+      title: '重量',
+      dataIndex: 'weight',
+    },
+    {
+      title: '结果',
+      dataIndex: 'result',
+    }
+  ];
+
+  renderCheckFormLink(){
+    const {checkResultDataLink} = this.state;
+    const {loading} = this.props;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={checkResultDataLink}
+          columns={this.checkColumnsLink}
+          rowKey="keyno"
+          loading={loading}
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
+
+
+  renderTreeNodes = data =>
+    data.map(item => {
+      if (item.children) {
+        return (
+          <TreeNode title={item.title} key={item.key} dataRef={item}>
+            {this.renderTreeNodes(item.children)}
+          </TreeNode>
+        );
+      }
+      return <TreeNode key={item.key} {...item} dataRef={item} />;
+    });
+
+  renderFileInfo =(value)=>{
+    const {pdfFileEmbed} = this.state;
+    if(value === '0-0-0')
+      return this.renderReportForm();
+    if(value === '0-0-1')
+      return this.renderSampleForm();
+    if(value === '0-0-2')
+      return this.renderCheckForm();
+    if(value === '0-1-0')
+      return this.renderSampleFormLink();
+    if(value === '0-1-1')
+      return this.renderCheckFormLink();
+    //this.renderLinkFileForm().remove();
+      return this.renderLinkFileForm();
+  }
+
 
 
   render() {
@@ -787,7 +992,7 @@ class CertificateUploadDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,urls,value} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
     // 下载模板 模态框方法
@@ -852,39 +1057,23 @@ class CertificateUploadDetail extends PureComponent {
           visible={showVisible}
           onCancel={this.showCancel}
           style={{ top: 10 }}
-          width={1450}
+          width={1500}
         >
           <Layout>
             <Content>
               <div style={{backgroundColor:'white'}}>
                 <Row>
                   <Form>
-                    <Col span={12}>  <embed src={urls} width={620} height="600" /></Col>
+                    <Col span={12}>  <embed src={Certurls} width={620} height="600" /></Col>
                     <Col span={12}>
-                      {value === '0-0-0'?[this.renderReportForm()]:[]}
-                      {value === '0-0-1'?[this.renderSampleForm()]:[]}
-                      {value === '0-0-2'?[this.renderCheckForm()]:[]}
+                      {this.renderFileInfo(value)}
                     </Col>
                   </Form>
                 </Row>
               </div>
             </Content>
-            <Sider theme='light' width={130} style={{paddingLeft:15}}>
-              <Tree showLine defaultExpandedKeys={['0-0-0']} defaultExpandParent onSelect={this.onSelect}>
-                <TreeNode title="本委托" key="0-0">
-                  <TreeNode title="委托" key="0-0-0" />
-                  <TreeNode title="品质" key="0-0-1" />
-                  <TreeNode title="检验" key="0-0-2" />
-                </TreeNode>
-                <TreeNode title="关联委托" key="0-1">
-                  <TreeNode title="品质" key="0-1-0" />
-                  <TreeNode title="检验" key="0-1-1" />
-                </TreeNode>
-                <TreeNode title="附件" key="0-2">
-                  <TreeNode title="品质" key="0-2-0" />
-                  <TreeNode title="检验" key="0-2-1" />
-                </TreeNode>
-              </Tree>
+            <Sider theme='light' width={180} style={{paddingLeft:15}}>
+              <Tree showLine defaultExpandedKeys={['0-0-0']} defaultExpandParent onSelect={this.onSelect}>{this.renderTreeNodes(this.state.treeData)}</Tree>
             </Sider>
           </Layout>
         </Modal>

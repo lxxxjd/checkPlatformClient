@@ -1,4 +1,5 @@
-import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,getCheckResult} from '@/services/Certificate'
+import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,
+  getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl} from '@/services/Certificate'
 
 import {getOssPdf} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
@@ -14,9 +15,15 @@ export default {
     ossPdfResult:{},
     report:[],
     // 品质信息的返回结果
-    sampleDataResult:[],
+    sampleDataResult:{},
     // 检查结果返回结果
     checkResultData:{},
+
+    // 关联委托的信息
+    sampleDetailForLinkResult:{},
+    checkResultForLinkResult:{},
+    recordinfoResult:{},
+    pdfResult:{}
   },
 
   effects: {
@@ -105,6 +112,44 @@ export default {
       if (callback) callback(response);
     },
 
+    *getSampleDetailForLink({ payload,callback }, { call, put }) {
+      const response = yield call(getSampleDetailForLink, payload);
+      yield put({
+        type: 'getSampleDetailForLinkResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+
+    *getCheckResultForLink({ payload,callback }, { call, put }) {
+      const response = yield call(getCheckResultForLink, payload);
+      yield put({
+        type: 'getCheckResultForLinkResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+    *getRecordInfo({ payload,callback }, { call, put }) {
+      const response = yield call(getRecordInfo, payload);
+      yield put({
+        type: 'getRecordInfoResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+    *getPdfUrlFetch({ payload,callback }, { call, put }) {
+      const response = yield call(getPdfUrl, payload);
+      yield put({
+        type: 'getPdfUrlResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+
   },
 
   reducers: {
@@ -145,7 +190,7 @@ export default {
     getSampleDetailResult(state, { payload }) {
       return {
         ...state,
-        sampleDataResult: payload.data,
+        sampleDataResult: payload,
       };
     },
 
@@ -154,6 +199,36 @@ export default {
       return {
         ...state,
         checkResultData: payload,
+      };
+    },
+
+    //
+
+    getSampleDetailForLinkResult(state, { payload }) {
+      return {
+        ...state,
+        sampleDetailForLinkResult: payload,
+      };
+    },
+
+
+    getCheckResultForLinkResult(state, { payload }) {
+      return {
+        ...state,
+        checkResultForLinkResult: payload,
+      };
+    },
+
+    getRecordInfoResult(state, { payload }) {
+      return {
+        ...state,
+        recordinfoResult: payload,
+      };
+    },
+    getPdfUrlResult(state, { payload }) {
+      return {
+        ...state,
+        pdfResult: payload,
       };
     },
   },

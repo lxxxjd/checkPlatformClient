@@ -66,6 +66,28 @@ export async function getCheckResult(params) {
 }
 
 
+// 签署界面的关联委托的检验信息
+export async function getCheckResultForLink(params) {
+  return request(`/api/report/get_checkResult?reportno=${params.reportno}`);
+}
+
+
+
+// 签署界面的关联委托的品质信息
+export async function getSampleDetailForLink(params) {
+  return request(`/api/report/get_sampleDetail?reportno=${params.reportno}`);
+}
+
+
+// 签署界面的关联委托的品质信息
+export async function getRecordInfo(params) {
+  return request(`/api/recordinfo/get_recordinfo_source?reportno=${params.reportno}`);
+}
+
+// 签署界面的关联委托的品质信息
+export async function getPdfUrl(params) {
+  return request(`/api/recordinfo/get_pdf_url?id=${params.id}`);
+}
 
 
 // get请求 注意 ` 这个符号 不是这种 ’号
