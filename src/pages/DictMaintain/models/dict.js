@@ -1,32 +1,49 @@
-import {} from '@/services/dict';
+import {getCargos , searchCargos, updateCargo, addCargo, deleteCargo} from '@/services/dict';
 
 export default {
   namespace: 'dict',
   state: {
-    // data: [],
+    cargos: [],
   },
   effects: {
-    // *fetch({ payload,callback }, { call, put }) {
-    //   const response = yield call(getAllArchives, payload);
-    //   yield put({
-    //     type: 'save',
-    //     payload: response,
-    //   });
-    //   if (callback) callback(response.data);
-    // },
-
-
-
+    *getCargos({ payload,callback }, { call, put }) {
+      const response = yield call(getCargos, payload);
+      yield put({
+        type: 'getCargo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+    *searchCargos({ payload,callback }, { call, put }) {
+      const response = yield call(searchCargos, payload);
+      yield put({
+        type: 'getCargo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+    *updateCargo({ payload,callback }, { call, put }) {
+      const response = yield call(updateCargo, payload);
+      if (callback) callback(response);
+    },
+    *addCargo({ payload,callback }, { call, put }) {
+      const response = yield call(addCargo, payload);
+      if (callback) callback(response);
+    },
+    *deleteCargo({ payload,callback }, { call, put }) {
+      const response = yield call(deleteCargo, payload);
+      if (callback) callback(response);
+    },
   },
 
   reducers: {
-    /*
-    save(state, { payload }) {
+    
+    getCargo(state, { payload }) {
       return {
         ...state,
-        data: payload.data,
+        cargos: payload.data,
       };
-    }, */
+    }, 
 
 
 

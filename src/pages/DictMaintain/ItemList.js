@@ -32,7 +32,7 @@ const SearchForm = Form.create()(Search);
   loading: loading.models.dict,
 }))
 @Form.create()
-class CargoList extends PureComponent {
+class ItemList extends PureComponent {
   state = {
     visible: false ,
     modalInfo : {} ,
@@ -271,4 +271,4 @@ class CargoList extends PureComponent {
   }
 }
 
-export default CargoList;
+export default ItemList;
