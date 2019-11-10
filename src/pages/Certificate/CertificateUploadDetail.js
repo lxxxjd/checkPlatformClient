@@ -130,6 +130,7 @@ class CertificateUploadDetail extends PureComponent {
     fileList: [],
     modelName:[],
     showVisible:false,
+    text:{}, // 当前信息
 
     Certurls:"",
     urls:"",
@@ -165,6 +166,8 @@ class CertificateUploadDetail extends PureComponent {
       { title: '附件', key: '0-2',children: [],},
     ],
 
+    option:"",
+
   };
 
   columns = [
@@ -199,10 +202,12 @@ class CertificateUploadDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          {(typeof(text.status)===undefined || text.status === "" || text.status === null ||text.status==="未签")?[<a onClick={() => this.signCertFile(text, record)}>签署&nbsp;&nbsp;</a>]:[]}
-          {text.status==="已签署"?[<a onClick={() => this.reviewCertFile(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
-          {text.status==="已复核"?[<a onClick={() => this.sealCertFile(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
+          {(typeof(text.status)===undefined || text.status === "" || text.status === null ||text.status==="未签")?[<a onClick={() => this.signItem(text, record)}>签署&nbsp;&nbsp;</a>]:[]}
+          {text.status==="已签署"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
+          {text.status==="已复核"?[<a onClick={() => this.sealItem(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.ViewItem(text, record)}>详情</a>
           &nbsp;&nbsp;
         </Fragment>
       ),
@@ -217,6 +222,9 @@ class CertificateUploadDetail extends PureComponent {
       type: 'certificate/getCertFiles',
       payload:{
          reportno,
+      },
+      callback: (response) => {
+        console.log(response);
       }
     });
 
@@ -247,8 +255,21 @@ class CertificateUploadDetail extends PureComponent {
         }
       }
     });
+  }
 
-
+  ViewItem = text =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'certificate/getPdfByOssPath',
+      payload:{osspath:text.pdfpath},
+      callback: (response) => {
+        if(response.code === 200){
+          window.open(response.data);
+        }else {
+          message.success("打开文件失败");
+        }
+      }
+    });
   }
 
   signCertFile = text =>{
@@ -259,8 +280,6 @@ class CertificateUploadDetail extends PureComponent {
     const params ={
       osspath:text.pdfpath
     }
-
-
     dispatch({
       type: 'certificate/getOssPdf',
       payload:params,
@@ -268,6 +287,7 @@ class CertificateUploadDetail extends PureComponent {
         if(response.code === 200){
           this.setState({Certurls:response.data});
           this.setState({showVisible:true});
+          this.setState({text:text});
         }else {
           message.success("打开签署文件失败");
         }
@@ -276,7 +296,10 @@ class CertificateUploadDetail extends PureComponent {
 
   };
 
-  reviewCertFile = text =>{
+
+
+  reviewCertFile = () =>{
+    const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     text.reviewer = "test";
@@ -301,13 +324,58 @@ class CertificateUploadDetail extends PureComponent {
         }
       }
     });
-
-
-
-
+    this.setState({showVisible:false});
   };
 
-  sealCertFile = text =>{
+  handleSign =()=>{
+    const{text} = this.state;
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    text.signer = "test";
+    dispatch({
+      type: 'certificate/signCertFile',
+      payload:{
+        ...text,
+      },
+      callback: (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '签署失败',
+            description:response.message,
+          });
+        }else{
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+              reportno,
+            }
+          });
+        }
+      }
+    });
+    this.setState({showVisible:false});
+
+  }
+
+
+
+  signItem =text=>{
+    this.setState({option:"签署"});
+    this.signCertFile(text);
+  }
+
+  reivewItem =text=>{
+    this.setState({option:"复核"});
+    this.signCertFile(text);
+  }
+
+  sealItem =text=>{
+    this.setState({option:"盖章"});
+    this.signCertFile(text);
+  }
+
+  sealCertFile = () =>{
+    const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
@@ -331,6 +399,7 @@ class CertificateUploadDetail extends PureComponent {
         }
       }
     });
+    this.setState({showVisible:false});
   };
 
   editCerticate = text => {
@@ -615,6 +684,7 @@ class CertificateUploadDetail extends PureComponent {
         payload: params,
         callback: (response) => {
           if (response) {
+            console.log( this.state.sampleDataLink);
             this.state.sampleDataLink = response.data;
           }
         }
@@ -625,6 +695,7 @@ class CertificateUploadDetail extends PureComponent {
         payload: params,
         callback: (response) => {
           if (response) {
+            console.log( this.state.checkResultDataLink);
             this.state.checkResultDataLink = response.data;
           }
         }
@@ -961,7 +1032,6 @@ class CertificateUploadDetail extends PureComponent {
     });
 
   renderFileInfo =(value)=>{
-    const {pdfFileEmbed} = this.state;
     if(value === '0-0-0')
       return this.renderReportForm();
     if(value === '0-0-1')
@@ -972,7 +1042,6 @@ class CertificateUploadDetail extends PureComponent {
       return this.renderSampleFormLink();
     if(value === '0-1-1')
       return this.renderCheckFormLink();
-    //this.renderLinkFileForm().remove();
       return this.renderLinkFileForm();
   }
 
@@ -991,7 +1060,7 @@ class CertificateUploadDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value,option} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
     // 下载模板 模态框方法
@@ -1052,9 +1121,16 @@ class CertificateUploadDetail extends PureComponent {
         <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
 
         <Modal
-          title="签署"
+          title={option}
           visible={showVisible}
           onCancel={this.showCancel}
+          footer={[
+            // 定义右下角 按钮的地方 可根据需要使用 一个或者 2个按钮
+            <Button key="cancel" type="primary" onClick={this.showCancel}> 取消</Button>,
+            option === "签署"?[<Button key="submit1" type="primary" onClick={this.handleSign}>签署</Button>]:[],
+            option === "复核"?[<Button key="submit2" type="primary" onClick={this.reviewCertFile}>复核</Button>]:[],
+            option === "盖章"?[<Button key="submit3" type="primary" onClick={this.sealCertFile}>盖章</Button>]:[],
+          ]}
           style={{ top: 10 }}
           width={1500}
         >

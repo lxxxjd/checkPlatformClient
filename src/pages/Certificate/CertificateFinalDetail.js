@@ -584,9 +584,7 @@ class CertificateFinalDetail extends PureComponent {
 
         <Card bordered={false} size="small">
           <Row>
-            <Col span={22}>
-
-            </Col>
+            <Col span={22} />
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
                 <Icon type="left" />返回
