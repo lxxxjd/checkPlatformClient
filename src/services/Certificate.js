@@ -89,6 +89,11 @@ export async function getPdfUrl(params) {
   return request(`/api/recordinfo/get_pdf_url?id=${params.id}`);
 }
 
+// 签署界面的关联委托的品质信息
+export async function getPdfByOssPath(params) {
+  return request(`/api/cert_report/get_pdf?osspath=${params.osspath}`);
+}
+
 
 // get请求 注意 ` 这个符号 不是这种 ’号
 export async function queryUser1(params) {

@@ -1,4 +1,4 @@
-import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,
+import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPath,
   getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl} from '@/services/Certificate'
 
 import {getOssPdf} from '@/services/TestRecord'
@@ -23,7 +23,8 @@ export default {
     sampleDetailForLinkResult:{},
     checkResultForLinkResult:{},
     recordinfoResult:{},
-    pdfResult:{}
+    pdfResult:{},
+    pdfByOssPathResult:{},
   },
 
   effects: {
@@ -150,6 +151,16 @@ export default {
     },
 
 
+    *getPdfByOssPath({ payload,callback }, { call, put }) {
+      const response = yield call(getPdfByOssPath, payload);
+      yield put({
+        type: 'getPdfByOssPathResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+
   },
 
   reducers: {
@@ -229,6 +240,13 @@ export default {
       return {
         ...state,
         pdfResult: payload,
+      };
+    },
+
+    getPdfByOssPathResult(state, { payload }) {
+      return {
+        ...state,
+        pdfByOssPathResult: payload,
       };
     },
   },
