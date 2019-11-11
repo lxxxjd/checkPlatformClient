@@ -42,25 +42,21 @@ class ItemList extends PureComponent {
   columns = [
     {
       title: '货物名称',
-      dataIndex: 'cargonamec',
+      dataIndex: 'cargonameC',
+    },
+    {
+      title: '指标名称',
+      dataIndex: 'itemC',
     },
     {
       title: '英文名',
-      dataIndex: 'cargonamee',
-    },
-    {
-      title: '货物分类',
-      dataIndex: 'cargosort',
-    },
-    {
-      title: 'CNS编码',
-      dataIndex: 'checkCode',
+      dataIndex: 'itemE',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看指标</a>
+          <a onClick={() => this.previewItem(text, record)}>查看标准</a>
           &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
@@ -96,12 +92,14 @@ class ItemList extends PureComponent {
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    const cargoname =  sessionStorage.getItem('cargoname');
     const { dispatch } = this.props;
     const params = {
-      certCode:user.certCode
+      certCode:user.certCode,
+      cargoname,
     };
     dispatch({
-      type: 'dict/getCargos',
+      type: 'dict/getItemList',
       payload: params,
     });
   }
@@ -208,7 +206,7 @@ class ItemList extends PureComponent {
 
   render() {
     const {
-      dict: {cargos},
+      dict: {items},
       loading,
       dispatch,
       form:{getFieldDecorator}
@@ -229,7 +227,7 @@ class ItemList extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={cargos}
+              dataSource={items}
               columns={this.columns}
               rowKey="cargonamec"
               pagination={{showQuickJumper:true,showSizeChanger:true}}

@@ -26,7 +26,7 @@ export async function updateCargo(params) {
 
 
 export async function getItemList(params) {
-  return request(`/api/testItem/getItemList?certCode=${params.certCode}&cargoname=${params.cargoname}`);
+  return request(`/api/testItem/getItemList?cargoname=${params.cargoname}&certCode=${params.certCode}`);
 }
 
 export async function addCargo(params) {

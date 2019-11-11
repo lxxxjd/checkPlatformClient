@@ -115,10 +115,9 @@ class CargoList extends PureComponent {
 
 
   previewItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
-    localStorage.setItem('reportDetailNo',text.reportno);
+    sessionStorage.setItem('cargoname',text.cargonamec);
     router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
+      pathname:'/DictMaintain/ItemList',
     });
   };
 
@@ -154,6 +153,7 @@ class CargoList extends PureComponent {
             payload: {
               ...values,
               keyno,
+              certCode:user.certCode,
             },
             callback: (response) => {
               if (response.code === 200) {
@@ -175,6 +175,7 @@ class CargoList extends PureComponent {
             type: 'dict/addCargo',
             payload: {
               ...values,
+              certCode:user.certCode,
             },
             callback: (response) => {
               if (response.code === 200) {

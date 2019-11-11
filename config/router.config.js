@@ -475,7 +475,12 @@ export default [
             name: 'CargoList',
             component: './DictMaintain/CargoList',
           },
-
+          {
+            path: '/DictMaintain/ItemList',
+            name: 'ItemList',
+            component: './DictMaintain/ItemList',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 

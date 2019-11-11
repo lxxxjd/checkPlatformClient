@@ -1,15 +1,25 @@
-import {getCargos , searchCargos, updateCargo, addCargo, deleteCargo} from '@/services/dict';
+import {getCargos , searchCargos, updateCargo, addCargo, deleteCargo, getItemList} from '@/services/dict';
 
 export default {
   namespace: 'dict',
   state: {
     cargos: [],
+    items:[],
+
   },
   effects: {
     *getCargos({ payload,callback }, { call, put }) {
       const response = yield call(getCargos, payload);
       yield put({
         type: 'getCargo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+    *getItemList({ payload,callback }, { call, put }) {
+      const response = yield call(getItemList, payload);
+      yield put({
+        type: 'getItem',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -34,6 +44,7 @@ export default {
       const response = yield call(deleteCargo, payload);
       if (callback) callback(response);
     },
+
   },
 
   reducers: {
@@ -44,7 +55,12 @@ export default {
         cargos: payload.data,
       };
     }, 
-
+    getItem(state, { payload }) {
+      return {
+        ...state,
+        items: payload.data,
+      };
+    }, 
 
 
 
