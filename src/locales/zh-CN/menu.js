@@ -68,6 +68,8 @@ export default {
   'menu.Certificate.CertificateFinal':'证书缮制',
   'menu.Certificate.CertificateFinalDetail':'证稿证书详情',
 
+  'menu.DictMaintain.StandardList':'标准管理',
+  'menu.DictMaintain.ItemList':'指标管理',
   'menu.DictMaintain.CargoList':'货物管理',
   'menu.DictMaintain':'字段管理',
 

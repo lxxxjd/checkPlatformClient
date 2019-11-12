@@ -481,6 +481,12 @@ export default [
             component: './DictMaintain/ItemList',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: '/DictMaintain/StandardList',
+            name: 'StandardList',
+            component: './DictMaintain/StandardList',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 

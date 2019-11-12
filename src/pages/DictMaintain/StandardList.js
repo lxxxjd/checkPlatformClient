@@ -18,12 +18,10 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment';
 import styles from '../table.less';
 import cnsOptions from './cnsOptions'
-import Search from './SearchItem.js'
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-const SearchForm = Form.create()(Search);
 
 
 /* eslint react/no-multi-comp:0 */
@@ -32,7 +30,7 @@ const SearchForm = Form.create()(Search);
   loading: loading.models.dict,
 }))
 @Form.create()
-class ItemList extends PureComponent {
+class StandardList extends PureComponent {
   state = {
     visible: false ,
     modalInfo : {} ,
@@ -46,18 +44,20 @@ class ItemList extends PureComponent {
     },
     {
       title: '指标名称',
-      dataIndex: 'itemC',
+      dataIndex: 'item',
     },
     {
-      title: '英文名',
-      dataIndex: 'itemE',
+      title: '标准',
+      dataIndex: 'standard',
+    },
+    {
+      title: '单位',
+      dataIndex: 'unit',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看标准</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
@@ -65,11 +65,10 @@ class ItemList extends PureComponent {
       ),
     },
   ];
-  
   deleteItem = text =>{
     const { dispatch } = this.props;
     dispatch({
-      type: 'dict/deleteItem',
+      type: 'dict/deleteTestStandard',
       payload: {
         keyno : text.keyno,
       },
@@ -87,47 +86,34 @@ class ItemList extends PureComponent {
         }
       }
     });
-  }
+  };
 
 
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const cargoname =  sessionStorage.getItem('cargoname');
+    const item =  sessionStorage.getItem('item');
     const { dispatch } = this.props;
     const params = {
-      certCode:user.certCode,
+      certcode:user.certCode,
       cargoname,
+      item,
     };
     dispatch({
-      type: 'dict/getItemList',
+      type: 'dict/getTestStandard',
       payload: params,
     });
-  }
-
-  isValidDate =date=> {
-    if(date !==undefined && date !==null ){
-      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
-    }
-    return [];
   };
 
-
-  previewItem = text => {
-    sessionStorage.setItem('cargoname',text.cargonameC);
-    sessionStorage.setItem('item',text.itemC);
-    router.push({
-      pathname:'/DictMaintain/StandardList',
-    });
-  };
 
   modifyItem = text => {
     const {form} = this.props;
     this.setState( { visible : true });
     this.setState( { keyno : text.keyno });
     form.setFieldsValue({
-      'itemC': text.itemC,
-      'itemE': text.itemE,
+      'standard': text.standard,
+      'unit': text.unit,
     });
   };
 
@@ -140,14 +126,16 @@ class ItemList extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const cargoname =  sessionStorage.getItem('cargoname');
+      const item =  sessionStorage.getItem('item');
       if (!error) {
         // submit the values
         if(keyno !== null){
           dispatch({
-            type: 'dict/updateItem',
+            type: 'dict/updateTestStandard',
             payload: {
               ...values,
               keyno,
+              item,
               cargoname,
               certcode:user.certCode,
             },
@@ -168,10 +156,11 @@ class ItemList extends PureComponent {
           });
         }else {
           dispatch({
-            type: 'dict/addItem',
+            type: 'dict/addTestStandard',
             payload: {
               ...values,
               cargoname,
+              item,
               certcode:user.certCode,
             },
             callback: (response) => {
@@ -206,29 +195,28 @@ class ItemList extends PureComponent {
 
   render() {
     const {
-      dict: {items},
+      dict: {standards},
       loading,
       dispatch,
       form:{getFieldDecorator}
     } = this.props;
 
     const {  visible } = this.state;
-
-    const parentMethods = {
-      showAdd: this.showAdd,
-    };
-
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
-          <div className={styles.tableListForm}><SearchForm {...parentMethods}></SearchForm></div>
           <div className={styles.tableList}>
+            <div className={styles.tableListForm}>
+              <Button type="primary" style={{ marginBottom: 8 }} onClick={this.showAdd}>
+                新增
+              </Button>
+            </div>
             <Table
               size="middle"
               loading={loading}
-              dataSource={items}
+              dataSource={standards}
               columns={this.columns}
-              rowKey="itemC"
+              rowKey="standard"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
@@ -240,16 +228,16 @@ class ItemList extends PureComponent {
             onCancel={this.handleCancel}
           >
             <Form>
-              <Form.Item label="指标名称">
-                {getFieldDecorator('itemC', {
-                  rules: [{ required: true, message: '请选择分包实验室' }],
+              <Form.Item label="标准名称">
+                {getFieldDecorator('standard', {
+                  rules: [{ required: true, message: '请输入标准名' }],
                 })(
                      <Input />
                   )}
               </Form.Item>
-              <Form.Item label="英文名">
-                {getFieldDecorator('itemE', {
-                  rules: [{ required: true, message: '请输入总计费用' }],
+              <Form.Item label="单位">
+                {getFieldDecorator('unit', {
+                  rules: [{ required: true, message: '请输入单位' }],
                 })(
                     <Input />
                   )}
@@ -261,4 +249,4 @@ class ItemList extends PureComponent {
   }
 }
 
-export default ItemList;
+export default StandardList;

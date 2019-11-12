@@ -78,11 +78,13 @@ class SampleModify extends PureComponent {
   modifyItem = text => {
     const { dispatch ,form} = this.props;
     const cargoname = sessionStorage.getItem('cargoname');
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'inspectionAnalysis/getTestStandard',
       payload:{
         cargoname,
         item:text.itemC,
+        certCode:user.certCode,
       },
     });
     form.setFieldsValue({['teststandard']: text.teststandard});
@@ -387,7 +389,7 @@ class SampleModify extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     const {addMany,onDelete,selectedRowKeys,standard,itemName,deleteRowKeys,onLoad,onDetail,modify} = this.state;
-    const testStandardOptions = testStandards.map(d => <Option key={d} value={d}>{d}</Option>);
+    const testStandardOptions = testStandards.map(d => <Option key={d.standard} value={d.standard}>{d.standard}</Option>);
     const reportno = sessionStorage.getItem('reportno');
     const cargoname = sessionStorage.getItem('cargoname');
     const sampleno = sessionStorage.getItem('sampleno');
