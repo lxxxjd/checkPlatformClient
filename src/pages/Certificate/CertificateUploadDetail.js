@@ -64,7 +64,6 @@ const CreateUploadForm = Form.create()(props => {
       ]}
     >
 
-
       <Form.Item label="记录名称">
         {form.getFieldDecorator('downloadRecordName', {
           rules: [{ required: true, message: '请输入记录名称' }],
