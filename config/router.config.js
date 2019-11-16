@@ -490,7 +490,24 @@ export default [
         ],
       },
 
-
+      //Dict
+      {
+        path: '/CompanyManage',
+        icon: 'profile',
+        name: 'CompanyManage',
+        routes: [
+          {
+            path: '/CompanyManage/CompanyUpload',
+            name: 'CompanyUpload',
+            component: './CompanyManage/CompanyUpload',
+          },
+          {
+            path: '/CompanyManage/CompanySign',
+            name: 'CompanySign',
+            component: './CompanyManage/CompanySign',
+          },
+        ],
+      },
 
 
       {
