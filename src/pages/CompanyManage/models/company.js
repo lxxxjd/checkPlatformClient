@@ -1,22 +1,15 @@
-import {} from '@/services/Company';
+import {uploadFile} from '@/services/Company';
 
 export default {
-  namespace: 'Company',
+  namespace: 'company',
   state: {
     // data: [],
   },
   effects: {
-    // *fetch({ payload,callback }, { call, put }) {
-    //   const response = yield call(getAllArchives, payload);
-    //   yield put({
-    //     type: 'save',
-    //     payload: response,
-    //   });
-    //   if (callback) callback(response.data);
-    // },
-
-
-
+    *uploadFile({ payload,callback }, { call, put }) {
+      const response = yield call(uploadFile, payload);
+      if (callback) callback(response);
+    },
   },
 
   reducers: {

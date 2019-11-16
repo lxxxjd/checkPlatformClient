@@ -44,17 +44,10 @@ function getBase64(file) {
 }))
 class CompanyUpload extends PureComponent {
   state = {
-    formValues: {},
     visible:false,
-    downloadVisible:false,
-    checkProject:[],
-    allCompanyName:[],
-    selectEntrustment:null,
-    showPrice:false,
     previewVisible: false,
     previewImage: '',
     fileList: [],
-    modelName:[],
   };
 
   columns = [
@@ -88,9 +81,6 @@ class CompanyUpload extends PureComponent {
         <Fragment>
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          {(typeof(text.status)===undefined || text.status === "" || text.status === null ||text.status==="未签")?[<a onClick={() => this.signCertFile(text, record)}>签署&nbsp;&nbsp;</a>]:[]}
-          {text.status==="已签署"?[<a onClick={() => this.reviewCertFile(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
-          {text.status==="已复核"?[<a onClick={() => this.sealCertFile(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
         </Fragment>
@@ -103,92 +93,16 @@ class CompanyUpload extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'certificate/getCertFiles',
+      type: 'testRecord/getRecordInfo',
       payload:{
-         reportno,
+         reportno : reportno,
+         source : '公司',
       }
     });
   }
 
-  signCertFile = text =>{
-    const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    text.signer = "test";
-    dispatch({
-      type: 'certificate/signCertFile',
-      payload:{
-         ...text,
-      },
-      callback: (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '签署失败',
-            description:response.message,
-          });
-        }else{
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-               reportno,
-            }
-          });
-        }
-      }
-    });
-  };
 
-  reviewCertFile = text =>{
-    const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    text.reviewer = "test";
-    dispatch({
-      type: 'certificate/reviewCertFile',
-      payload:{
-         ...text,
-      },
-      callback: (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '复核失败',
-            description:response.message,
-          });
-        }else{
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-               reportno,
-            }
-          });
-        }
-      }
-    });
-  };
 
-  sealCertFile = text =>{
-    const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    dispatch({
-      type: 'certificate/sealCertFile',
-      payload:{
-         ...text,
-      },
-      callback: (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '签名失败',
-            description:response.message,
-          });
-        }else{
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-               reportno,
-            }
-          });
-        }
-      }
-    });
-  };
 
   editCerticate = text => {
 
@@ -318,13 +232,6 @@ class CompanyUpload extends PureComponent {
   };
 
 
-  onChange = e =>{
-    if(e.target.value === "按单价"  || e.target.value ==="按比例"){
-      this.setState({showPrice:true});
-    }else{
-      this.setState({showPrice:false});
-    }
-  };
 
   Cancel = () => this.setState({ previewVisible: false });
 
@@ -365,75 +272,6 @@ class CompanyUpload extends PureComponent {
 
 
 
-  // 处理下载模态框打开
-  showDownloadVisible = (flag) => {
-    this.setState({
-      downloadVisible: !!flag,
-    });
-  };
-
-  // 处理下载模态框取消
-  handleDownloadCancel = (flag) => {
-    this.setState({
-      downloadVisible: !!flag,
-    });
-  };
-
-
-
-  // 处理下载模态框 提交表单
-  handleDownloadAdd = (fields) =>{
-    const { dispatch, } = this.props;
-    const reportNo = sessionStorage.getItem('reportno');
-    const params = {
-      reportno:reportNo,
-      tempName:fields.tempName,
-      recordName:fields.downloadRecordName,
-    };
-    dispatch({
-      type: 'testRecord/downloadPlatFromTemp',
-      payload:params,
-      callback: (response) => {
-        if(response){
-          message.success("下载成功");
-        }
-      }
-    });
-    console.log(params);
-    this.setState({
-      downloadVisible: false,
-    });
-  }
-
-  // 处理下载模态框 提交表单
-  handleOnSelect =(value) =>{
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    let ownerValue="";
-    if( value ==="platform"){
-      ownerValue = "platform";
-    }else if(value ==="company"){
-      ownerValue= user.certCode;
-    }else if(value ==="person"){
-      ownerValue= user.userName;
-    }else{
-      ownerValue = "blank";
-    }
-    const { dispatch, } = this.props;
-    const params = {
-      type:value,
-      owner:ownerValue
-    };
-    dispatch({
-      type: 'testRecord/getModelName',
-      payload:params,
-      callback: (response) => {
-        if(response){
-          this.state.modelName = response;
-        }
-      }
-    });
-  };
-
   back = () =>{
     this.props.history.goBack();
   };
@@ -451,8 +289,7 @@ class CompanyUpload extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName} = this.state
-    const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
+    const {fileList,visible,previewVisible,previewImage} = this.state
 
     // 下载模板 模态框方法
     return (
@@ -469,8 +306,6 @@ class CompanyUpload extends PureComponent {
                 rules: [{ required: true, message: '请选择上传文件' }],
               })(
                 <Upload
-                  //action="http://localhost:8000/api/recordinfo/upload"
-                  //data={{'reportno':reportno}}
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={this.handlePreview}

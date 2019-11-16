@@ -3,12 +3,11 @@ import { stringify } from 'qs';
 
 
 
-export async function getAllArchives(params) {
-  return request(`/api/archives/getAllArchives`, {
+export async function uploadFile(params) {
+    return request(`/api/recordinfo/upload`,{
     method: 'POST',
-    data: {
-      ...params,
-    },
+    // headers: { 'Content-Type': 'multipart/form-data;'},
+    data:params,
   });
 }
 
