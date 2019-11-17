@@ -506,6 +506,13 @@ export default [
             name: 'CompanySign',
             component: './CompanyManage/CompanySign',
           },
+
+          {
+            path: '/CompanyManage/UserManage',
+            name: 'UserManage',
+            component: './CompanyManage/UserManage',
+          },
+
         ],
       },
 

@@ -37,4 +37,6 @@ export default {
   'validation.date.required': '请选择起止日期',
   'validation.goal.required': '请输入目标描述',
   'validation.standard.required': '请输入衡量标准',
+  'validation.userExist.repeated':'用户名重复',
+  'validation.userExist.error':'检测用户名错误，联系管理员',
 };
