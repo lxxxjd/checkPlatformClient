@@ -62,8 +62,8 @@ export async function deleteUser(params) {
     },
   });
 }
-// getDepartmentList,addDepartment,updateDepartment,deleteDepartment
 
+// 部门管理
 export async function getDepartmentList(params) {
   return request(`/api/department/get_departmentList`,{
     method: 'POST',
@@ -100,3 +100,6 @@ export async function deleteDepartment(params) {
     },
   });
 }
+
+
+

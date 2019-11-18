@@ -1,11 +1,19 @@
 import {getCargos , searchCargos, updateCargo, addCargo, deleteCargo, getItemList, searchItemList , addItem, updateItem, deleteItem, getTestStandard, updateTestStandard, addTestStandard, deleteTestStandard} from '@/services/dict';
-
+import {  getCheckProjectList,addCheckProject,updateCheckProject,deleteCheckProject} from '@/services/CheckProject';
 export default {
   namespace: 'dict',
   state: {
     cargos: [],
     items:[],
     standards:[],
+
+    // 检验项目管理
+
+    getCheckProjectListResult:{},
+    addCheckProjectResult:{},
+    updateCheckProjectResult:{},
+    deleteCheckProjectResult:{},
+
   },
   effects: {
     *getCargos({ payload,callback }, { call, put }) {
@@ -84,29 +92,100 @@ export default {
       const response = yield call(addTestStandard, payload);
       if (callback) callback(response);
     },
+
+
+    // 检验项目管理管理
+
+    *getCheckProjectList({ payload,callback }, { call, put }) {
+      const response = yield call(getCheckProjectList, payload);
+      yield put({
+        type: 'getCheckProjectListResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+    *addCheckProject({ payload,callback }, { call, put }) {
+      const response = yield call(addCheckProject, payload);
+      yield put({
+        type: 'addCheckProjectResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+    *updateCheckProject({ payload,callback }, { call, put }) {
+      const response = yield call(updateCheckProject, payload);
+      yield put({
+        type: 'updateCheckProjectResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+    *deleteCheckProject({ payload,callback }, { call, put }) {
+      const response = yield call(deleteCheckProject, payload);
+      yield put({
+        type: 'deleteCheckProjectResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
   },
 
   reducers: {
-    
+
     getCargo(state, { payload }) {
       return {
         ...state,
         cargos: payload.data,
       };
-    }, 
+    },
     getItem(state, { payload }) {
       return {
         ...state,
         items: payload.data,
       };
-    }, 
+    },
     getStandard(state, { payload }) {
       return {
         ...state,
         standards: payload.data,
       };
-    }, 
+    },
 
+    // 检验项目字典
+    getCheckProjectListResult(state, { payload }) {
+      return {
+        ...state,
+        getCheckProjectListResult: payload,
+      };
+    },
+
+    addCheckProjectResult(state, { payload }) {
+      return {
+        ...state,
+        addCheckProjectResult: payload.data,
+      };
+    },
+
+    updateCheckProjectResult(state, { payload }) {
+      return {
+        ...state,
+        updateCheckProjectResult: payload.data,
+      };
+    },
+
+    deleteCheckProjectResult(state, { payload }) {
+      return {
+        ...state,
+        deleteCheckProjectResult: payload.data,
+      };
+    },
 
   }
 

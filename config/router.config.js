@@ -487,6 +487,13 @@ export default [
             component: './DictMaintain/StandardList',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
+          {
+            path: '/DictMaintain/CheckProject',
+            name: 'CheckProject',
+            component: './DictMaintain/CheckProject',
+          },
+
         ],
       },
 
@@ -518,6 +525,7 @@ export default [
             name: 'Department',
             component: './CompanyManage/Department',
           },
+
 
 
         ],

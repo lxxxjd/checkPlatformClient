@@ -1,5 +1,5 @@
 import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser,
-  getDepartmentList,addDepartment,updateDepartment,deleteDepartment} from '@/services/Company';
+  getDepartmentList,addDepartment,updateDepartment,deleteDepartment, } from '@/services/Company';
 
 export default {
   namespace: 'company',
@@ -16,6 +16,13 @@ export default {
     addDepartResult:{},
     updateDepartResult:{},
     deleteDepartResult:{},
+
+    // 检验项目管理
+
+    getCheckProjectListResult:{},
+    addCheckProjectResult:{},
+    updateCheckProjectResult:{},
+    deleteCheckProjectResult:{},
 
   },
   effects: {
@@ -119,6 +126,7 @@ export default {
 
 
 
+
   },
 
   reducers: {
@@ -196,6 +204,7 @@ export default {
         deleteDepartResult: payload.data,
       };
     },
+
 
 
   }

@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
-import { connect } from 'dva';
+import { connect } from 'dva/index';
 import router from 'umi/router';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { formatMessage } from 'umi-plugin-react/locale/index';
 
 import {
   Row,
@@ -12,9 +12,9 @@ import {
   Button,
   Select,
   Table, message, Modal, DatePicker,
-} from 'antd';
+} from 'antd/lib/index';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import moment from 'moment';
+import moment from 'moment/moment';
 import styles from '../table.less';
 
 const FormItem = Form.Item;
@@ -37,23 +37,23 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="部门修改"
+      title="检验项目修改"
       style={{ top: 100 }}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门名称">
-        {form.getFieldDecorator('branchname', {
-          initialValue: modalInfo.branchname,
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检验项目">
+        {form.getFieldDecorator('project', {
+          initialValue: modalInfo.project,
           rules: [
             {
               required: true,
-              message: "请输入部门名称",
+              message: "请输入检验项目",
             },
           ],
-        })(<Input placeholder="请输入部门名称" />)}
+        })(<Input placeholder="请输入检验项目" />)}
       </FormItem>
 
 
@@ -75,22 +75,22 @@ const AddForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="部门新增"
+      title="检验项目修改"
       style={{ top: 100 }}
       visible={addModalVisible}
       onOk={okHandle}
       onCancel={() => addHandleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门名称">
-        {form.getFieldDecorator('branchname', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检验项目">
+        {form.getFieldDecorator('project', {
           rules: [
             {
               required: true,
-              message: "请输入部门名称",
+              message: "请输入检验项目",
             },
           ],
-        })(<Input placeholder="请输入部门名称" />)}
+        })(<Input placeholder="请输入检验项目" />)}
       </FormItem>
 
     </Modal>
@@ -98,12 +98,12 @@ const AddForm = Form.create()(props => {
 });
 
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ dict, loading }) => ({
+  dict,
+  loading: loading.models.dict,
 }))
 @Form.create()
-class Department extends PureComponent {
+class CheckProject extends PureComponent {
   state = {
     modalVisible: false,
     addModalVisible:false,
@@ -113,8 +113,8 @@ class Department extends PureComponent {
 
   columns = [
     {
-      title: '部门名称',
-      dataIndex: 'branchname',
+      title: '检验项目',
+      dataIndex: 'project',
     },
 
     {
@@ -143,7 +143,7 @@ class Department extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'company/getDepartmentList',
+      type: 'dict/getCheckProjectList',
       payload: params,
       callback: (response) => {
         if (response){
@@ -166,17 +166,15 @@ class Department extends PureComponent {
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
-        ...fieldsValue,
         kind :fieldsValue.kind.trim(),
         value: fieldsValue.value.trim(),
         certCode:user.certCode,
       };
       dispatch({
-        type: 'company/getDepartmentList',
+        type: 'dict/getCheckProjectList',
         payload: values,
         callback: (response) => {
           if (response){
-
             this.state.dataSource = response.data;
           }
         }
@@ -204,7 +202,7 @@ class Department extends PureComponent {
       ...text
     };
     dispatch({
-      type: 'company/deleteDepartment',
+      type: 'dict/deleteCheckProject',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -241,13 +239,13 @@ class Department extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     let prams = modalInfo;
-    prams.branchname =  fields.branchname;
+    prams.project =  fields.project;
     const values = {
       ...prams,
       certcode:user.certCode,
     };
     dispatch({
-      type: 'company/updateDepartment',
+      type: 'dict/updateCheckProject',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -271,7 +269,7 @@ class Department extends PureComponent {
       certcode:user.certCode,
     };
     dispatch({
-      type: 'company/addDepartment',
+      type: 'dict/addCheckProject',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -305,11 +303,11 @@ class Department extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
-                initialValue:"branchname",
+                initialValue:"project",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="branchname">部门名称</Option>
+                  <Option value="project">检验项目</Option>
                 </Select>
               )}
             </Form.Item>
@@ -368,7 +366,7 @@ class Department extends PureComponent {
               loading={loading}
               dataSource={dataSource}
               columns={this.columns}
-              rowKey="keyno"
+              rowKey="itemno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
@@ -378,4 +376,4 @@ class Department extends PureComponent {
   }
 }
 
-export default Department;
+export default CheckProject;
