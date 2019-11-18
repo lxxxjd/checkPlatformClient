@@ -37,16 +37,16 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="用户修改"
+      title="部门修改"
       style={{ top: 100 }}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户名">
-        {form.getFieldDecorator('userName', {
-          initialValue: modalInfo.userName,
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门名称">
+        {form.getFieldDecorator('branchname', {
+          initialValue: modalInfo.branchname,
           rules: [
             {
               required: true,
@@ -56,60 +56,6 @@ const CreateForm = Form.create()(props => {
         })(<Input placeholder="请输入用户名" />)}
       </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
-        {form.getFieldDecorator('password', {
-          initialValue: modalInfo.password,
-          rules: [
-            {
-              required: true,
-              message: "请输入不重复的用户名",
-            },
-          ],
-        })(<Input placeholder="请输入密码" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('nameC', {
-          initialValue: modalInfo.nameC,
-          rules: [
-            {
-              required: true,
-              message: "请输入不重复的用户名",
-            },
-          ],
-        })(<Input placeholder="请输入姓名" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地址">
-        {form.getFieldDecorator('place', {
-          initialValue: modalInfo.place,
-        })(<Input placeholder="请输入地址" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
-        {form.getFieldDecorator('tel', {
-          initialValue: modalInfo.tel,
-        })(<Input placeholder="请输入电话" />)}
-      </FormItem>
-
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
-        {form.getFieldDecorator('section', {
-          initialValue: modalInfo.section,
-        })(<Input placeholder="请输入部门" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色" colon={false}>
-        {form.getFieldDecorator('role', {
-          initialValue: modalInfo.role,
-        })(
-          <Select style={{width:300}} placeholder="选择角色">
-            <Option value="管理员">管理员</Option>
-            <Option value="客服人员">客服人员</Option>
-            <Option value="检验人员">检验人员</Option>
-            <Option value="检测人员">检测人员</Option>
-          </Select>)}
-      </FormItem>
 
     </Modal>
   );
@@ -129,15 +75,15 @@ const AddForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="用户新增"
+      title="部门新增"
       style={{ top: 100 }}
       visible={addModalVisible}
       onOk={okHandle}
       onCancel={() => addHandleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户名">
-        {form.getFieldDecorator('userName', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门名称">
+        {form.getFieldDecorator('branchname', {
           rules: [
             {
               required: true,
@@ -145,55 +91,6 @@ const AddForm = Form.create()(props => {
             },
           ],
         })(<Input placeholder="请输入用户名" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
-        {form.getFieldDecorator('password', {
-          rules: [
-            {
-              required: true,
-              message: "请输入不重复的用户名",
-            },
-          ],
-        })(<Input placeholder="请输入密码" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('nameC', {
-          rules: [
-            {
-              required: true,
-              message: "请输入不重复的用户名",
-            },
-          ],
-        })(<Input placeholder="请输入姓名" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地址">
-        {form.getFieldDecorator('place', {
-        })(<Input placeholder="请输入地址" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
-        {form.getFieldDecorator('tel', {
-        })(<Input placeholder="请输入电话" />)}
-      </FormItem>
-
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
-        {form.getFieldDecorator('section', {
-        })(<Input placeholder="请输入部门" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色" colon={false}>
-        {form.getFieldDecorator('role', {
-        })(
-          <Select style={{width:300}} placeholder="选择角色">
-            <Option value="管理员">管理员</Option>
-            <Option value="客服人员">客服人员</Option>
-            <Option value="检验人员">检验人员</Option>
-            <Option value="检测人员">检测人员</Option>
-          </Select>)}
       </FormItem>
 
     </Modal>
@@ -206,7 +103,7 @@ const AddForm = Form.create()(props => {
   loading: loading.models.company,
 }))
 @Form.create()
-class UserManage extends PureComponent {
+class Department extends PureComponent {
   state = {
     modalVisible: false,
     addModalVisible:false,
@@ -216,34 +113,8 @@ class UserManage extends PureComponent {
 
   columns = [
     {
-      title: '用户名',
-      dataIndex: 'userName',
-    },
-    {
-      title: '密码',
-      dataIndex: 'password',
-    },
-    {
-      title: '姓名',
-      dataIndex: 'nameC',
-    },
-    {
-      title: '地址',
-      dataIndex: 'place',
-    },
-
-    {
-      title: '电话',
-      dataIndex: 'tel',
-    },
-    {
-      title: '部门',
-      dataIndex: 'section',
-    },
-
-    {
-      title: '权限角色',
-      dataIndex: 'role',
+      title: '部门名称',
+      dataIndex: 'branchname',
     },
 
     {
@@ -272,7 +143,7 @@ class UserManage extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'company/getAllUserListByCertCode',
+      type: 'company/getDepartmentList',
       payload: params,
       callback: (response) => {
         if (response){
@@ -301,10 +172,11 @@ class UserManage extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'company/getAllUserListByCertCode',
+        type: 'company/getDepartmentList',
         payload: values,
         callback: (response) => {
           if (response){
+
             this.state.dataSource = response.data;
           }
         }
@@ -329,21 +201,20 @@ class UserManage extends PureComponent {
   deleteItem = text =>{
     const { dispatch } = this.props;
     const values = {
-      userName:text.userName,
+      ...text
     };
-    console.log(values);
     dispatch({
-      type: 'company/deleteUser',
+      type: 'company/deleteDepartment',
       payload:values,
       callback: (response) => {
-        if(response==="success")
+        if(response==="success"){
+          this.init();
           message.success("删除成功");
-        else{
+        } else{
           message.success("删除失败");
         }
       }
     });
-    this.init();
   }
 
 
@@ -368,24 +239,21 @@ class UserManage extends PureComponent {
 
   handleEdit = (fields,modalInfo) => {
     const { dispatch } = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     let prams = modalInfo;
-    prams.userName =  fields.userName;
-    prams.password =  fields.password;
-    prams.nameC =  fields.nameC;
-    prams.place =  fields.place;
-    prams.tel =  fields.tel;
-    prams.section =  fields.section;
-    prams.role =  fields.role;
+    prams.branchname =  fields.branchname;
     const values = {
       ...prams,
+      certcode:user.certCode,
     };
     dispatch({
-      type: 'company/updateUser',
+      type: 'company/updateDepartment',
       payload:values,
       callback: (response) => {
-        if(response==="success")
+        if(response==="success"){
           message.success("保存成功");
-        else{
+          this.init();
+        } else {
           message.success("保存失败");
         }
       }
@@ -400,15 +268,16 @@ class UserManage extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const values = {
       ...fields,
-      certCode:user.certCode,
+      certcode:user.certCode,
     };
     dispatch({
-      type: 'company/addUser',
+      type: 'company/addDepartment',
       payload:values,
       callback: (response) => {
-        if(response==="success")
+        if(response==="success"){
           message.success("保存成功");
-        else{
+          this.init();
+        } else{
           message.success("保存失败");
         }
       }
@@ -416,7 +285,7 @@ class UserManage extends PureComponent {
     this.setState({
       addModalVisible: false,
     });
-    this.init();
+
   }
 
 
@@ -436,16 +305,11 @@ class UserManage extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:"branchname",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="userName">用户名</Option>
-                  <Option value="password">密码</Option>
-                  <Option value="nameC">姓名</Option>
-                  <Option value="place">地址</Option>
-                  <Option value="tel">电话</Option>
-                  <Option value="section">部门</Option>
-                  <Option value="role">权限角色</Option>
+                  <Option value="branchname">部门名称</Option>
                 </Select>
               )}
             </Form.Item>
@@ -504,7 +368,7 @@ class UserManage extends PureComponent {
               loading={loading}
               dataSource={dataSource}
               columns={this.columns}
-              rowKey="userName"
+              rowKey="keyno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
@@ -514,4 +378,4 @@ class UserManage extends PureComponent {
   }
 }
 
-export default UserManage;
+export default Department;

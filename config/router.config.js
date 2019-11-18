@@ -513,6 +513,13 @@ export default [
             component: './CompanyManage/UserManage',
           },
 
+          {
+            path: '/CompanyManage/Department',
+            name: 'Department',
+            component: './CompanyManage/Department',
+          },
+
+
         ],
       },
 

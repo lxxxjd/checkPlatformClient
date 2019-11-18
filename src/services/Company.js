@@ -62,3 +62,41 @@ export async function deleteUser(params) {
     },
   });
 }
+// getDepartmentList,addDepartment,updateDepartment,deleteDepartment
+
+export async function getDepartmentList(params) {
+  return request(`/api/department/get_departmentList`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
+export async function addDepartment(params) {
+  return request(`/api/department/add_department`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function updateDepartment(params) {
+  return request(`/api/department/update_department`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function deleteDepartment(params) {
+  return request(`/api/department/delete_department`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}

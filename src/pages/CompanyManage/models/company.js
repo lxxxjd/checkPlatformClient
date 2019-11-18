@@ -1,4 +1,5 @@
-import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser} from '@/services/Company';
+import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser,
+  getDepartmentList,addDepartment,updateDepartment,deleteDepartment} from '@/services/Company';
 
 export default {
   namespace: 'company',
@@ -9,6 +10,13 @@ export default {
     updateUserResult:{},
     addUserResult:{},
     deleteUserResult:{},
+
+    // 部门管理
+    departListResult:{},
+    addDepartResult:{},
+    updateDepartResult:{},
+    deleteDepartResult:{},
+
   },
   effects: {
     *uploadFile({ payload,callback }, { call, put }) {
@@ -55,7 +63,7 @@ export default {
     },
 
 
-    *deleteUser({ payload,callback }, { call, put }) {
+     *deleteUser({ payload,callback }, { call, put }) {
       const response = yield call(deleteUser, payload);
       yield put({
         type: 'getDeleteUserResult',
@@ -63,6 +71,47 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+    // 部门管理
+    *getDepartmentList({ payload,callback }, { call, put }) {
+      const response = yield call(getDepartmentList, payload);
+      yield put({
+        type: 'getDepartmentListResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+    *addDepartment({ payload,callback }, { call, put }) {
+      const response = yield call(addDepartment, payload);
+      yield put({
+        type: 'addDepartmentResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+    *updateDepartment({ payload,callback }, { call, put }) {
+      const response = yield call(updateDepartment, payload);
+      yield put({
+        type: 'updateDepartmentResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+    *deleteDepartment({ payload,callback }, { call, put }) {
+      const response = yield call(deleteDepartment, payload);
+      yield put({
+        type: 'deleteDepartmentResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
 
 
 
@@ -116,6 +165,35 @@ export default {
       return {
         ...state,
         deleteUserResult: payload.data,
+      };
+    },
+
+
+    getDepartmentListResult(state, { payload }) {
+      return {
+        ...state,
+        departListResult: payload,
+      };
+    },
+
+    addDepartmentResult(state, { payload }) {
+      return {
+        ...state,
+        addDepartResult: payload.data,
+      };
+    },
+
+    updateDepartmentResult(state, { payload }) {
+      return {
+        ...state,
+        updateDepartResult: payload.data,
+      };
+    },
+
+    deleteDepartmentResult(state, { payload }) {
+      return {
+        ...state,
+        deleteDepartResult: payload.data,
       };
     },
 
