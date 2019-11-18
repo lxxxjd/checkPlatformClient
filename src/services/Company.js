@@ -53,6 +53,12 @@ export async function addUser(params) {
   });
 }
 
+
 export async function deleteUser(params) {
-  return request(`/api/user/deleteUser?id=${params.id}`);
+  return request(`/api/user/deleteUser`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
 }
