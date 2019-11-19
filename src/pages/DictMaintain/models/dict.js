@@ -1,5 +1,6 @@
 import {getCargos , searchCargos, updateCargo, addCargo, deleteCargo, getItemList, searchItemList , addItem, updateItem, deleteItem, getTestStandard, updateTestStandard, addTestStandard, deleteTestStandard} from '@/services/dict';
 import {  getCheckProjectList,addCheckProject,updateCheckProject,deleteCheckProject} from '@/services/CheckProject';
+import { getBusinessSortList,addBusinessSort,updateBusinessSort,deleteBusinessSort, getBusinessSourceList,addBusinessSource,updateusinessSource,deleteBusinessSource }from '@/services/Business';
 export default {
   namespace: 'dict',
   state: {
@@ -13,6 +14,12 @@ export default {
     addCheckProjectResult:{},
     updateCheckProjectResult:{},
     deleteCheckProjectResult:{},
+
+    // 业务分类和业务来源
+    getBusinessSortListResult:{},addBusinessSortResult:{},updateBusinessSortResult:{},deleteBusinessSortResult:{},
+    getBusinessSourceListResult:{},addBusinessSourceResult:{},updateusinessSourceResult:{},deleteBusinessSourceResult:{},
+
+
 
   },
   effects: {

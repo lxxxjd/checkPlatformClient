@@ -494,6 +494,20 @@ export default [
             component: './DictMaintain/CheckProject',
           },
 
+          {
+            path: '/DictMaintain/BusinessSource',
+            name: 'BusinessSource',
+            component: './DictMaintain/BusinessSource',
+          },
+
+          {
+            path: '/DictMaintain/BusinessSort',
+            name: 'BusinessSort',
+            component: './DictMaintain/BusinessSort',
+          },
+
+
+
         ],
       },
 

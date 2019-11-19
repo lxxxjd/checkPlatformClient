@@ -73,6 +73,8 @@ export default {
   'menu.DictMaintain.CargoList':'货物管理',
   'menu.DictMaintain':'字段管理',
   'menu.DictMaintain.CheckProject':'检验项目',
+  'menu.DictMaintain.BusinessSort':'业务分类',
+  'menu.DictMaintain.BusinessSource':'业务来源',
 
   'menu.CompanyManage':'公司管理',
   'menu.CompanyManage.CompanyUpload':'上传文件',
