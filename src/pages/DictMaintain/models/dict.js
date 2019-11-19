@@ -1,7 +1,8 @@
 import {getCargos , searchCargos, updateCargo, addCargo, deleteCargo, getItemList, searchItemList , addItem, updateItem, deleteItem, getTestStandard, updateTestStandard, addTestStandard, deleteTestStandard} from '@/services/dict';
 import {  getCheckProjectList,addCheckProject,updateCheckProject,deleteCheckProject} from '@/services/CheckProject';
-import { getBusinessSortList,addBusinessSort,updateBusinessSort,deleteBusinessSort,
-  getBusinessSourceList,addBusinessSource,updateBusinessSource,deleteBusinessSource }from '@/services/Business';
+import { getBusinessSortList,addBusinessSort,updateBusinessSort,deleteBusinessSort, getBusinessSourceList,addBusinessSource,updateBusinessSource,deleteBusinessSource }from '@/services/Business';
+import { getInvoiceTitleList,addInvoiceTitle,updateInvoiceTitle,deleteInvoiceTitle} from '@/services/InvoiceTitle';
+
 export default {
   namespace: 'dict',
   state: {
@@ -17,8 +18,22 @@ export default {
     deleteCheckProjectResult:{},
 
     // 业务分类和业务来源
-    getBusinessSortListResult:{},addBusinessSortResult:{},updateBusinessSortResult:{},deleteBusinessSortResult:{},
-    getBusinessSourceListResult:{},addBusinessSourceResult:{},updateBusinessSourceResult:{},deleteBusinessSourceResult:{},
+    getBusinessSortListResult:{},
+    addBusinessSortResult:{},
+    updateBusinessSortResult:{},
+    deleteBusinessSortResult:{},
+
+    getBusinessSourceListResult:{},
+    addBusinessSourceResult:{},
+    updateBusinessSourceResult:{},
+    deleteBusinessSourceResult:{},
+
+    // 发票
+
+    getInvoiceTitleListResult:{},
+    addInvoiceTitleResult:{},
+    updateInvoiceTitleResult:{},
+    deleteInvoiceTitleResult:{},
 
 
 
@@ -142,7 +157,7 @@ export default {
       if (callback) callback(response.data);
     },
 
-
+    // 业务分类
     *getBusinessSortList({ payload,callback }, { call, put }) {
       const response = yield call(getBusinessSortList, payload);
       yield put({
@@ -152,7 +167,7 @@ export default {
       if (callback) callback(response);
     },
 
-
+    // 业务分类
     *addBusinessSort({ payload,callback }, { call, put }) {
       const response = yield call(addBusinessSort, payload);
       yield put({
@@ -161,7 +176,7 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
+    // 业务分类
     *updateBusinessSort({ payload,callback }, { call, put }) {
       const response = yield call(updateBusinessSort, payload);
       yield put({
@@ -170,7 +185,7 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
+    // 业务分类
     *deleteBusinessSort({ payload,callback }, { call, put }) {
       const response = yield call(deleteBusinessSort, payload);
       yield put({
@@ -180,6 +195,7 @@ export default {
       if (callback) callback(response.data);
     },
 
+    // 业务来源
     *getBusinessSourceList({ payload,callback }, { call, put }) {
       const response = yield call(getBusinessSourceList, payload);
       yield put({
@@ -188,7 +204,6 @@ export default {
       });
       if (callback) callback(response);
     },
-
     *addBusinessSource({ payload,callback }, { call, put }) {
       const response = yield call(addBusinessSource, payload);
       yield put({
@@ -197,7 +212,6 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
     *updateBusinessSource({ payload,callback }, { call, put }) {
       const response = yield call(updateBusinessSource, payload);
       yield put({
@@ -206,11 +220,44 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
     *deleteBusinessSource({ payload,callback }, { call, put }) {
       const response = yield call(deleteBusinessSource, payload);
       yield put({
         type: 'deleteBusinessSortResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    // 开发票
+    *getInvoiceTitleList({ payload,callback }, { call, put }) {
+      const response = yield call(getInvoiceTitleList, payload);
+      yield put({
+        type: 'getInvoiceTitleListResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+    *addInvoiceTitle({ payload,callback }, { call, put }) {
+      const response = yield call(addInvoiceTitle, payload);
+      yield put({
+        type: 'addInvoiceTitleResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+    *updateInvoiceTitle({ payload,callback }, { call, put }) {
+      const response = yield call(updateInvoiceTitle, payload);
+      yield put({
+        type: 'updateInvoiceTitleResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+    *deleteInvoiceTitle({ payload,callback }, { call, put }) {
+      const response = yield call(deleteInvoiceTitle, payload);
+      yield put({
+        type: 'deleteInvoiceTitleResult',
         payload: response,
       });
       if (callback) callback(response.data);
@@ -320,7 +367,34 @@ export default {
       };
     },
 
+    getInvoiceTitleListResult(state, { payload }) {
+      return {
+        ...state,
+        getInvoiceTitleListResult: payload,
+      };
+    },
 
+
+    addInvoiceTitleResult(state, { payload }) {
+      return {
+        ...state,
+        addInvoiceTitleResult: payload.data,
+      };
+    },
+
+    updateInvoiceTitleResult(state, { payload }) {
+      return {
+        ...state,
+        updateInvoiceTitleResult: payload.data,
+      };
+    },
+
+    deleteInvoiceTitleResult(state, { payload }) {
+      return {
+        ...state,
+        deleteInvoiceTitleResult: payload.data,
+      };
+    },
 
   }
 

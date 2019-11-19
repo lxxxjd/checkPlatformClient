@@ -506,6 +506,12 @@ export default [
             component: './DictMaintain/BusinessSort',
           },
 
+          {
+            path: '/DictMaintain/InvoiceTitle',
+            name: 'InvoiceTitle',
+            component: './DictMaintain/InvoiceTitle',
+          },
+
 
 
         ],
