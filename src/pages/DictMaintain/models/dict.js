@@ -1,6 +1,7 @@
 import {getCargos , searchCargos, updateCargo, addCargo, deleteCargo, getItemList, searchItemList , addItem, updateItem, deleteItem, getTestStandard, updateTestStandard, addTestStandard, deleteTestStandard} from '@/services/dict';
 import {  getCheckProjectList,addCheckProject,updateCheckProject,deleteCheckProject} from '@/services/CheckProject';
-import { getBusinessSortList,addBusinessSort,updateBusinessSort,deleteBusinessSort, getBusinessSourceList,addBusinessSource,updateusinessSource,deleteBusinessSource }from '@/services/Business';
+import { getBusinessSortList,addBusinessSort,updateBusinessSort,deleteBusinessSort,
+  getBusinessSourceList,addBusinessSource,updateBusinessSource,deleteBusinessSource }from '@/services/Business';
 export default {
   namespace: 'dict',
   state: {
@@ -17,7 +18,7 @@ export default {
 
     // 业务分类和业务来源
     getBusinessSortListResult:{},addBusinessSortResult:{},updateBusinessSortResult:{},deleteBusinessSortResult:{},
-    getBusinessSourceListResult:{},addBusinessSourceResult:{},updateusinessSourceResult:{},deleteBusinessSourceResult:{},
+    getBusinessSourceListResult:{},addBusinessSourceResult:{},updateBusinessSourceResult:{},deleteBusinessSourceResult:{},
 
 
 
@@ -142,6 +143,81 @@ export default {
     },
 
 
+    *getBusinessSortList({ payload,callback }, { call, put }) {
+      const response = yield call(getBusinessSortList, payload);
+      yield put({
+        type: 'getBusinessSortListResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+
+    *addBusinessSort({ payload,callback }, { call, put }) {
+      const response = yield call(addBusinessSort, payload);
+      yield put({
+        type: 'addBusinessSortResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *updateBusinessSort({ payload,callback }, { call, put }) {
+      const response = yield call(updateBusinessSort, payload);
+      yield put({
+        type: 'updateBusinessSortResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *deleteBusinessSort({ payload,callback }, { call, put }) {
+      const response = yield call(deleteBusinessSort, payload);
+      yield put({
+        type: 'deleteBusinessSortResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *getBusinessSourceList({ payload,callback }, { call, put }) {
+      const response = yield call(getBusinessSourceList, payload);
+      yield put({
+        type: 'getBusinessSourceListResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+    *addBusinessSource({ payload,callback }, { call, put }) {
+      const response = yield call(addBusinessSource, payload);
+      yield put({
+        type: 'addBusinessSourceResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *updateBusinessSource({ payload,callback }, { call, put }) {
+      const response = yield call(updateBusinessSource, payload);
+      yield put({
+        type: 'updateBusinessSourceResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *deleteBusinessSource({ payload,callback }, { call, put }) {
+      const response = yield call(deleteBusinessSource, payload);
+      yield put({
+        type: 'deleteBusinessSortResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+
   },
 
   reducers: {
@@ -186,13 +262,65 @@ export default {
         updateCheckProjectResult: payload.data,
       };
     },
-
-    deleteCheckProjectResult(state, { payload }) {
+    getBusinessSortListResult(state, { payload }) {
       return {
         ...state,
-        deleteCheckProjectResult: payload.data,
+        getBusinessSortListResult: payload,
       };
     },
+
+
+    addBusinessSortResult(state, { payload }) {
+      return {
+        ...state,
+        addBusinessSortResult: payload.data,
+      };
+    },
+
+    updateBusinessSortResult(state, { payload }) {
+      return {
+        ...state,
+        updateBusinessSortResult: payload.data,
+      };
+    },
+
+    deleteBusinessSortResult(state, { payload }) {
+      return {
+        ...state,
+        deleteBusinessSortResult: payload.data,
+      };
+    },
+
+    getBusinessSourceListResult(state, { payload }) {
+      return {
+        ...state,
+        getBusinessSourceListResult: payload,
+      };
+    },
+
+
+    addBusinessSourceResult(state, { payload }) {
+      return {
+        ...state,
+        addBusinessSourceResult: payload.data,
+      };
+    },
+
+    updateBusinessSourceResult(state, { payload }) {
+      return {
+        ...state,
+        updateBusinessSourceResult: payload.data,
+      };
+    },
+
+    deleteBusinessSourceResult(state, { payload }) {
+      return {
+        ...state,
+        deleteBusinessSourceResult: payload.data,
+      };
+    },
+
+
 
   }
 

@@ -59,8 +59,8 @@ export async function addBusinessSource(params) {
 }
 
 
-export async function updateusinessSource(params) {
-  return request(`/api/business_source/updateusinessSource`,{
+export async function updateBusinessSource(params) {
+  return request(`/api/business_source/updateBusinessSource`,{
     method: 'POST',
     data: {
       ...params,

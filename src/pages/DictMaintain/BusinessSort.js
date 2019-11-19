@@ -37,7 +37,7 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="检验项目修改"
+      title="业务分类修改"
       style={{ top: 100 }}
       visible={modalVisible}
       onOk={okHandle}
@@ -133,7 +133,7 @@ class BusinessSort extends PureComponent {
 
 
   componentDidMount() {
-   this.init();
+    this.init();
   }
 
   init =()=>{
@@ -143,7 +143,7 @@ class BusinessSort extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'dict/getCheckProjectList',
+      type: 'dict/getBusinessSortList',
       payload: params,
       callback: (response) => {
         if (response){
@@ -171,7 +171,7 @@ class BusinessSort extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'dict/getCheckProjectList',
+        type: 'dict/getBusinessSortList',
         payload: values,
         callback: (response) => {
           if (response){
@@ -202,7 +202,7 @@ class BusinessSort extends PureComponent {
       ...text
     };
     dispatch({
-      type: 'dict/deleteCheckProject',
+      type: 'dict/deleteBusinessSort',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -239,13 +239,13 @@ class BusinessSort extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     let prams = modalInfo;
-    prams.project =  fields.project;
+    prams.itemname =  fields.itemname;
     const values = {
-      ...prams,
-      certcode:user.certCode,
+      ...prams
     };
+    console.log(values);
     dispatch({
-      type: 'dict/updateCheckProject',
+      type: 'dict/updateBusinessSort',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -269,7 +269,7 @@ class BusinessSort extends PureComponent {
       certcode:user.certCode,
     };
     dispatch({
-      type: 'dict/addCheckProject',
+      type: 'dict/addBusinessSort',
       payload:values,
       callback: (response) => {
         if(response==="success"){

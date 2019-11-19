@@ -37,23 +37,23 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="检验项目修改"
+      title="业务来源修改"
       style={{ top: 100 }}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检验项目">
-        {form.getFieldDecorator('project', {
-          initialValue: modalInfo.project,
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="业务来源名称">
+        {form.getFieldDecorator('itemname', {
+          initialValue: modalInfo.itemname,
           rules: [
             {
               required: true,
-              message: "请输入检验项目",
+              message: "请输入业务来源名称",
             },
           ],
-        })(<Input placeholder="请输入检验项目" />)}
+        })(<Input placeholder="请输入业务来源名称" />)}
       </FormItem>
 
 
@@ -75,22 +75,22 @@ const AddForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="检验项目修改"
+      title="业务来源新增"
       style={{ top: 100 }}
       visible={addModalVisible}
       onOk={okHandle}
       onCancel={() => addHandleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检验项目">
-        {form.getFieldDecorator('project', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="业务来源名称">
+        {form.getFieldDecorator('itemname', {
           rules: [
             {
               required: true,
-              message: "请输入检验项目",
+              message: "请输入业务来源名称",
             },
           ],
-        })(<Input placeholder="请输入检验项目" />)}
+        })(<Input placeholder="请输入业务来源名称" />)}
       </FormItem>
 
     </Modal>
@@ -113,8 +113,8 @@ class BusinessSource extends PureComponent {
 
   columns = [
     {
-      title: '检验项目',
-      dataIndex: 'project',
+      title: '业务来源名称',
+      dataIndex: 'itemname',
     },
 
     {
@@ -133,7 +133,7 @@ class BusinessSource extends PureComponent {
 
 
   componentDidMount() {
-   this.init();
+    this.init();
   }
 
   init =()=>{
@@ -143,7 +143,7 @@ class BusinessSource extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'dict/getCheckProjectList',
+      type: 'dict/getBusinessSourceList',
       payload: params,
       callback: (response) => {
         if (response){
@@ -171,7 +171,7 @@ class BusinessSource extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'dict/getCheckProjectList',
+        type: 'dict/getBusinessSourceList',
         payload: values,
         callback: (response) => {
           if (response){
@@ -202,7 +202,7 @@ class BusinessSource extends PureComponent {
       ...text
     };
     dispatch({
-      type: 'dict/deleteCheckProject',
+      type: 'dict/deleteBusinessSource',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -239,13 +239,13 @@ class BusinessSource extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     let prams = modalInfo;
-    prams.project =  fields.project;
+    prams.itemname =  fields.itemname;
     const values = {
-      ...prams,
-      certcode:user.certCode,
+      ...prams
     };
+    console.log(values);
     dispatch({
-      type: 'dict/updateCheckProject',
+      type: 'dict/updateBusinessSource',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -269,7 +269,7 @@ class BusinessSource extends PureComponent {
       certcode:user.certCode,
     };
     dispatch({
-      type: 'dict/addCheckProject',
+      type: 'dict/addBusinessSource',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -303,11 +303,11 @@ class BusinessSource extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
-                initialValue:"project",
+                initialValue:"itemname",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="project">检验项目</Option>
+                  <Option value="itemname">业务分类</Option>
                 </Select>
               )}
             </Form.Item>
