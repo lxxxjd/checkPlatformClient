@@ -82,6 +82,7 @@ export default {
   'menu.CompanyManage.CompanySign':'上传盖章图片',
   'menu.CompanyManage.UserManage':'用户管理',
   'menu.CompanyManage.Department':'部门管理',
+  'menu.CompanyManage.TestMan':'检测机构',
 
 
   'menu.dashboard': 'Dashboard',

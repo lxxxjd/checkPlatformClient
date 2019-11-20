@@ -545,7 +545,11 @@ export default [
             name: 'Department',
             component: './CompanyManage/Department',
           },
-
+          {
+            path: '/CompanyManage/TestMan',
+            name: 'TestMan',
+            component: './CompanyManage/TestMan',
+          },
 
 
         ],

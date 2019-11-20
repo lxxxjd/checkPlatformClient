@@ -130,6 +130,7 @@ class InspectionArrangement extends PureComponent {
       type: 'inspectionAnalysis/getCompany',
       payload: {
         certCode : certCode,
+        type:"实验室",
       },
       callback: (response) => {
         this.setState({allCompanyName:response})

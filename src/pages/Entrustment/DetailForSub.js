@@ -94,6 +94,7 @@ class DetailForSub extends PureComponent {
       type: 'testInfo/getCompany',
       payload: {
         certCode : certCode,
+        type : "检验机构",
       },
       callback: (response) => {
         this.setState({allCompanyName:response});

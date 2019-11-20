@@ -120,24 +120,9 @@ export default {
 
 
 
-
-
-
-
-
-
-
   },
 
   reducers: {
-    /*
-    save(state, { payload }) {
-      return {
-        ...state,
-        data: payload.data,
-      };
-    }, */
-
 
     getAllUserListByCertCodeResult(state, { payload }) {
       return {
