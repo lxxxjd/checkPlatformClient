@@ -453,9 +453,6 @@ class CertificateUploadDetail extends PureComponent {
 
   signCertFile = text =>{
     const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    text.signer = "test";
-
     const params ={
       osspath:text.pdfpath
     }
@@ -481,7 +478,8 @@ class CertificateUploadDetail extends PureComponent {
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    text.reviewer = "test";
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    text.reviewer = user.userName;
     dispatch({
       type: 'certificate/reviewCertFile',
       payload:{
@@ -510,7 +508,8 @@ class CertificateUploadDetail extends PureComponent {
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    text.signer = "test";
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    text.signer = user.userName;
     dispatch({
       type: 'certificate/signCertFile',
       payload:{

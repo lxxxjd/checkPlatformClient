@@ -117,13 +117,13 @@ function getBase64(file) {
 }))
 class CertificateFinalDetail extends PureComponent {
   state = {
+    formValues: {},
     visible: false,
     downloadVisible: false,
     checkProject: [],
     allCompanyName: [],
     selectEntrustment: null,
     showPrice: false,
-
     previewVisible: false,
     previewImage: '',
     fileList: [],
@@ -380,10 +380,13 @@ class CertificateFinalDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
+          <a onClick={() => this.editCerticate(text, record)}>编辑</a>
+          &nbsp;&nbsp;
           {text.status==="已复核"?[<a onClick={() => this.sealItem(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           <a onClick={() => this.ViewItem(text, record)}>详情</a>
+          &nbsp;&nbsp;
         </Fragment>
       ),
     },
@@ -449,9 +452,6 @@ class CertificateFinalDetail extends PureComponent {
 
   signCertFile = text =>{
     const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    text.signer = "test";
-
     const params ={
       osspath:text.pdfpath
     }
@@ -477,7 +477,8 @@ class CertificateFinalDetail extends PureComponent {
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    text.reviewer = "test";
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    text.reviewer = user.userName;
     dispatch({
       type: 'certificate/reviewCertFile',
       payload:{
@@ -506,7 +507,8 @@ class CertificateFinalDetail extends PureComponent {
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    text.signer = "test";
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    text.signer = user.userName;
     dispatch({
       type: 'certificate/signCertFile',
       payload:{
@@ -549,6 +551,33 @@ class CertificateFinalDetail extends PureComponent {
     this.signCertFile(text);
   }
 
+  sealCertFile = () =>{
+    const{text} = this.state;
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    dispatch({
+      type: 'certificate/sealCertFile',
+      payload:{
+        ...text,
+      },
+      callback: (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '签名失败',
+            description:response.message,
+          });
+        }else{
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+              reportno,
+            }
+          });
+        }
+      }
+    });
+    this.setState({showVisible:false});
+  };
 
   editCerticate = text => {
 
@@ -865,8 +894,7 @@ class CertificateFinalDetail extends PureComponent {
 
 
     }
-  };
-
+  }
 
 
   isValidDate =date=> {
@@ -875,7 +903,6 @@ class CertificateFinalDetail extends PureComponent {
     }
     return [];
   }
-
 
   // eslint-disable-next-line class-methods-use-this
   // 委托的信息
@@ -1149,7 +1176,7 @@ class CertificateFinalDetail extends PureComponent {
             <Button key="cancel" type="primary" onClick={this.showCancel}> 取消</Button>,
             option === "签署"?[<Button key="submit1" type="primary" onClick={this.handleSign}>签署</Button>]:[],
             option === "复核"?[<Button key="submit2" type="primary" onClick={this.reviewCertFile}>复核</Button>]:[],
-            option === "盖章"?[<Button key="submit3" type="primary" onClick={this.handleSign}>盖章</Button>]:[],
+            option === "盖章"?[<Button key="submit3" type="primary" onClick={this.sealCertFile}>盖章</Button>]:[],
           ]}
           style={{ top: 10 }}
           width={1500}
