@@ -146,6 +146,7 @@ class InspectionArrangement extends PureComponent {
     });
   };
 
+
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
