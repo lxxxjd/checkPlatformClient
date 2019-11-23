@@ -31,6 +31,7 @@ class CompanyInfo extends PureComponent {
 
 	state = {
 		company:{},
+		parents:[],
 	};
 	componentDidMount() {
 	    const { 
@@ -51,7 +52,19 @@ class CompanyInfo extends PureComponent {
 						'adres':response.data.adres,
 						'account':response.data.account,
 						'bank' : response.data.bank,
+						'belongto': response.data.belongto,
 					});
+				}
+			}
+    	});
+    	dispatch({
+			type: 'company/getParent',
+			payload:{
+			 	certCode : user.certCode,
+			},
+			callback:(response)=>{
+				if(response.code === 200){
+					this.setState({parents:response.data});
 				}
 			}
     	});
@@ -71,6 +84,7 @@ class CompanyInfo extends PureComponent {
 	       	company.adres = form.getFieldValue('adres');
 	        company.account = form.getFieldValue('account');
 	        company.bank = form.getFieldValue('bank');
+	        company.belongto = form.getFieldValue('belongto');
 	        dispatch({
 	          type: 'company/updateCompany',
 	          payload: {
@@ -99,7 +113,8 @@ class CompanyInfo extends PureComponent {
 	      labelCol: { span: 6 },
 	      wrapperCol: { span: 14 },
 	    };
-	    const { company } = this.state;
+	    const { company ,parents} = this.state;
+	    const parentsOptions = parents.map(d => <Option key={d.certcode} value={d.certcode}>{d.namec}</Option>);
  		return(
  			<Card>
 	 			<Form {...formItemLayout} >
@@ -146,6 +161,19 @@ class CompanyInfo extends PureComponent {
 			            ],
 			          })(<Input />)}
 			        </Form.Item>
+			        <Form.Item
+	                  label="母公司"
+	                >
+	                  {getFieldDecorator('belongto', {
+	                  })(
+	                    <Select
+	                      placeholder="请选择母公司"
+	                      filterOption={false}
+	                    >
+	                      {parentsOptions}
+	                    </Select>
+	                  )}
+	                </Form.Item>
 			        <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
 						<Button type="primary" onClick={this.handleSubmit}>
 						Submit

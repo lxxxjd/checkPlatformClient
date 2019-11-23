@@ -25,6 +25,9 @@ export async function getAllUserListByCertCode(params) {
   });
 }
 
+export async function getParent(params) {
+  return request(`/api/company/getParent?certCode=${params.certCode}`);
+}
 
 export async function updateCompany(params) {
   return request(`/api/company/updateCompany`,{
@@ -55,6 +58,7 @@ export async function uploadDocumentHead(params) {
     data:params,
   });
 }
+
 export async function getUrl(params) {
   return request(`/api/cert_report/get_pdf?osspath=${params.url}`);
 }
