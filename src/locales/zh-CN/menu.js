@@ -82,7 +82,7 @@ export default {
   'menu.CompanyManage.CompanyUpload':'上传文件',
   'menu.CompanyManage.UserManage':'用户管理',
   'menu.CompanyManage.Department':'部门管理',
-  'menu.CompanyManage.TestMan':'检测机构',
+  'menu.CompanyManage.TestMan':'分包方',
 
 
   'menu.dashboard': 'Dashboard',
