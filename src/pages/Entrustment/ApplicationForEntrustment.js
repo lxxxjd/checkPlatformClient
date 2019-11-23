@@ -152,7 +152,9 @@ class ApplicationForEntrustment extends PureComponent {
     });
     dispatch({
       type: 'entrustment/getCheckProject',
-      payload: {},
+      payload: {
+        certCode : user.certCode,
+      },
       callback: (response) => {
         this.setState({checkProject: response})
       }

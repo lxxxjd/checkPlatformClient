@@ -78,8 +78,8 @@ export async function getTradeWay() {
   return request('/api/trade_away/get_ways');
 }
 
-export async function getCheckProject() {
-  return request('/api/check_project/get_project');
+export async function getCheckProject(params) {
+  return request(`/api/check_project/get_project?certCode=${params.certCode}`);
 }
 
 export async function getCnasInfo(params) {

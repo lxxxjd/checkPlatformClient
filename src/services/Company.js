@@ -25,6 +25,34 @@ export async function getAllUserListByCertCode(params) {
   });
 }
 
+export async function uploadUserSeal(params) {
+  return request(`/api/user/upload_sign`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+export async function uploadSeal(params) {
+  return request(`/api/company/uploadSeal`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+export async function uploadDocumentHead(params) {
+  return request(`/api/company/uploadDocumentHead`,{
+    method: 'POST',
+    data:params,
+  });
+}
+export async function getUrl(params) {
+  return request(`/api/cert_report/get_pdf?osspath=${params.url}`);
+}
+
+export async function getCompany(params) {
+  return request(`/api/company/getCompany?certCode=${params.certCode}`);
+}
+
 
 export async function checkUserName(params) {
   return request(`/api/user/check_user?username=${params.username}`);

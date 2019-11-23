@@ -1,5 +1,5 @@
 import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser,
-  getDepartmentList,addDepartment,updateDepartment,deleteDepartment, } from '@/services/Company';
+  getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,getUrl,uploadSeal,uploadDocumentHead,uploadUserSeal} from '@/services/Company';
 
 export default {
   namespace: 'company',
@@ -28,6 +28,27 @@ export default {
   effects: {
     *uploadFile({ payload,callback }, { call, put }) {
       const response = yield call(uploadFile, payload);
+      if (callback) callback(response);
+    },
+    *uploadSeal({ payload,callback }, { call, put }) {
+      const response = yield call(uploadSeal, payload);
+      if (callback) callback(response);
+    },
+    *uploadUserSeal({ payload,callback }, { call, put }) {
+      const response = yield call(uploadUserSeal, payload);
+      if (callback) callback(response);
+    },
+    *uploadDocumentHead({ payload,callback }, { call, put }) {
+      const response = yield call(uploadDocumentHead, payload);
+      if (callback) callback(response);
+    },
+    *getCompany({ payload,callback }, { call, put }) {
+      const response = yield call(getCompany, payload);
+      if (callback) callback(response);
+    },
+
+    *getUrl({ payload,callback }, { call, put }) {
+      const response = yield call(getUrl, payload);
       if (callback) callback(response);
     },
 

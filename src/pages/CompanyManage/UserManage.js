@@ -11,7 +11,7 @@ import {
   Input,
   Button,
   Select,
-  Table, message, Modal, DatePicker,
+  Table, message, Modal, DatePicker,Upload,Icon
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment';
@@ -199,6 +199,66 @@ const AddForm = Form.create()(props => {
     </Modal>
   );
 });
+const UploadForm = Form.create()(props => {
+  const { visible, form, handleUpload, handleCancel ,fileList, handleChange} = props;
+  const getBase64 = (file) =>{
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+  const handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
+    });
+  };
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      handleUpload(fieldsValue);
+    });
+  };
+  const uploadButton = (
+      <div>
+        <Icon type="plus" />
+        <div className="ant-upload-text">Upload</div>
+      </div>
+  );
+  return (
+    <Modal
+      title="上传签名"
+      visible={visible}
+      onOk={okHandle}
+      onCancel={handleCancel}
+    >
+      <Form>
+        <Form.Item label="文件上传">
+          {form.getFieldDecorator('MultipartFile', {
+            rules: [{ required: true, message: '请选择上传文件' }],
+          })(
+            <Upload
+              //action="http://localhost:8000/api/recordinfo/upload"
+              //data={{'reportno':reportno}}
+              listType="picture-card"
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChange}
+            >
+              {fileList.length >= 1 ? null : uploadButton}
+            </Upload>
+          )}
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+});
 
 
 @connect(({ company, loading }) => ({
@@ -212,6 +272,11 @@ class UserManage extends PureComponent {
     addModalVisible:false,
     modalInfo :{},
     dataSource:[],
+    username:null,
+    fileList:[],
+    visible:false,
+    previewVisible:false,
+    signUrl:'',
   };
 
   columns = [
@@ -250,6 +315,9 @@ class UserManage extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
+          {text.signurl !== null ?[<a onClick={() => this.previewItem(text, record)}>查看签名&nbsp;&nbsp;</a>]:[]}
+          <a onClick={() => this.uploadItem(text, record)}>上传签名</a>
+          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
@@ -264,6 +332,27 @@ class UserManage extends PureComponent {
   componentDidMount() {
    this.init();
   }
+
+  handleChange = ({ file,fileList }) => {
+    //限制图片 格式、size、分辨率
+    const isJPG = file.type === 'image/jpg';
+    const isJPEG = file.type === 'image/jpeg';
+    const isGIF = file.type === 'image/gif';
+    const isPNG = file.type === 'image/png';
+    const size = file.size / 1024 / 1024 < 20;
+    if (!(isJPG || isGIF || isJPEG || isPNG)) {
+      Modal.error({
+        title: '只能上传JPG 、GIF 、PNG、JPEG格式的图片~',
+      });
+      return;
+    } else if (!size) {
+      Modal.error({
+        title: '超过20M限制，不允许上传~',
+      });
+      return;
+    }
+    this.setState({ fileList:fileList});
+  };
 
   init =()=>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -280,13 +369,13 @@ class UserManage extends PureComponent {
         }
       }
     });
-  }
+  };
 
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
     this.init();
-  }
+  };
 
   handleSearch = e=> {
     e.preventDefault();
@@ -310,15 +399,33 @@ class UserManage extends PureComponent {
         }
       });
     });
-  }
+  };
 
   isValidDate =date=> {
     if(date !==undefined && date !==null ){
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  }
+  };
 
+
+  previewItem = text =>{
+    this.setState({previewVisible:true});
+    const {
+      dispatch,
+    } = this.props;
+    dispatch({
+      type: 'company/getUrl',
+      payload:{
+         url : text.signurl,
+      },
+      callback:(response)=>{
+        if(response.code === 200){
+          this.setState({signUrl:response.data});
+        }
+      }
+    });
+  };
   modifyItem = text => {
     this.setState({
       modalInfo:text,
@@ -344,7 +451,12 @@ class UserManage extends PureComponent {
       }
     });
     this.init();
-  }
+  };
+
+  uploadItem = (text) =>{
+    this.setState({username:text.userName});
+    this.setState({visible:true});
+  };
 
 
   addItem = () => {
@@ -393,7 +505,7 @@ class UserManage extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-  }
+  };
 
   handleAdd = (fields) => {
     const { dispatch } = this.props;
@@ -472,23 +584,66 @@ class UserManage extends PureComponent {
         </Row>
       </Form>
     );
+  };
+
+  handleUpload = (values) =>{
+    const {
+      dispatch,
+      form
+    } = this.props
+    const {username} = this.state;
+    let formData = new FormData();
+    console.log(values);
+    values.MultipartFile.fileList.forEach(file => {
+      formData.append('multipartFile', file.originFileObj);
+    });
+    formData.append('username',username);
+    dispatch({
+      type: 'company/uploadUserSeal',
+      payload : formData,
+      callback: (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '添加失败',
+            description:response.data,
+          });
+        }else{
+          notification.open({
+            message: '上传成功',
+          });
+        }
+      }
+    });
+    this.init();
+    this.setState({ visible: false });
+    form.resetFields();
+  };
+
+  handleCancel = () =>{
+    const {
+      form
+    } = this.props;
+    form.resetFields();
+    this.setState({ visible: false });
+  };
+  handlePreviewCancel = () =>{
+    this.setState({previewVisible:false});
   }
-
-
-
-
   render() {
     const {
       loading,
       dispatch,
     } = this.props;
 
-    const {  modalVisible,modalInfo,addModalVisible,dataSource} = this.state;
+    const {  modalVisible,modalInfo,addModalVisible,dataSource,fileList,visible, previewVisible, signUrl} = this.state;
     const parentMethods = {
       handleEdit: this.handleEdit,
       handleAdd:this.handleAdd,
       handleModalVisible: this.handleModalVisible,
       addHandleModalVisible:this.addHandleModalVisible,
+      handleChange : this.handleChange,
+      handleUpload : this.handleUpload,
+      handleCancel : this.handleCancel,
     };
 
 
@@ -498,6 +653,7 @@ class UserManage extends PureComponent {
           <div className={styles.tableList}>
             <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} />
             <AddForm {...parentMethods} addModalVisible={addModalVisible} dispatch={dispatch} />
+            <UploadForm {...parentMethods} fileList={fileList} visible={visible} dispatch={dispatch} />
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"
@@ -508,6 +664,14 @@ class UserManage extends PureComponent {
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
+          <Modal
+            title="签名"
+            visible={previewVisible}
+            onCancel={this.handlePreviewCancel}
+            footer={null}
+          >
+            <img src={signUrl} width="100" height="100"/>
+          </Modal>
         </Card>
       </PageHeaderWrapper>
     );

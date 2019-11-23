@@ -17,6 +17,7 @@ export default {
     cargos: [],
     copyNo:'',
     deleteResult:null,
+    checkProject:[],
   },
 
   effects: {
@@ -169,7 +170,7 @@ export default {
     getCheckProjectName(state, { payload }) {
       return {
         ...state,
-        businessSort: payload.data,
+        checkProject: payload.data,
       };
     },
     getBusinessName(state, { payload }) {

@@ -155,7 +155,9 @@ class ResultUpdate extends PureComponent {
       pathname:'/InspectionAnalysis/ResultUpdateDetail',
     });
   };
-  
+  handleCancel = () =>{
+    this.setState({visible:false});
+  }
   render() {
     const {
       inspectionAnalysis: {samples,detail},
@@ -180,7 +182,7 @@ class ResultUpdate extends PureComponent {
           </div>
         </Card>
         <Modal
-            title="新建样品指标"
+            title="结果详情"
             visible={visible}
             footer={null}
             onCancel={this.handleCancel}
