@@ -118,56 +118,237 @@ function getBase64(file) {
 class CertificateUploadDetail extends PureComponent {
   state = {
     formValues: {},
-    visible:false,
-    downloadVisible:false,
-    checkProject:[],
-    allCompanyName:[],
-    selectEntrustment:null,
-    showPrice:false,
+    visible: false,
+    downloadVisible: false,
+    checkProject: [],
+    allCompanyName: [],
+    selectEntrustment: null,
+    showPrice: false,
     previewVisible: false,
     previewImage: '',
     fileList: [],
-    modelName:[],
-    showVisible:false,
-    text:{}, // 当前信息
+    modelName: [],
+    showVisible: false,
+    text: {}, // 当前信息
 
-    Certurls:"",
-    urls:"",
-    report:[],
+    Certurls: "",
+    urls: "",
+    report: [],
     // 切换tab签署页面
-    value:'0-0-0',
+    value: '0-0-0',
 
     // 本委托品质信息
-    sampleData:[],
+    sampleData: [],
 
     // 本委托检验信息
-    checkResultData:[],
+    checkResultData: [],
 
 
     // 关联委托的信息
-    sampleDataLink:[],
+    sampleDataLink: [],
 
     // 关联委托的检验信息
-    checkResultDataLink:[],
+    checkResultDataLink: [],
 
     // 附件
     treeData: [
-      { title: '本委托', key: '0-0',children: [
+      {
+        title: '本委托', key: '0-0', children: [
           { title: '委托', key: '0-0-0', isLeaf: true },
           { title: '品质', key: '0-0-1', isLeaf: true },
           { title: '检验', key: '0-0-2', isLeaf: true },
-        ],},
+        ],
+      },
 
-      { title: '关联委托', key: '0-1',children: [
+      {
+        title: '关联委托', key: '0-1', children: [
           { title: '委托', key: '0-1-0', isLeaf: true },
           { title: '品质', key: '0-1-1', isLeaf: true },
-        ],},
-      { title: '附件', key: '0-2',children: [],},
+        ],
+      },
+      { title: '附件', key: '0-2', children: [], },
     ],
 
-    option:"",
+    option: "",
 
-  };
+
+    // 品质的信息
+    // eslint-disable-next-line react/sort-comp
+    sampleColumns : [
+      {
+        title: '样品编号',
+        dataIndex: 'sampleno',
+      },
+      {
+        title: '样品名称',
+        dataIndex: 'samplename',
+      },
+      {
+        title: '检查项目',
+        dataIndex: 'itemC',
+      },
+      {
+        title: '检验标准',
+        dataIndex: 'teststandard',
+      },
+      {
+        title: '结果',
+        dataIndex: 'weight',
+      }
+    ],
+
+
+  // ---------------------检验信息数据
+  // 品质的信息
+  checkColumns : [
+    {
+      title: '检验项目',
+      dataIndex: 'inspway',
+    },
+    {
+      title: '仪器名称',
+      dataIndex: 'instrument',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
+      title: '检验人员',
+      dataIndex: 'inspman',
+    },
+    {
+      title: '开始日期',
+      dataIndex: 'begindate',
+      render: val => this.isValidDate(val),
+
+    },
+    {
+      title: '结束日期',
+      dataIndex: 'finishdate',
+      render: val => this.isValidDate(val),
+    },
+    {
+      title: '重量',
+      dataIndex: 'weight',
+    },
+    {
+      title: '结果',
+      dataIndex: 'result',
+    }
+  ],
+
+  // 品质的信息 关联委托
+  // eslint-disable-next-line react/sort-comp
+  sampleColumnsLink : [
+    {
+      title: '委托编号',
+      dataIndex: 'reportno',
+    },
+    {
+      title: '样品编号',
+      dataIndex: 'sampleno',
+    },
+    {
+      title: '样品名称',
+      dataIndex: 'samplename',
+    },
+    {
+      title: '检查项目',
+      dataIndex: 'itemC',
+    },
+    {
+      title: '检验标准',
+      dataIndex: 'teststandard',
+    },
+    {
+      title: '结果',
+      dataIndex: 'weight',
+    }
+  ],
+
+  // ---------------------检验信息数据，关联委托
+  // 品质的信息
+  checkColumnsLink : [
+    {
+      title: '委托编号',
+      dataIndex: 'reportno',
+    },
+    {
+      title: '检验项目',
+      dataIndex: 'inspway',
+    },
+    {
+      title: '仪器名称',
+      dataIndex: 'instrument',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
+      title: '检验人员',
+      dataIndex: 'inspman',
+    },
+
+    {
+      title: '开始日期',
+      dataIndex: 'begindate',
+      render: val => this.isValidDate(val),
+
+    },
+    {
+      title: '结束日期',
+      dataIndex: 'finishdate',
+      render: val => this.isValidDate(val),
+    },
+    {
+      title: '重量',
+      dataIndex: 'weight',
+    },
+    {
+      title: '结果',
+      dataIndex: 'result',
+    }
+  ],
+
+    renderFormData:[],
+    renderFormColumns:[],
+
+  }
+
 
   columns = [
     {
@@ -203,7 +384,6 @@ class CertificateUploadDetail extends PureComponent {
           &nbsp;&nbsp;
           {(typeof(text.status)===undefined || text.status === "" || text.status === null ||text.status==="未签")?[<a onClick={() => this.signItem(text, record)}>签署&nbsp;&nbsp;</a>]:[]}
           {text.status==="已签署"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
-          {text.status==="已复核"?[<a onClick={() => this.sealItem(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           <a onClick={() => this.ViewItem(text, record)}>详情</a>
@@ -567,6 +747,8 @@ class CertificateUploadDetail extends PureComponent {
     this.setState({ fileList});
   };
 
+
+
   handleBeforeUpload = file => {
     return false;
   };
@@ -694,7 +876,6 @@ class CertificateUploadDetail extends PureComponent {
         payload: params,
         callback: (response) => {
           if (response) {
-            console.log( this.state.checkResultDataLink);
             this.state.checkResultDataLink = response.data;
           }
         }
@@ -775,30 +956,6 @@ class CertificateUploadDetail extends PureComponent {
     );
   }
 
-  // 品质的信息
-  // eslint-disable-next-line react/sort-comp
-  sampleColumns = [
-    {
-      title: '样品编号',
-      dataIndex: 'sampleno',
-    },
-    {
-      title: '样品名称',
-      dataIndex: 'samplename',
-    },
-    {
-      title: '检查项目',
-      dataIndex: 'itemC',
-    },
-    {
-      title: '检验标准',
-      dataIndex: 'teststandard',
-    },
-    {
-      title: '结果',
-      dataIndex: 'weight',
-    }
-  ];
 
   renderSampleForm(){
     const {sampleData} = this.state;
@@ -818,61 +975,6 @@ class CertificateUploadDetail extends PureComponent {
   }
 
 
-  // ---------------------检验信息数据
-  // 品质的信息
-  checkColumns = [
-    {
-      title: '检验项目',
-      dataIndex: 'inspway',
-    },
-    {
-      title: '仪器名称',
-      dataIndex: 'instrument',
-      render: (text, record) => {
-        if(typeof(text) === undefined || text === null){
-          return;
-        }
-        let  contentStr = [];
-        contentStr = text.split("|");
-        if (contentStr.length < 2) {
-          return text;
-        }
-        let result = null;
-        const br = <br />;
-        for( let  j=0 ; j < contentStr.length ; j++){
-          if(j===0){
-            result=contentStr[j];
-          }else{
-            result=<span>{result}{br}{contentStr[j]}</span>;
-          }
-        }
-        return <div>{result}</div>;
-      },
-    },
-    {
-      title: '检验人员',
-      dataIndex: 'inspman',
-    },
-    {
-      title: '开始日期',
-      dataIndex: 'begindate',
-      render: val => this.isValidDate(val),
-
-    },
-    {
-      title: '结束日期',
-      dataIndex: 'finishdate',
-      render: val => this.isValidDate(val),
-    },
-    {
-      title: '重量',
-      dataIndex: 'weight',
-    },
-    {
-      title: '结果',
-      dataIndex: 'result',
-    }
-  ];
 
   renderCheckForm(){
     const {checkResultData} = this.state;
@@ -892,34 +994,8 @@ class CertificateUploadDetail extends PureComponent {
   }
 
 
-  // 品质的信息 关联委托
-  // eslint-disable-next-line react/sort-comp
-  sampleColumnsLink = [
-    {
-      title: '委托编号',
-      dataIndex: 'reportno',
-    },
-    {
-      title: '样品编号',
-      dataIndex: 'sampleno',
-    },
-    {
-      title: '样品名称',
-      dataIndex: 'samplename',
-    },
-    {
-      title: '检查项目',
-      dataIndex: 'itemC',
-    },
-    {
-      title: '检验标准',
-      dataIndex: 'teststandard',
-    },
-    {
-      title: '结果',
-      dataIndex: 'weight',
-    }
-  ];
+
+
 
   renderSampleFormLink(){
     const {sampleDataLink} = this.state;
@@ -939,66 +1015,23 @@ class CertificateUploadDetail extends PureComponent {
   }
 
 
-  // ---------------------检验信息数据，关联委托
-  // 品质的信息
-  checkColumnsLink = [
-    {
-      title: '委托编号',
-      dataIndex: 'reportno',
-    },
-    {
-      title: '检验项目',
-      dataIndex: 'inspway',
-    },
-    {
-      title: '仪器名称',
-      dataIndex: 'instrument',
-      render: (text, record) => {
-        if(typeof(text) === undefined || text === null){
-          return;
-        }
-        let  contentStr = [];
-        contentStr = text.split("|");
-        if (contentStr.length < 2) {
-          return text;
-        }
-        let result = null;
-        const br = <br />;
-        for( let  j=0 ; j < contentStr.length ; j++){
-          if(j===0){
-            result=contentStr[j];
-          }else{
-            result=<span>{result}{br}{contentStr[j]}</span>;
-          }
-        }
-        return <div>{result}</div>;
-      },
-    },
-    {
-      title: '检验人员',
-      dataIndex: 'inspman',
-    },
+  renderForm(){
+    const {renderFormData,renderFormColumns} = this.state;
+    const {loading} = this.props;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={renderFormData}
+          columns={renderFormColumns}
+          rowKey="keyno"
+          loading={loading}
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
 
-    {
-      title: '开始日期',
-      dataIndex: 'begindate',
-      render: val => this.isValidDate(val),
-
-    },
-    {
-      title: '结束日期',
-      dataIndex: 'finishdate',
-      render: val => this.isValidDate(val),
-    },
-    {
-      title: '重量',
-      dataIndex: 'weight',
-    },
-    {
-      title: '结果',
-      dataIndex: 'result',
-    }
-  ];
 
   renderCheckFormLink(){
     const {checkResultDataLink} = this.state;
@@ -1031,17 +1064,34 @@ class CertificateUploadDetail extends PureComponent {
     });
 
   renderFileInfo =(value)=>{
-    if(value === '0-0-0')
+    /*
+
+     */
+    if(value === '0-0-0'){
       return this.renderReportForm();
-    if(value === '0-0-1')
-      return this.renderSampleForm();
-    if(value === '0-0-2')
-      return this.renderCheckForm();
-    if(value === '0-1-0')
-      return this.renderSampleFormLink();
-    if(value === '0-1-1')
-      return this.renderCheckFormLink();
-      return this.renderLinkFileForm();
+    }
+
+    if(value === '0-0-1'){
+      this.state.renderFormData  = this.state.sampleData;
+      this.state.renderFormColumns  = this.state.sampleColumns;
+    }
+
+    if(value === '0-0-2'){
+      this.state.renderFormData  = this.state.checkResultData;
+      this.state.renderFormColumns  = this.state.checkColumns;
+    }
+
+    if(value === '0-1-0'){
+      this.state.renderFormData  = this.state.sampleDataLink;
+      this.state.renderFormColumns  = this.state.sampleColumnsLink;
+    }
+
+    if(value === '0-1-1'){
+      this.state.renderFormData  = this.state.checkResultDataLink;
+      this.state.renderFormColumns  = this.state.checkColumnsLink;
+    }
+
+    return this.renderForm();
   }
 
 
@@ -1081,7 +1131,7 @@ class CertificateUploadDetail extends PureComponent {
     return (
       <PageHeaderWrapper text={reprotText}>
         <Modal
-          title="记录上传"
+          title="证稿上传"
           visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -1104,11 +1154,11 @@ class CertificateUploadDetail extends PureComponent {
                 </Upload>
               )}
             </Form.Item>
-            <Form.Item label="证书名称">
+            <Form.Item label="证稿名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入证书名称' }],
+                rules: [{ required: true, message: '请输入证稿名称' }],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入证书名称" />
+                <Input style={{ width: '100%' }} placeholder="请输入证稿名称" />
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>
@@ -1128,7 +1178,6 @@ class CertificateUploadDetail extends PureComponent {
             <Button key="cancel" type="primary" onClick={this.showCancel}> 取消</Button>,
             option === "签署"?[<Button key="submit1" type="primary" onClick={this.handleSign}>签署</Button>]:[],
             option === "复核"?[<Button key="submit2" type="primary" onClick={this.reviewCertFile}>复核</Button>]:[],
-            option === "盖章"?[<Button key="submit3" type="primary" onClick={this.sealCertFile}>盖章</Button>]:[],
           ]}
           style={{ top: 10 }}
           width={1500}

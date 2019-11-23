@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import router from 'umi/router';
 
 import {
+  Layout,
   Row,
   Col,
   Card,
@@ -16,27 +17,29 @@ import {
   Table,
   DatePicker,
   notification,
+  Descriptions,
   Upload,
   Icon,
-  message
+  message,
+  Tree, Divider,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './Certificate.less';
 import moment from 'moment'
+import { SiderTheme } from 'antd/lib/layout/Sider';
+import styles from './Certificate.less';
+
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
+const { TreeNode } = Tree;
+const { Header, Footer, Sider, Content } = Layout;
 
 
 // 表单组件
 const CreateUploadForm = Form.create()(props => {
-
-
   const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect } = props;
-
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
-        console.log(err);
         return;
       }
       form.resetFields();
@@ -60,7 +63,6 @@ const CreateUploadForm = Form.create()(props => {
         <Button key="submit" type="primary" onClick={okHandle}>下载</Button>,
       ]}
     >
-
 
       <Form.Item label="记录名称">
         {form.getFieldDecorator('downloadRecordName', {
@@ -115,39 +117,260 @@ function getBase64(file) {
 }))
 class CertificateFinalDetail extends PureComponent {
   state = {
-    formValues: {},
-    visible:false,
-    downloadVisible:false,
-    checkProject:[],
-    allCompanyName:[],
-    selectEntrustment:null,
-    showPrice:false,
+    visible: false,
+    downloadVisible: false,
+    checkProject: [],
+    allCompanyName: [],
+    selectEntrustment: null,
+    showPrice: false,
+
     previewVisible: false,
     previewImage: '',
     fileList: [],
-    modelName:[],
-  };
+    modelName: [],
+    showVisible: false,
+    text: {}, // 当前信息
+
+    Certurls: "",
+    urls: "",
+    report: [],
+    // 切换tab签署页面
+    value: '0-0-0',
+
+    // 本委托品质信息
+    sampleData: [],
+
+    // 本委托检验信息
+    checkResultData: [],
+
+
+    // 关联委托的信息
+    sampleDataLink: [],
+
+    // 关联委托的检验信息
+    checkResultDataLink: [],
+
+    // 附件
+    treeData: [
+      {
+        title: '本委托', key: '0-0', children: [
+          { title: '委托', key: '0-0-0', isLeaf: true },
+          { title: '品质', key: '0-0-1', isLeaf: true },
+          { title: '检验', key: '0-0-2', isLeaf: true },
+        ],
+      },
+
+      {
+        title: '关联委托', key: '0-1', children: [
+          { title: '委托', key: '0-1-0', isLeaf: true },
+          { title: '品质', key: '0-1-1', isLeaf: true },
+        ],
+      },
+      { title: '附件', key: '0-2', children: [], },
+    ],
+
+    option: "",
+
+
+    // 品质的信息
+    // eslint-disable-next-line react/sort-comp
+    sampleColumns : [
+      {
+        title: '样品编号',
+        dataIndex: 'sampleno',
+      },
+      {
+        title: '样品名称',
+        dataIndex: 'samplename',
+      },
+      {
+        title: '检查项目',
+        dataIndex: 'itemC',
+      },
+      {
+        title: '检验标准',
+        dataIndex: 'teststandard',
+      },
+      {
+        title: '结果',
+        dataIndex: 'weight',
+      }
+    ],
+
+
+    // ---------------------检验信息数据
+    // 品质的信息
+    checkColumns : [
+      {
+        title: '检验项目',
+        dataIndex: 'inspway',
+      },
+      {
+        title: '仪器名称',
+        dataIndex: 'instrument',
+        render: (text, record) => {
+          if(typeof(text) === undefined || text === null){
+            return;
+          }
+          let  contentStr = [];
+          contentStr = text.split("|");
+          if (contentStr.length < 2) {
+            return text;
+          }
+          let result = null;
+          const br = <br />;
+          for( let  j=0 ; j < contentStr.length ; j++){
+            if(j===0){
+              result=contentStr[j];
+            }else{
+              result=<span>{result}{br}{contentStr[j]}</span>;
+            }
+          }
+          return <div>{result}</div>;
+        },
+      },
+      {
+        title: '检验人员',
+        dataIndex: 'inspman',
+      },
+      {
+        title: '开始日期',
+        dataIndex: 'begindate',
+        render: val => this.isValidDate(val),
+
+      },
+      {
+        title: '结束日期',
+        dataIndex: 'finishdate',
+        render: val => this.isValidDate(val),
+      },
+      {
+        title: '重量',
+        dataIndex: 'weight',
+      },
+      {
+        title: '结果',
+        dataIndex: 'result',
+      }
+    ],
+
+    // 品质的信息 关联委托
+    // eslint-disable-next-line react/sort-comp
+    sampleColumnsLink : [
+      {
+        title: '委托编号',
+        dataIndex: 'reportno',
+      },
+      {
+        title: '样品编号',
+        dataIndex: 'sampleno',
+      },
+      {
+        title: '样品名称',
+        dataIndex: 'samplename',
+      },
+      {
+        title: '检查项目',
+        dataIndex: 'itemC',
+      },
+      {
+        title: '检验标准',
+        dataIndex: 'teststandard',
+      },
+      {
+        title: '结果',
+        dataIndex: 'weight',
+      }
+    ],
+
+    // ---------------------检验信息数据，关联委托
+    // 品质的信息
+    checkColumnsLink : [
+      {
+        title: '委托编号',
+        dataIndex: 'reportno',
+      },
+      {
+        title: '检验项目',
+        dataIndex: 'inspway',
+      },
+      {
+        title: '仪器名称',
+        dataIndex: 'instrument',
+        render: (text, record) => {
+          if(typeof(text) === undefined || text === null){
+            return;
+          }
+          let  contentStr = [];
+          contentStr = text.split("|");
+          if (contentStr.length < 2) {
+            return text;
+          }
+          let result = null;
+          const br = <br />;
+          for( let  j=0 ; j < contentStr.length ; j++){
+            if(j===0){
+              result=contentStr[j];
+            }else{
+              result=<span>{result}{br}{contentStr[j]}</span>;
+            }
+          }
+          return <div>{result}</div>;
+        },
+      },
+      {
+        title: '检验人员',
+        dataIndex: 'inspman',
+      },
+
+      {
+        title: '开始日期',
+        dataIndex: 'begindate',
+        render: val => this.isValidDate(val),
+
+      },
+      {
+        title: '结束日期',
+        dataIndex: 'finishdate',
+        render: val => this.isValidDate(val),
+      },
+      {
+        title: '重量',
+        dataIndex: 'weight',
+      },
+      {
+        title: '结果',
+        dataIndex: 'result',
+      }
+    ],
+
+    renderFormData:[],
+    renderFormColumns:[],
+
+  }
+
 
   columns = [
     {
       title: '记录名',
       dataIndex: 'name',
       render: val => {
-        //取文件名
-        var pattern = /\.{1}[a-z]{1,}$/;
+        // 取文件名
+        const pattern = /\.{1}[a-z]{1,}$/;
         if (pattern.exec(val) !== null) {
           return <span>{val.slice(0, pattern.exec(val).index)}</span>;
-        } else {
-          return <span>{val}</span>;
         }
+        return <span>{val}</span>;
+
       }
     },
     {
       title: '上传日期',
       dataIndex: 'recorddate',
       render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
+        moment(val).format('YYYY-MM-DD')
+      }
+      </span>
     },
     {
       title: '状态',
@@ -157,13 +380,10 @@ class CertificateFinalDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.editCerticate(text, record)}>编辑</a>
-          &nbsp;&nbsp;
-          {(typeof(text.status)===undefined || text.status === "" || text.status === null ||text.status==="未签")?[<a onClick={() => this.signCertFile(text, record)}>签署&nbsp;&nbsp;</a>]:[]}
-          {text.status==="已签署"?[<a onClick={() => this.reviewCertFile(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
-          {text.status==="已复核"?[<a onClick={() => this.sealCertFile(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
+          {text.status==="已复核"?[<a onClick={() => this.sealItem(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
+          <a onClick={() => this.ViewItem(text, record)}>详情</a>
         </Fragment>
       ),
     },
@@ -176,7 +396,53 @@ class CertificateFinalDetail extends PureComponent {
     dispatch({
       type: 'certificate/getCertFiles',
       payload:{
-         reportno,
+        reportno,
+      },
+      callback: (response) => {
+        console.log(response);
+      }
+    });
+
+    const reportnNo =reportno;
+    dispatch({
+      type: 'certificate/getReport',
+      payload: reportnNo,
+      callback: (response) => {
+        this.setState({report:response});
+      }
+    });
+
+    // 获取附件信息
+    dispatch({
+      type: 'certificate/getRecordInfo',
+      payload:{reportno:reportnNo},
+      callback: (response) => {
+        if(response){
+          if(response.data !==undefined && response.data !==null &&response.data.length>0){
+            for(const value of response.data) {
+              const data={
+                title: value.recordname,
+                key:value.id,
+              }
+              this.state.treeData[2].children.push(data);
+            }
+          }
+        }
+      }
+    });
+  }
+
+  ViewItem = text => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'certificate/getPdfByOssPath',
+      payload: { osspath: text.certpdfpath },
+      callback: (response) => {
+        if (response.code === 200) {
+          window.open(response.data);
+        } else {
+          message.success("打开文件失败");
+        }
       }
     });
   }
@@ -185,37 +451,37 @@ class CertificateFinalDetail extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     text.signer = "test";
+
+    const params ={
+      osspath:text.pdfpath
+    }
     dispatch({
-      type: 'certificate/signCertFile',
-      payload:{
-         ...text,
-      },
+      type: 'certificate/getOssPdf',
+      payload:params,
       callback: (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '签署失败',
-            description:response.message,
-          });
-        }else{
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-               reportno,
-            }
-          });
+        if(response.code === 200){
+          this.setState({Certurls:response.data});
+          this.setState({showVisible:true});
+          this.setState({text:text});
+        }else {
+          message.success("打开签署文件失败");
         }
       }
     });
+
   };
 
-  reviewCertFile = text =>{
+
+
+  reviewCertFile = () =>{
+    const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     text.reviewer = "test";
     dispatch({
       type: 'certificate/reviewCertFile',
       payload:{
-         ...text,
+        ...text,
       },
       callback: (response) => {
         if(response.code === 400){
@@ -227,39 +493,62 @@ class CertificateFinalDetail extends PureComponent {
           dispatch({
             type: 'certificate/getCertFiles',
             payload:{
-               reportno,
+              reportno,
             }
           });
         }
       }
     });
+    this.setState({showVisible:false});
   };
 
-  sealCertFile = text =>{
+  handleSign =()=>{
+    const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
+    text.signer = "test";
     dispatch({
-      type: 'certificate/sealCertFile',
+      type: 'certificate/signCertFile',
       payload:{
-         ...text,
+        ...text,
       },
       callback: (response) => {
         if(response.code === 400){
           notification.open({
-            message: '签名失败',
+            message: '签署失败',
             description:response.message,
           });
         }else{
           dispatch({
             type: 'certificate/getCertFiles',
             payload:{
-               reportno,
+              reportno,
             }
           });
         }
       }
     });
-  };
+    this.setState({showVisible:false});
+
+  }
+
+
+
+  signItem =text=>{
+    this.setState({option:"签署"});
+    this.signCertFile(text);
+  }
+
+  reivewItem =text=>{
+    this.setState({option:"复核"});
+    this.signCertFile(text);
+  }
+
+  sealItem =text=>{
+    this.setState({option:"盖章"});
+    this.signCertFile(text);
+  }
+
 
   editCerticate = text => {
 
@@ -275,23 +564,23 @@ class CertificateFinalDetail extends PureComponent {
       _w_fname
     };
     dispatch({
-        type: 'certificate/getSignature',
-        payload: {params},
-        callback: (response) => {
-          if (response.code === 200) {
-            // eslint-disable-next-line camelcase,no-underscore-dangle
-            const _w_signature = response.data;
-            // eslint-disable-next-line camelcase
-            const wpsUrl = `https://localhost:81/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
-            window.open('about:blank').location.href=wpsUrl;
-          } else {
-            notification.open({
-              message: '加载失败',
-              description:response.message,
-            });
-          }
+      type: 'certificate/getSignature',
+      payload: {params},
+      callback: (response) => {
+        if (response.code === 200) {
+          // eslint-disable-next-line camelcase,no-underscore-dangle
+          const _w_signature = response.data;
+          // eslint-disable-next-line camelcase
+          const wpsUrl = `https://localhost:81/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
+          window.open('about:blank').location.href=wpsUrl;
+        } else {
+          notification.open({
+            message: '加载失败',
+            description:response.message,
+          });
         }
-      });
+      }
+    });
 
   };
 
@@ -316,7 +605,7 @@ class CertificateFinalDetail extends PureComponent {
           dispatch({
             type: 'certificate/getCertFiles',
             payload:{
-              reportno : reportno,
+              reportno,
             }
           });
         }
@@ -333,7 +622,7 @@ class CertificateFinalDetail extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     validateFieldsAndScroll((error, values) => {
       if (!error) {
-        let formData = new FormData();
+        const formData = new FormData();
         values.MultipartFile.fileList.forEach(file => {
           formData.append('file', file.originFileObj);
           formData.append('size', file.size);
@@ -342,7 +631,6 @@ class CertificateFinalDetail extends PureComponent {
         formData.append('modifier', user.nameC);
         formData.append('reportno', reportno);
         formData.append('name', values.recordname);
-        console.log(formData.get('files'));
         dispatch({
           type: 'certificate/uploadCertFile',
           payload : formData,
@@ -356,7 +644,7 @@ class CertificateFinalDetail extends PureComponent {
               dispatch({
                 type: 'certificate/getCertFiles',
                 payload:{
-                  reportno : reportno,
+                  reportno,
                 }
               });
             }
@@ -365,7 +653,6 @@ class CertificateFinalDetail extends PureComponent {
         this.setState({ visible: false });
         form.resetFields();
       }
-      console.log(error);
     });
   };
 
@@ -411,7 +698,7 @@ class CertificateFinalDetail extends PureComponent {
   };
 
   handleChange = ({ file,fileList }) => {
-    //限制图片 格式、size、分辨率
+    // 限制图片 格式、size、分辨率
     const isDOC = file.type === 'application/msword';
     const isDOCX = file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     const size = file.size / 1024 / 1024 < 20;
@@ -420,15 +707,16 @@ class CertificateFinalDetail extends PureComponent {
         title: '只能上传DOC 、DOCX 格式的图片~',
       });
       return;
-    } else if (!size) {
+    } if (!size) {
       Modal.error({
         title: '超过20M限制，不允许上传~',
       });
       return;
     }
-    this.setState({ fileList:fileList});
-    console.log(fileList)
+    this.setState({ fileList});
   };
+
+
 
   handleBeforeUpload = file => {
     return false;
@@ -470,7 +758,6 @@ class CertificateFinalDetail extends PureComponent {
         }
       }
     });
-    console.log(params);
     this.setState({
       downloadVisible: false,
     });
@@ -509,6 +796,277 @@ class CertificateFinalDetail extends PureComponent {
     this.props.history.goBack();
   };
 
+  showCancel = () =>{
+    this.setState({showVisible:false});
+  }
+
+  // 树控件的目录数据
+  onSelect = (selectedKeys, info) => {
+    this.setState({ value: selectedKeys[0] });
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const params = {
+      reportno,
+    }
+    if (selectedKeys[0] === '0-0-2') {
+      dispatch({
+        type: 'certificate/getCheckResultFetch',
+        payload: params,
+        callback: (response) => {
+          if (response) {
+            this.state.checkResultData = response.data;
+          }
+        }
+      });
+    } else if (selectedKeys[0] === '0-0-1') {
+      dispatch({
+        type: 'certificate/getSampleDetailFetch',
+        payload: params,
+        callback: (response) => {
+          if (response) {
+            this.state.sampleData = response.data;
+          }
+        }
+      });
+    } else if (selectedKeys[0] === '0-1-0') {
+      dispatch({
+        type: 'certificate/getSampleDetailForLink',
+        payload: params,
+        callback: (response) => {
+          if (response) {
+            console.log( this.state.sampleDataLink);
+            this.state.sampleDataLink = response.data;
+          }
+        }
+      });
+    } else if (selectedKeys[0] === '0-1-1') {
+      dispatch({
+        type: 'certificate/getCheckResultForLink',
+        payload: params,
+        callback: (response) => {
+          if (response) {
+            this.state.checkResultDataLink = response.data;
+          }
+        }
+      });
+    } else if (selectedKeys[0] === '0-0' || selectedKeys[0] === '0-1' || selectedKeys[0] === '0-2' || selectedKeys[0] === '0-0-0') {
+      return null;
+    } else {
+      // 附件的url
+      dispatch({
+        type: 'certificate/getPdfUrlFetch',
+        payload: { id: selectedKeys[0] },
+        callback: (pdfresponse) => {
+          if (pdfresponse) {
+            this.state.urls = pdfresponse.data;
+          }
+        }
+      });
+
+
+    }
+  };
+
+
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  }
+
+
+  // eslint-disable-next-line class-methods-use-this
+  // 委托的信息
+  renderReportForm() {
+    const {report} = this.state;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Descriptions style={{ marginBottom: 10 }} size='small' title="业务信息" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+          <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
+          <Descriptions.Item label="委托日期">{moment(report.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
+          <Descriptions.Item label="检验费">{report.price}</Descriptions.Item>
+          <Descriptions.Item label="申请人">{report.applicant}</Descriptions.Item>
+          <Descriptions.Item label="联系人">{report.applicantname}</Descriptions.Item>
+          <Descriptions.Item label="联系电话">{report.applicanttel}</Descriptions.Item>
+          <Descriptions.Item label="代理人">{report.agent}</Descriptions.Item>
+          <Descriptions.Item label="联系人">{report.agentname}</Descriptions.Item>
+          <Descriptions.Item label="联系电话">{report.agenttel}</Descriptions.Item>
+          <Descriptions.Item label="付款人">{report.payer}</Descriptions.Item>
+          <Descriptions.Item label="业务来源">{report.businesssource}</Descriptions.Item>
+          <Descriptions.Item label="贸易方式">{report.tradeway}</Descriptions.Item>
+          <Descriptions.Item label="证书要求">{report.certstyle}</Descriptions.Item>
+          <Descriptions.Item label="自编号">{report.reportno20}</Descriptions.Item>
+          <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
+        </Descriptions>
+        <Descriptions style={{ marginBottom: 10 }} size='small' title="检查对象" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+          <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
+          <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
+          <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
+          <Descriptions.Item label="申报数量和单位">{report.quantityd+report.unit}</Descriptions.Item>
+          <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
+          <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
+          <Descriptions.Item label="到达地点">{report.inspplace1}</Descriptions.Item>
+        </Descriptions>
+        <Descriptions style={{ marginBottom: 10 }} size='small' title="检查项目" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+          <Descriptions.Item label="申请项目">{report.inspway}</Descriptions.Item>
+          <Descriptions.Item label="检验备注">{report.inspwaymemo1}</Descriptions.Item>
+        </Descriptions>
+      </div>
+    );
+  }
+
+
+  renderLinkFileForm (){
+    const  {urls}  = this.state;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <embed runat="server" src={urls} width={620} height="600" />
+      </div>
+    );
+  }
+
+
+  renderSampleForm(){
+    const {sampleData} = this.state;
+    const {loading} = this.props;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={sampleData}
+          columns={this.sampleColumns}
+          rowKey="sampleno"
+          loading={loading}
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
+
+
+
+  renderCheckForm(){
+    const {checkResultData} = this.state;
+    const {loading} = this.props;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={checkResultData}
+          columns={this.checkColumns}
+          rowKey="keyno"
+          loading={loading}
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
+
+
+
+
+
+  renderSampleFormLink(){
+    const {sampleDataLink} = this.state;
+    const {loading} = this.props;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={sampleDataLink}
+          columns={this.sampleColumnsLink}
+          rowKey="sampleno"
+          loading={loading}
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
+
+
+  renderForm(){
+    const {renderFormData,renderFormColumns} = this.state;
+    const {loading} = this.props;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={renderFormData}
+          columns={renderFormColumns}
+          rowKey="keyno"
+          loading={loading}
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
+
+
+  renderCheckFormLink(){
+    const {checkResultDataLink} = this.state;
+    const {loading} = this.props;
+    return (
+      <div style={{width:620,backgroundColor:'white'}}>
+        <Table
+          size="middle"
+          dataSource={checkResultDataLink}
+          columns={this.checkColumnsLink}
+          rowKey="keyno"
+          loading={loading}
+          pagination={{showQuickJumper:true,showSizeChanger:true}}
+        />
+      </div>
+    );
+  }
+
+
+  renderTreeNodes = data =>
+    data.map(item => {
+      if (item.children) {
+        return (
+          <TreeNode title={item.title} key={item.key} dataRef={item}>
+            {this.renderTreeNodes(item.children)}
+          </TreeNode>
+        );
+      }
+      return <TreeNode key={item.key} {...item} dataRef={item} />;
+    });
+
+  renderFileInfo =(value)=>{
+    /*
+
+     */
+    if(value === '0-0-0'){
+      return this.renderReportForm();
+    }
+
+    if(value === '0-0-1'){
+      this.state.renderFormData  = this.state.sampleData;
+      this.state.renderFormColumns  = this.state.sampleColumns;
+    }
+
+    if(value === '0-0-2'){
+      this.state.renderFormData  = this.state.checkResultData;
+      this.state.renderFormColumns  = this.state.checkColumns;
+    }
+
+    if(value === '0-1-0'){
+      this.state.renderFormData  = this.state.sampleDataLink;
+      this.state.renderFormColumns  = this.state.sampleColumnsLink;
+    }
+
+    if(value === '0-1-1'){
+      this.state.renderFormData  = this.state.checkResultDataLink;
+      this.state.renderFormColumns  = this.state.checkColumnsLink;
+    }
+
+    return this.renderForm();
+  }
+
+
+
   render() {
     const uploadButton = (
       <div>
@@ -522,7 +1080,7 @@ class CertificateFinalDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value,option} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
     // 下载模板 模态框方法
@@ -544,7 +1102,7 @@ class CertificateFinalDetail extends PureComponent {
     return (
       <PageHeaderWrapper text={reprotText}>
         <Modal
-          title="记录上传"
+          title="证稿上传"
           visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -555,8 +1113,8 @@ class CertificateFinalDetail extends PureComponent {
                 rules: [{ required: true, message: '请选择上传文件' }],
               })(
                 <Upload
-                  //action="http://localhost:8000/api/recordinfo/upload"
-                  //data={{'reportno':reportno}}
+                  // action="http://localhost:8000/api/recordinfo/upload"
+                  // data={{'reportno':reportno}}
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={this.handlePreview}
@@ -567,11 +1125,11 @@ class CertificateFinalDetail extends PureComponent {
                 </Upload>
               )}
             </Form.Item>
-            <Form.Item label="证书名称">
+            <Form.Item label="证稿名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入证书名称' }],
+                rules: [{ required: true, message: '请输入证稿名称' }],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入证书名称" />
+                <Input style={{ width: '100%' }} placeholder="请输入证稿名称" />
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>
@@ -582,9 +1140,45 @@ class CertificateFinalDetail extends PureComponent {
 
         <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
 
+        <Modal
+          title={option}
+          visible={showVisible}
+          onCancel={this.showCancel}
+          footer={[
+            // 定义右下角 按钮的地方 可根据需要使用 一个或者 2个按钮
+            <Button key="cancel" type="primary" onClick={this.showCancel}> 取消</Button>,
+            option === "签署"?[<Button key="submit1" type="primary" onClick={this.handleSign}>签署</Button>]:[],
+            option === "复核"?[<Button key="submit2" type="primary" onClick={this.reviewCertFile}>复核</Button>]:[],
+            option === "盖章"?[<Button key="submit3" type="primary" onClick={this.handleSign}>盖章</Button>]:[],
+          ]}
+          style={{ top: 10 }}
+          width={1500}
+        >
+          <Layout>
+            <Content>
+              <div style={{backgroundColor:'white'}}>
+                <Row>
+                  <Form>
+                    <Col span={12}>  <embed src={Certurls} width={620} height="600" /></Col>
+                    <Col span={12}>
+                      {this.renderFileInfo(value)}
+                    </Col>
+                  </Form>
+                </Row>
+              </div>
+            </Content>
+            <Sider theme='light' width={180} style={{paddingLeft:15}}>
+              <Tree showLine defaultExpandedKeys={['0-0-0']} defaultExpandParent onSelect={this.onSelect}>{this.renderTreeNodes(this.state.treeData)}</Tree>
+            </Sider>
+          </Layout>
+        </Modal>
+
         <Card bordered={false} size="small">
           <Row>
-            <Col span={22} />
+            <Col span={22}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
+              <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
+            </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
                 <Icon type="left" />返回
