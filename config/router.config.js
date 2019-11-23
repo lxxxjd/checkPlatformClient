@@ -528,11 +528,11 @@ export default [
             name: 'CompanyUpload',
             component: './CompanyManage/CompanyUpload',
           },
-          {
-            path: '/CompanyManage/CompanySign',
-            name: 'CompanySign',
-            component: './CompanyManage/CompanySign',
-          },
+          // {
+          //   path: '/CompanyManage/CompanySign',
+          //   name: 'CompanySign',
+          //   component: './CompanyManage/CompanySign',
+          // },
 
           {
             path: '/CompanyManage/UserManage',
