@@ -529,6 +529,11 @@ export default [
             component: './CompanyManage/CompanyUpload',
           },
           {
+            path: '/CompanyManage/CompanyInfo',
+            name: 'CompanyInfo',
+            component: './CompanyManage/CompanyInfo',
+          },
+          {
             path: '/CompanyManage/UserManage',
             name: 'UserManage',
             component: './CompanyManage/UserManage',

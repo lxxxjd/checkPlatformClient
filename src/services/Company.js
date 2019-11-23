@@ -25,6 +25,16 @@ export async function getAllUserListByCertCode(params) {
   });
 }
 
+
+export async function updateCompany(params) {
+  return request(`/api/company/updateCompany`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 export async function uploadUserSeal(params) {
   return request(`/api/user/upload_sign`,{
     method: 'POST',

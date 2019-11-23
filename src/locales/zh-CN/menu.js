@@ -78,6 +78,7 @@ export default {
   'menu.DictMaintain.InvoiceTitle':'发票信息',
 
   'menu.CompanyManage':'公司管理',
+  'menu.CompanyManage.CompanyInfo':'公司信息管理',
   'menu.CompanyManage.CompanyUpload':'上传文件',
   'menu.CompanyManage.UserManage':'用户管理',
   'menu.CompanyManage.Department':'部门管理',
