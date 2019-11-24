@@ -195,6 +195,9 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="证书要求" >{report.certstyle}</Descriptions.Item>
             <Descriptions.Item label="自编号">{report.reportno20}</Descriptions.Item>
             <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
+            <Descriptions.Item label="执行部门">{report.section}</Descriptions.Item>
+            <Descriptions.Item label="海关部门">{report.costomsName}</Descriptions.Item>
+
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="检查对象" style={{ marginBottom: 32 }} bordered>
@@ -217,11 +220,11 @@ class DetailForEnturstment extends Component {
             <tr>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可领域及代码</td>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可子领域代码</td>
-              <td width="15%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
+              <td width="12%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
               </td>
-              <td width="12%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>检查项目及代码
+              <td width="15%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>检查项目及代码
               </td>
-              <td style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查项目</td>
+              <td style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查项目详细描述</td>
             </tr>
             <tr>
               <td style={{'padding': '10px'}}>{cnasInfo.domaincode}{<br />}{cnasInfo.domainname}</td>

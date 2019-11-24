@@ -5,9 +5,11 @@ export async function submitApplication(params) {
 	const inspway = params.inspway.join(' ');
 	const certstyle = params.certstyle.join('');
   const cnasProject = params.cnasProject.join(' ');
+  const costomsName = params.costomsName.join(' ');
   params.inspway = inspway;
   params.certstyle = certstyle;
   params.cnasProject = cnasProject;
+  params.costomsName = costomsName;
 	return request('/api/report/add_report', {
   	method: 'POST',
   	data: {
@@ -20,10 +22,22 @@ export async function updateReport(params) {
   const inspway = params.inspway.join(' ');
   const certstyle = params.certstyle.join('');
   const cnasProject = params.cnasProject.join(' ');
+  const costomsName = params.costomsName.join(' ');
   params.inspway = inspway;
   params.certstyle = certstyle;
   params.cnasProject = cnasProject;
+  params.costomsName = costomsName;
   return request('/api/report/update_report', {
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function getDepartmentList(params) {
+  return request(`/api/department/get_departmentList`,{
     method: 'POST',
     data: {
       ...params,

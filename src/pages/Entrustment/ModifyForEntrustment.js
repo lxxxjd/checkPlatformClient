@@ -14,7 +14,8 @@ import {
   Popover,
   Radio,
   Typography,
-  notification
+  notification,
+  AutoComplete
 } from 'antd';
 
 import {connect} from 'dva';
@@ -63,26 +64,23 @@ const fieldLabels = {
   reportdate: '委托日期',
   tradeway: '贸易方式',
   businesssource: '业务来源',
-  shipname: '船名标识',
-  inspplace: '装卸港',
+  shipname: '标识/船名',
+  fromto: '产地/装卸港',
   insplinkway: '现场联系方式',
   inspdate: '检验时间',
   cargoname: '货物名称',
   cargosort: '货物类别',
   quantityD: '申报数量',
   unit: '单位',
-  ChineseName: '中文俗名',
-  EnglishName: '英文俗名',
+  ChineseName: '型号/俗称',
   inspplace1: '检验地点',
-  country: '国',
-  province: '省',
-  city: '市',
-  area: '区',
-  harbour: '港',
   reportno20: '自编号',
+  area:'区/县/市',
   inspway: '申请项目',
   inspwaymemo1: '检验备注',
   certstyle: '证书要求',
+  section:'执行部门',
+  customsName:'海关部门'
 };
 
 
@@ -115,6 +113,8 @@ class ModifyForEntrustment extends PureComponent {
       subdomainname: '',
     },
     cnasCheckInfo: [],
+    departments:[],
+    isCustoms:false,
   };
 
 
@@ -230,9 +230,21 @@ class ModifyForEntrustment extends PureComponent {
     });
     dispatch({
       type: 'entrustment/getCheckProject',
-      payload: {},
+      payload: {
+        certCode : user.certCode,
+      },
       callback: (response) => {
         this.setState({checkProject: response})
+      }
+    });
+    dispatch({
+      type: 'entrustment/getDepartmentList',
+      payload: {
+        certCode: user.certCode,
+      },
+      callback: (response) => {
+        console.log(response);
+        this.setState({departments: response.data})
       }
     });
   }
@@ -447,20 +459,27 @@ class ModifyForEntrustment extends PureComponent {
       }
     }
   };
-
+  isCostoms = e =>{
+    if (e.target.value === 1) {
+      this.setState({isCustoms:true});
+    } else {
+      console.log(false);
+      this.setState({isCustoms:false});
+    }
+  };
   render() {
     const {
       form: {getFieldDecorator},
     } = this.props;
-    const {allReporterName, businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo} = this.state;
+    const {allReporterName, businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments,isCustoms} = this.state;
 
     const reportNameOptions = allReporterName.map(d => <Option key={d} value={d}>{d}</Option>);
     const businessSortOptions = businessSort.map(d => <Option key={d} value={d}>{d}</Option>);
     const businessSourceOptions = businessSource.map(d => <Option key={d} value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d} value={d}>{d}</Option>);
-    const cargosOptions = cargos.map(d => <Option key={d.cargonamec} value={d.cargonamec}>{d.cargonamec}</Option>);
-    const applicantContactsOptions = applicantContacts.map(d => <Option key={d.keyno}
-                                                                        value={d.keyno}>{d.contactName}</Option>);
+    const cargosOptions = cargos.map(d => d.cargonamec);
+    const departmentOptions = departments.map(d => d.branchname);
+    const applicantContactsOptions = applicantContacts.map(d => <Option key={d.keyno} value={d.keyno}>{d.contactName}</Option>);
     const agentContactsOptions = agentContacts.map(d => <Option key={d.keyno} value={d.keyno}>{d.contactName}</Option>);
     //申请人选项
     return (
@@ -513,6 +532,7 @@ class ModifyForEntrustment extends PureComponent {
                       showSearch
                       placeholder="请选择联系人"
                       filterOption={false}
+                      onSearch={this.handleSearch}
                       onChange={this.onAppliantNameChange}
                     >
                       {applicantContactsOptions}
@@ -580,6 +600,7 @@ class ModifyForEntrustment extends PureComponent {
                       showSearch
                       placeholder="请选择联系人"
                       filterOption={false}
+                      onSearch={this.handleSearch}
                       onChange={this.onAgentNameChange}
                     >
                       {agentContactsOptions}
@@ -634,11 +655,15 @@ class ModifyForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col span={10}>
-                <Radio.Group onChange={this.onChange}>
-                  <Radio value={2}>申请人为付款人</Radio>
-                  <Radio value={1}>代理人为付款人</Radio>
-                </Radio.Group>
+              <Col span={5}>
+                <Form.Item
+                  colon={false}
+                >
+                  <Radio.Group onChange={this.onChange}>
+                    <Radio value={2}>申请人付款</Radio>
+                    <Radio value={1}>代理人付款</Radio>
+                  </Radio.Group>
+                </Form.Item>
               </Col>
               <Col span={5}>
                 <Form.Item
@@ -663,6 +688,81 @@ class ModifyForEntrustment extends PureComponent {
                   }
                 </Form.Item>
               </Col>
+              <Col span={5}>
+                <Form.Item
+                  label={fieldLabels.reportno20}
+                  labelCol={{span: 8}}
+                  wrapperCol={{span: 16}}
+                  colon={false}
+                >
+                  {getFieldDecorator('reportno20', {
+                    rules: [{required: true, message: '自编号'}],
+                  })(<Input placeholder="自编号"/>)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={9}>
+                <Form.Item
+                  label={fieldLabels.businesssort}
+                  labelCol={{span: 4}}
+                  wrapperCol={{span: 20}}
+                  colon={false}
+                >
+                  {getFieldDecorator('businesssort', {
+                    rules: [{required: true, message: '请选择业务分类'}],
+                  })(
+                    <Select placeholder="请选择">
+                      {businessSortOptions}
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+                <Form.Item
+                  colon={false}
+                >
+                  {getFieldDecorator('businesssort', {
+                    rules: [{required: true, message: '是否海关管辖'}],
+                  })(
+                    <Radio.Group onChange={this.isCustoms}>
+                      <Radio value={1}>海关管辖</Radio>
+                      <Radio value={0}>非海关管辖</Radio>
+                    </Radio.Group>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+                <Form.Item
+                  label={fieldLabels.customsName}
+                  labelCol={{span: 8}}
+                  wrapperCol={{span: 16}}
+                  colon={false}
+                >
+                  {getFieldDecorator('customsName', {
+                    rules: 
+                    isCustoms === true
+                    ? [{required: true, message: '请选择海关部门'}]
+                    : [],
+                  })(
+                    <Select placeholder="请选择">
+                      {businessSortOptions}
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+                <Form.Item
+                  label={fieldLabels.certstyle}
+                  labelCol={{span: 8}}
+                  wrapperCol={{span: 16}}
+                  colon={false}
+                >
+                  {getFieldDecorator('certstyle', {
+                    rules: [{required: true, message: '证书要求'}],
+                  })(<Cascader options={options} placeholder="请选择证书要求"/>)}
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
               <Col span={6}>
@@ -684,47 +784,22 @@ class ModifyForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col span={18}>
                 <Form.Item
-                  label={fieldLabels.certstyle}
-                  labelCol={{span: 8}}
-                  wrapperCol={{span: 16}}
+                  label={fieldLabels.section}
+                  labelCol={{span: 2}}
+                  wrapperCol={{span: 22}}
                   colon={false}
                 >
-                  {getFieldDecorator('certstyle', {
-                    rules: [{required: true, message: '证书要求'}],
-                  })(<Cascader options={options} placeholder="请选择证书要求"/>)}
-                </Form.Item>
-              </Col>
-              <Col span={4}>
-                <Form.Item
-                  label={fieldLabels.reportno20}
-                  labelCol={{span: 8}}
-                  wrapperCol={{span: 16}}
-                  colon={false}
-                >
-                  {getFieldDecorator('reportno20', {
-                    rules: [{required: true, message: '自编号'}],
-                  })(<Input placeholder="自编号"/>)}
-                </Form.Item>
-              </Col>
-              <Col span={10}>
-                <Form.Item
-                  label={fieldLabels.businesssort}
-                  labelCol={{span: 3}}
-                  wrapperCol={{span: 21}}
-                  colon={false}
-                >
-                  {getFieldDecorator('businesssort', {
-                    rules: [{required: true, message: '请选择业务分类'}],
+                  {getFieldDecorator('section', {
+                    rules: [{required: true, message: '执行部门'}],
                   })(
-                    <Select placeholder="请选择">
-                      {businessSortOptions}
-                    </Select>
+                    <CheckboxGroup
+                      options={departmentOptions}
+                    />
                   )}
                 </Form.Item>
               </Col>
-
             </Row>
           </Form>
         </Card>
@@ -740,14 +815,21 @@ class ModifyForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('cargoname', {
                     rules: [{required: true, message: '请输入货物名称'}],
-                  })(<Select
-                    showSearch
-                    filterOption={false}
-                    placeholder="请选择货物名称"
-                    onSearch={this.cargoSearch}
-                    onChange={this.handleChangeCargo}
-                  >{cargosOptions}
-                  </Select>)}
+                  })(
+                    <AutoComplete
+                      className="global-search"
+                      //size="large"
+                      //style={{ width: '100%' }}
+                      dataSource={cargosOptions}
+                      onChange={this.handleChangeCargo}
+                      onSearch={this.cargoSearch}
+                      placeholder="input here"
+                    >
+                      <Input
+                      />
+                    </AutoComplete>
+
+                  )}
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -838,15 +920,15 @@ class ModifyForEntrustment extends PureComponent {
               </Col>
               <Col span={8}>
                 <Form.Item
-                  label={fieldLabels.inspplace}
+                  label={fieldLabels.fromto}
                   labelCol={{span: 6}}
                   wrapperCol={{span: 18}}
                   colon={false}
                 >
-                  {getFieldDecorator('inspplace', {
-                    rules: [{required: true, message: '请输入装运港口'}],
+                  {getFieldDecorator('fromto', {
+                    rules: [{required: true, message: '请输入产地/装卸港'}],
                   })(
-                    <Input placeholder="请输入装运港口"/>
+                    <Input placeholder="请输入产地/装卸港"/>
                   )}
                 </Form.Item>
               </Col>
@@ -862,11 +944,11 @@ class ModifyForEntrustment extends PureComponent {
                   {getFieldDecorator('inspplace1', {
                     rules: [{required: true, message: '请选择检验地点'}],
                   })(
-                    <Cascader options={areaOptions} placeholder="请选择检验地点" />
+                    <Cascader options={areaOptions} placeholder="请选择检验地点"/>
                   )}
                 </Form.Item>
               </Col>
-              <Col span={3}>
+              <Col span={8}>
                 <Form.Item
                   label={fieldLabels.area}
                   labelCol={{span: 6}}
@@ -874,21 +956,9 @@ class ModifyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('inspplace2', {
-                    rules: [{required: true, message: '请输入港'}],
+                    rules: [{required: true, message: '请输入详细地址'}],
                   })(
-                    <Input placeholder="请输入"/>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item
-                  label={fieldLabels.harbour}
-                  labelCol={{span: 4}}
-                  wrapperCol={{span: 20}}
-                  colon={false}
-                >
-                  {getFieldDecorator('inspplace3')(
-                    <Input placeholder="请输入补充" />
+                    <Input placeholder="请输入详细地址" />
                   )}
                 </Form.Item>
               </Col>
@@ -900,23 +970,23 @@ class ModifyForEntrustment extends PureComponent {
             <tr>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可领域及代码</td>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可子领域代码</td>
-              <td width="15%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
+              <td width="12%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
               </td>
-              <td width="12%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>检查项目及代码
+              <td width="15%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>检查项目及代码
               </td>
-              <td style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查项目</td>
+              <td style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查项目具体描述</td>
             </tr>
             <tr>
-              <td style={{'padding': '10px'}}>{cnasInfo.domaincode}{<br/>}{cnasInfo.domainname}</td>
-              <td style={{'padding': '10px'}}>{cnasInfo.subdomaincode}{<br/>}{cnasInfo.subdomainname}</td>
-              <td style={{'padding': '10px'}}>{cnasInfo.checkcode}{<br/>}{cnasInfo.checkname}</td>
+              <td style={{'padding': '10px'}}>{cnasInfo.domaincode}{<br />}{cnasInfo.domainname}</td>
+              <td style={{'padding': '10px'}}>{cnasInfo.subdomaincode}{<br />}{cnasInfo.subdomainname}</td>
+              <td style={{'padding': '10px'}}>{cnasInfo.checkcode}{<br />}{cnasInfo.checkname}</td>
               <td style={{'padding': '10px'}}>
                 <Form hideRequiredMark labelAlign="left">
                   <Form.Item
                     colon={false}
                   >
                     {getFieldDecorator('cnasProject', {
-                      rules: [{required: true, message: '申请项目'}],
+                      rules: [{required: true, message: '检查项目'}],
                     })(
                       <CheckboxGroup
                         options={cnasCheckInfo}
@@ -930,7 +1000,7 @@ class ModifyForEntrustment extends PureComponent {
                   <Row>
                     <Col span={24}>
                       <Form.Item
-                        label={fieldLabels.inspway}
+                        // label={fieldLabels.inspway}
                         colon={false}
                       >
                         {getFieldDecorator('inspway', {
@@ -949,7 +1019,7 @@ class ModifyForEntrustment extends PureComponent {
                         label={fieldLabels.inspwaymemo1}
                         colon={false}
                       >
-                        {getFieldDecorator('inspwaymemo1', {})(<TextArea style={{minHeight: 32}} rows={4}/>)}
+                        {getFieldDecorator('inspwaymemo1', {})(<TextArea style={{minHeight: 32}} rows={5}/>)}
                       </Form.Item>
                     </Col>
                   </Row>
