@@ -30,7 +30,7 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 水木梁清检验机构
+    Copyright <Icon type="copyright" /> 检验机构业务管理系统
   </Fragment>
 );
 
@@ -63,7 +63,7 @@ class UserLayout extends Component {
               <div className={styles.header}>
                 <Link to="/">
                   <img alt="logo" className={styles.logo} src={logo} />
-                  <span className={styles.title}>水木梁清</span>
+                  <span className={styles.title}>检验机构业务管理系统</span>
                 </Link>
               </div>
               <div className={styles.desc}></div>
