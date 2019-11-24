@@ -1,6 +1,6 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
-        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,getCnasInfo,getCnasCheckInfo,getDepartmentList} from '@/services/Entrustment';
+        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -30,6 +30,10 @@ export default {
     },
     *getDepartmentList({ payload , callback}, { call, put }) {
       const response = yield call(getDepartmentList, payload);
+      if (callback) callback(response);
+    },
+    *getCustomInfos({ payload , callback}, { call, put }) {
+      const response = yield call(getCustomInfos, payload);
       if (callback) callback(response);
     },
     *addReport({ payload, callback }, { call, put }) {

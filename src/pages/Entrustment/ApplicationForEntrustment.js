@@ -111,6 +111,7 @@ class ApplicationForEntrustment extends PureComponent {
     cnasCheckInfo: [],
     departments:[],
     isCustoms:false,
+    customsOption:[],
   };
 
 
@@ -178,6 +179,15 @@ class ApplicationForEntrustment extends PureComponent {
         this.setState({departments: response.data})
       }
     });
+    dispatch({
+      type: 'entrustment/getCustomInfos',
+      payload: {
+      },
+      callback: (response) => {
+        console.log(response);
+        this.setState({customsOption: response.data})
+      }
+    });
   }
 
   validate = () => {
@@ -189,6 +199,8 @@ class ApplicationForEntrustment extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       values.inspplace1 = values.inspplace1[2];
+      values.customsName = values.customsName[1];
+      console.log(error);
       if (!error) {
         // submit the values
         dispatch({
@@ -197,7 +209,6 @@ class ApplicationForEntrustment extends PureComponent {
             ...values,
             username: user.nameC,
             certcode: user.certCode,
-            section: user.section,
             reportplace: user.place,
             cnasCode: cnasInfo.checkcode
           },
@@ -218,6 +229,9 @@ class ApplicationForEntrustment extends PureComponent {
             }
           }
         });
+      }
+      else{
+        console.log(error);
       }
     });
   };
@@ -272,6 +286,7 @@ class ApplicationForEntrustment extends PureComponent {
     console.log(value);
     const {form, dispatch} = this.props;
     const {cargos} = this.state;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     for (const cargo in cargos) {
       if (cargos[cargo].cargonamec === value) {
         const checkCode = cargos[cargo].checkCode;
@@ -283,16 +298,17 @@ class ApplicationForEntrustment extends PureComponent {
           callback: (response) => {
             if (response.code === 200) {
               this.setState({cnasInfo: response.data});
-              dispatch({
-                type: 'entrustment/getCnasCheckInfo',
-                payload: {
-                  subdomaincode: response.data.subdomaincode,
-                },
-                callback: (response) => {
-                  this.setState({cnasCheckInfo: response.data});
-                }
-              });
             }
+          }
+        });
+        dispatch({
+          type: 'entrustment/getCnasCheckInfo',
+          payload: {
+            certCode:user.certCode,
+            checkCode,
+          },
+          callback: (response) => {
+            this.setState({cnasCheckInfo: response.data});
           }
         });
         break;
@@ -331,7 +347,7 @@ class ApplicationForEntrustment extends PureComponent {
     const {form} = this.props;
     const {applicantContacts} = this.state;
     for (const applicantContact in applicantContacts) {
-      if (applicantContacts[applicantContact].keyno === value) {
+      if (applicantContacts[applicantContact].contactName === value) {
         form.setFieldsValue({'applicanttel': applicantContacts[applicantContact].contactPhone});
         break;
       }
@@ -342,7 +358,7 @@ class ApplicationForEntrustment extends PureComponent {
     const {form} = this.props;
     const {agentContacts} = this.state;
     for (const agentContact in agentContacts) {
-      if (agentContacts[agentContact].keyno === value) {
+      if (agentContacts[agentContact].contactName === value) {
         form.setFieldsValue({'agenttel': agentContacts[agentContact].contactPhone});
         break;
       }
@@ -353,7 +369,7 @@ class ApplicationForEntrustment extends PureComponent {
     const {
       form: {getFieldDecorator},
     } = this.props;
-    const {allReporterName, businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments,isCustoms} = this.state;
+    const {allReporterName, businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments,isCustoms,customsOption} = this.state;
 
     const reportNameOptions = allReporterName.map(d => <Option key={d} value={d}>{d}</Option>);
     const businessSortOptions = businessSort.map(d => <Option key={d} value={d}>{d}</Option>);
@@ -361,8 +377,8 @@ class ApplicationForEntrustment extends PureComponent {
     const tradewayOptions = tradeway.map(d => <Option key={d} value={d}>{d}</Option>);
     const cargosOptions = cargos.map(d => d.cargonamec);
     const departmentOptions = departments.map(d => d.branchname);
-    const applicantContactsOptions = applicantContacts.map(d => <Option key={d.keyno} value={d.keyno}>{d.contactName}</Option>);
-    const agentContactsOptions = agentContacts.map(d => <Option key={d.keyno} value={d.keyno}>{d.contactName}</Option>);
+    const applicantContactsOptions = applicantContacts.map(d => d.contactName);
+    const agentContactsOptions = agentContacts.map(d => d.contactName);
     //申请人选项
     return (
       <PageHeaderWrapper
@@ -410,15 +426,18 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicantname', {})(
-                    <Select
-                      showSearch
-                      placeholder="请选择联系人"
-                      filterOption={false}
-                      onSearch={this.handleSearch}
+                    <AutoComplete
+                      className="global-search"
+                      //size="large"
+                      //style={{ width: '100%' }}
+                      dataSource={applicantContactsOptions}
                       onChange={this.onAppliantNameChange}
+                      onSearch={this.handleSearch}
+                      placeholder="请输入联系人"
                     >
-                      {applicantContactsOptions}
-                    </Select>
+                      <Input
+                      />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>
@@ -478,15 +497,18 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentname', {})(
-                    <Select
-                      showSearch
-                      placeholder="请选择联系人"
-                      filterOption={false}
-                      onSearch={this.handleSearch}
+                    <AutoComplete
+                      className="global-search"
+                      //size="large"
+                      //style={{ width: '100%' }}
+                      dataSource={agentContactsOptions}
                       onChange={this.onAgentNameChange}
+                      onSearch={this.handleSearch}
+                      placeholder="请输入联系人"
                     >
-                      {agentContactsOptions}
-                    </Select>
+                      <Input
+                      />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>
@@ -604,7 +626,7 @@ class ApplicationForEntrustment extends PureComponent {
                 <Form.Item
                   colon={false}
                 >
-                  {getFieldDecorator('businesssort', {
+                  {getFieldDecorator('iscostoms', {
                     rules: [{required: true, message: '是否海关管辖'}],
                   })(
                     <Radio.Group onChange={this.isCustoms}>
@@ -627,9 +649,7 @@ class ApplicationForEntrustment extends PureComponent {
                     ? [{required: true, message: '请选择海关部门'}]
                     : [],
                   })(
-                    <Select placeholder="请选择">
-                      {businessSortOptions}
-                    </Select>
+                    <Cascader options={customsOption} placeholder="请选择检验地点"/>
                   )}
                 </Form.Item>
               </Col>

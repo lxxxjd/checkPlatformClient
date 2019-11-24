@@ -5,11 +5,11 @@ export async function submitApplication(params) {
 	const inspway = params.inspway.join(' ');
 	const certstyle = params.certstyle.join('');
   const cnasProject = params.cnasProject.join(' ');
-  const costomsName = params.costomsName.join(' ');
+  const section = params.section.join(' ');
   params.inspway = inspway;
   params.certstyle = certstyle;
   params.cnasProject = cnasProject;
-  params.costomsName = costomsName;
+  params.section = section;
 	return request('/api/report/add_report', {
   	method: 'POST',
   	data: {
@@ -22,11 +22,11 @@ export async function updateReport(params) {
   const inspway = params.inspway.join(' ');
   const certstyle = params.certstyle.join('');
   const cnasProject = params.cnasProject.join(' ');
-  const costomsName = params.costomsName.join(' ');
+  const section = params.section.join(' ');
   params.inspway = inspway;
   params.certstyle = certstyle;
   params.cnasProject = cnasProject;
-  params.costomsName = costomsName;
+  params.section = section;
   return request('/api/report/update_report', {
     method: 'POST',
     data: {
@@ -35,6 +35,7 @@ export async function updateReport(params) {
     },
   });
 }
+
 
 export async function getDepartmentList(params) {
   return request(`/api/department/get_departmentList`,{
@@ -64,6 +65,10 @@ export async function queryAllReportsByFilter(params) {
       method: 'post',
     },
   });
+}
+
+export async function getCustomInfos(params) {
+  return request(`/api/Customs/getCustomInfos`);
 }
 
 export async function queryReport(params) {
@@ -100,7 +105,7 @@ export async function getCnasInfo(params) {
   return request(`/api/cnas/getCnasInfo?checkCode=${params.checkCode}`);
 }
 export async function getCnasCheckInfo(params) {
-  return request(`/api/cnas/getCnasCheckInfo?subdomaincode=${params.subdomaincode}`);
+  return request(`/api/cnas/getCnasCheckInfo?checkCode=${params.checkCode}&certcode=${params.certCode}`);
 }
 
 export async function getCargos(params) {
