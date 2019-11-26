@@ -53,13 +53,10 @@ export async function queryInspects(params) {
 }
 
 
-
-// post请求 注意 ` 这个符号 不是这种 ’号
 export async function dealTask(params) {
-  const param = params.params;
   return request(`/api/task_info/deal_task`,{
     method: 'POST',
-    data:param,
+    data:params,
   });
 }
 
@@ -74,12 +71,13 @@ export async function updateTask(params) {
 }
 
 
+
+
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function dealnspect(params) {
-  const param = params.params;
   return request(`/api/task_info/deal_inspect`,{
     method: 'POST',
-    data:param,
+    data:params,
   });
 }
 
@@ -96,10 +94,9 @@ export async function updateInspect(params) {
 
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function dealnspman(params) {
-  const param = params.params;
   return request(`/api/task_info/deal_inspman`,{
     method: 'POST',
-    data:param,
+    data:params,
   });
 }
 

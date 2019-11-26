@@ -42,7 +42,6 @@ export async function getDepartmentList(params) {
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }

@@ -196,11 +196,11 @@ class InspectorDetail extends PureComponent {
     modalReviewVisible:false,
     modalInfo :{},
     checkProject:[],
+    taskData:[],
   };
 
-  taskData=[];
 
-  exist=[];
+
 
 
   columns = [
@@ -271,32 +271,23 @@ class InspectorDetail extends PureComponent {
 
     // eslint-disable-next-line no-restricted-syntax
     for( const i of selectedRowKeys){
-      let itemtask = this.taskData.find(item => item.inspman === i );
-      if(!this.exist.find(item => item === itemtask.inspman)){
-        itemtask.state = 2
-      }
+      let itemtask = this.state.taskData.find(item => item.inspman === i );
       itemtask.reportno = reportinfo.reportno;
       itemtask.taskman =user.nameC;
       params.push(itemtask);
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    for( const i of this.exist){
-      let itemtask = this.taskData.find(item => item.inspman === i );
-      if(!selectedRowKeys.find(item => item === itemtask.inspman)){
-        // eslint-disable-next-line block-scoped-var
-        itemtask.state = 3;
-      }
-      if(!params.find(item =>item.inspman ===i)) {
-        itemtask.reportno = reportinfo.reportno;
-        itemtask.taskman =user.nameC;
-        params.push(itemtask);
-      }
-    }
+    let formData = new FormData();
+    formData.append('taskJsonInspect', JSON.stringify(params));
+    formData.append('reportno', reportinfo.reportno);
+    formData.append('inspmantype', '检验人员');
+
+    console.log(params);
+
     const {dispatch} = this.props;
     dispatch({
       type: 'task/dealnspect',
-      payload: {params},
+      payload: formData,
       callback: (response) => {
         if(response){
           message.success('保存成功');
@@ -333,14 +324,15 @@ class InspectorDetail extends PureComponent {
       payload: params,
       callback: (response) => {
         if (response){
-          this.taskData =  response.list;
+          this.state.taskData =  response.list;
+          // 添加到selectkey
           const data = response.list;
-          const {state} = this;
-            // eslint-disable-next-line no-plusplus
-          for(let i=0;i<data.length;i++) {
-            if(data[i].state === 1){
+          const { state } = this;
+          state.selectedRowKeys = [];
+          // eslint-disable-next-line no-plusplus
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].state === 1) {
               state.selectedRowKeys.push(data[i].inspman);
-              this.exist.push(data[i].inspman);
             }
           }
         }
@@ -394,14 +386,15 @@ class InspectorDetail extends PureComponent {
         payload: params,
         callback: (response) => {
           if (response){
-            this.taskData =  response.list;
+
+            state.taskData =  response.list;
+            // 添加到selectkey
             const data = response.list;
-            const {state} = this;
+            state.selectedRowKeys = [];
             // eslint-disable-next-line no-plusplus
-            for(let i=0;i<data.length;i++) {
-              if(data[i].state === 1){
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].state === 1) {
                 state.selectedRowKeys.push(data[i].inspman);
-                this.exist.push(data[i].inspman);
               }
             }
           }
@@ -560,7 +553,7 @@ class InspectorDetail extends PureComponent {
       loading,
     } = this.props;
 
-    const {taskData} = this;
+    const {taskData,selectedRowKeys} = this.state;
 
     const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"));
     const Info = ({ title, value, bordered }) => (
@@ -571,7 +564,6 @@ class InspectorDetail extends PureComponent {
       </div>
     );
 
-    const {  selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,

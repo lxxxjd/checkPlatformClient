@@ -58,7 +58,7 @@ class Cost extends PureComponent {
     },
     {
       title: '总成本',
-      dataIndex: 'total',
+      dataIndex: 'totalcost',
     },
     {
       title: '状态',

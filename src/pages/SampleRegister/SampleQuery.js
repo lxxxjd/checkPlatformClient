@@ -12,7 +12,7 @@ import {
   Select,
   Table, message, Icon,
   Checkbox,
-  Image, Modal, Descriptions,
+  Image, Modal, Descriptions,Switch,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import queryStyles from './SampleQuery.less'
@@ -182,10 +182,9 @@ class SampleQuery extends PureComponent {
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
-    this.setState({
-      formValues: {},
-    });
     this.init();
+    this.flag = 0;
+
   };
 
 
@@ -204,7 +203,8 @@ class SampleQuery extends PureComponent {
       let mkinds=[];
       let mvalues=[];
       let mconditions=[];
-      if(fieldsValue.kind !==undefined &&fieldsValue.value !==undefined &&fieldsValue.condition !== undefined ){
+
+      if( fieldsValue.check ===true && fieldsValue.kind !==undefined &&fieldsValue.value !==undefined &&fieldsValue.condition !== undefined ){
         mkinds.push(fieldsValue.kind );
         mvalues.push(fieldsValue.value);
         mconditions.push(fieldsValue.condition );
@@ -216,7 +216,8 @@ class SampleQuery extends PureComponent {
         const kind = form.getFieldValue(`kinds${k}`);
         const condition = form.getFieldValue(`conditions${k}`);
         const value = form.getFieldValue(`values${k}`);
-        if(kind!==undefined &&value !==undefined &&condition !== undefined ){
+        const checkk = form.getFieldValue(`check${k}`);
+        if( checkk ===true &&  kind!==undefined &&value !==undefined &&condition !== undefined ){
           mkinds.push(kind );
           mvalues.push(value);
           mconditions.push(condition);
@@ -257,8 +258,21 @@ class SampleQuery extends PureComponent {
     } = this.props;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-
         <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
+          <Col md={1} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+            >
+              {getFieldDecorator('check', {
+                initialValue: true,
+                valuePropName: 'checked',
+              })(
+                <Switch checkedChildren="开" unCheckedChildren="关"  />
+              )}
+            </Form.Item>
+          </Col>
           <Col md={3} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
@@ -284,16 +298,16 @@ class SampleQuery extends PureComponent {
             </Form.Item>
           </Col>
 
-          <Col md={2} sm={20}>
+          <Col md={3} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
               colon={false}
             >
               {getFieldDecorator('condition', {
-                rules: [{  message: '选择条件' }],
+                rules: [{  message: '条件' }],
               })(
-                <Select placeholder="选择条件">
+                <Select placeholder="条件">
                   <Option value="=">等于</Option>
                   <Option value="!=">不等于</Option>
                   <Option value="like">包含</Option>
@@ -302,20 +316,23 @@ class SampleQuery extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col md={4} sm={10}>
+          <Col md={4} sm={20}>
             <FormItem>
-              {getFieldDecorator('value',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
+              {getFieldDecorator('value',{rules: [{ message: '请输入' }],})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
+          <Col md={1} sm={20}>  <Icon type="plus-circle" style={{fontSize:24, marginLeft: 8 ,marginTop:4}} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} /></Col>
 
           <Col md={8} sm={20}>
             <span className={styles.submitButtons}>
-              <Icon type="plus-circle" style={{fontSize:24, marginLeft: 8 ,marginTop:4}} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} />
-              <Button type="primary" style={{ marginLeft: 45 }} htmlType="submit">
-                查询
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+              <Button style={{ marginLeft: 0 }} onClick={this.handleFormReset}>
                 重置
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleAdvanceSearch}>
+                高级检索
+              </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">
+                查询
               </Button>
             </span>
           </Col>
@@ -361,6 +378,24 @@ class SampleQuery extends PureComponent {
   };
 
 
+  flag = 0;
+
+  handleAdvanceSearch =()=>{
+    if(this.flag ===0){
+      let i =4;
+      while(i>0){
+        this.add();
+        // eslint-disable-next-line no-plusplus
+        i--;
+      }
+      this.flag = 1;
+    }
+  };
+
+
+
+
+
   render() {
     const {
       sample: {selectRegisterResult},
@@ -380,6 +415,20 @@ class SampleQuery extends PureComponent {
         { index %2===0 && keys.length!==0? (
           <Row className={queryStyles.rowClass} />
         ) : null}
+        <Col md={1} sm={20}>
+          <Form.Item
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 6 }}
+            colon={false}
+          >
+            {getFieldDecorator(`check${k}`, {
+              initialValue: true,
+              valuePropName: 'checked',
+            })(
+              <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked />
+            )}
+          </Form.Item>
+        </Col>
         <Col md={3} sm={20}>
           <Form.Item
             style={{marginRight:8}}
@@ -404,7 +453,7 @@ class SampleQuery extends PureComponent {
             )}
           </Form.Item>
         </Col>
-        <Col md={2} sm={20}>
+        <Col md={3} sm={20}>
           <Form.Item
             style={{marginRight:8}}
             labelCol={{ span: 5 }}

@@ -4,7 +4,7 @@ import {getRecordList,getRecordInfo,deleteRecordInfo,uploadFile,getRecord} from 
 
 
 export default {
-  namespace: 'testRecord',
+  namespace: 'testRecordEntrustment',
 
   state: {
     data: {

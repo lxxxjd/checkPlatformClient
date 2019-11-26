@@ -11,7 +11,7 @@ import {
   Button,
   Select,
   Table, message,
-  Radio, Popconfirm, Icon, Modal, Descriptions,
+  Radio, Popconfirm, Icon, Modal, Descriptions, Switch,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -221,6 +221,7 @@ class SampleDestory extends PureComponent {
       formValues: {},
     });
     this.init();
+    this.flag = 0;
   };
 
 
@@ -271,7 +272,7 @@ class SampleDestory extends PureComponent {
       let mkinds=[];
       let mvalues=[];
       let mconditions=[];
-      if(fieldsValue.kind !==undefined &&fieldsValue.value !==undefined &&fieldsValue.condition !== undefined ){
+      if(fieldsValue.check ===true && fieldsValue.kind !==undefined &&fieldsValue.value !==undefined &&fieldsValue.condition !== undefined ){
         mkinds.push(fieldsValue.kind );
         mvalues.push(fieldsValue.value);
         mconditions.push(fieldsValue.condition );
@@ -283,7 +284,8 @@ class SampleDestory extends PureComponent {
         const kind = form.getFieldValue(`kinds${k}`);
         const condition = form.getFieldValue(`conditions${k}`);
         const value = form.getFieldValue(`values${k}`);
-        if(kind!==undefined &&value !==undefined &&condition !== undefined ){
+        const checkk = form.getFieldValue(`check${k}`);
+        if(checkk ===true && kind!==undefined &&value !==undefined &&condition !== undefined ){
           mkinds.push(kind );
           mvalues.push(value);
           mconditions.push(condition);
@@ -359,6 +361,21 @@ class SampleDestory extends PureComponent {
   };
 
 
+  flag = 0;
+
+  handleAdvanceSearch =()=>{
+    if(this.flag ===0){
+      let i =4;
+      while(i>0){
+        this.add();
+        // eslint-disable-next-line no-plusplus
+        i--;
+      }
+      this.flag = 1;
+    }
+  };
+
+
 
 
   renderSimpleForm() {
@@ -372,36 +389,44 @@ class SampleDestory extends PureComponent {
             <Col span={24}>
               <Button type="primary" onClick={this.destoryExist}>销毁</Button>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.undestory}>未销毁</Button>
-              <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">
-                查询
-              </Button>
               <Button onClick={this.handleFormReset} style={{ marginLeft: 8 }}>
                 重置
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleAdvanceSearch}>
+                高级检索
+              </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">
+                查询
               </Button>
             </Col>
           </Row>
         </Card>
 
-        <Row gutter={16} >
-          <Col md={6} sm={4}>
+        <Row >
+          <Col md={6} sm={10}>
             <Form.Item
               label="状态："
-              labelCol={{ span: 2 }}
-              wrapperCol={{ span: 10 }}
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 4 }}
             >
               {getFieldDecorator('status', {
                 initialValue:"全部",
               })(
                 // onChange={this.onChange} value={this.state.value}
-                <Radio.Group>
-                  <Radio value="全部">全部</Radio>
+                /*
+                 <Radio value="全部">全部</Radio>
                   <Radio value="销毁">销毁</Radio>
                   <Radio value="未销毁">未销毁</Radio>
+                 */
+                <Radio.Group defaultValue="全部" buttonStyle="solid">
+                  <Radio.Button value="全部">全部</Radio.Button>
+                  <Radio.Button value="销毁">销毁</Radio.Button>
+                  <Radio.Button value="未销毁">未销毁</Radio.Button>
                 </Radio.Group>
               )}
             </Form.Item>
           </Col>
-          <Col md={3} sm={4}>
+          <Col md={4} sm={10}>
             <Form.Item
               label="超保存期："
               labelCol={{ span: 5 }}
@@ -419,15 +444,27 @@ class SampleDestory extends PureComponent {
               )}
             </Form.Item>
           </Col>
-
-
-
-          <Col md={3} sm={20}>
+          <Col md={2} sm={10} />
+          <Col md={1} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
               colon={false}
-              // style={{marginLeft:45}}
+            >
+              {getFieldDecorator(`check`, {
+                initialValue: true,
+                valuePropName: 'checked',
+              })(
+                <Switch checkedChildren="开" unCheckedChildren="关"  />
+              )}
+            </Form.Item>
+          </Col>
+
+          <Col md={3} sm={10}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
             >
               {getFieldDecorator('kind', {
                 rules: [{  message: '选择字段' }],
@@ -448,7 +485,7 @@ class SampleDestory extends PureComponent {
             </Form.Item>
           </Col>
 
-          <Col md={3} sm={20}>
+          <Col md={3} sm={10}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
@@ -466,15 +503,15 @@ class SampleDestory extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col md={4} sm={10}>
+          <Col md={3} sm={10}>
             <FormItem>
               {getFieldDecorator('value',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
 
-          <Col md={4} sm={20}>
+          <Col md={2} sm={10}>
             <span>
-              <Icon type="plus-circle" style={{fontSize:24, marginLeft: 8,marginTop:4}} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} />
+              <Icon type="plus-circle" style={{fontSize:24,marginTop:4,marginLeft:16}} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} />
             </span>
           </Col>
 
@@ -509,7 +546,21 @@ class SampleDestory extends PureComponent {
         { index %2===0 && keys.length!==0? (
           <Row className={queryStyles.rowClass} />
         ) : null}
-        <Col md={3} sm={20}>
+        <Col md={1} sm={20}>
+          <Form.Item
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 6 }}
+            colon={false}
+          >
+            {getFieldDecorator(`check${k}`, {
+              initialValue: true,
+              valuePropName: 'checked',
+            })(
+              <Switch checkedChildren="开" unCheckedChildren="关"  />
+            )}
+          </Form.Item>
+        </Col>
+        <Col md={3} sm={10}>
           <Form.Item
             style={{marginRight:8}}
             labelCol={{ span: 5 }}
@@ -533,7 +584,7 @@ class SampleDestory extends PureComponent {
             )}
           </Form.Item>
         </Col>
-        <Col md={2} sm={20}>
+        <Col md={3} sm={10}>
           <Form.Item
             style={{marginRight:8}}
             labelCol={{ span: 5 }}
@@ -551,14 +602,14 @@ class SampleDestory extends PureComponent {
             )}
           </Form.Item>
         </Col>
-        <Col md={4} sm={10}>
+        <Col md={3} sm={10}>
           <FormItem>
             {getFieldDecorator(`values${k}`,{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
           </FormItem>
         </Col>
-        <Col md={1} sm={5}>
+        <Col md={2} sm={10}>
           {keys.length >= 1 ? (
-            <Icon style={{fontSize:24,marginLeft:8}} type="minus-circle" theme='twoTone' twoToneColor="#ff0000" onClick={() => this.remove(k)} />
+            <Icon style={{fontSize:24,marginLeft:16}} type="minus-circle" theme='twoTone' twoToneColor="#ff0000" onClick={() => this.remove(k)} />
           ) : null}
         </Col>
       </div>
@@ -578,6 +629,7 @@ class SampleDestory extends PureComponent {
             </Form>
             <Table
               className={styles.tableList}
+              style={{marginTop:10}}
               size="middle"
               rowKey="sampleno"
               loading={loading}

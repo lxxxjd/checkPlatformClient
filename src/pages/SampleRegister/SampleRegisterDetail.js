@@ -362,11 +362,13 @@ class SampleRegisterDetail extends PureComponent {
                 <Select placeholder="请选择样品名称">
                   <Option value="分析样">分析样</Option>
                   <Option value="水份样">水份样</Option>
+                  <Option value="分析样/水份样">分析样/水份样</Option>
                   <Option value="船舱样">船舱样</Option>
                   <Option value="岸罐样">岸罐样</Option>
                   <Option value="槽车样">槽车样</Option>
                   <Option value="管线样">管线样</Option>
                   <Option value="一英尺样">一英尺样</Option>
+                  <Option value="卸货平台">卸货平台</Option>
                 </Select>,
               )}
             </Form.Item>

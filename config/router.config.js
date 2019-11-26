@@ -396,6 +396,7 @@ export default [
             path: '/Charge/CostEdit',
             name: 'CostEdit',
             component: './Charge/CostEdit',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
           {

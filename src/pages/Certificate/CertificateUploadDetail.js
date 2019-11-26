@@ -463,7 +463,7 @@ class CertificateUploadDetail extends PureComponent {
         if(response.code === 200){
           this.setState({Certurls:response.data});
           this.setState({showVisible:true});
-          this.setState({text:text});
+          this.setState({text});
         }else {
           message.success("打开签署文件失败");
         }
@@ -714,6 +714,7 @@ class CertificateUploadDetail extends PureComponent {
     }
   };
 
+
   Cancel = () => this.setState({ previewVisible: false });
 
   handlePreview = async file => {
@@ -830,15 +831,29 @@ class CertificateUploadDetail extends PureComponent {
     this.setState({showVisible:false});
   }
 
+
+
   // 树控件的目录数据
   onSelect = (selectedKeys, info) => {
+    if (selectedKeys[0] === undefined || selectedKeys[0] === '0-0' || selectedKeys[0] === '0-1' || selectedKeys[0] === '0-2'  ) {
+      return;
+    }
     this.setState({ value: selectedKeys[0] });
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const params = {
       reportno,
     }
-    if (selectedKeys[0] === '0-0-2') {
+    if( selectedKeys[0] === '0-0-0' ){
+      const reportnNo =reportno;
+      dispatch({
+        type: 'certificate/getReport',
+        payload: reportnNo,
+        callback: (response) => {
+          this.setState({report:response});
+        }
+      });
+    }else if (selectedKeys[0] === '0-0-2') {
       dispatch({
         type: 'certificate/getCheckResultFetch',
         payload: params,
@@ -864,7 +879,6 @@ class CertificateUploadDetail extends PureComponent {
         payload: params,
         callback: (response) => {
           if (response) {
-            console.log( this.state.sampleDataLink);
             this.state.sampleDataLink = response.data;
           }
         }
@@ -879,8 +893,6 @@ class CertificateUploadDetail extends PureComponent {
           }
         }
       });
-    } else if (selectedKeys[0] === '0-0' || selectedKeys[0] === '0-1' || selectedKeys[0] === '0-2' || selectedKeys[0] === '0-0-0') {
-      return null;
     } else {
       // 附件的url
       dispatch({
@@ -892,8 +904,6 @@ class CertificateUploadDetail extends PureComponent {
           }
         }
       });
-
-
     }
   }
 
@@ -1063,33 +1073,34 @@ class CertificateUploadDetail extends PureComponent {
     });
 
   renderFileInfo =(value)=>{
-    /*
 
-     */
+    if (value === '0-0' || value=== '0-1' || value=== '0-2' ) {
+      return;
+    }
     if(value === '0-0-0'){
       return this.renderReportForm();
     }
-
     if(value === '0-0-1'){
       this.state.renderFormData  = this.state.sampleData;
       this.state.renderFormColumns  = this.state.sampleColumns;
     }
 
-    if(value === '0-0-2'){
+    else if(value === '0-0-2'){
       this.state.renderFormData  = this.state.checkResultData;
       this.state.renderFormColumns  = this.state.checkColumns;
     }
 
-    if(value === '0-1-0'){
+    else if(value === '0-1-0'){
       this.state.renderFormData  = this.state.sampleDataLink;
       this.state.renderFormColumns  = this.state.sampleColumnsLink;
     }
 
-    if(value === '0-1-1'){
+    else if(value === '0-1-1'){
       this.state.renderFormData  = this.state.checkResultDataLink;
       this.state.renderFormColumns  = this.state.checkColumnsLink;
+    }else{
+      return this.renderLinkFileForm();
     }
-
     return this.renderForm();
   }
 
