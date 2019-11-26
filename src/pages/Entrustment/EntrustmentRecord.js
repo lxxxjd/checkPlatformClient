@@ -426,6 +426,7 @@ class EntrustmentRecord extends PureComponent {
           onCancel={this.showCancel}
           footer={null}
           width={800}
+          style={{ top: 10}}
         >
           <embed src={url} width="700" height="700"/>
         </Modal>

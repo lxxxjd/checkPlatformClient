@@ -74,17 +74,16 @@ const ArrivalInvoiceForm = Form.create()(props => {
             initialValue:sampledata.samplename
           })(
             <Select placeholder="请选择样品名称">
-              <Option value="堆场">堆场</Option>
-              <Option value="皮带机">皮带机</Option>
-              <Option value="卸货平台">卸货平台</Option>
-              <Option value="散货船">散货船</Option>
-              <Option value="驳船">驳船</Option>
-              <Option value="船舱">船舱</Option>
-              <Option value="岸罐">岸罐</Option>
-              <Option value="管线">管线</Option>
+              <Option value="分析样">分析样</Option>
+              <Option value="水份样">水份样</Option>
+              <Option value="分析样/水份样">分析样/水份样</Option>
+              <Option value="船舱样">船舱样</Option>
+              <Option value="岸罐样">岸罐样</Option>
+              <Option value="槽车样">槽车样</Option>
+              <Option value="管线样">管线样</Option>
               <Option value="一英尺样">一英尺样</Option>
-              <Option value="槽东">槽东</Option>
-            </Select>,
+              <Option value="卸货平台">卸货平台</Option>
+            </Select>
           )}
         </Form.Item>
 
