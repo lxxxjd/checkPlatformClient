@@ -185,7 +185,6 @@ const CreateForm = Form.create()(props => {
   task,
   loading: loading.models.task,
 }))
-
 @Form.create()
 class InspectorDetail extends PureComponent {
   state = {
@@ -198,10 +197,6 @@ class InspectorDetail extends PureComponent {
     checkProject:[],
     taskData:[],
   };
-
-
-
-
 
   columns = [
     {
@@ -278,11 +273,10 @@ class InspectorDetail extends PureComponent {
     }
 
     let formData = new FormData();
-    formData.append('taskJsonInspect', JSON.stringify(params));
+    formData.append('taskJson', JSON.stringify(params));
     formData.append('reportno', reportinfo.reportno);
     formData.append('inspmantype', '检验人员');
 
-    console.log(params);
 
     const {dispatch} = this.props;
     dispatch({
@@ -325,37 +319,26 @@ class InspectorDetail extends PureComponent {
       callback: (response) => {
         if (response){
           this.state.taskData =  response.list;
+
           // 添加到selectkey
           const data = response.list;
-          const { state } = this;
-          state.selectedRowKeys = [];
+          this.state.selectedRowKeys = [];
           // eslint-disable-next-line no-plusplus
           for (let i = 0; i < data.length; i++) {
             if (data[i].state === 1) {
-              state.selectedRowKeys.push(data[i].inspman);
+              this.state.selectedRowKeys.push(data[i].inspman);
             }
           }
         }
       }
     });
-    //
-    // //获得checkoptions
-    // dispatch({
-    //   type: 'testInfo/getCheckProject',
-    //   payload: {},
-    //   callback: (response) => {
-    //     this.setState({checkProject:response})
-    //   }
-    // });
-
-  }
+  };
 
   handleFormReset = () => {
     this.init();
     const { form } = this.props;
     form.resetFields();
   };
-
 
 
   handleSearch = e => {
@@ -387,14 +370,16 @@ class InspectorDetail extends PureComponent {
         callback: (response) => {
           if (response){
 
-            state.taskData =  response.list;
+            this.state.taskData =  response.list;
+
+            // 添加到selectkey
             // 添加到selectkey
             const data = response.list;
-            state.selectedRowKeys = [];
+            this.state.selectedRowKeys = [];
             // eslint-disable-next-line no-plusplus
             for (let i = 0; i < data.length; i++) {
               if (data[i].state === 1) {
-                state.selectedRowKeys.push(data[i].inspman);
+                this.state.selectedRowKeys.push(data[i].inspman);
               }
             }
           }
@@ -553,7 +538,7 @@ class InspectorDetail extends PureComponent {
       loading,
     } = this.props;
 
-    const {taskData,selectedRowKeys} = this.state;
+    const {selectedRowKeys} = this.state;
 
     const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"));
     const Info = ({ title, value, bordered }) => (
@@ -592,7 +577,7 @@ class InspectorDetail extends PureComponent {
                 size="middle"
                 rowKey="inspman"
                 loading={loading}
-                dataSource={taskData}
+                dataSource={taskInspects.list}
                 pagination={{showQuickJumper:true,showSizeChanger:true}}
                 columns={this.columns}
                 rowSelection={rowSelection}
