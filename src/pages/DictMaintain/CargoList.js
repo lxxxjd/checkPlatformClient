@@ -61,14 +61,19 @@ class CargoList extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.previewItem(text, record)}>查看指标</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+
         </Fragment>
       ),
     },
   ];
+
+  /*
+          &nbsp;&nbsp;
+          <a onClick={() => this.modifyItem(text, record)}>修改</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+   */
+
   deleteItem = text =>{
     const { dispatch } = this.props;
     dispatch({
@@ -95,10 +100,10 @@ class CargoList extends PureComponent {
 
 
   componentDidMount() {
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+    // const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     const params = {
-      certCode:user.certCode
+      // certCode:user.certCode
     };
     dispatch({
       type: 'dict/getCargos',
@@ -225,9 +230,10 @@ class CargoList extends PureComponent {
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
-          <div className={styles.tableListForm}><SearchForm {...parentMethods}></SearchForm></div>
+          <div className={styles.tableListForm}><SearchForm {...parentMethods}/></div>
           <div className={styles.tableList}>
             <Table
+              style={{marginTop:10}}
               size="middle"
               loading={loading}
               dataSource={cargos}

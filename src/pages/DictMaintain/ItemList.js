@@ -58,14 +58,14 @@ class ItemList extends PureComponent {
         <Fragment>
           <a onClick={() => this.previewItem(text, record)}>查看标准</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          {/*<a onClick={() => this.modifyItem(text, record)}>修改</a>*/}
+          {/*&nbsp;&nbsp;*/}
+          {/*<a onClick={() => this.deleteItem(text, record)}>删除</a>*/}
         </Fragment>
       ),
     },
   ];
-  
+
   deleteItem = text =>{
     const { dispatch } = this.props;
     dispatch({
@@ -129,6 +129,10 @@ class ItemList extends PureComponent {
       'itemC': text.itemC,
       'itemE': text.itemE,
     });
+  };
+
+  back = () =>{
+    this.props.history.goBack();
   };
 
   handleOk = () => {
@@ -216,14 +220,16 @@ class ItemList extends PureComponent {
 
     const parentMethods = {
       showAdd: this.showAdd,
+      back:this.back,
     };
 
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
-          <div className={styles.tableListForm}><SearchForm {...parentMethods}></SearchForm></div>
+          <div className={styles.tableListForm}><SearchForm {...parentMethods} ></SearchForm></div>
           <div className={styles.tableList}>
             <Table
+              style={{marginTop:10}}
               size="middle"
               loading={loading}
               dataSource={items}

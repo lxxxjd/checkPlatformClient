@@ -58,9 +58,9 @@ class StandardList extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          {/*<a onClick={() => this.modifyItem(text, record)}>修改</a>*/}
+          {/*&nbsp;&nbsp;*/}
+          {/*<a onClick={() => this.deleteItem(text, record)}>删除</a>*/}
         </Fragment>
       ),
     },
@@ -192,6 +192,10 @@ class StandardList extends PureComponent {
     this.setState( { visible : false } );
   };
 
+  back = () =>{
+    this.props.history.goBack();
+  };
+
 
   render() {
     const {
@@ -207,8 +211,8 @@ class StandardList extends PureComponent {
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
-              <Button type="primary" style={{ marginBottom: 8 }} onClick={this.showAdd}>
-                新增
+              <Button type="primary" style={{ marginBottom: 8 }} onClick={this.back}>
+                返回
               </Button>
             </div>
             <Table

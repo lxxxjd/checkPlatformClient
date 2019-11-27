@@ -108,10 +108,10 @@ export async function getCnasCheckInfo(params) {
 }
 
 export async function getCargos(params) {
-  return request(`/api/cargo/get_cargos?certCode=${params.certCode}`);
+  return request(`/api/cargo/get_cargos`);
 }
 export async function searchCargos(params) {
-  return request(`/api/cargo/search_cargos?certCode=${params.certCode}&value=${params.value}`);
+  return request(`/api/cargo/search_cargos?value=${params.value}`);
 }
 export async function cancelReportItem(params) {
   return request(`/api/report/delete_report`,{

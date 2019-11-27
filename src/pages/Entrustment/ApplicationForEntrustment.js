@@ -163,7 +163,7 @@ class ApplicationForEntrustment extends PureComponent {
     dispatch({
       type: 'entrustment/getCargos',
       payload: {
-        certCode: user.certCode,
+        // certCode: user.certCode,
       },
       callback: (response) => {
         this.setState({cargos: response})
@@ -269,11 +269,11 @@ class ApplicationForEntrustment extends PureComponent {
   };
   cargoSearch = value => {
     const {dispatch} = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+   // const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
       type: 'entrustment/searchCargos',
       payload: {
-        certCode,
+        // certCode,
         value
       },
       callback: (response) => {
@@ -644,7 +644,7 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('customsName', {
-                    rules: 
+                    rules:
                     isCustoms === true
                     ? [{required: true, message: '请选择海关部门'}]
                     : [],

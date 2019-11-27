@@ -6,7 +6,7 @@ import {
   Col,
   Select,
   Input,
-  Button
+  Button, Icon,
 } from 'antd';
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -48,6 +48,8 @@ class Search  extends PureComponent {
 		  });
 		});
 	};
+
+
 	render() {
 		const {
 		  form: { getFieldDecorator },
@@ -77,9 +79,11 @@ class Search  extends PureComponent {
 		          <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
 		            重置
 		          </Button>
-		          <Button style={{ marginLeft: 8 }} onClick={showAdd}>
-		            新增
-		          </Button>
+
+
+              {/*<Button style={{ marginLeft: 8 }} onClick={showAdd}>*/}
+		          {/*  新增*/}
+		          {/*</Button>*/}
 		        </span>
 		      </Col>
 		    </Row>

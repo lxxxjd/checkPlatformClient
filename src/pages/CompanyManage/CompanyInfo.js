@@ -34,7 +34,7 @@ class CompanyInfo extends PureComponent {
 		parents:[],
 	};
 	componentDidMount() {
-	    const { 
+	    const {
 	    	dispatch ,
 	    	form
 	    } = this.props;
@@ -176,7 +176,7 @@ class CompanyInfo extends PureComponent {
 	                </Form.Item>
 			        <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
 						<Button type="primary" onClick={this.handleSubmit}>
-						Submit
+					  	保存
 						</Button>
 			        </Form.Item>
 			    </Form>
