@@ -109,9 +109,9 @@ function getBase64(file) {
 }
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ testRecord, loading }) => ({
-  testRecord,
-  loading: loading.models.testRecord,
+@connect(({ mTestRecord, loading }) => ({
+  mTestRecord,
+  loading: loading.models.mTestRecord,
 }))
 class UploadDetail extends PureComponent {
   state = {
@@ -173,7 +173,7 @@ class UploadDetail extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testRecord/getRecordInfo',
+      type: 'mTestRecord/getRecordInfo',
       payload:{
          reportno : reportno,
          source : '检查记录',
@@ -189,7 +189,7 @@ class UploadDetail extends PureComponent {
       reportno:reportno
     };
     dispatch({
-      type: 'testRecord/getRecord',
+      type: 'mTestRecord/getRecord',
       payload:params,
       callback:(response) =>{
         if(response.code === 400){
@@ -217,7 +217,7 @@ class UploadDetail extends PureComponent {
       reportno:reportno
     };
     dispatch({
-      type: 'testRecord/deleteRecordInfo',
+      type: 'mTestRecord/deleteRecordInfo',
       payload:params,
       callback: (response) => {
         if(response.code === 400){
@@ -249,7 +249,7 @@ class UploadDetail extends PureComponent {
         formData.append('fileName', values.recordname);
         console.log(formData.get('files'));
         dispatch({
-          type: 'testRecord/uploadFile',
+          type: 'mTestRecord/uploadFile',
           payload : formData,
           callback: (response) => {
             if(response.code === 400){
@@ -365,7 +365,7 @@ class UploadDetail extends PureComponent {
       recordName:fields.downloadRecordName,
     };
     dispatch({
-      type: 'testRecord/downloadPlatFromTemp',
+      type: 'mTestRecord/downloadPlatFromTemp',
       payload:params,
       callback: (response) => {
         if(response){
@@ -373,7 +373,6 @@ class UploadDetail extends PureComponent {
         }
       }
     });
-    console.log(params);
     this.setState({
       downloadVisible: false,
     });
@@ -398,7 +397,7 @@ class UploadDetail extends PureComponent {
       owner:ownerValue
     };
     dispatch({
-      type: 'testRecord/getModelName',
+      type: 'mTestRecord/getModelName',
       payload:params,
       callback: (response) => {
         if(response){
@@ -422,7 +421,7 @@ class UploadDetail extends PureComponent {
       </div>
     );
     const {
-      testRecord:{recordData},
+      mTestRecord:{recordData},
       loading,
       form: { getFieldDecorator },
     } = this.props;

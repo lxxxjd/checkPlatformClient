@@ -464,6 +464,7 @@ class ResultDetail extends PureComponent {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           width={800}
+          style={{ top: 10}}
         >
           <Form>
             <Form.Item label="申请项目">

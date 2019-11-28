@@ -78,11 +78,12 @@ export default {
   'menu.DictMaintain.InvoiceTitle':'发票信息',
 
   'menu.CompanyManage':'公司管理',
-  'menu.CompanyManage.CompanyInfo':'公司信息管理',
-  'menu.CompanyManage.CompanyUpload':'上传文件',
+  'menu.CompanyManage.CompanyInfo':'公司信息',
+  'menu.CompanyManage.CompanyUpload':'公司图片',
   'menu.CompanyManage.UserManage':'用户管理',
   'menu.CompanyManage.Department':'部门管理',
   'menu.CompanyManage.TestMan':'分包方',
+  'menu.CompanyManage.Port':'常用地点',
 
 
   'menu.dashboard': 'Dashboard',

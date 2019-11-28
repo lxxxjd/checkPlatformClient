@@ -524,16 +524,8 @@ export default [
         icon: 'profile',
         name: 'CompanyManage',
         routes: [
-          {
-            path: '/CompanyManage/CompanyUpload',
-            name: 'CompanyUpload',
-            component: './CompanyManage/CompanyUpload',
-          },
-          {
-            path: '/CompanyManage/CompanyInfo',
-            name: 'CompanyInfo',
-            component: './CompanyManage/CompanyInfo',
-          },
+
+
           {
             path: '/CompanyManage/UserManage',
             name: 'UserManage',
@@ -550,6 +542,23 @@ export default [
             name: 'TestMan',
             component: './CompanyManage/TestMan',
           },
+          {
+            path: '/CompanyManage/Port',
+            name: 'Port',
+            component: './CompanyManage/Port',
+          },
+
+          {
+            path: '/CompanyManage/CompanyInfo',
+            name: 'CompanyInfo',
+            component: './CompanyManage/CompanyInfo',
+          },
+          {
+            path: '/CompanyManage/CompanyUpload',
+            name: 'CompanyUpload',
+            component: './CompanyManage/CompanyUpload',
+          },
+
 
 
         ],

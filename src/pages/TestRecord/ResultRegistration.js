@@ -19,9 +19,9 @@ const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ testRecord, loading }) => ({
-  testRecord,
-  loading: loading.models.testRecord,
+@connect(({ mTestRecord, loading }) => ({
+  mTestRecord,
+  loading: loading.models.mTestRecord,
 }))
 class ResultRegistration extends PureComponent {
   state = {
@@ -65,7 +65,7 @@ class ResultRegistration extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'testRecord/getReports',
+      type: 'mTestRecord/getReports',
       payload:{
         certCode:user.certCode
       }
@@ -103,7 +103,7 @@ class ResultRegistration extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'testRecord/getReports',
+        type: 'mTestRecord/getReports',
         payload: values,
       });
     });
@@ -115,7 +115,7 @@ class ResultRegistration extends PureComponent {
     const {certCode} = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     dispatch({
-      type: 'testRecord/getReports',
+      type: 'mTestRecord/getReports',
       payload:{
          certCode,
       }
@@ -167,7 +167,7 @@ class ResultRegistration extends PureComponent {
 
   render() {
     const {
-      testRecord:{report},
+      mTestRecord:{report},
       loading,
     } = this.props;
     return (

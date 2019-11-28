@@ -5,7 +5,7 @@ import {getAllReports,getInspway,getProject,addInspway,deleteInspway,getRecordLi
 
 
 export default {
-  namespace: 'testRecord',
+  namespace: 'mTestRecord',
 
   state: {
     data: {
