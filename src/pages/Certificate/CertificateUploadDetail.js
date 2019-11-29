@@ -584,7 +584,6 @@ class CertificateUploadDetail extends PureComponent {
 
   editCerticate = text => {
 
-
     // var wpsUrl = 'https://wwo.wps.cn/office/w/111?_w_signature=JFUosMy%2bG2Q2lWYOZ2h8I3YjwlE%3d&_w_userid=320318060202&_w_fname=test.doc&_w_appid=0af07f041df14ca27c68a2d9449d7f9f'
     // eslint-disable-next-line camelcase,no-underscore-dangle
     // eslint-disable-next-line camelcase,no-underscore-dangle
@@ -594,7 +593,7 @@ class CertificateUploadDetail extends PureComponent {
     const { dispatch } = this.props;
     const params={
       _w_userid,
-      _w_fname:encodeURI(_w_fname),
+      _w_fname
     };
     dispatch({
         type: 'certificate/getSignature',

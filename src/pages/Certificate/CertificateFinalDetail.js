@@ -590,7 +590,7 @@ class CertificateFinalDetail extends PureComponent {
     const { dispatch } = this.props;
     const params={
       _w_userid,
-      _w_fname:encodeURI(_w_fname),
+      _w_fname
     };
     dispatch({
       type: 'certificate/getSignature',
