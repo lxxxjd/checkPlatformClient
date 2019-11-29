@@ -358,6 +358,16 @@ class Port extends PureComponent {
       certcode:user.certCode,
     };
 
+    this.setState({
+      addModalVisible: false,
+    });
+
+    if( this.state.dataSource.find(item=>item.portc === fields.portc)){
+      message.success("添加地点已存在");
+      return;
+    }
+
+
     dispatch({
       type: 'port/addPort',
       payload:values,
@@ -370,11 +380,8 @@ class Port extends PureComponent {
         }
       }
     });
-    this.setState({
-      addModalVisible: false,
-    });
 
-  }
+  };
 
 
 

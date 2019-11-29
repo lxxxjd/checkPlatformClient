@@ -332,6 +332,18 @@ class TestMan extends PureComponent {
       ...fields,
       certcode:user.certCode,
     };
+
+    this.setState({
+      addModalVisible: false,
+    });
+
+    if( this.state.dataSource.find(item=>item.name === fields.name)){
+      message.success("添加分包方已存在");
+      return;
+    }
+
+
+
     dispatch({
       type: 'testman/addTestman',
       payload:values,
@@ -344,11 +356,8 @@ class TestMan extends PureComponent {
         }
       }
     });
-    this.setState({
-      addModalVisible: false,
-    });
 
-  }
+  };
 
 
 

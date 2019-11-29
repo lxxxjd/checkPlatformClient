@@ -60,7 +60,7 @@ class Search  extends PureComponent {
 		    <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
 		      <Col span={6}>
 		        <FormItem
-		          label = '货物名称'
+		          label = '检查品名'
 		          labelCol={{span: 8}}
 		          wrapperCol={{span: 16}}
 		          colon={false}

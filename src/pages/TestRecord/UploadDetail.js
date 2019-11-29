@@ -159,7 +159,7 @@ class UploadDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
+          <a onClick={() => this.previewItem(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
@@ -471,11 +471,11 @@ class UploadDetail extends PureComponent {
                 </Upload>
               )}
             </Form.Item>
-            <Form.Item label="证书名称">
+            <Form.Item label="文件名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入证书名称' }],
+                rules: [{ required: true, message: '请输入文件名称' }],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入证书名称" />
+                <Input style={{ width: '100%' }} placeholder="请输入文件名称" />
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>

@@ -268,6 +268,14 @@ class CheckProject extends PureComponent {
       ...fields,
       certcode:user.certCode,
     };
+
+    this.setState({
+      addModalVisible: false,
+    });
+    if( this.state.dataSource.find(item=>item.project === fields.project)){
+      message.success("添加项目已存在");
+      return;
+    }
     dispatch({
       type: 'dict/addCheckProject',
       payload:values,
@@ -280,9 +288,7 @@ class CheckProject extends PureComponent {
         }
       }
     });
-    this.setState({
-      addModalVisible: false,
-    });
+
 
   }
 

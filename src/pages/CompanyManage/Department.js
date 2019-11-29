@@ -270,6 +270,17 @@ class Department extends PureComponent {
       ...fields,
       certcode:user.certCode,
     };
+
+
+    this.setState({
+      addModalVisible: false,
+    });
+
+    if( this.state.dataSource.find(item=>item.branchname === fields.branchname)){
+      message.success("添加部门已存在");
+      return;
+    }
+
     dispatch({
       type: 'company/addDepartment',
       payload:values,
@@ -282,9 +293,7 @@ class Department extends PureComponent {
         }
       }
     });
-    this.setState({
-      addModalVisible: false,
-    });
+
 
   }
 

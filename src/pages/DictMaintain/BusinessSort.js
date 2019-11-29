@@ -151,13 +151,13 @@ class BusinessSort extends PureComponent {
         }
       }
     });
-  }
+  };
 
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
     this.init();
-  }
+  };
 
   handleSearch = e=> {
     e.preventDefault();
@@ -180,14 +180,14 @@ class BusinessSort extends PureComponent {
         }
       });
     });
-  }
+  };
 
   isValidDate =date=> {
     if(date !==undefined && date !==null ){
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  }
+  };
 
   modifyItem = text => {
     this.setState({
@@ -213,7 +213,7 @@ class BusinessSort extends PureComponent {
         }
       }
     });
-  }
+  };
 
 
   addItem = () => {
@@ -259,7 +259,7 @@ class BusinessSort extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-  }
+  };
 
   handleAdd = (fields) => {
     const { dispatch } = this.props;
@@ -268,6 +268,16 @@ class BusinessSort extends PureComponent {
       ...fields,
       certcode:user.certCode,
     };
+
+    this.setState({
+      addModalVisible: false,
+    });
+
+    if( this.state.dataSource.find(item=>item.itemname === fields.itemname)){
+      message.success("添加项目已存在");
+      return;
+    }
+
     dispatch({
       type: 'dict/addBusinessSort',
       payload:values,
@@ -280,11 +290,9 @@ class BusinessSort extends PureComponent {
         }
       }
     });
-    this.setState({
-      addModalVisible: false,
-    });
 
-  }
+
+  };
 
 
 

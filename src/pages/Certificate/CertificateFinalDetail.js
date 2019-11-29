@@ -352,7 +352,7 @@ class CertificateFinalDetail extends PureComponent {
 
   columns = [
     {
-      title: '记录名',
+      title: '证书名',
       dataIndex: 'name',
       render: val => {
         // 取文件名
@@ -928,7 +928,7 @@ class CertificateFinalDetail extends PureComponent {
           <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
         </Descriptions>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="检查对象" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-          <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
+          <Descriptions.Item label="检查品名">{report.cargoname}</Descriptions.Item>
           <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
           <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
           <Descriptions.Item label="申报数量和单位">{report.quantityd+report.unit}</Descriptions.Item>
@@ -1152,11 +1152,11 @@ class CertificateFinalDetail extends PureComponent {
                 </Upload>
               )}
             </Form.Item>
-            <Form.Item label="证稿名称">
+            <Form.Item label="证书名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入证稿名称' }],
+                rules: [{ required: true, message: '请输入证书名称' }],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入证稿名称" />
+                <Input style={{ width: '100%' }} placeholder="请输入证书名称,不超出10个字符" maxLength={10} />
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>

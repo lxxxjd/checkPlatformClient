@@ -268,6 +268,16 @@ class BusinessSource extends PureComponent {
       ...fields,
       certcode:user.certCode,
     };
+
+    this.setState({
+      addModalVisible: false,
+    });
+
+    if( this.state.dataSource.find(item=>item.itemname === fields.itemname)){
+      message.success("添加项目已存在");
+      return;
+    }
+
     dispatch({
       type: 'dict/addBusinessSource',
       payload:values,
@@ -280,11 +290,8 @@ class BusinessSource extends PureComponent {
         }
       }
     });
-    this.setState({
-      addModalVisible: false,
-    });
 
-  }
+  };
 
 
 

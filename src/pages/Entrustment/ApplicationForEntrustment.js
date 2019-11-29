@@ -67,7 +67,7 @@ const fieldLabels = {
   fromto: '产地/装卸港',
   insplinkway: '现场联系方式',
   inspdate: '检验时间',
-  cargoname: '货物名称',
+  cargoname: '检查品名',
   cargosort: '货物类别',
   quantityD: '申报数量',
   unit: '单位',
@@ -580,12 +580,13 @@ class ApplicationForEntrustment extends PureComponent {
                     rules: [{
                       required: true,
                       whitespace: true,
-                      type: 'number',
-                      transform(value) {
-                        if (value) {
-                          return Number(value);
-                        }
-                      }, message: '请输入数字'
+                      // type: 'number',
+                      // transform(value) {
+                      //   if (value) {
+                      //     return Number(value);
+                      //   }
+                      // },
+                      message: '请输入检验费'
                     }],
                   })
                   (<Input style={{width: '100%'}} placeholder="请输入"/>)

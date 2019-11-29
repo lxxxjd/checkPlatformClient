@@ -36,9 +36,9 @@ function getBase64(file) {
 }
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ testRecord, loading }) => ({
-  testRecord,
-  loading: loading.models.testRecord,
+@connect(({ testRecordEntrustment, loading }) => ({
+  testRecordEntrustment,
+  loading: loading.models.testRecordEntrustment,
 }))
 class EntrustmentRecord extends PureComponent {
   state = {
@@ -96,7 +96,7 @@ class EntrustmentRecord extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
-      type: 'testRecord/getRecordInfo',
+      type: 'testRecordEntrustment/getRecordInfo',
       payload:{
          reportno : reportno,
          source : '委托',
@@ -112,7 +112,7 @@ class EntrustmentRecord extends PureComponent {
       reportno:reportno
     };
     dispatch({
-      type: 'testRecord/getRecord',
+      type: 'testRecordEntrustment/getRecord',
       payload:params,
       callback:(response) =>{
         if(response.code === 400){
@@ -140,7 +140,7 @@ class EntrustmentRecord extends PureComponent {
       reportno:reportno
     };
     dispatch({
-      type: 'testRecord/deleteRecordInfo',
+      type: 'testRecordEntrustment/deleteRecordInfo',
       payload:params,
       callback: (response) => {
         if(response.code === 400){
@@ -172,7 +172,7 @@ class EntrustmentRecord extends PureComponent {
         formData.append('fileName', values.recordname);
         console.log(formData.get('files'));
         dispatch({
-          type: 'testRecord/uploadFile',
+          type: 'testRecordEntrustment/uploadFile',
           payload : formData,
           callback: (response) => {
             if(response.code === 400){
@@ -288,7 +288,7 @@ class EntrustmentRecord extends PureComponent {
       recordName:fields.downloadRecordName,
     };
     dispatch({
-      type: 'testRecord/downloadPlatFromTemp',
+      type: 'testRecordEntrustment/downloadPlatFromTemp',
       payload:params,
       callback: (response) => {
         if(response){
@@ -321,7 +321,7 @@ class EntrustmentRecord extends PureComponent {
       owner:ownerValue
     };
     dispatch({
-      type: 'testRecord/getModelName',
+      type: 'testRecordEntrustment/getModelName',
       payload:params,
       callback: (response) => {
         if(response){
@@ -345,7 +345,7 @@ class EntrustmentRecord extends PureComponent {
       </div>
     );
     const {
-      testRecord:{recordData},
+      testRecordEntrustment:{recordData},
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -386,11 +386,11 @@ class EntrustmentRecord extends PureComponent {
                 </Upload>
               )}
             </Form.Item>
-            <Form.Item label="证书名称">
+            <Form.Item label="附件名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入证书名称' }],
+                rules: [{ required: true, message: '请输入附件名称' }],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入证书名称" />
+                <Input style={{ width: '100%' }} placeholder="请输入附件名称" />
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>

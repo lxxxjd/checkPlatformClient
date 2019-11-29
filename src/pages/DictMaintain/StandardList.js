@@ -39,7 +39,7 @@ class StandardList extends PureComponent {
 
   columns = [
     {
-      title: '货物名称',
+      title: '检查品名',
       dataIndex: 'cargonameC',
     },
     {

@@ -205,7 +205,7 @@ class DetailForEnturstment extends Component {
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="检查对象" style={{ marginBottom: 32 }} bordered>
-            <Descriptions.Item label="货物名称">{report.cargoname}</Descriptions.Item>
+            <Descriptions.Item label="检查品名">{report.cargoname}</Descriptions.Item>
             <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
             <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
             <Descriptions.Item label="申报数量和单位">{((report.quantityd ===undefined || report.quantityd ===null ) ? report.quantityd :"" )+report.unit }</Descriptions.Item>

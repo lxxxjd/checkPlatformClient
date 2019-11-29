@@ -50,7 +50,7 @@ class RecordUpload extends PureComponent {
       dataIndex: 'inspway',
     },
     {
-      title: '证书名称',
+      title: '文件名称',
       dataIndex: 'recordname',
       render: (text, record) => {
         if(text === null || text === undefined){
@@ -86,7 +86,7 @@ class RecordUpload extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>查看</a>
+          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

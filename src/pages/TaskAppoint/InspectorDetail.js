@@ -150,30 +150,75 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="工时">
         {form.getFieldDecorator('manhour', {
           initialValue: modalInfo.manhour,
-        })(<Input placeholder="请输入工时费用" />)}
+          rules: [{
+            type: 'number',
+            transform(value) {
+              if (value) {
+                return Number(value);
+              }
+            },
+            message: '请输入数字或者小数'
+          }],
+        })(<Input placeholder="请输入工时" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="劳务">
         {form.getFieldDecorator('labourfee', {
           initialValue: modalInfo.labourfee,
+          rules: [{
+            type: 'number',
+            transform(value) {
+              if (value) {
+                return Number(value);
+              }
+            },
+            message: '请输入数字或者小数'
+          }],
         })(<Input placeholder="请输入劳务费用" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="餐饮">
         {form.getFieldDecorator('lunchfee', {
           initialValue: modalInfo.lunchfee,
+          rules: [{
+            type: 'number',
+            transform(value) {
+              if (value) {
+                return Number(value);
+              }
+            },
+            message: '请输入数字或者小数'
+          }],
         })(<Input placeholder="请输入餐饮费用" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="交通">
         {form.getFieldDecorator('trafficfee', {
           initialValue: modalInfo.trafficfee,
+          rules: [{
+            type: 'number',
+            transform(value) {
+              if (value) {
+                return Number(value);
+              }
+            },
+            message: '请输入数字或者小数'
+          }],
         })(<Input placeholder="请输入交通费用" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="其他">
         {form.getFieldDecorator('otherfee', {
           initialValue: modalInfo.otherfee,
+          rules: [{
+            type: 'number',
+            transform(value) {
+              if (value) {
+                return Number(value);
+              }
+            },
+            message: '请输入数字或者小数'
+          }],
         })(<Input placeholder="请输入其他费用" />)}
       </FormItem>
     </Modal>

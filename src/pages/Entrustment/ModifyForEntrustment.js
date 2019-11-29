@@ -68,7 +68,7 @@ const fieldLabels = {
   fromto: '产地/装卸港',
   insplinkway: '现场联系方式',
   inspdate: '检验时间',
-  cargoname: '货物名称',
+  cargoname: '检查品名',
   cargosort: '货物类别',
   quantityD: '申报数量',
   unit: '单位',
@@ -759,7 +759,7 @@ class ModifyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('customsName', {
-                    rules: 
+                    rules:
                     isCustoms === true
                     ? [{required: true, message: '请选择海关部门'}]
                     : [],
