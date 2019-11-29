@@ -138,6 +138,7 @@ class BusinessSort extends PureComponent {
 
   init =()=>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    console.log(user);
     const { dispatch } = this.props;
     const params = {
       certCode:user.certCode
