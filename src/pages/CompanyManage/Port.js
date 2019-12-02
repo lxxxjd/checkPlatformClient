@@ -56,7 +56,7 @@ const CreateForm = Form.create()(props => {
               message: "请输入所属地区",
             },
           ],
-        })(<Cascader options={areaOptions} placeholder="请选择所属地区" />)}
+        })(<Cascader style={{ width: 300 }} options={areaOptions} placeholder="请选择所属地区" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地点名称">
@@ -117,7 +117,7 @@ const AddForm = Form.create()(props => {
               message: "请输入所属地区",
             },
           ],
-        })( <Cascader options={areaOptions} placeholder="请选择所属地区" />)}
+        })( <Cascader style={{ width: 300 }} options={areaOptions} placeholder="请选择所属地区" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地点名称">

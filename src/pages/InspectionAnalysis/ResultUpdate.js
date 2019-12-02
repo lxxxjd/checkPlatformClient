@@ -82,7 +82,7 @@ class ResultUpdate extends PureComponent {
           &nbsp;&nbsp;
           <a onClick={() => this.uploadItem(text, record)}>上传文件</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.detailItem(text, record)}>详情</a>
+          <a onClick={() => this.detailItem(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

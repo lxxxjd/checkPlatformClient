@@ -151,10 +151,10 @@ class UploadDetail extends PureComponent {
          moment(val).format('YYYY-MM-DD')
       }</span>
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'state',
-    // },
+    {
+      title: '上传人',
+      dataIndex: 'creator',
+    },
     {
       title: '操作',
       render: (text, record) => (
@@ -241,12 +241,14 @@ class UploadDetail extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         let formData = new FormData();
+        const user = JSON.parse(localStorage.getItem("userinfo"));
         values.MultipartFile.fileList.forEach(file => {
           formData.append('files', file.originFileObj);
         });
         formData.append('reportno', reportno);
         formData.append('source', '检查记录');
         formData.append('fileName', values.recordname);
+        formData.append('creator', user.nameC);
         console.log(formData.get('files'));
         dispatch({
           type: 'mTestRecord/uploadFile',

@@ -108,7 +108,7 @@ class InspectionArrangement extends PureComponent {
           <a onClick={() => this.mobileItem(text, record)}>人员</a>
           &nbsp;&nbsp;
           {text.state==="已添加"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.detailItem(text, record)}>详情</a>
+          <a onClick={() => this.detailItem(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -322,14 +322,14 @@ class InspectionArrangement extends PureComponent {
                 {getFieldDecorator('totalfee', {
                   rules: [{ required: true, message: '请输入总计费用' }],
                 })(
-                      <Input />
+                      <Input placeholder="请输入总计费用" />
                   )}
               </Form.Item>
               <Form.Item label=" 备注">
                 {getFieldDecorator('inspwaymemo1', {
-                  rules: [{ required: true, message: '请输入备注' }],
+                  rules: [],
                 })(
-                      <Input />
+                  <Input placeholder="请输入备注" />
                   )}
               </Form.Item>
             </Form>

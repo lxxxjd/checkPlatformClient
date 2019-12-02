@@ -80,7 +80,7 @@ const description = (
 const tabList = [
   {
     key: 'detail',
-    tab: '详情',
+    tab: '查看',
   },
   {
     key: 'rule',

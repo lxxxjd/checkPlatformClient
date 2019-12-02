@@ -169,7 +169,7 @@ class SampleModify extends PureComponent {
         <Fragment>
           <a onClick={() => this.loadItem(text, record)}>导入</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.detailItem(text, record)}>详情</a>
+          <a onClick={() => this.detailItem(text, record)}>查看</a>
         </Fragment>
       ),
     },

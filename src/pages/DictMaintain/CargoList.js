@@ -53,7 +53,7 @@ class CargoList extends PureComponent {
       dataIndex: 'cargosort',
     },
     {
-      title: 'CNS编码',
+      title: 'CNAS编码',
       dataIndex: 'checkCode',
     },
     {

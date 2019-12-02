@@ -59,7 +59,7 @@ class EntrustmentRecord extends PureComponent {
 
   columns = [
     {
-      title: '记录名',
+      title: '文件名称',
       dataIndex: 'recordname',
       render: val => {
         //取文件名
@@ -78,11 +78,17 @@ class EntrustmentRecord extends PureComponent {
          moment(val).format('YYYY-MM-DD')
       }</span>
     },
+
+    {
+      title: '上传人',
+      dataIndex: 'creator',
+    },
+
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>详情</a>
+          <a onClick={() => this.previewItem(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
@@ -164,12 +170,14 @@ class EntrustmentRecord extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         let formData = new FormData();
+        const user = JSON.parse(localStorage.getItem("userinfo"));
         values.MultipartFile.fileList.forEach(file => {
           formData.append('files', file.originFileObj);
         });
         formData.append('reportno', reportno);
         formData.append('source', '委托');
         formData.append('fileName', values.recordname);
+        formData.append('creator', user.nameC);
         console.log(formData.get('files'));
         dispatch({
           type: 'testRecordEntrustment/uploadFile',
@@ -365,7 +373,7 @@ class EntrustmentRecord extends PureComponent {
     return (
       <PageHeaderWrapper text={reprotText}>
         <Modal
-          title="记录上传"
+          title="文件上传"
           visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -386,11 +394,11 @@ class EntrustmentRecord extends PureComponent {
                 </Upload>
               )}
             </Form.Item>
-            <Form.Item label="附件名称">
+            <Form.Item label="文件名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入附件名称' }],
+                rules: [{ required: true, message: '请输入文件名称' }],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入附件名称" />
+                <Input style={{ width: '100%' }} placeholder="请输入文件名称" />
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>

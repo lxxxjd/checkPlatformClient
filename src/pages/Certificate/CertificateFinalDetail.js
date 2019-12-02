@@ -385,7 +385,7 @@ class CertificateFinalDetail extends PureComponent {
           {text.status==="已复核"?[<a onClick={() => this.sealItem(text, record)}>盖章&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.ViewItem(text, record)}>详情</a>
+          <a onClick={() => this.ViewItem(text, record)}>查看</a>
           &nbsp;&nbsp;
         </Fragment>
       ),

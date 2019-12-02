@@ -109,6 +109,8 @@ function getBase64(file) {
     reader.onerror = error => reject(error);
   });
 }
+
+
 /* eslint react/no-multi-comp:0 */
 @Form.create()
 @connect(({ certificate, loading }) => ({
@@ -168,6 +170,8 @@ class CertificateUploadDetail extends PureComponent {
       },
       { title: '附件', key: '0-2', children: [], },
     ],
+
+
 
     option: "",
 
@@ -386,7 +390,7 @@ class CertificateUploadDetail extends PureComponent {
           {text.status==="已签署"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.ViewItem(text, record)}>详情</a>
+          <a onClick={() => this.ViewItem(text, record)}>查看</a>
           &nbsp;&nbsp;
         </Fragment>
       ),
@@ -794,7 +798,9 @@ class CertificateUploadDetail extends PureComponent {
     this.setState({
       downloadVisible: false,
     });
-  }
+  };
+
+
 
   // 处理下载模态框 提交表单
   handleOnSelect =(value) =>{
@@ -831,7 +837,7 @@ class CertificateUploadDetail extends PureComponent {
 
   showCancel = () =>{
     this.setState({showVisible:false});
-  }
+  };
 
 
 
@@ -845,7 +851,7 @@ class CertificateUploadDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const params = {
       reportno,
-    }
+    };
     if( selectedKeys[0] === '0-0-0' ){
       const reportnNo =reportno;
       dispatch({
@@ -907,7 +913,7 @@ class CertificateUploadDetail extends PureComponent {
         }
       });
     }
-  }
+  };
 
 
   isValidDate =date=> {
@@ -915,14 +921,14 @@ class CertificateUploadDetail extends PureComponent {
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  }
+  };
 
   // eslint-disable-next-line class-methods-use-this
   // 委托的信息
   renderReportForm() {
     const {report} = this.state;
     return (
-      <div style={{width:620,backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white'}}>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="业务信息" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
           <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
           <Descriptions.Item label="委托日期">{moment(report.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
@@ -961,8 +967,8 @@ class CertificateUploadDetail extends PureComponent {
   renderLinkFileForm (){
     const  {urls}  = this.state;
     return (
-      <div style={{width:620,backgroundColor:'white'}}>
-        <embed runat="server" src={urls} width={620} height="600" />
+      <div style={{width:'100%',backgroundColor:'white'}}>
+        <embed runat="server" src={urls} style={{width:'100%', height:document.body.clientHeight*0.8}} type="application/pdf" />
       </div>
     );
   }
@@ -972,7 +978,7 @@ class CertificateUploadDetail extends PureComponent {
     const {sampleData} = this.state;
     const {loading} = this.props;
     return (
-      <div style={{width:620,backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white'}}>
         <Table
           size="middle"
           dataSource={sampleData}
@@ -991,7 +997,7 @@ class CertificateUploadDetail extends PureComponent {
     const {checkResultData} = this.state;
     const {loading} = this.props;
     return (
-      <div style={{width:620,backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white'}}>
         <Table
           size="middle"
           dataSource={checkResultData}
@@ -1012,7 +1018,7 @@ class CertificateUploadDetail extends PureComponent {
     const {sampleDataLink} = this.state;
     const {loading} = this.props;
     return (
-      <div style={{width:620,backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white'}}>
         <Table
           size="middle"
           dataSource={sampleDataLink}
@@ -1030,7 +1036,7 @@ class CertificateUploadDetail extends PureComponent {
     const {renderFormData,renderFormColumns} = this.state;
     const {loading} = this.props;
     return (
-      <div style={{width:620,backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white'}}>
         <Table
           size="middle"
           dataSource={renderFormData}
@@ -1048,7 +1054,7 @@ class CertificateUploadDetail extends PureComponent {
     const {checkResultDataLink} = this.state;
     const {loading} = this.props;
     return (
-      <div style={{width:620,backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white'}}>
         <Table
           size="middle"
           dataSource={checkResultDataLink}
@@ -1140,6 +1146,9 @@ class CertificateUploadDetail extends PureComponent {
       shipname,
       applicant,
     };
+
+    console.log(window.screen.width);
+
     return (
       <PageHeaderWrapper text={reprotText}>
         <Modal
@@ -1192,14 +1201,15 @@ class CertificateUploadDetail extends PureComponent {
             option === "复核"?[<Button key="submit2" type="primary" onClick={this.reviewCertFile}>复核</Button>]:[],
           ]}
           style={{ top: 10 }}
-          width={1500}
+          width={document.body.clientWidth}
+          height={document.body.clientHeight}
         >
           <Layout>
             <Content>
               <div style={{backgroundColor:'white'}}>
                 <Row>
                   <Form>
-                    <Col span={12}>  <embed src={Certurls} width={620} height="600" /></Col>
+                    <Col span={12}>  <embed src={Certurls} style={{width:'90%', height:document.body.clientHeight*0.8}} type="application/pdf" /></Col>
                     <Col span={12}>
                       {this.renderFileInfo(value)}
                     </Col>

@@ -283,7 +283,7 @@ class CancelForEntrustment extends PureComponent {
               onOk={this.ModalhandleOk}
               onCancel={this.ModalhandleCancel}
             >
-              <p>是否撤销</p>
+              <h3>您确定要撤销此委托吗？</h3>
             </Modal>
             <Table
               //selectedRows={selectedRows}

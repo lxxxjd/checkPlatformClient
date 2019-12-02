@@ -64,7 +64,7 @@ class DetailList extends PureComponent {
     },
     {
       title: '状态',
-      dataIndex: 'process',
+      dataIndex: 'status',
     },
   ];
 

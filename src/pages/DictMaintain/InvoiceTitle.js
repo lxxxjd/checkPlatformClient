@@ -67,12 +67,11 @@ const CreateForm = Form.create()(props => {
         })(<Input placeholder="请输入税号" />)}
       </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="注册地址电话">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地址电话">
         {form.getFieldDecorator('addresstel', {
           initialValue: modalInfo.addresstel,
           rules: [
             {
-              required: true,
               message: "请输入注册地址电话",
             },
           ],
@@ -91,17 +90,6 @@ const CreateForm = Form.create()(props => {
         })(<Input placeholder="请输入开户行" />)}
       </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地点">
-        {form.getFieldDecorator('place', {
-          initialValue: modalInfo.place,
-          rules: [
-            {
-              required: true,
-              message: "请输入地点",
-            },
-          ],
-        })(<Input placeholder="请输入地点" />)}
-      </FormItem>
 
 
     </Modal>
@@ -151,11 +139,10 @@ const AddForm = Form.create()(props => {
         })(<Input placeholder="请输入税号" />)}
       </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="注册地址电话">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地址电话">
         {form.getFieldDecorator('addresstel', {
           rules: [
             {
-              required: true,
               message: "请输入注册地址电话",
             },
           ],
@@ -171,17 +158,6 @@ const AddForm = Form.create()(props => {
             },
           ],
         })(<Input placeholder="请输入开户行" />)}
-      </FormItem>
-
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地点">
-        {form.getFieldDecorator('place', {
-          rules: [
-            {
-              required: true,
-              message: "请输入地点",
-            },
-          ],
-        })(<Input placeholder="请输入地点" />)}
       </FormItem>
 
     </Modal>
@@ -212,25 +188,24 @@ class BusinessSort extends PureComponent {
       dataIndex: 'cocode',
     },
     {
-      title: '注册地址',
+      title: '地址电话',
       dataIndex: 'addresstel',
     },
     {
       title: '开户行',
       dataIndex: 'bankaccount',
     },
-    {
-      title: '地点',
-      dataIndex: 'place',
-    },
+
 
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          <div style={{width:100}}>
+            <a onClick={() => this.modifyItem(text, record)}>修改</a>
+            &nbsp;&nbsp;
+            <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          </div>
         </Fragment>
       ),
     },
@@ -258,13 +233,13 @@ class BusinessSort extends PureComponent {
         }
       }
     });
-  }
+  };
 
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
     this.init();
-  }
+  };
 
   handleSearch = e=> {
     e.preventDefault();
@@ -287,7 +262,7 @@ class BusinessSort extends PureComponent {
         }
       });
     });
-  }
+  };
 
   isValidDate =date=> {
     if(date !==undefined && date !==null ){
@@ -302,6 +277,8 @@ class BusinessSort extends PureComponent {
     });
     this.handleModalVisible(true);
   };
+
+
 
   deleteItem = text =>{
     const { dispatch } = this.props;
@@ -349,7 +326,6 @@ class BusinessSort extends PureComponent {
     prams.cocode =  fields.cocode;
     prams.addresstel =  fields.addresstel;
     prams.bankaccount =  fields.bankaccount;
-    prams.place =  fields.place;
     const values = {
       ...prams
     };
@@ -420,7 +396,6 @@ class BusinessSort extends PureComponent {
                   <Option value="cocode">税号</Option>
                   <Option value="addresstel">注册地址电话</Option>
                   <Option value="bankaccount">开户行</Option>
-                  <Option value="place">地点</Option>
                 </Select>
               )}
             </Form.Item>
