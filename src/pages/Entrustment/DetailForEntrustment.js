@@ -77,18 +77,20 @@ class DetailForEnturstment extends Component {
       dispatch
     } = this.props;
 
-    if(report.cnasCode!==undefined &&report.cnasCode!==null  ){
-      dispatch({
-        type: 'entrustment/getCnasInfo',
-        payload: {
-          checkCode:report.cnasCode,
-        },
-        callback: (response) => {
-          if (response.code === 200) {
-            this.setState({cnasInfo: response.data});
+    if(report.cnasCode!==undefined && report.cnasCode!==null  ){
+      if(report.iscnas === 1){
+        dispatch({
+          type: 'entrustment/getCnasInfo',
+          payload: {
+            checkCode:report.cnasCode,
+          },
+          callback: (response) => {
+            if (response.code === 200) {
+              this.setState({cnasInfo: response.data});
+            }
           }
-        }
-      });
+        });
+      }
     }
 
   }
@@ -208,15 +210,10 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="检查品名">{report.cargoname}</Descriptions.Item>
             <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
             <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
-            <Descriptions.Item label="申报数量和单位">{((report.quantityd ===undefined || report.quantityd ===null ) ? report.quantityd :"" )+report.unit }</Descriptions.Item>
+            <Descriptions.Item label="申报数量和单位">{((report.quantityd === undefined || report.quantityd === null ) ? "":report.quantityd  )+report.unit }</Descriptions.Item>
             <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
             <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
             <Descriptions.Item label="到达地点">{report.inspplace1}</Descriptions.Item>
-          </Descriptions>
-          <Divider style={{ marginBottom: 32 }} />
-          <Descriptions size="large" title="检查项目" style={{ marginBottom: 32 }} bordered>
-            <Descriptions.Item label="申请项目">{report.inspway}</Descriptions.Item>
-            <Descriptions.Item label="检验备注">{report.inspwaymemo1}</Descriptions.Item>
           </Descriptions>
         </Card>
         <Card title="检查项目" className={styles.card} bordered={false}>
