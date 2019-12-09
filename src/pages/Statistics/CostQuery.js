@@ -15,7 +15,7 @@ import {
   Image, Modal, Descriptions,Switch,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import queryStyles from './SampleQuery.less'
+import queryStyles from './CostQuery.less'
 import styles from '../table.less';
 
 
@@ -71,7 +71,7 @@ const ReviewFrom = (props => {
 
 let id = 0;
 
-//正文页面
+// 正文页面
 const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj =>
@@ -80,12 +80,12 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ sample, loading }) => ({
-  sample,
-  loading: loading.models.sample,
+@connect(({ cost, loading }) => ({
+  cost,
+  loading: loading.models.cost,
 }))
 @Form.create()
-class SampleQuery extends PureComponent {
+class CostQuery extends PureComponent {
   state = {
     formValues: {},
     modalReviewVisible:false,
@@ -165,10 +165,10 @@ class SampleQuery extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'sample/getSampleRegisterByConditions',
+      type: 'cost/getSampleRegisterByConditions',
       payload: params,
     });
-  }
+  };
 
   previewItem = text => {
     router.push({
@@ -378,7 +378,6 @@ class SampleQuery extends PureComponent {
 
 
   flag = 0;
-
   handleAdvanceSearch =()=>{
     if(this.flag ===0){
       let i =4;
@@ -397,7 +396,7 @@ class SampleQuery extends PureComponent {
 
   render() {
     const {
-      sample: {selectRegisterResult},
+      // cost: {getAllCostResult},
       loading,
     } = this.props;
 
@@ -498,7 +497,7 @@ class SampleQuery extends PureComponent {
               size="middle"
               rowKey="sampleno"
               loading={loading}
-              dataSource={selectRegisterResult.list}
+             // dataSource={getAllCostResult.list}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />
@@ -509,4 +508,4 @@ class SampleQuery extends PureComponent {
   }
 }
 
-export default SampleQuery;
+export default CostQuery;

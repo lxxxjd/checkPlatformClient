@@ -118,21 +118,10 @@ export default class GlobalHeaderRight extends PureComponent {
             console.log('enter', value); // eslint-disable-line
           }}
         />
-        <Tooltip title={formatMessage({ id: 'component.globalHeader.help' })}>
-          <a
-            target="_blank"
-            href="https://pro.ant.design/docs/getting-started"
-            rel="noopener noreferrer"
-            className={styles.action}
-          >
-            <Icon type="question-circle-o" />
-          </a>
-        </Tooltip>
         <NoticeIcon
           className={styles.action}
           count={currentUser.unreadCount}
           onItemClick={(item, tabProps) => {
-            console.log(item, tabProps); // eslint-disable-line
             this.changeReadState(item, tabProps);
           }}
           loading={fetchingNotices}

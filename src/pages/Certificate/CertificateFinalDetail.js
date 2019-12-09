@@ -532,24 +532,24 @@ class CertificateFinalDetail extends PureComponent {
     });
     this.setState({showVisible:false});
 
-  }
+  };
 
 
 
   signItem =text=>{
     this.setState({option:"签署"});
     this.signCertFile(text);
-  }
+  };
 
   reivewItem =text=>{
     this.setState({option:"复核"});
     this.signCertFile(text);
-  }
+  };
 
   sealItem =text=>{
     this.setState({option:"盖章"});
     this.signCertFile(text);
-  }
+  };
 
   sealCertFile = () =>{
     const{text} = this.state;

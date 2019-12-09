@@ -565,6 +565,28 @@ export default [
       },
 
 
+
+      // analysis
+      {
+        path: '/Statistics',
+        icon: 'profile',
+        name: 'Statistics',
+        routes: [
+
+
+          {
+            path: '/Statistics/CostQuery',
+            name: 'CostQuery',
+            component: './Statistics/CostQuery',
+          },
+
+
+
+        ],
+      },
+
+
+
       {
         component: '404',
       },

@@ -162,10 +162,26 @@ export async function searchCertificate(params) {
 }
 
 
+export async function convertWordToPdf(params) {
+  return request('/api/cert_report/convertWordToPdf', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
 
 export async function getSignature(params) {
   return request(`/api/getSignature?${stringify(params.params)}`);
 }
 
+
+
+
+export async function getMainInfo(params) {
+  return request(`/api/mainReport/getmainInfo?reportno=${params.reportno}`);
+}
 
 

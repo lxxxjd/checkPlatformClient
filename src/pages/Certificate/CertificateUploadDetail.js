@@ -19,20 +19,88 @@ import {
   notification,
   Descriptions,
   Upload,
-  Icon,
   message,
   Tree, Divider,
+  Spin, Icon,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
 import { SiderTheme } from 'antd/lib/layout/Sider';
 import styles from './Certificate.less';
+import Label from 'bizcharts/src/components/Label';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 const { TreeNode } = Tree;
 const { Header, Footer, Sider, Content } = Layout;
 
+
+const CertForm = Form.create()(props => {
+
+  const { form,option,showVisible,showCancel,Certurls,value,onSelect,treeData,handleSign,reviewCertFile,renderFileInfo,renderTreeNodes} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err){
+        return;
+      }
+      form.resetFields();
+      if(option === "拟制"){
+        handleSign(fieldsValue);
+      }else if(option === "复核"){
+        reviewCertFile(fieldsValue);
+      }
+    });
+  };
+
+
+  return (
+    <Modal
+      title={option}
+      visible={showVisible}
+      onCancel={showCancel}
+      footer={[
+        <div>
+          <span>审核人：</span>
+          {form.getFieldDecorator('approver', {
+            rules: [{ required: true, message: '选择审核人' }],
+          })(
+            <Select style={{width:150,marginRight:10,marginLeft:10}} placeholder="选择审核人">
+              <Option value="徐佳待">徐佳待</Option>
+              <Option value="徐佳待2">徐佳待2</Option>
+              <Option value="徐佳待3">徐佳待3</Option>
+              <Option value="徐佳待4">徐佳待5</Option>
+            </Select>
+          )}
+          <Button key="cancel" type="primary" onClick={showCancel}> 取消</Button>
+          {option === "拟制"?[<Button key="submit1" type="primary" onClick={okHandle}>拟制</Button>]:null}
+          {option === "复核"?[<Button key="submit2" type="primary" onClick={okHandle}>复核</Button>]:null}
+        </div>
+      ]}
+      style={{ top: 10 }}
+      width={document.body.clientWidth}
+      height={document.body.clientHeight}
+    >
+      <Layout>
+        <Content>
+          <div style={{backgroundColor:'white'}}>
+            <Row>
+              <Col span={12}>
+                <embed src={Certurls} style={{width:'90%', height:document.body.clientHeight*0.8}} type="application/pdf" />
+              </Col>
+              <Col span={12}>
+                {renderFileInfo(value)}
+              </Col>
+            </Row>
+          </div>
+        </Content>
+        <Sider theme='light' width={280} style={{paddingLeft:15}}>
+          <Tree showLine defaultExpandedKeys={['reportDetail']} defaultExpandAll onSelect={onSelect}>{renderTreeNodes(treeData)}</Tree>
+        </Sider>
+      </Layout>
+    </Modal>
+  );
+
+});
 
 // 表单组件
 const CreateUploadForm = Form.create()(props => {
@@ -48,7 +116,7 @@ const CreateUploadForm = Form.create()(props => {
   };
   const handleChange =()=>{
     form.resetFields(`tempName`,[]);
-  }
+  };
 
   return (
     <Modal
@@ -64,11 +132,11 @@ const CreateUploadForm = Form.create()(props => {
       ]}
     >
 
-      <Form.Item label="记录名称">
+      <Form.Item label="证书名称">
         {form.getFieldDecorator('downloadRecordName', {
-          rules: [{ required: true, message: '请输入记录名称' }],
+          rules: [{ required: true, message: '请输入证书名称' }],
         })(
-          <Input style={{ width: '100%' }} placeholder="记录名称" />
+          <Input style={{ width: '100%' }} placeholder="证书名称" />
         )}
       </Form.Item>
 
@@ -119,13 +187,8 @@ function getBase64(file) {
 }))
 class CertificateUploadDetail extends PureComponent {
   state = {
-    formValues: {},
     visible: false,
     downloadVisible: false,
-    checkProject: [],
-    allCompanyName: [],
-    selectEntrustment: null,
-    showPrice: false,
     previewVisible: false,
     previewImage: '',
     fileList: [],
@@ -133,52 +196,20 @@ class CertificateUploadDetail extends PureComponent {
     showVisible: false,
     text: {}, // 当前信息
 
-    Certurls: "",
-    urls: "",
-    report: [],
-    // 切换tab签署页面
-    value: '0-0-0',
+    Certurls: "", // 当前证书的url
+    urls: "", // 切换pdf的url
+    value: 'reportDetail', // 切换tab拟制页面
+    checkData: {},   // 现场检查信息
+    reportDetail: {},  // 委托详情
+    treeData: [],
+    renderFormData: [], // 当前data
+    renderFormColumns: [],// 当前表格的信息
 
-    // 本委托品质信息
-    sampleData: [],
-
-    // 本委托检验信息
-    checkResultData: [],
-
-
-    // 关联委托的信息
-    sampleDataLink: [],
-
-    // 关联委托的检验信息
-    checkResultDataLink: [],
-
-    // 附件
-    treeData: [
+    sampleColumnsLink: [ // 分析检测表格头
       {
-        title: '本委托', key: '0-0', children: [
-          { title: '委托', key: '0-0-0', isLeaf: true },
-          { title: '品质', key: '0-0-1', isLeaf: true },
-          { title: '检验', key: '0-0-2', isLeaf: true },
-        ],
+        title: '委托编号',
+        dataIndex: 'reportno',
       },
-
-      {
-        title: '关联委托', key: '0-1', children: [
-          { title: '委托', key: '0-1-0', isLeaf: true },
-          { title: '品质', key: '0-1-1', isLeaf: true },
-        ],
-      },
-      { title: '附件', key: '0-2', children: [], },
-    ],
-
-
-
-    option: "",
-
-
-    // 品质的信息
-    // eslint-disable-next-line react/sort-comp
-    sampleColumns : [
       {
         title: '样品编号',
         dataIndex: 'sampleno',
@@ -197,162 +228,11 @@ class CertificateUploadDetail extends PureComponent {
       },
       {
         title: '结果',
-        dataIndex: 'weight',
+        dataIndex: 'testresult',
       }
     ],
 
-
-  // ---------------------检验信息数据
-  // 品质的信息
-  checkColumns : [
-    {
-      title: '检验项目',
-      dataIndex: 'inspway',
-    },
-    {
-      title: '仪器名称',
-      dataIndex: 'instrument',
-      render: (text, record) => {
-        if(typeof(text) === undefined || text === null){
-          return;
-        }
-        let  contentStr = [];
-        contentStr = text.split("|");
-        if (contentStr.length < 2) {
-          return text;
-        }
-        let result = null;
-        const br = <br />;
-        for( let  j=0 ; j < contentStr.length ; j++){
-          if(j===0){
-            result=contentStr[j];
-          }else{
-            result=<span>{result}{br}{contentStr[j]}</span>;
-          }
-        }
-        return <div>{result}</div>;
-      },
-    },
-    {
-      title: '检验人员',
-      dataIndex: 'inspman',
-    },
-    {
-      title: '开始日期',
-      dataIndex: 'begindate',
-      render: val => this.isValidDate(val),
-
-    },
-    {
-      title: '结束日期',
-      dataIndex: 'finishdate',
-      render: val => this.isValidDate(val),
-    },
-    {
-      title: '重量',
-      dataIndex: 'weight',
-    },
-    {
-      title: '结果',
-      dataIndex: 'result',
-    }
-  ],
-
-  // 品质的信息 关联委托
-  // eslint-disable-next-line react/sort-comp
-  sampleColumnsLink : [
-    {
-      title: '委托编号',
-      dataIndex: 'reportno',
-    },
-    {
-      title: '样品编号',
-      dataIndex: 'sampleno',
-    },
-    {
-      title: '样品名称',
-      dataIndex: 'samplename',
-    },
-    {
-      title: '检查项目',
-      dataIndex: 'itemC',
-    },
-    {
-      title: '检验标准',
-      dataIndex: 'teststandard',
-    },
-    {
-      title: '结果',
-      dataIndex: 'weight',
-    }
-  ],
-
-  // ---------------------检验信息数据，关联委托
-  // 品质的信息
-  checkColumnsLink : [
-    {
-      title: '委托编号',
-      dataIndex: 'reportno',
-    },
-    {
-      title: '检验项目',
-      dataIndex: 'inspway',
-    },
-    {
-      title: '仪器名称',
-      dataIndex: 'instrument',
-      render: (text, record) => {
-        if(typeof(text) === undefined || text === null){
-          return;
-        }
-        let  contentStr = [];
-        contentStr = text.split("|");
-        if (contentStr.length < 2) {
-          return text;
-        }
-        let result = null;
-        const br = <br />;
-        for( let  j=0 ; j < contentStr.length ; j++){
-          if(j===0){
-            result=contentStr[j];
-          }else{
-            result=<span>{result}{br}{contentStr[j]}</span>;
-          }
-        }
-        return <div>{result}</div>;
-      },
-    },
-    {
-      title: '检验人员',
-      dataIndex: 'inspman',
-    },
-
-    {
-      title: '开始日期',
-      dataIndex: 'begindate',
-      render: val => this.isValidDate(val),
-
-    },
-    {
-      title: '结束日期',
-      dataIndex: 'finishdate',
-      render: val => this.isValidDate(val),
-    },
-    {
-      title: '重量',
-      dataIndex: 'weight',
-    },
-    {
-      title: '结果',
-      dataIndex: 'result',
-    }
-  ],
-
-    renderFormData:[],
-    renderFormColumns:[],
-
-  }
-
+  };
 
   columns = [
     {
@@ -386,12 +266,11 @@ class CertificateUploadDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          {(typeof(text.status)===undefined || text.status === "" || text.status === null ||text.status==="未签")?[<a onClick={() => this.signItem(text, record)}>签署&nbsp;&nbsp;</a>]:[]}
-          {text.status==="已签署"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
+          {text.status==="未签"?[<a onClick={() => this.signItem(text, record)}>拟制&nbsp;&nbsp;</a>]:[]}
+          {text.status==="已拟制"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.ViewItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
+          {(text.status!=="未签")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
@@ -407,7 +286,6 @@ class CertificateUploadDetail extends PureComponent {
          reportno,
       },
       callback: (response) => {
-        console.log(response);
       }
     });
 
@@ -416,7 +294,7 @@ class CertificateUploadDetail extends PureComponent {
       type: 'certificate/getReport',
       payload: reportnNo,
       callback: (response) => {
-        this.setState({report:response});
+        this.setState({reportDetail:response});
       }
     });
 
@@ -431,13 +309,27 @@ class CertificateUploadDetail extends PureComponent {
               const data={
                 title: value.recordname,
                 key:value.id,
-              }
+              };
               this.state.treeData[2].children.push(data);
             }
           }
         }
       }
     });
+
+    // 获取信息
+    dispatch({
+      type: 'certificate/getMainInfo',
+      payload:{reportno:reportnNo},
+      callback: (response) => {
+        if(response){
+          this.state.treeData.push(response);
+        }
+      }
+    });
+
+
+
   }
 
   ViewItem = text =>{
@@ -453,108 +345,142 @@ class CertificateUploadDetail extends PureComponent {
         }
       }
     });
-  }
+  };
 
   signCertFile = text =>{
-    const { dispatch } = this.props;
-    const params ={
-      osspath:text.pdfpath
-    }
-    dispatch({
-      type: 'certificate/getOssPdf',
-      payload:params,
-      callback: (response) => {
-        if(response.code === 200){
-          this.setState({Certurls:response.data});
-          this.setState({showVisible:true});
-          this.setState({text});
-        }else {
-          message.success("打开签署文件失败");
-        }
-      }
-    });
+
+
+
+
+    // dispatch({
+    //   type: 'certificate/getOssPdf',
+    //   payload:params,
+    //   callback: (response) => {
+    //     if(response.code === 200){
+    //       this.setState({Certurls:response.data});
+    //       this.setState({showVisible:true});
+    //       this.setState({text});
+    //     }else {
+    //       message.success("打开拟制文件失败");
+    //     }
+    //   }
+    // });
+
+
 
   };
 
 
 
-  reviewCertFile = () =>{
-    const{text} = this.state;
-    const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    text.reviewer = user.userName;
-    dispatch({
-      type: 'certificate/reviewCertFile',
-      payload:{
-         ...text,
-      },
-      callback: (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '复核失败',
-            description:response.message,
-          });
-        }else{
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-               reportno,
-            }
-          });
-        }
-      }
-    });
-    this.setState({showVisible:false});
+  reviewCertFile = (fieldValue) =>{
+    // const{text} = this.state;
+    // const { dispatch } = this.props;
+    // const reportno = sessionStorage.getItem('reportno');
+    // const user = JSON.parse(localStorage.getItem("userinfo"));
+    // text.reviewer = user.userName;
+    // dispatch({
+    //   type: 'certificate/reviewCertFile',
+    //   payload:{
+    //      ...text,
+    //   },
+    //   callback: (response) => {
+    //     if(response.code === 400){
+    //       notification.open({
+    //         message: '复核失败',
+    //         description:response.message,
+    //       });
+    //     }else{
+    //       dispatch({
+    //         type: 'certificate/getCertFiles',
+    //         payload:{
+    //            reportno,
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
+    // this.setState({showVisible:false});
   };
 
-  handleSign =()=>{
-    const{text} = this.state;
-    const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    text.signer = user.userName;
-    dispatch({
-      type: 'certificate/signCertFile',
-      payload:{
-        ...text,
-      },
-      callback: (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '签署失败',
-            description:response.message,
-          });
-        }else{
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-              reportno,
-            }
-          });
-        }
-      }
-    });
-    this.setState({showVisible:false});
+  handleSign =(fieldValue)=>{
+    // const{text} = this.state;
+    // const { dispatch } = this.props;
+    // const reportno = sessionStorage.getItem('reportno');
+    // const user = JSON.parse(localStorage.getItem("userinfo"));
+    // text.signer = user.userName;
+    // dispatch({
+    //   type: 'certificate/signCertFile',
+    //   payload:{
+    //     ...text,
+    //   },
+    //   callback: (response) => {
+    //     if(response.code === 400){
+    //       notification.open({
+    //         message: '拟制失败',
+    //         description:response.message,
+    //       });
+    //     }else{
+    //       dispatch({
+    //         type: 'certificate/getCertFiles',
+    //         payload:{
+    //           reportno,
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
+    // this.setState({showVisible:false});
 
-  }
+  };
 
 
 
   signItem =text=>{
-    this.setState({option:"签署"});
-    this.signCertFile(text);
-  }
+    const { dispatch } = this.props;
+    const value = {
+      ...text,
+    };
+    // 转pdf
+    dispatch({
+      type: 'certificate/convertWordToPdf',
+      payload:value,
+      callback: (response2) => {
+        if(response2){
+          // 打开文件
+          const params ={
+            osspath:response2.pdf1path
+          };
+          dispatch({
+            type: 'certificate/getOssPdf',
+            payload:params,
+            callback: (response) => {
+              if(response.code === 200){
+                this.setState({Certurls:response.data});
+                this.setState({option:"拟制"});
+                this.setState({showVisible:true});
+                this.setState({text});
+              }else {
+                message.success("打开拟制文件失败");
+              }
+            }
+          });
+        }
+      }
+    });
+
+
+
+  };
 
   reivewItem =text=>{
     this.setState({option:"复核"});
     this.signCertFile(text);
-  }
+  };
 
   sealItem =text=>{
     this.setState({option:"盖章"});
     this.signCertFile(text);
-  }
+  };
 
   sealCertFile = () =>{
     const{text} = this.state;
@@ -626,7 +552,7 @@ class CertificateUploadDetail extends PureComponent {
     } = this.props;
     const params = {
       keyno:text.keyno
-    }
+    };
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'certificate/deleteCertFile',
@@ -820,12 +746,15 @@ class CertificateUploadDetail extends PureComponent {
       type:value,
       owner:ownerValue
     };
+
     dispatch({
-      type: 'testRecord/getModelName',
+      type: 'certificate/getModelSelectName',
       payload:params,
       callback: (response) => {
         if(response){
+          console.log(response);
           this.state.modelName = response;
+
         }
       }
     });
@@ -843,76 +772,47 @@ class CertificateUploadDetail extends PureComponent {
 
   // 树控件的目录数据
   onSelect = (selectedKeys, info) => {
-    if (selectedKeys[0] === undefined || selectedKeys[0] === '0-0' || selectedKeys[0] === '0-1' || selectedKeys[0] === '0-2'  ) {
-      return;
-    }
-    this.setState({ value: selectedKeys[0] });
     const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const params = {
-      reportno,
-    };
-    if( selectedKeys[0] === '0-0-0' ){
-      const reportnNo =reportno;
-      dispatch({
-        type: 'certificate/getReport',
-        payload: reportnNo,
-        callback: (response) => {
-          this.setState({report:response});
-        }
-      });
-    }else if (selectedKeys[0] === '0-0-2') {
-      dispatch({
-        type: 'certificate/getCheckResultFetch',
-        payload: params,
-        callback: (response) => {
-          if (response) {
-            this.state.checkResultData = response.data;
-          }
-        }
-      });
-    } else if (selectedKeys[0] === '0-0-1') {
-      dispatch({
-        type: 'certificate/getSampleDetailFetch',
-        payload: params,
-        callback: (response) => {
-          if (response) {
-            this.state.sampleData = response.data;
-          }
-        }
-      });
-    } else if (selectedKeys[0] === '0-1-0') {
-      dispatch({
-        type: 'certificate/getSampleDetailForLink',
-        payload: params,
-        callback: (response) => {
-          if (response) {
-            this.state.sampleDataLink = response.data;
-          }
-        }
-      });
-    } else if (selectedKeys[0] === '0-1-1') {
-      dispatch({
-        type: 'certificate/getCheckResultForLink',
-        payload: params,
-        callback: (response) => {
-          if (response) {
-            this.state.checkResultDataLink = response.data;
-          }
-        }
-      });
-    } else {
+    if(selectedKeys ===undefined || selectedKeys[0] ===undefined){
+      return null;
+    }
+    if( selectedKeys[0] === 'reportDetail' ){ // 委托详情
+      this.state.reportDetail = this.state.treeData[0].children[0].children[0].data;
+      this.setState({ value: selectedKeys[0] });
+    }else if (selectedKeys[0].indexOf("checkitem")  === 0) { //   检查
+      this.state.checkData = this.state.treeData[0].children[1].children[0].children[selectedKeys[0].substring(9)].data;
+      this.setState({ value: selectedKeys[0] });
+    } else if (selectedKeys[0].indexOf("testitem")  === 0) {   // 检测
+      this.state.renderFormData = this.state.treeData[0].children[2].children[0].children[selectedKeys[0].substring(8)].data;
+      this.state.renderFormColumns  = this.state.sampleColumnsLink;
+      this.setState({ value: selectedKeys[0] });
+    } else if (selectedKeys[0].indexOf("recordinfo")  === 0) {  // 附件
+      const key = selectedKeys[0].substring(10);
       // 附件的url
       dispatch({
         type: 'certificate/getPdfUrlFetch',
-        payload: { id: selectedKeys[0] },
+        payload: { id: key },
         callback: (pdfresponse) => {
           if (pdfresponse) {
             this.state.urls = pdfresponse.data;
           }
         }
       });
+      this.setState({ value: selectedKeys[0] });
+    }else if(selectedKeys[0].indexOf("certpdf")  === 0){   // 证书
+      const key = selectedKeys[0].substring(7);
+      dispatch({
+        type: 'certificate/getPdfByOssPath',
+        payload:{osspath:key},
+        callback: (response) => {
+          if (response) {
+            this.state.urls = response.data;
+          }
+        }
+      });
+      this.setState({ value: selectedKeys[0] });
     }
+    return null;
   };
 
 
@@ -923,45 +823,61 @@ class CertificateUploadDetail extends PureComponent {
     return [];
   };
 
-  // eslint-disable-next-line class-methods-use-this
-  // 委托的信息
   renderReportForm() {
-    const {report} = this.state;
+    const {reportDetail} = this.state;
     return (
       <div style={{width:'100%',backgroundColor:'white'}}>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="业务信息" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-          <Descriptions.Item label="委托编号">{report.reportno}</Descriptions.Item>
-          <Descriptions.Item label="委托日期">{moment(report.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
-          <Descriptions.Item label="检验费">{report.price}</Descriptions.Item>
-          <Descriptions.Item label="申请人">{report.applicant}</Descriptions.Item>
-          <Descriptions.Item label="联系人">{report.applicantname}</Descriptions.Item>
-          <Descriptions.Item label="联系电话">{report.applicanttel}</Descriptions.Item>
-          <Descriptions.Item label="代理人">{report.agent}</Descriptions.Item>
-          <Descriptions.Item label="联系人">{report.agentname}</Descriptions.Item>
-          <Descriptions.Item label="联系电话">{report.agenttel}</Descriptions.Item>
-          <Descriptions.Item label="付款人">{report.payer}</Descriptions.Item>
-          <Descriptions.Item label="业务来源">{report.businesssource}</Descriptions.Item>
-          <Descriptions.Item label="贸易方式">{report.tradeway}</Descriptions.Item>
-          <Descriptions.Item label="证书要求">{report.certstyle}</Descriptions.Item>
-          <Descriptions.Item label="自编号">{report.reportno20}</Descriptions.Item>
-          <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
+          <Descriptions.Item label="委托编号">{reportDetail.reportno}</Descriptions.Item>
+          <Descriptions.Item label="委托日期">{moment(reportDetail.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
+          <Descriptions.Item label="检验费">{reportDetail.price}</Descriptions.Item>
+          <Descriptions.Item label="申请人">{reportDetail.applicant}</Descriptions.Item>
+          <Descriptions.Item label="联系人">{reportDetail.applicantname}</Descriptions.Item>
+          <Descriptions.Item label="联系电话">{reportDetail.applicanttel}</Descriptions.Item>
+          <Descriptions.Item label="代理人">{reportDetail.agent}</Descriptions.Item>
+          <Descriptions.Item label="联系人">{reportDetail.agentname}</Descriptions.Item>
+          <Descriptions.Item label="联系电话">{reportDetail.agenttel}</Descriptions.Item>
+          <Descriptions.Item label="付款人">{reportDetail.payer}</Descriptions.Item>
+          <Descriptions.Item label="业务来源">{reportDetail.businesssource}</Descriptions.Item>
+          <Descriptions.Item label="贸易方式">{reportDetail.tradeway}</Descriptions.Item>
+          <Descriptions.Item label="证书要求">{reportDetail.certstyle}</Descriptions.Item>
+          <Descriptions.Item label="自编号">{reportDetail.reportno20}</Descriptions.Item>
+          <Descriptions.Item label="业务分类">{reportDetail.businesssort}</Descriptions.Item>
         </Descriptions>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="检查对象" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-          <Descriptions.Item label="检查品名">{report.cargoname}</Descriptions.Item>
-          <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
-          <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
-          <Descriptions.Item label="申报数量和单位">{report.quantityd+report.unit}</Descriptions.Item>
-          <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
-          <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
-          <Descriptions.Item label="到达地点">{report.inspplace1}</Descriptions.Item>
+          <Descriptions.Item label="检查品名">{reportDetail.cargoname}</Descriptions.Item>
+          <Descriptions.Item label="中文俗名">{reportDetail.chineselocalname}</Descriptions.Item>
+          <Descriptions.Item label="船名标识">{reportDetail.shipname}</Descriptions.Item>
+          <Descriptions.Item label="申报数量和单位">{reportDetail.quantityd+reportDetail.unit}</Descriptions.Item>
+          <Descriptions.Item label="检验时间">{moment(reportDetail.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
+          <Descriptions.Item label="检查港口">{reportDetail.inspplace2}</Descriptions.Item>
+          <Descriptions.Item label="到达地点">{reportDetail.inspplace1}</Descriptions.Item>
         </Descriptions>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="检查项目" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-          <Descriptions.Item label="申请项目">{report.inspway}</Descriptions.Item>
-          <Descriptions.Item label="检验备注">{report.inspwaymemo1}</Descriptions.Item>
+          <Descriptions.Item label="申请项目">{reportDetail.inspway}</Descriptions.Item>
+          <Descriptions.Item label="检验备注">{reportDetail.inspwaymemo1}</Descriptions.Item>
         </Descriptions>
       </div>
     );
   }
+
+  renderCheckForm() {
+    const {checkData} = this.state;
+    return (
+      <div style={{width:'100%',backgroundColor:'white'}}>
+        <Descriptions style={{ marginBottom: 10 }} size='small' title="现场检查" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
+          <Descriptions.Item label="检查项目">{checkData.inspway}</Descriptions.Item>
+          <Descriptions.Item label="开始日期">{moment(checkData.begindate).format('YYYY-MM-DD')}</Descriptions.Item>
+          <Descriptions.Item label="结束日期">{moment(checkData.finishdate).format('YYYY-MM-DD')}</Descriptions.Item>
+          <Descriptions.Item label="重量">{checkData.weight}</Descriptions.Item>
+          <Descriptions.Item label="标准">{checkData.standard}</Descriptions.Item>
+          <Descriptions.Item label="检验员">{checkData.inspman}</Descriptions.Item>
+          <Descriptions.Item label="检验仪器">{checkData.instrument}</Descriptions.Item>
+        </Descriptions>
+      </div>
+    );
+  }
+
 
 
   renderLinkFileForm (){
@@ -974,62 +890,6 @@ class CertificateUploadDetail extends PureComponent {
   }
 
 
-  renderSampleForm(){
-    const {sampleData} = this.state;
-    const {loading} = this.props;
-    return (
-      <div style={{width:'100%',backgroundColor:'white'}}>
-        <Table
-          size="middle"
-          dataSource={sampleData}
-          columns={this.sampleColumns}
-          rowKey="sampleno"
-          loading={loading}
-          pagination={{showQuickJumper:true,showSizeChanger:true}}
-        />
-      </div>
-    );
-  }
-
-
-
-  renderCheckForm(){
-    const {checkResultData} = this.state;
-    const {loading} = this.props;
-    return (
-      <div style={{width:'100%',backgroundColor:'white'}}>
-        <Table
-          size="middle"
-          dataSource={checkResultData}
-          columns={this.checkColumns}
-          rowKey="keyno"
-          loading={loading}
-          pagination={{showQuickJumper:true,showSizeChanger:true}}
-        />
-      </div>
-    );
-  }
-
-
-
-
-
-  renderSampleFormLink(){
-    const {sampleDataLink} = this.state;
-    const {loading} = this.props;
-    return (
-      <div style={{width:'100%',backgroundColor:'white'}}>
-        <Table
-          size="middle"
-          dataSource={sampleDataLink}
-          columns={this.sampleColumnsLink}
-          rowKey="sampleno"
-          loading={loading}
-          pagination={{showQuickJumper:true,showSizeChanger:true}}
-        />
-      </div>
-    );
-  }
 
 
   renderForm(){
@@ -1041,24 +901,6 @@ class CertificateUploadDetail extends PureComponent {
           size="middle"
           dataSource={renderFormData}
           columns={renderFormColumns}
-          rowKey="keyno"
-          loading={loading}
-          pagination={{showQuickJumper:true,showSizeChanger:true}}
-        />
-      </div>
-    );
-  }
-
-
-  renderCheckFormLink(){
-    const {checkResultDataLink} = this.state;
-    const {loading} = this.props;
-    return (
-      <div style={{width:'100%',backgroundColor:'white'}}>
-        <Table
-          size="middle"
-          dataSource={checkResultDataLink}
-          columns={this.checkColumnsLink}
           rowKey="keyno"
           loading={loading}
           pagination={{showQuickJumper:true,showSizeChanger:true}}
@@ -1081,36 +923,20 @@ class CertificateUploadDetail extends PureComponent {
     });
 
   renderFileInfo =(value)=>{
-
-    if (value === '0-0' || value=== '0-1' || value=== '0-2' ) {
-      return;
-    }
-    if(value === '0-0-0'){
+    if(value === 'reportDetail'){
       return this.renderReportForm();
-    }
-    if(value === '0-0-1'){
-      this.state.renderFormData  = this.state.sampleData;
-      this.state.renderFormColumns  = this.state.sampleColumns;
-    }
-
-    else if(value === '0-0-2'){
-      this.state.renderFormData  = this.state.checkResultData;
-      this.state.renderFormColumns  = this.state.checkColumns;
-    }
-
-    else if(value === '0-1-0'){
-      this.state.renderFormData  = this.state.sampleDataLink;
-      this.state.renderFormColumns  = this.state.sampleColumnsLink;
-    }
-
-    else if(value === '0-1-1'){
-      this.state.renderFormData  = this.state.checkResultDataLink;
-      this.state.renderFormColumns  = this.state.checkColumnsLink;
-    }else{
+    }else if(value.indexOf("checkitem")  === 0){  // 现场检查
+      return this.renderCheckForm();
+    } else if(value.indexOf("testitem")  === 0){  // 分析测试
+      return this.renderForm();
+    }else if(value.indexOf("recordinfo")  === 0) { // 附件
       return this.renderLinkFileForm();
+    }else if(value.indexOf("certpdf")  === 0) {  // 已经盖章的证书
+      return this.renderLinkFileForm();
+    }else{
+      return null;
     }
-    return this.renderForm();
-  }
+  };
 
 
 
@@ -1127,8 +953,8 @@ class CertificateUploadDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value,option} = this.state
-    const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value,option,treeData} = this.state
+    const typeOptions = modelName.map(d => <Option key={d.id} value={d.id}>{d.name}</Option>);
 
     // 下载模板 模态框方法
     const parentMethods = {
@@ -1136,7 +962,15 @@ class CertificateUploadDetail extends PureComponent {
       showDownloadVisible: this.showDownloadVisible,
       handleDownloadCancel:this.handleDownloadCancel,
       handleOnSelect :this.handleOnSelect,
+      showCancel: this.showCancel,
+      onSelect:this.onSelect,
+      handleSign:this.handleSign,
+      reviewCertFile:this.reviewCertFile,
+      renderFileInfo:this.renderFileInfo,
+      renderTreeNodes:this.renderTreeNodes,
     };
+
+
 
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
@@ -1147,7 +981,6 @@ class CertificateUploadDetail extends PureComponent {
       applicant,
     };
 
-    console.log(window.screen.width);
 
     return (
       <PageHeaderWrapper text={reprotText}>
@@ -1165,6 +998,7 @@ class CertificateUploadDetail extends PureComponent {
                 <Upload
                   // action="http://localhost:8000/api/recordinfo/upload"
                   // data={{'reportno':reportno}}
+                  // defaultExpandedKeys={['0-0-0']}
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={this.handlePreview}
@@ -1190,38 +1024,8 @@ class CertificateUploadDetail extends PureComponent {
 
         <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
 
-        <Modal
-          title={option}
-          visible={showVisible}
-          onCancel={this.showCancel}
-          footer={[
-            // 定义右下角 按钮的地方 可根据需要使用 一个或者 2个按钮
-            <Button key="cancel" type="primary" onClick={this.showCancel}> 取消</Button>,
-            option === "签署"?[<Button key="submit1" type="primary" onClick={this.handleSign}>签署</Button>]:[],
-            option === "复核"?[<Button key="submit2" type="primary" onClick={this.reviewCertFile}>复核</Button>]:[],
-          ]}
-          style={{ top: 10 }}
-          width={document.body.clientWidth}
-          height={document.body.clientHeight}
-        >
-          <Layout>
-            <Content>
-              <div style={{backgroundColor:'white'}}>
-                <Row>
-                  <Form>
-                    <Col span={12}>  <embed src={Certurls} style={{width:'90%', height:document.body.clientHeight*0.8}} type="application/pdf" /></Col>
-                    <Col span={12}>
-                      {this.renderFileInfo(value)}
-                    </Col>
-                  </Form>
-                </Row>
-              </div>
-            </Content>
-            <Sider theme='light' width={180} style={{paddingLeft:15}}>
-              <Tree showLine defaultExpandedKeys={['0-0-0']} defaultExpandParent onSelect={this.onSelect}>{this.renderTreeNodes(this.state.treeData)}</Tree>
-            </Sider>
-          </Layout>
-        </Modal>
+        <CertForm {...parentMethods} showVisible={showVisible} option={option} Certurls={Certurls} treeData={treeData} value={value}  />
+
 
         <Card bordered={false} size="small">
           <Row>

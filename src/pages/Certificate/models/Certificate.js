@@ -1,7 +1,8 @@
 import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPath,
-  getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl} from '@/services/Certificate'
+  getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,
+  getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,getMainInfo,convertWordToPdf} from '@/services/Certificate'
 
-import {getOssPdf} from '@/services/TestRecord'
+import {getOssPdf,getModelSelectName} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
 
 
@@ -25,9 +26,21 @@ export default {
     recordinfoResult:{},
     pdfResult:{},
     pdfByOssPathResult:{},
+    getMainInfoResult:{},
+    convertWortToPdfResult:{},
+    getModelSelectNameResult:{},
   },
 
   effects: {
+    *convertWordToPdf({ payload,callback }, { call, put }) {
+      const response = yield call(convertWordToPdf, payload);
+      yield put({
+        type: 'convertWortToPdfResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
     *getCertReports({ payload,callback }, { call, put }) {
       const response = yield call(getCertReports, payload);
       yield put({
@@ -72,6 +85,16 @@ export default {
       });
       if (callback) callback(response);
     },
+
+    *getMainInfo({ payload,callback }, { call, put }) {
+      const response = yield call(getMainInfo, payload);
+      yield put({
+        type: 'getMainInfoResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
 
 
     *getOssPdf({ payload,callback }, { call, put }) {
@@ -161,6 +184,16 @@ export default {
     },
 
 
+    *getModelSelectName({ payload,callback }, { call, put }) {
+      const response = yield call(getModelSelectName, payload);
+      yield put({
+        type: 'getRecordInfoResult',
+        payload: response.data,
+      });
+      if (callback) callback(response.data);
+    },
+
+
   },
 
   reducers: {
@@ -190,6 +223,14 @@ export default {
         signData: payload.data,
       };
     },
+
+    getMainInfoResult(state, { payload }) {
+      return {
+        ...state,
+        getMainInfoResult: payload.data,
+      };
+    },
+
 
     getOssPdfInfo(state, { payload }) {
       return {
@@ -243,11 +284,27 @@ export default {
       };
     },
 
+
     getPdfByOssPathResult(state, { payload }) {
       return {
         ...state,
         pdfByOssPathResult: payload,
       };
     },
+
+    convertWortToPdfResult(state, { payload }) {
+      return {
+        ...state,
+        convertWortToPdfResult: payload.data,
+      };
+    },
+
+    getModelSelectNameResult(state, { payload }) {
+      return {
+        ...state,
+        getModelSelectNameResult: payload.data,
+      };
+    },
+
   },
 };

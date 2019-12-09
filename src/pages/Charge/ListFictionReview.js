@@ -66,7 +66,7 @@ class ListFictionReview extends PureComponent {
     },
     {
       title: '状态',
-      dataIndex: 'process',
+      dataIndex: 'status',
     },
     {
       title: '操作',
