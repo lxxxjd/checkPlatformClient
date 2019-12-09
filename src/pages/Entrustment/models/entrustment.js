@@ -109,7 +109,7 @@ export default {
         type: 'update',
         payload:response,
       });
-      if (callback) callback();
+      if (callback) callback(response);
     },
 
     *getCargos({ payload ,callback}, { call, put }) {

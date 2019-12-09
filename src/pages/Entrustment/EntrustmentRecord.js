@@ -1,7 +1,5 @@
-import React, { PureComponent, Fragment } from 'react';
-import { connect } from 'dva';
-import router from 'umi/router';
-import styles from './ModifyRelevance.less';
+import React, {PureComponent, Fragment} from 'react';
+import {connect} from 'dva';
 
 import {
   Row,
@@ -12,10 +10,7 @@ import {
   Button,
   Select,
   Modal,
-  Checkbox,
-  Radio,
   Table,
-  DatePicker,
   notification,
   Upload,
   Icon,
@@ -23,8 +18,9 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
-const CheckboxGroup = Checkbox.Group;
-const { Option } = Select;
+import styles from './ModifyRelevance.less';
+
+const {Option} = Select;
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -34,27 +30,23 @@ function getBase64(file) {
     reader.onerror = error => reject(error);
   });
 }
+
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ testRecordEntrustment, loading }) => ({
+@connect(({testRecordEntrustment, loading}) => ({
   testRecordEntrustment,
   loading: loading.models.testRecordEntrustment,
 }))
 class EntrustmentRecord extends PureComponent {
   state = {
-    formValues: {},
-    visible:false,
-    downloadVisible:false,
-    checkProject:[],
-    allCompanyName:[],
-    selectEntrustment:null,
-    showPrice:false,
+    visible: false,
+    downloadVisible: false,
     previewVisible: false,
     previewImage: '',
     fileList: [],
-    modelName:[],
-    url:null,
-    showVisible:false,
+    modelName: [],
+    url: null,
+    showVisible: false,
   };
 
   columns = [
@@ -75,7 +67,7 @@ class EntrustmentRecord extends PureComponent {
       title: '上传日期',
       dataIndex: 'recorddate',
       render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
+        moment(val).format('YYYY-MM-DD')
       }</span>
     },
 
@@ -99,41 +91,41 @@ class EntrustmentRecord extends PureComponent {
 
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'testRecordEntrustment/getRecordInfo',
-      payload:{
-         reportno : reportno,
-         source : '委托',
+      payload: {
+        reportno: reportno,
+        source: '委托',
       }
     });
   }
 
   previewItem = text => {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const params = {
       ...text,
-      reportno:reportno
+      reportno: reportno
     };
     dispatch({
       type: 'testRecordEntrustment/getRecord',
-      payload:params,
-      callback:(response) =>{
-        if(response.code === 400){
+      payload: params,
+      callback: (response) => {
+        if (response.code === 400) {
           notification.open({
             message: '打开失败',
-            description:response.data,
+            description: response.data,
           });
-        }else{
+        } else {
           const url = response.data;
-          this.setState({url:url});
+          this.setState({url: url});
           //window.open(url);
         }
       }
     });
-    this.setState({showVisible:true});
+    this.setState({showVisible: true});
   };
 
   deleteItem = text => {
@@ -143,27 +135,27 @@ class EntrustmentRecord extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const params = {
       ...text,
-      reportno:reportno
+      reportno: reportno
     };
     dispatch({
       type: 'testRecordEntrustment/deleteRecordInfo',
-      payload:params,
+      payload: params,
       callback: (response) => {
-        if(response.code === 400){
+        if (response.code === 400) {
           notification.open({
             message: '删除失败',
-            description:response.data,
+            description: response.data,
           });
-        }else{
+        } else {
           this.componentDidMount();
         }
       }
     });
   };
 
-  handleOk = () =>{
+  handleOk = () => {
     const {
-      form: { validateFieldsAndScroll },
+      form: {validateFieldsAndScroll},
       dispatch,
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
@@ -181,19 +173,19 @@ class EntrustmentRecord extends PureComponent {
         console.log(formData.get('files'));
         dispatch({
           type: 'testRecordEntrustment/uploadFile',
-          payload : formData,
+          payload: formData,
           callback: (response) => {
-            if(response.code === 400){
+            if (response.code === 400) {
               notification.open({
                 message: '添加失败',
-                description:response.message,
+                description: response.message,
               });
-            }else{
+            } else {
               this.componentDidMount();
             }
           }
         });
-        this.setState({ visible: false });
+        this.setState({visible: false});
         form.resetFields();
       }
       console.log(error);
@@ -207,28 +199,28 @@ class EntrustmentRecord extends PureComponent {
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     form.resetFields();
-    this.setState({fileList:[]});
-    this.setState({ visible: true });
+    this.setState({fileList: []});
+    this.setState({visible: true});
   };
 
-  handleCancel = () =>{
+  handleCancel = () => {
     const {
       form
     } = this.props;
     form.resetFields();
-    this.setState({ visible: false });
+    this.setState({visible: false});
   };
 
 
-  onChange = e =>{
-    if(e.target.value === "按单价"  || e.target.value ==="按比例"){
-      this.setState({showPrice:true});
-    }else{
-      this.setState({showPrice:false});
+  onChange = e => {
+    if (e.target.value === "按单价" || e.target.value === "按比例") {
+      this.setState({showPrice: true});
+    } else {
+      this.setState({showPrice: false});
     }
   };
 
-  Cancel = () => this.setState({ previewVisible: false });
+  Cancel = () => this.setState({previewVisible: false});
 
   handlePreview = async file => {
     if (!file.url && !file.preview) {
@@ -241,7 +233,7 @@ class EntrustmentRecord extends PureComponent {
     });
   };
 
-  handleChange = ({ file,fileList }) => {
+  handleChange = ({file, fileList}) => {
     //限制图片 格式、size、分辨率
     const isJPG = file.type === 'image/jpg';
     const isJPEG = file.type === 'image/jpeg';
@@ -260,14 +252,13 @@ class EntrustmentRecord extends PureComponent {
       });
       return;
     }
-    this.setState({ fileList:fileList});
+    this.setState({fileList: fileList});
     console.log(fileList)
   };
 
   handleBeforeUpload = file => {
     return false;
   };
-
 
 
   // 处理下载模态框打开
@@ -285,21 +276,20 @@ class EntrustmentRecord extends PureComponent {
   };
 
 
-
   // 处理下载模态框 提交表单
-  handleDownloadAdd = (fields) =>{
-    const { dispatch, } = this.props;
+  handleDownloadAdd = (fields) => {
+    const {dispatch,} = this.props;
     const reportNo = sessionStorage.getItem('reportno');
     const params = {
-      reportno:reportNo,
-      tempName:fields.tempName,
-      recordName:fields.downloadRecordName,
+      reportno: reportNo,
+      tempName: fields.tempName,
+      recordName: fields.downloadRecordName,
     };
     dispatch({
       type: 'testRecordEntrustment/downloadPlatFromTemp',
-      payload:params,
+      payload: params,
       callback: (response) => {
-        if(response){
+        if (response) {
           message.success("下载成功");
         }
       }
@@ -311,61 +301,62 @@ class EntrustmentRecord extends PureComponent {
   }
 
   // 处理下载模态框 提交表单
-  handleOnSelect =(value) =>{
+  handleOnSelect = (value) => {
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    let ownerValue="";
-    if( value ==="platform"){
+    let ownerValue = "";
+    if (value === "platform") {
       ownerValue = "platform";
-    }else if(value ==="company"){
-      ownerValue= user.certCode;
-    }else if(value ==="person"){
-      ownerValue= user.userName;
-    }else{
+    } else if (value === "company") {
+      ownerValue = user.certCode;
+    } else if (value === "person") {
+      ownerValue = user.userName;
+    } else {
       ownerValue = "blank";
     }
-    const { dispatch, } = this.props;
+    const {dispatch,} = this.props;
     const params = {
-      type:value,
-      owner:ownerValue
+      type: value,
+      owner: ownerValue
     };
     dispatch({
       type: 'testRecordEntrustment/getModelName',
-      payload:params,
+      payload: params,
       callback: (response) => {
-        if(response){
+        if (response) {
           this.state.modelName = response;
         }
       }
     });
   };
 
-  back = () =>{
+  back = () => {
     this.props.history.goBack();
   };
-  showCancel = () =>{
-    this.setState({showVisible:false});
+  showCancel = () => {
+    this.setState({showVisible: false});
   }
+
   render() {
     const uploadButton = (
       <div>
-        <Icon type="plus" />
+        <Icon type="plus"/>
         <div className="ant-upload-text">Upload</div>
       </div>
     );
     const {
-      testRecordEntrustment:{recordData},
+      testRecordEntrustment: {recordData},
       loading,
-      form: { getFieldDecorator },
+      form: {getFieldDecorator},
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible} = this.state
+    const {fileList, visible, previewVisible, previewImage, downloadVisible, modelName, url, showVisible} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
 
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const applicant = sessionStorage.getItem('applicant');
-    const reprotText= {
+    const reprotText = {
       reportno,
       shipname,
       applicant,
@@ -381,7 +372,7 @@ class EntrustmentRecord extends PureComponent {
           <Form>
             <Form.Item label="文件上传">
               {getFieldDecorator('MultipartFile', {
-                rules: [{ required: true, message: '请选择上传文件' }],
+                rules: [{required: true, message: '请选择上传文件'}],
               })(
                 <Upload
                   listType="picture-card"
@@ -396,24 +387,24 @@ class EntrustmentRecord extends PureComponent {
             </Form.Item>
             <Form.Item label="文件名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入文件名称' }],
+                rules: [{required: true, message: '请输入文件名称'}],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入文件名称" />
+                <Input style={{width: '100%'}} placeholder="请输入文件名称"/>
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>
-              <img alt="example" style={{ width: '100%' }} src={previewImage} />
+              <img alt="example" style={{width: '100%'}} src={previewImage}/>
             </Modal>
           </Form>
         </Modal>
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
+              <Button style={{marginBottom: 12}} type="primary" onClick={this.show}>上传文件</Button>
             </Col>
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
-                <Icon type="left" />返回
+              <Button type="primary" style={{marginLeft: 8, paddingLeft: 0, paddingRight: 15}} onClick={this.back}>
+                <Icon type="left"/>返回
               </Button>
             </Col>
           </Row>
@@ -424,7 +415,7 @@ class EntrustmentRecord extends PureComponent {
               dataSource={recordData}
               columns={this.columns}
               rowKey="recordname"
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              pagination={{showQuickJumper: true, showSizeChanger: true}}
             />
           </div>
         </Card>
@@ -434,7 +425,7 @@ class EntrustmentRecord extends PureComponent {
           onCancel={this.showCancel}
           footer={null}
           width={800}
-          style={{ top: 10}}
+          style={{top: 10}}
         >
           <embed src={url} width="700" height="700"/>
         </Modal>
@@ -442,6 +433,7 @@ class EntrustmentRecord extends PureComponent {
     );
   }
 }
+
 /*         <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
           <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>批量上传</Button>
           <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>工作目录</Button>*/

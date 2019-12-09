@@ -51,6 +51,7 @@ const options = [
   },
 ];
 const fieldLabels = {
+  customsNo: '报关号',
   applicant: '申请人',
   applicantname: '联系人',
   applicanttel: '联系方式',
@@ -90,8 +91,11 @@ const fieldLabels = {
 @Form.create()
 class CopyForEntrustment extends PureComponent {
   state = {
+    width: '100%',
     value: 1,
-    allReporterName: [],
+    applicantName: [],
+    agentName:[],
+    payerName:[],
     businessSort: [],
     businessSource: [],
     tradeway: [],
@@ -108,9 +112,10 @@ class CopyForEntrustment extends PureComponent {
       subdomainname: '',
     },
     cnasCheckInfo: [],
-    isCustoms:false,
     departments:[],
+    isCustoms:false,
     customsOption:[],
+    cargoname:"",
   };
 
 
@@ -161,6 +166,7 @@ class CopyForEntrustment extends PureComponent {
               'agenttel': response.agenttel,
               'businesssource': response.businesssource,
               'chineselocalname': response.chineselocalname,
+              'iscnas': response.incnas,
             });
             const {cargos} = this.state;
             for (const cargo in cargos) {
@@ -174,22 +180,30 @@ class CopyForEntrustment extends PureComponent {
                   callback: (response) => {
                     if (response.code === 200) {
                       this.setState({cnasInfo: response.data});
-                      dispatch({
-                        type: 'entrustment/getCnasCheckInfo',
-                        payload: {
-                          subdomaincode: response.data.subdomaincode,
-                        },
-                        callback: (response) => {
-                          this.setState({cnasCheckInfo: response.data});
-                        }
-                      });
                     }
+                  }
+                });
+                dispatch({
+                  type: 'entrustment/getCnasCheckInfo',
+                  payload: {
+                    certCode:user.certCode,
+                    checkCode,
+                  },
+                  callback: (response) => {
+                    this.setState({cnasCheckInfo: response.data});
                   }
                 });
                 break;
               }
             }
-            form.setFieldsValue({['inspway']: response.inspway.split(" ")});
+            this.setState({cargoname:response.cargoname});
+            if(response.section !== null && response.section !== undefined){
+              form.setFieldsValue({'section': response.section.split(" ")});
+            }
+            if(response.cnasProject !== null && response.cnasProject !== undefined){
+              form.setFieldsValue({'cnasProject': response.cnasProject.split(" ")});
+            }
+            form.setFieldsValue({'inspway': response.inspway.split(" ")});
             if (response.certstyle != null) {
               const result = ['need'];
               result.push(response.certstyle);
@@ -295,6 +309,7 @@ class CopyForEntrustment extends PureComponent {
     );
   };
 
+ 
   validate = () => {
     const {
       form: {validateFieldsAndScroll},
@@ -303,8 +318,13 @@ class CopyForEntrustment extends PureComponent {
     const { cnasInfo } = this.state;
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
-      values.inspplace1 = values.inspplace1[2];
-      values.customsName = values.customsName[1];
+      if(values.inspplace1 !== null && values.inspplace1 !== undefined){
+         values.inspplace1 = values.inspplace1[2];
+      }
+      if(values.customsName !== null && values.customsName !== undefined){
+        values.customsName = values.customsName[1];
+      }
+      console.log(error);
       if (!error) {
         // submit the values
         dispatch({
@@ -313,7 +333,6 @@ class CopyForEntrustment extends PureComponent {
             ...values,
             username: user.nameC,
             certcode: user.certCode,
-            section: user.section,
             reportplace: user.place,
             cnasCode: cnasInfo.checkcode
           },
@@ -335,9 +354,55 @@ class CopyForEntrustment extends PureComponent {
           }
         });
       }
+      else{
+        console.log(error);
+      }
     });
   };
-
+  onCnasChange = e =>{
+    if(e.target.value === 1){
+      const {form, dispatch} = this.props;
+      const {cargos,cargoname} = this.state;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      for (const cargo in cargos) {
+        if (cargos[cargo].cargonamec === cargoname) {
+          const checkCode = cargos[cargo].checkCode;
+          dispatch({
+            type: 'entrustment/getCnasInfo',
+            payload: {
+              checkCode,
+            },
+            callback: (response) => {
+              if (response.code === 200) {
+                this.setState({cnasInfo: response.data});
+              }
+            }
+          });
+          dispatch({
+            type: 'entrustment/getCnasCheckInfo',
+            payload: {
+              certCode:user.certCode,
+              checkCode,
+            },
+            callback: (response) => {
+              this.setState({cnasCheckInfo: response.data});
+            }
+          });
+          break;
+        }
+      }
+    }else{
+      this.setState({cnasInfo: {
+        checkcode: '',
+        checkname: '',
+        domaincode: '',
+        domainname: '',
+        subdomaincode: '',
+        subdomainname: '',
+      }});
+      this.setState({cnasCheckInfo: []});
+    }
+  };
   onChange = e => {
     this.setState({
       value: e.target.value,
@@ -349,14 +414,15 @@ class CopyForEntrustment extends PureComponent {
       form.setFieldsValue({['payer']: form.getFieldValue('agent')});
     }
   };
-  onChangeNum = e => {
-    const {value} = e.target;
-    const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
-    if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
-      this.props.onChange(value);
+  changeIsCustoms = e =>{
+    console.log(e);
+    if (e.target.value === 1) {
+      this.setState({isCustoms:true});
+    } else {
+      this.setState({isCustoms:false});
     }
   };
-  handleSearch = value => {
+  handleAgentSearch = value => {
     const {dispatch} = this.props;
     dispatch({
       type: 'entrustment/getClientName',
@@ -364,17 +430,41 @@ class CopyForEntrustment extends PureComponent {
         content: value
       },
       callback: (response) => {
-        this.setState({allReporterName: response})
+        this.setState({agentName: response})
+      }
+    });
+  };
+  handleApplicantSearch = value => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/getClientName',
+      payload: {
+        content: value
+      },
+      callback: (response) => {
+        this.setState({applicantName: response})
+      }
+    });
+  };
+  handlePayerSearch = value => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'entrustment/getClientName',
+      payload: {
+        content: value
+      },
+      callback: (response) => {
+        this.setState({payerName: response})
       }
     });
   };
   cargoSearch = value => {
     const {dispatch} = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+   // const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
       type: 'entrustment/searchCargos',
       payload: {
-        certCode,
+        // certCode,
         value
       },
       callback: (response) => {
@@ -384,37 +474,7 @@ class CopyForEntrustment extends PureComponent {
   };
 
   handleChangeCargo = value => {
-    console.log(value);
-    const {form, dispatch} = this.props;
-    const {cargos} = this.state;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    for (const cargo in cargos) {
-      if (cargos[cargo].cargonamec === value) {
-        const checkCode = cargos[cargo].checkCode;
-        dispatch({
-          type: 'entrustment/getCnasInfo',
-          payload: {
-            checkCode,
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              this.setState({cnasInfo: response.data});
-            }
-          }
-        });
-        dispatch({
-          type: 'entrustment/getCnasCheckInfo',
-          payload: {
-            certCode:user.certCode,
-            checkCode,
-          },
-          callback: (response) => {
-            this.setState({cnasCheckInfo: response.data});
-          }
-        });
-        break;
-      }
-    }
+    this.setState({cargoname:value});
   };
 
   onAppliantChange = value => {
@@ -430,60 +490,58 @@ class CopyForEntrustment extends PureComponent {
       }
     });
   };
+
   onAgentChange = value => {
     const {dispatch} = this.props;
     dispatch({
       type: 'entrustment/getContacts',
       payload: {
-        content: value
+        value
       },
       callback: (response) => {
         this.setState({agentContacts: response.data})
       }
     });
   };
+
   onAppliantNameChange = value => {
     const {form} = this.props;
     const {applicantContacts} = this.state;
     for (const applicantContact in applicantContacts) {
-      if (applicantContacts[applicantContact].contactName === e) {
+      if (applicantContacts[applicantContact].contactName === value) {
         form.setFieldsValue({'applicanttel': applicantContacts[applicantContact].contactPhone});
         break;
       }
     }
   };
+
   onAgentNameChange = value => {
     const {form} = this.props;
     const {agentContacts} = this.state;
     for (const agentContact in agentContacts) {
-      if (agentContacts[agentContact].contactName === e) {
+      if (agentContacts[agentContact].contactName === value) {
         form.setFieldsValue({'agenttel': agentContacts[agentContact].contactPhone});
         break;
       }
     }
   };
-  isCostoms = e =>{
-    if (e.target.value === 1) {
-      this.setState({isCustoms:true});
-    } else {
-      console.log(false);
-      this.setState({isCustoms:false});
-    }
-  };
-    render() {
+
+  render() {
     const {
       form: {getFieldDecorator},
     } = this.props;
-    const {allReporterName, businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments,isCustoms,customsOption} = this.state;
+    const {applicantName, agentName, payerName , businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments,isCustoms,customsOption,disable} = this.state;
 
-    const reportNameOptions = allReporterName.map(d => <Option key={d} value={d}>{d}</Option>);
+    const applicantOptions = applicantName.map(d => <Option key={d} value={d}>{d}</Option>);
+    const agentOptions = agentName.map(d => <Option key={d} value={d}>{d}</Option>);
+    const payerOptions = payerName.map(d => <Option key={d} value={d}>{d}</Option>);
     const businessSortOptions = businessSort.map(d => <Option key={d} value={d}>{d}</Option>);
     const businessSourceOptions = businessSource.map(d => <Option key={d} value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d} value={d}>{d}</Option>);
     const cargosOptions = cargos.map(d => d.cargonamec);
-    const departmentOptions = departments.map(d => d.branchname);
-    const applicantContactsOptions = applicantContacts.map(d => d.contactName);
-    const agentContactsOptions = agentContacts.map(d => d.contactName);
+    const departmentOptions = departments.map(d => <Option key={d.branchname} value={d.branchname}>{d.branchname}</Option>);
+    const applicantContactsOptions = applicantContacts.map(d => <Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
+    const agentContactsOptions = agentContacts.map(d =><Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
     //申请人选项
     return (
       <PageHeaderWrapper
@@ -502,6 +560,69 @@ class CopyForEntrustment extends PureComponent {
             <Row gutter={16}>
               <Col span={9}>
                 <Form.Item
+                  label={fieldLabels.section}
+                  labelCol={{span: 4}}
+                  wrapperCol={{span: 20}}
+                  colon={false}
+                >
+                  {getFieldDecorator('section', {
+                    //rules: [{required: true, message: '执行部门'}],
+                  })(
+                    <Select mode="tags" placeholder="请选择执行部门">
+                      {departmentOptions}
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+                <Form.Item
+                  label={fieldLabels.reportdate}
+                  labelCol={{span: 8}}
+                  wrapperCol={{span: 16}}
+                  colon={false}
+                >
+                  {getFieldDecorator('reportdate', {
+                    rules: [{required: true, message: '请选择委托日期'}],
+                  })(
+                    <DatePicker
+                      placeholder="委托日期"
+                      format="YYYY-MM-DD"
+                      getPopupContainer={trigger => trigger.parentNode}
+                    />
+                  )}
+                </Form.Item>
+              </Col>
+
+              <Col span={4}>
+                <Form.Item
+                  label={fieldLabels.reportno20}
+                  labelCol={{span: 8}}
+                  wrapperCol={{span: 16}}
+                  colon={false}
+                >
+                  {getFieldDecorator('reportno20', {
+                    rules: [],
+                  })(<Input placeholder="自编号"/>)}
+                </Form.Item>
+              </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label={fieldLabels.customsNo}
+                  labelCol={{span: 6}}
+                  wrapperCol={{span: 16}}
+                  colon={false}
+                >
+                  {getFieldDecorator('customsNo', {
+                    rules: [],
+                  })(<Input placeholder="报关号"/>)}
+                </Form.Item>
+              </Col>
+
+            </Row>
+            <Row gutter={16}>
+              <Col span={9}>
+                <Form.Item
                   label={fieldLabels.applicant}
                   labelCol={{span: 4}}
                   wrapperCol={{span: 20}}
@@ -513,12 +634,12 @@ class CopyForEntrustment extends PureComponent {
                   })(
                     <Select
                       showSearch
-                      placeholder="请选择"
+                      placeholder="请选择申请人"
                       filterOption={false}
-                      onSearch={this.handleSearch}
+                      onSearch={this.handleApplicantSearch}
                       onChange={this.onAppliantChange}
                     >
-                      {reportNameOptions}
+                      {applicantOptions}
                     </Select>
                   )}
                 </Form.Item>
@@ -531,40 +652,35 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicantname', {})(
-                    <AutoComplete
-                      className="global-search"
-                      //size="large"
-                      //style={{ width: '100%' }}
-                      dataSource={applicantContactsOptions}
+                    <Select
+                      placeholder="请选择联系人"
+                      filterOption={false}
                       onChange={this.onAppliantNameChange}
-                      onSearch={this.handleSearch}
-                      placeholder="请输入联系人"
                     >
-                      <Input
-                      />
-                    </AutoComplete>
+                      {applicantContactsOptions}
+                    </Select>
                   )}
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={4}>
                 <Form.Item
                   label={fieldLabels.applicanttel}
                   labelCol={{span: 8}}
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('applicanttel', {})(<Input style={{width: '100%'}} placeholder="请输入联系方式"/>)}
+                  {getFieldDecorator('applicanttel', {})(<Input style={{width: '100%'}} placeholder="联系方式"/>)}
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={6}>
                 <Form.Item
                   label={fieldLabels.tradeway}
-                  labelCol={{span: 8}}
+                  labelCol={{span: 6}}
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
                   {getFieldDecorator('tradeway', {
-                    rules: [{required: true, message: '请选择贸易方式'}],
+                    rules: [],
                   })(
                     <Select placeholder="请选择贸易方式">
                       {tradewayOptions}
@@ -586,10 +702,10 @@ class CopyForEntrustment extends PureComponent {
                       showSearch
                       placeholder="请选择代理人"
                       filterOption={false}
-                      onSearch={this.handleSearch}
+                      onSearch={this.handleAgentSearch}
                       onChange={this.onAgentChange}
                     >
-                      {reportNameOptions}
+                      {agentOptions}
                     </Select>
                   )}
                 </Form.Item>
@@ -602,40 +718,35 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentname', {})(
-                    <AutoComplete
-                      className="global-search"
-                      //size="large"
-                      //style={{ width: '100%' }}
-                      dataSource={agentContactsOptions}
+                    <Select
+                      placeholder="请选择联系人"
+                      filterOption={false}
                       onChange={this.onAgentNameChange}
-                      onSearch={this.handleSearch}
-                      placeholder="请输入联系人"
                     >
-                      <Input
-                      />
-                    </AutoComplete>
+                      {agentContactsOptions}
+                    </Select>
                   )}
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={4}>
                 <Form.Item
                   label={fieldLabels.agenttel}
                   labelCol={{span: 8}}
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('agenttel', {})(<Input style={{width: '100%'}} placeholder="请输入联系方式"/>)}
+                  {getFieldDecorator('agenttel', {})(<Input style={{width: '100%'}} placeholder="联系方式"/>)}
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={6}>
                 <Form.Item
                   label={fieldLabels.businesssource}
-                  labelCol={{span: 8}}
+                  labelCol={{span: 6}}
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
                   {getFieldDecorator('businesssource', {
-                    rules: [{required: true, message: '业务来源'}],
+                    rules: [],
                   })(
                     <Select
                       placeholder="请选择业务来源"
@@ -656,10 +767,14 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('payer', {
-                    rules: [{required: true, message: '请输入付款人'}],
+                    //rules: [{required: true, message: '请输入付款人'}],
                   })(
-                    <Select placeholder="请选择">
-                      {reportNameOptions}
+                    <Select                       
+                      showSearch
+                      placeholder="请选择付款人"
+                      filterOption={false}
+                      onSearch={this.handlePayerSearch}>
+                      {payerOptions}
                     </Select>
                   )}
                 </Form.Item>
@@ -669,12 +784,12 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   <Radio.Group onChange={this.onChange}>
-                    <Radio value={2}>申请人付款</Radio>
-                    <Radio value={1}>代理人付款</Radio>
+                    <Radio value={2}>同申请</Radio>
+                    <Radio value={1}>同代理</Radio>
                   </Radio.Group>
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={4}>
                 <Form.Item
                   label={fieldLabels.price}
                   labelCol={{span: 8}}
@@ -683,32 +798,27 @@ class CopyForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('price', {
                     rules: [{
-                      required: true,
-                      whitespace: true,
-                      type: 'number',
-                      transform(value) {
-                        if (value) {
-                          return Number(value);
-                        }
-                      }, message: '请输入数字'
+                      message: '请输入检验费'
                     }],
                   })
                   (<Input style={{width: '100%'}} placeholder="请输入"/>)
                   }
                 </Form.Item>
               </Col>
-              <Col span={5}>
+
+              <Col span={6}>
                 <Form.Item
-                  label={fieldLabels.reportno20}
-                  labelCol={{span: 8}}
+                  label={fieldLabels.certstyle}
+                  labelCol={{span: 6}}
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('reportno20', {
-                    rules: [{required: true, message: '自编号'}],
-                  })(<Input placeholder="自编号"/>)}
+                  {getFieldDecorator('certstyle', {
+                    rules: [],
+                  })(<Cascader options={options} placeholder="请选择证书要求"/>)}
                 </Form.Item>
               </Col>
+
             </Row>
             <Row gutter={16}>
               <Col span={9}>
@@ -719,9 +829,9 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('businesssort', {
-                    rules: [{required: true, message: '请选择业务分类'}],
+                    rules: [],
                   })(
-                    <Select placeholder="请选择">
+                    <Select placeholder="请选择业务分类">
                       {businessSortOptions}
                     </Select>
                   )}
@@ -732,82 +842,32 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('iscostoms', {
-                    rules: [{required: true, message: '是否海关管辖'}],
+                    rules: [],
                   })(
-                    <Radio.Group onChange={this.isCustoms}>
+                    <Radio.Group onChange={this.changeIsCustoms}>
                       <Radio value={1}>海关管辖</Radio>
                       <Radio value={0}>非海关管辖</Radio>
                     </Radio.Group>
                   )}
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={10}>
                 <Form.Item
                   label={fieldLabels.customsName}
-                  labelCol={{span: 8}}
-                  wrapperCol={{span: 16}}
+                  labelCol={{span: 4}}
+                  wrapperCol={{span: 19}}
                   colon={false}
                 >
                   {getFieldDecorator('customsName', {
-                    rules:
-                    isCustoms === true
-                    ? [{required: true, message: '请选择海关部门'}]
-                    : [],
+                    //rules:
                   })(
-                    <Cascader options={customsOption} placeholder="请选择检验地点"/>
+                    <Cascader options={customsOption} disabled={!isCustoms} placeholder="请选择海关部门"/>
                   )}
                 </Form.Item>
               </Col>
-              <Col span={5}>
-                <Form.Item
-                  label={fieldLabels.certstyle}
-                  labelCol={{span: 8}}
-                  wrapperCol={{span: 16}}
-                  colon={false}
-                >
-                  {getFieldDecorator('certstyle', {
-                    rules: [{required: true, message: '证书要求'}],
-                  })(<Cascader options={options} placeholder="请选择证书要求"/>)}
-                </Form.Item>
-              </Col>
+
             </Row>
-            <Row gutter={16}>
-              <Col span={6}>
-                <Form.Item
-                  label={fieldLabels.reportdate}
-                  labelCol={{span: 6}}
-                  wrapperCol={{span: 18}}
-                  colon={false}
-                >
-                  {getFieldDecorator('reportdate', {
-                    rules: [{required: true, message: '请选择委托日期'}],
-                  })(
-                    <DatePicker
-                      placeholder="委托日期"
-                      style={{width: '100%'}}
-                      format="YYYY-MM-DD"
-                      getPopupContainer={trigger => trigger.parentNode}
-                    />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={18}>
-                <Form.Item
-                  label={fieldLabels.section}
-                  labelCol={{span: 2}}
-                  wrapperCol={{span: 22}}
-                  colon={false}
-                >
-                  {getFieldDecorator('section', {
-                    rules: [{required: true, message: '执行部门'}],
-                  })(
-                    <CheckboxGroup
-                      options={departmentOptions}
-                    />
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
+
           </Form>
         </Card>
         <Card title="检查对象" className={styles.card} bordered={false}>
@@ -821,12 +881,10 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('cargoname', {
-                    rules: [{required: true, message: '请输入货物名称'}],
+                    rules: [{required: true, message: '请输入检查品名'}],
                   })(
                     <AutoComplete
                       className="global-search"
-                      //size="large"
-                      //style={{ width: '100%' }}
                       dataSource={cargosOptions}
                       onChange={this.handleChangeCargo}
                       onSearch={this.cargoSearch}
@@ -847,7 +905,7 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('chineselocalname', {
-                    rules: [{required: true, message: '请输入中文俗名'}],
+                    rules: [],
                   })(<Input placeholder="请输入中文俗名"/>)}
                 </Form.Item>
               </Col>
@@ -859,8 +917,8 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('shipname', {
-                    rules: [{required: true, message: '请输入船名'}],
-                  })(<Input placeholder="请输入船名"/>)}
+                    rules: [],
+                  })(<Input placeholder="请输入船名" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -874,7 +932,6 @@ class CopyForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('quantityD', {
                     rules: [{
-                      required: true,
                       whitespace: true,
                       type: 'number',
                       transform(value) {
@@ -893,7 +950,7 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('unit', {
-                    rules: [{required: true, message: '请选择单位'}],
+                    rules: [],
                   })(
                     <Select placeholder="请选择">
                       <Option value="公吨">公吨</Option>
@@ -913,7 +970,7 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('inspdate', {
-                    rules: [{required: true, message: '请选择检查日期'}],
+                    rules: [],
                   })(
                     <DatePicker
                       placeholder="检查日期"
@@ -933,9 +990,9 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('fromto', {
-                    rules: [{required: true, message: '请输入产地/装卸港'}],
+                    rules: [],
                   })(
-                    <Input placeholder="请输入产地/装卸港"/>
+                    <Input placeholder="请输入产地/装卸港" />
                   )}
                 </Form.Item>
               </Col>
@@ -949,9 +1006,9 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('inspplace1', {
-                    rules: [{required: true, message: '请选择检验地点'}],
+                    rules: [],
                   })(
-                    <Cascader options={areaOptions} placeholder="请选择检验地点"/>
+                    <Cascader options={areaOptions} placeholder="请选择检验地点" />
                   )}
                 </Form.Item>
               </Col>
@@ -963,7 +1020,7 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('inspplace2', {
-                    rules: [{required: true, message: '请输入详细地址'}],
+                    rules: [],
                   })(
                     <Input placeholder="请输入详细地址" />
                   )}
@@ -973,6 +1030,22 @@ class CopyForEntrustment extends PureComponent {
           </Form>
         </Card>
         <Card title="检查项目" className={styles.card} bordered={false}>
+          <Row gutter={16}>
+            <Col span={5}>
+              <Form.Item
+                colon={false}
+              >
+                {getFieldDecorator('iscnas', {
+                  rules: [],
+                })(
+                  <Radio.Group onChange={this.onCnasChange}>
+                    <Radio value={1}>CNAS</Radio>
+                    <Radio value={0}>非CNAS</Radio>
+                  </Radio.Group>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
           <table width="100%" border={1}>
             <tr>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可领域及代码</td>
@@ -993,7 +1066,7 @@ class CopyForEntrustment extends PureComponent {
                     colon={false}
                   >
                     {getFieldDecorator('cnasProject', {
-                      rules: [{required: true, message: '检查项目'}],
+                      rules: [],
                     })(
                       <CheckboxGroup
                         options={cnasCheckInfo}

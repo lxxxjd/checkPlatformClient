@@ -2,14 +2,20 @@ import request from '@/utils/request';
 import { stringify } from 'qs';
 
 export async function submitApplication(params) {
-	const inspway = params.inspway.join(' ');
-	const certstyle = params.certstyle.join('');
-  const cnasProject = params.cnasProject.join(' ');
-  const section = params.section.join(' ');
+  if(params.certstyle !== null && params.certstyle !== undefined){
+    const certstyle = params.certstyle.join('');
+    params.certstyle = certstyle;
+  }
+  if(params.cnasProject !== null && params.cnasProject !== undefined){
+    const cnasProject = params.cnasProject.join('');
+    params.cnasProject = cnasProject;
+  }
+  if(params.section !== null && params.section !== undefined){
+    const section = params.section.join(' ');
+    params.section = section;
+  }
+  const inspway = params.inspway.join(' ');
   params.inspway = inspway;
-  params.certstyle = certstyle;
-  params.cnasProject = cnasProject;
-  params.section = section;
 	return request('/api/report/add_report', {
   	method: 'POST',
   	data: {
@@ -19,15 +25,22 @@ export async function submitApplication(params) {
 	});
 }
 export async function updateReport(params) {
+  console.log(params);
+  if(params.certstyle !== null && params.certstyle !== undefined){
+    const certstyle = params.certstyle.join(' ');
+    params.certstyle = certstyle;
+  }
+  if(params.cnasProject !== null && params.cnasProject !== undefined){
+    const cnasProject = params.cnasProject.join(' ');
+    params.cnasProject = cnasProject;
+  }
+  if(params.section !== null && params.section !== undefined){
+    const section = params.section.join(' ');
+    params.section = section;
+  }
   const inspway = params.inspway.join(' ');
-  const certstyle = params.certstyle.join('');
-  const cnasProject = params.cnasProject.join(' ');
-  const section = params.section.join(' ');
   params.inspway = inspway;
-  params.certstyle = certstyle;
-  params.cnasProject = cnasProject;
-  params.section = section;
-  return request('/api/report/update_report', {
+  return request('/api/report/add_report', {
     method: 'POST',
     data: {
       ...params,
