@@ -10,8 +10,6 @@ import {
   DatePicker,
   Checkbox,
   Cascader,
-  Icon,
-  Popover,
   Radio,
   notification,
   AutoComplete
@@ -75,12 +73,12 @@ const fieldLabels = {
   ChineseName: '型号/俗称',
   inspplace1: '检验地点',
   reportno20: '自编号',
-  area:'区/县/市',
+  area: '区/县/市',
   inspway: '申请项目',
   inspwaymemo1: '检验备注',
   certstyle: '证书要求',
-  section:'执行部门',
-  customsName:'海关部门'
+  section: '执行部门',
+  customsName: '海关部门'
 };
 
 
@@ -94,8 +92,8 @@ class ApplicationForEntrustment extends PureComponent {
     width: '100%',
     value: 1,
     applicantName: [],
-    agentName:[],
-    payerName:[],
+    agentName: [],
+    payerName: [],
     businessSort: [],
     businessSource: [],
     tradeway: [],
@@ -112,10 +110,10 @@ class ApplicationForEntrustment extends PureComponent {
       subdomainname: '',
     },
     cnasCheckInfo: [],
-    departments:[],
-    isCustoms:false,
-    customsOption:[],
-    cargoname:"",
+    departments: [],
+    isCustoms: false,
+    customsOption: [],
+    cargoname: "",
   };
 
 
@@ -133,7 +131,7 @@ class ApplicationForEntrustment extends PureComponent {
       callback: (response) => {
         this.setState({applicantName: response});
         this.setState({agentName: response});
-        this.setState({payerName:response});
+        this.setState({payerName: response});
       }
     });
     dispatch({
@@ -160,7 +158,7 @@ class ApplicationForEntrustment extends PureComponent {
     dispatch({
       type: 'entrustment/getCheckProject',
       payload: {
-        certCode : user.certCode,
+        certCode: user.certCode,
       },
       callback: (response) => {
         this.setState({checkProject: response})
@@ -187,8 +185,7 @@ class ApplicationForEntrustment extends PureComponent {
     });
     dispatch({
       type: 'entrustment/getCustomInfos',
-      payload: {
-      },
+      payload: {},
       callback: (response) => {
         console.log(response);
         this.setState({customsOption: response.data})
@@ -201,13 +198,13 @@ class ApplicationForEntrustment extends PureComponent {
       form: {validateFieldsAndScroll},
       dispatch,
     } = this.props;
-    const { cnasInfo } = this.state;
+    const {cnasInfo} = this.state;
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
-      if(values.inspplace1 !== null && values.inspplace1 !== undefined){
-         values.inspplace1 = values.inspplace1[2];
+      if (values.inspplace1 !== null && values.inspplace1 !== undefined) {
+        values.inspplace1 = values.inspplace1[2];
       }
-      if(values.customsName !== null && values.customsName !== undefined){
+      if (values.customsName !== null && values.customsName !== undefined) {
         values.customsName = values.customsName[1];
       }
       console.log(error);
@@ -239,16 +236,16 @@ class ApplicationForEntrustment extends PureComponent {
             }
           }
         });
-      }
-      else{
+      } else {
         console.log(error);
       }
     });
   };
-  onCnasChange = e =>{
-    if(e.target.value === 1){
+
+  onCnasChange = e => {
+    if (e.target.value === 1) {
       const {form, dispatch} = this.props;
-      const {cargos,cargoname} = this.state;
+      const {cargos, cargoname} = this.state;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       for (const cargo in cargos) {
         if (cargos[cargo].cargonamec === cargoname) {
@@ -267,7 +264,7 @@ class ApplicationForEntrustment extends PureComponent {
           dispatch({
             type: 'entrustment/getCnasCheckInfo',
             payload: {
-              certCode:user.certCode,
+              certCode: user.certCode,
               checkCode,
             },
             callback: (response) => {
@@ -277,18 +274,21 @@ class ApplicationForEntrustment extends PureComponent {
           break;
         }
       }
-    }else{
-      this.setState({cnasInfo: {
-        checkcode: '',
-        checkname: '',
-        domaincode: '',
-        domainname: '',
-        subdomaincode: '',
-        subdomainname: '',
-      }});
+    } else {
+      this.setState({
+        cnasInfo: {
+          checkcode: '',
+          checkname: '',
+          domaincode: '',
+          domainname: '',
+          subdomaincode: '',
+          subdomainname: '',
+        }
+      });
       this.setState({cnasCheckInfo: []});
     }
   };
+
   onChange = e => {
     this.setState({
       value: e.target.value,
@@ -300,14 +300,16 @@ class ApplicationForEntrustment extends PureComponent {
       form.setFieldsValue({['payer']: form.getFieldValue('agent')});
     }
   };
-  changeIsCustoms = e =>{
+
+  changeIsCustoms = e => {
     console.log(e);
     if (e.target.value === 1) {
-      this.setState({isCustoms:true});
+      this.setState({isCustoms: true});
     } else {
-      this.setState({isCustoms:false});
+      this.setState({isCustoms: false});
     }
   };
+
   handleAgentSearch = value => {
     const {dispatch} = this.props;
     dispatch({
@@ -320,6 +322,7 @@ class ApplicationForEntrustment extends PureComponent {
       }
     });
   };
+
   handleApplicantSearch = value => {
     const {dispatch} = this.props;
     dispatch({
@@ -332,6 +335,7 @@ class ApplicationForEntrustment extends PureComponent {
       }
     });
   };
+
   handlePayerSearch = value => {
     const {dispatch} = this.props;
     dispatch({
@@ -346,7 +350,7 @@ class ApplicationForEntrustment extends PureComponent {
   };
   cargoSearch = value => {
     const {dispatch} = this.props;
-   // const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    // const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     dispatch({
       type: 'entrustment/searchCargos',
       payload: {
@@ -360,7 +364,7 @@ class ApplicationForEntrustment extends PureComponent {
   };
 
   handleChangeCargo = value => {
-    this.setState({cargoname:value});
+    this.setState({cargoname: value});
   };
 
   onAppliantChange = value => {
@@ -416,7 +420,7 @@ class ApplicationForEntrustment extends PureComponent {
     const {
       form: {getFieldDecorator},
     } = this.props;
-    const {applicantName, agentName, payerName , businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments,isCustoms,customsOption,disable} = this.state;
+    const {applicantName, agentName, payerName, businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments, isCustoms, customsOption, disable} = this.state;
 
     const applicantOptions = applicantName.map(d => <Option key={d} value={d}>{d}</Option>);
     const agentOptions = agentName.map(d => <Option key={d} value={d}>{d}</Option>);
@@ -425,9 +429,12 @@ class ApplicationForEntrustment extends PureComponent {
     const businessSourceOptions = businessSource.map(d => <Option key={d} value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d} value={d}>{d}</Option>);
     const cargosOptions = cargos.map(d => d.cargonamec);
-    const departmentOptions = departments.map(d => <Option key={d.branchname} value={d.branchname}>{d.branchname}</Option>);
-    const applicantContactsOptions = applicantContacts.map(d => <Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
-    const agentContactsOptions = agentContacts.map(d =><Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
+    const departmentOptions = departments.map(d => <Option key={d.branchname}
+                                                           value={d.branchname}>{d.branchname}</Option>);
+    const applicantContactsOptions = applicantContacts.map(d => <Option key={d.contactName}
+                                                                        value={d.contactName}>{d.contactName}</Option>);
+    const agentContactsOptions = agentContacts.map(d => <Option key={d.contactName}
+                                                                value={d.contactName}>{d.contactName}</Option>);
     //申请人选项
     return (
       <PageHeaderWrapper
@@ -655,7 +662,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('payer', {
                     //rules: [{required: true, message: '请输入付款人'}],
                   })(
-                    <Select                       
+                    <Select
                       showSearch
                       placeholder="请选择付款人"
                       filterOption={false}
@@ -779,7 +786,6 @@ class ApplicationForEntrustment extends PureComponent {
                       <Input
                       />
                     </AutoComplete>
-
                   )}
                 </Form.Item>
               </Col>
@@ -804,7 +810,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('shipname', {
                     rules: [],
-                  })(<Input placeholder="请输入船名" />)}
+                  })(<Input placeholder="请输入船名"/>)}
                 </Form.Item>
               </Col>
             </Row>
@@ -878,7 +884,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('fromto', {
                     rules: [],
                   })(
-                    <Input placeholder="请输入产地/装卸港" />
+                    <Input placeholder="请输入产地/装卸港"/>
                   )}
                 </Form.Item>
               </Col>
@@ -894,7 +900,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('inspplace1', {
                     rules: [],
                   })(
-                    <Cascader options={areaOptions} placeholder="请选择检验地点" />
+                    <Cascader options={areaOptions} placeholder="请选择检验地点"/>
                   )}
                 </Form.Item>
               </Col>
@@ -908,7 +914,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('inspplace2', {
                     rules: [],
                   })(
-                    <Input placeholder="请输入详细地址" />
+                    <Input placeholder="请输入详细地址"/>
                   )}
                 </Form.Item>
               </Col>
@@ -936,16 +942,17 @@ class ApplicationForEntrustment extends PureComponent {
             <tr>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可领域及代码</td>
               <td width="8%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>认可子领域代码</td>
-              <td width="12%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
+              <td width="12%"
+                  style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查领域/检查对象及代码
               </td>
               <td width="15%" style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}>检查项目及代码
               </td>
               <td style={{backgroundColor: '#E5E5E5', 'textAlign': 'center', 'padding': '10px'}}> 检查项目具体描述</td>
             </tr>
             <tr>
-              <td style={{'padding': '10px'}}>{cnasInfo.domaincode}{<br />}{cnasInfo.domainname}</td>
-              <td style={{'padding': '10px'}}>{cnasInfo.subdomaincode}{<br />}{cnasInfo.subdomainname}</td>
-              <td style={{'padding': '10px'}}>{cnasInfo.checkcode}{<br />}{cnasInfo.checkname}</td>
+              <td style={{'padding': '10px'}}>{cnasInfo.domaincode}{<br/>}{cnasInfo.domainname}</td>
+              <td style={{'padding': '10px'}}>{cnasInfo.subdomaincode}{<br/>}{cnasInfo.subdomainname}</td>
+              <td style={{'padding': '10px'}}>{cnasInfo.checkcode}{<br/>}{cnasInfo.checkname}</td>
               <td style={{'padding': '10px'}}>
                 <Form hideRequiredMark labelAlign="left">
                   <Form.Item
@@ -985,7 +992,7 @@ class ApplicationForEntrustment extends PureComponent {
                         label={fieldLabels.inspwaymemo1}
                         colon={false}
                       >
-                        {getFieldDecorator('inspwaymemo1', {})(<TextArea style={{minHeight: 32}} rows={5}/>)}
+                        {getFieldDecorator('inspwaymemo1', {})(<TextArea style={{minHeight: 32}} rows={5} />)}
                       </Form.Item>
                     </Col>
                   </Row>
