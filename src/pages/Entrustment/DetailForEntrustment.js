@@ -24,6 +24,7 @@ class DetailForEnturstment extends Component {
       subdomainname: '',
     },
   };
+
   columns = [
     {
       title: '记录名',
@@ -267,8 +268,9 @@ class DetailForEnturstment extends Component {
           onCancel={this.showCancel}
           footer={null}
           width={800}
+          style={{ top: 10 }}
         >
-          <embed src={url} width="700" height="700"/>
+          <embed src={url} style={{width:'100%', height:document.body.clientHeight*0.8}} type="application/pdf" />
         </Modal>
       </PageHeaderWrapper>
     );

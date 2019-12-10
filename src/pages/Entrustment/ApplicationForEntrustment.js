@@ -429,8 +429,7 @@ class ApplicationForEntrustment extends PureComponent {
     const businessSourceOptions = businessSource.map(d => <Option key={d} value={d}>{d}</Option>);
     const tradewayOptions = tradeway.map(d => <Option key={d} value={d}>{d}</Option>);
     const cargosOptions = cargos.map(d => d.cargonamec);
-    const departmentOptions = departments.map(d => <Option key={d.branchname}
-                                                           value={d.branchname}>{d.branchname}</Option>);
+    const departmentOptions = departments.map(d => <Option key={d.branchname} value={d.branchname}>{d.branchname}</Option>);
     const applicantContactsOptions = applicantContacts.map(d => <Option key={d.contactName}
                                                                         value={d.contactName}>{d.contactName}</Option>);
     const agentContactsOptions = agentContacts.map(d => <Option key={d.contactName}
@@ -833,7 +832,7 @@ class ApplicationForEntrustment extends PureComponent {
                       }, message: '请输入数字'
                     }],
                   })(
-                    <Input placeholder="0"/>
+                    <Input placeholder="0" />
                   )}
                 </Form.Item>
               </Col>
@@ -869,7 +868,6 @@ class ApplicationForEntrustment extends PureComponent {
                       style={{width: '100%'}}
                       format="YYYY-MM-DD"
                       getPopupContainer={trigger => trigger.parentNode}
-
                     />
                   )}
                 </Form.Item>

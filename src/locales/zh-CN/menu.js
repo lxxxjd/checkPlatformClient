@@ -1,4 +1,5 @@
 import InspmanDetail from '../../pages/TaskAppoint/InspmanDetail';
+import CertificateReview from '../../pages/Certificate/CertificateReview';
 
 export default {
   'menu.home': '首页',
@@ -67,6 +68,9 @@ export default {
   'menu.Certificate.CertificateUploadDetail':'证稿证书详情',
   'menu.Certificate.CertificateFinal':'证书缮制',
   'menu.Certificate.CertificateFinalDetail':'证稿证书详情',
+
+  'menu.Certificate.CertificateReview':'证稿复核',
+  'menu.Certificate.CertificateReviewDetail':'证稿复核详情',
 
   'menu.DictMaintain.StandardList':'标准管理',
   'menu.DictMaintain.ItemList':'指标管理',

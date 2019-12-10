@@ -171,12 +171,26 @@ export async function convertWordToPdf(params) {
   });
 }
 
+export async function getAllUserListByCertCode(params) {
+  return request('/api/user/getAllUserListByCertCode', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 
 
 export async function getSignature(params) {
   return request(`/api/getSignature?${stringify(params.params)}`);
 }
 
+
+
+export async function undoCert(params) {
+  return request(`/api/cert_report/undo_cert?keyno=${params.keyno}`);
+}
 
 
 

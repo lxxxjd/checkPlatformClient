@@ -426,6 +426,19 @@ export default [
             component: './Certificate/CertificateUploadDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
+          {
+            path: '/Certificate/CertificateReview',
+            name: 'CertificateReview',
+            component: './Certificate/CertificateReview',
+          },
+          {
+            path: '/Certificate/CertificateReviewDetail',
+            name: 'CertificateReviewDetail',
+            component: './Certificate/CertificateReviewDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
           {
             path: '/Certificate/CertificateFinal',
             name: 'CertificateFinal',
@@ -437,6 +450,8 @@ export default [
             component: './Certificate/CertificateFinalDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
+
         ],
       },
 

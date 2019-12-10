@@ -37,15 +37,13 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const CertForm = Form.create()(props => {
 
-  const { form,option,showVisible,showCancel,Certurls,value,onSelect,treeData,handleSign,reviewCertFile,renderFileInfo,renderTreeNodes,approverusersOptions} = props;
+  const { form,option,showVisible,showCancel,Certurls,value,onSelect,treeData,reviewCertFile,renderFileInfo,renderTreeNodes,approverusersOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
         return;
       }
-      if(option === "拟制"){
-        handleSign(fieldsValue);
-      }else if(option === "复核"){
+      if(option === "复核"){
         reviewCertFile(fieldsValue);
       }
       form.resetFields();
@@ -69,7 +67,6 @@ const CertForm = Form.create()(props => {
             </Select>
           )}
           <Button key="cancel" type="primary" onClick={showCancel}> 取消</Button>
-          {option === "拟制"?[<Button key="submit1" type="primary" onClick={okHandle}>拟制</Button>]:null}
           {option === "复核"?[<Button key="submit2" type="primary" onClick={okHandle}>复核</Button>]:null}
         </div>
       ]}
@@ -99,71 +96,6 @@ const CertForm = Form.create()(props => {
 
 });
 
-// 表单组件
-const CreateUploadForm = Form.create()(props => {
-  const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err){
-        return;
-      }
-      form.resetFields();
-      handleDownloadAdd(fieldsValue);
-    });
-  };
-  const handleChange =()=>{
-    form.resetFields(`tempName`,[]);
-  };
-
-  return (
-    <Modal
-      destroyOnClose
-      title="模板下载"
-      visible={downloadVisible}
-      onOk={okHandle}
-      onCancel={() => handleDownloadCancel()}
-      footer={[
-        // 定义右下角 按钮的地方 可根据需要使用 一个或者 2个按钮
-        <Button key="back" type="primary" onClick={() => handleDownloadCancel()}> 取消</Button>,
-        <Button key="submit" type="primary" onClick={okHandle}>下载</Button>,
-      ]}
-    >
-
-      <Form.Item label="证书名称">
-        {form.getFieldDecorator('downloadRecordName', {
-          rules: [{ required: true, message: '请输入证书名称' }],
-        })(
-          <Input style={{ width: '100%' }} placeholder="证书名称" />
-        )}
-      </Form.Item>
-
-      <Form.Item label="文件来源">
-        {form.getFieldDecorator('type', {
-          rules: [{ required: true, message: '请选择文件来源' }],
-        })(
-          <Select style={{ width: '100%' }} placeholder="请选择文件来源" onSelect={handleOnSelect} onChange={handleChange}>
-            <Option value="platform">平台模板</Option>
-            <Option value="company">公司模板</Option>
-            <Option value="person">个人模板</Option>
-            <Option value="blank">空白模板</Option>
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item label="模板名称">
-        {form.getFieldDecorator('tempName', {
-          rules: [{ required: true, message: '请选择模板名称' }],
-        })(
-          <Select style={{ width: '100%' }} placeholder="请选择模板名称">
-            {typeOptions}
-          </Select>
-        )}
-      </Form.Item>
-
-    </Modal>
-  );
-});
-
-
 
 
 function getBase64(file) {
@@ -184,12 +116,7 @@ function getBase64(file) {
 }))
 class CertificateUploadDetail extends PureComponent {
   state = {
-    visible: false,
-    downloadVisible: false,
-    previewVisible: false,
-    previewImage: '',
-    fileList: [],
-    modelName: [],
+
     showVisible: false,
     text: {}, // 当前信息
 
@@ -201,6 +128,7 @@ class CertificateUploadDetail extends PureComponent {
     treeData: [],
     renderFormData: [], // 当前data
     renderFormColumns: [],// 当前表格的信息
+
     approverusers:[],
 
     sampleColumnsLink: [ // 分析检测表格头
@@ -264,8 +192,8 @@ class CertificateUploadDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          {text.status==="待拟制"?[<a onClick={() => this.signItem(text, record)}>拟制&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>
+          {text.status==="已拟制"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
+          <a onClick={() => this.rowbackItem(text, record)}>退回&nbsp;&nbsp;</a>
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
@@ -284,6 +212,7 @@ class CertificateUploadDetail extends PureComponent {
          reportno,
       },
       callback: (response) => {
+
       }
     });
 
@@ -327,27 +256,6 @@ class CertificateUploadDetail extends PureComponent {
     });
   }
 
-  undoCert = text =>{
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'certificate/undoCert',
-      payload:{keyno:text.keyno},
-      callback: (response) => {
-        if(response==="success"){
-          message.success("回退成功");
-          const reportno = sessionStorage.getItem('reportno');
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-              reportno,
-            },
-          });
-        }else {
-          message.success("回退失败");
-        }
-      }
-    });
-  };
 
   ViewItem = text =>{
     const { dispatch } = this.props;
@@ -377,22 +285,22 @@ class CertificateUploadDetail extends PureComponent {
 
 
 
-  handleSign =(fieldValue)=>{
+  reviewCertFile = (fieldValue) =>{
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    text.signer = user.userName;
+    text.reviewer = user.userName;
     if(fieldValue.approver !==undefined){
-      text.reviewer = fieldValue.approver;
+      text.maker = fieldValue.approver;
       dispatch({
-        type: 'certificate/signCertFile',
+        type: 'certificate/reviewCertFile',
         payload:{
           ...text,
         },
         callback: (response) => {
           if(response.data==="success"){
-            message.success("拟制成功")
+            message.success("复核成功")
             dispatch({
               type: 'certificate/getCertFiles',
               payload:{
@@ -401,31 +309,30 @@ class CertificateUploadDetail extends PureComponent {
               callback: (response) => {
               }
             });
+
           }else{
-            message.error("拟制失败")
+            message.error("复核失败")
           }
         }
       });
     }else{
-      message.error("拟制失败")
+      message.error("复核失败")
     }
-
-     this.setState({showVisible:false});
-
+    this.setState({showVisible:false});
   };
 
 
 
-  signItem =text=>{
 
+  reivewItem =text=>{
     const { dispatch } = this.props;
     // 打开文件
-    const param ={
+    const value ={
       certCode :JSON.parse(localStorage.getItem("userinfo")).certCode,
     };
     dispatch({
       type: 'certificate/getAllUserListByCertCode',
-      payload:param,
+      payload:value,
       callback: (response2) => {
         if(response2){
           this.state.approverusers = response2;
@@ -435,38 +342,44 @@ class CertificateUploadDetail extends PureComponent {
       }
     });
 
-    const value = {
-      ...text,
+    const params ={
+      osspath:text.pdfeditorpath
     };
-    // 转pdf
     dispatch({
-      type: 'certificate/convertWordToPdf',
-      payload:value,
-      callback: (response2) => {
-        if(response2){
-          // 打开文件
-          const params ={
-            osspath:response2.pdf1path
-          };
-          dispatch({
-            type: 'certificate/getOssPdf',
-            payload:params,
-            callback: (response) => {
-              if(response.code === 200){
-                this.setState({Certurls:response.data});
-                this.setState({option:"拟制"});
-                this.setState({showVisible:true});
-                this.setState({text});
-              }else {
-                message.success("打开拟制文件失败");
-              }
-            }
-          });
+      type: 'certificate/getOssPdf',
+      payload:params,
+      callback: (response) => {
+        if(response.code === 200){
+          this.setState({Certurls:response.data});
+          this.setState({option:"复核"});
+          this.setState({showVisible:true});
+          this.setState({text});
+        }else {
+          message.success("打开复核文件失败");
         }
       }
     });
 
+
+    dispatch({
+      type: 'certificate/getOssPdf',
+      payload:params,
+      callback: (response) => {
+        if(response.code === 200){
+          this.setState({Certurls:response.data});
+          this.setState({option:"复核"});
+          this.setState({showVisible:true});
+          this.setState({text});
+        }else {
+          message.success("打开复核文件失败");
+        }
+      }
+    });
+
+
+
   };
+
 
 
   editCerticate = text => {
@@ -532,59 +445,6 @@ class CertificateUploadDetail extends PureComponent {
     });
   };
 
-  handleOk = () =>{
-    const {
-      form: { validateFieldsAndScroll },
-      dispatch,
-    } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    validateFieldsAndScroll((error, values) => {
-      if (!error) {
-        const formData = new FormData();
-        values.MultipartFile.fileList.forEach(file => {
-          formData.append('file', file.originFileObj);
-          formData.append('size', file.size);
-        });
-        formData.append('creator', user.nameC);
-        formData.append('modifier', user.nameC);
-        formData.append('reportno', reportno);
-        formData.append('name', values.recordname);
-        dispatch({
-          type: 'certificate/uploadCertFile',
-          payload : formData,
-          callback: (response) => {
-            if(response.code === 400){
-              notification.open({
-                message: '添加失败',
-                description:response.data,
-              });
-            }else{
-              dispatch({
-                type: 'certificate/getCertFiles',
-                payload:{
-                  reportno,
-                }
-              });
-            }
-          }
-        });
-        this.setState({ visible: false });
-        form.resetFields();
-      }
-    });
-  };
-
-  show = () => {
-    const {
-      form,
-      dispatch,
-    } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    form.resetFields();
-    this.setState({fileList:[]});
-    this.setState({ visible: true });
-  };
 
   handleCancel = () =>{
     const {
@@ -595,13 +455,6 @@ class CertificateUploadDetail extends PureComponent {
   };
 
 
-  onChange = e =>{
-    if(e.target.value === "按单价"  || e.target.value ==="按比例"){
-      this.setState({showPrice:true});
-    }else{
-      this.setState({showPrice:false});
-    }
-  };
 
 
   Cancel = () => this.setState({ previewVisible: false });
@@ -617,104 +470,7 @@ class CertificateUploadDetail extends PureComponent {
     });
   };
 
-  handleChange = ({ file,fileList }) => {
-    // 限制图片 格式、size、分辨率
-    const isDOC = file.type === 'application/msword';
-    const isDOCX = file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    const size = file.size / 1024 / 1024 < 20;
-    if (!(isDOC || isDOCX )) {
-      Modal.error({
-        title: '只能上传DOC 、DOCX 格式的图片~',
-      });
-      return;
-    } if (!size) {
-      Modal.error({
-        title: '超过20M限制，不允许上传~',
-      });
-      return;
-    }
-    this.setState({ fileList});
-  };
 
-
-
-  handleBeforeUpload = file => {
-    return false;
-  };
-
-
-
-  // 处理下载模态框打开
-  showDownloadVisible = (flag) => {
-    this.setState({
-      downloadVisible: !!flag,
-    });
-  };
-
-  // 处理下载模态框取消
-  handleDownloadCancel = (flag) => {
-    this.setState({
-      downloadVisible: !!flag,
-    });
-  };
-
-
-
-  // 处理下载模态框 提交表单
-  handleDownloadAdd = (fields) =>{
-    const { dispatch, } = this.props;
-    const reportNo = sessionStorage.getItem('reportno');
-    const params = {
-      reportno:reportNo,
-      tempName:fields.tempName,
-      recordName:fields.downloadRecordName,
-    };
-    dispatch({
-      type: 'testRecord/downloadPlatFromTemp',
-      payload:params,
-      callback: (response) => {
-        if(response){
-          message.success("下载成功");
-        }
-      }
-    });
-    this.setState({
-      downloadVisible: false,
-    });
-  };
-
-
-
-  // 处理下载模态框 提交表单
-  handleOnSelect =(value) =>{
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    let ownerValue="";
-    if( value ==="platform"){
-      ownerValue = "platform";
-    }else if(value ==="company"){
-      ownerValue= user.certCode;
-    }else if(value ==="person"){
-      ownerValue= user.userName;
-    }else{
-      ownerValue = "blank";
-    }
-    const { dispatch, } = this.props;
-    const params = {
-      type:value,
-      owner:ownerValue
-    };
-
-    dispatch({
-      type: 'certificate/getModelSelectName',
-      payload:params,
-      callback: (response) => {
-        if(response){
-          this.state.modelName = response;
-
-        }
-      }
-    });
-  };
 
   back = () =>{
     this.props.history.goBack();
@@ -909,24 +665,20 @@ class CertificateUploadDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value,option,treeData,approverusers} = this.state
-    const typeOptions = modelName.map(d => <Option key={d.id} value={d.id}>{d.name}</Option>);
+    const {showVisible,Certurls,value,option,treeData,approverusers} = this.state
 
     // 下载模板 模态框方法
     const parentMethods = {
-      handleDownloadAdd: this.handleDownloadAdd,
-      showDownloadVisible: this.showDownloadVisible,
-      handleDownloadCancel:this.handleDownloadCancel,
       handleOnSelect :this.handleOnSelect,
       showCancel: this.showCancel,
       onSelect:this.onSelect,
-      handleSign:this.handleSign,
       reviewCertFile:this.reviewCertFile,
       renderFileInfo:this.renderFileInfo,
       renderTreeNodes:this.renderTreeNodes,
     };
 
     const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
+
 
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
@@ -940,55 +692,11 @@ class CertificateUploadDetail extends PureComponent {
 
     return (
       <PageHeaderWrapper text={reprotText}>
-        <Modal
-          title="证稿上传"
-          visible={visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-        >
-          <Form>
-            <Form.Item label="文件上传">
-              {getFieldDecorator('MultipartFile', {
-                rules: [{ required: true, message: '请选择上传文件' }],
-              })(
-                <Upload
-                  // action="http://localhost:8000/api/recordinfo/upload"
-                  // data={{'reportno':reportno}}
-                  // defaultExpandedKeys={['0-0-0']}
-                  listType="picture-card"
-                  fileList={fileList}
-                  onPreview={this.handlePreview}
-                  beforeUpload={this.handleBeforeUpload}
-                  onChange={this.handleChange}
-                >
-                  {fileList.length >= 1 ? null : uploadButton}
-                </Upload>
-              )}
-            </Form.Item>
-            <Form.Item label="证稿名称">
-              {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入证稿名称' }],
-              })(
-                <Input style={{ width: '100%' }} placeholder="请输入证稿名称,不超过10个字符" maxLength={10} />
-              )}
-            </Form.Item>
-            <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>
-              <img alt="example" style={{ width: '100%' }} src={previewImage} />
-            </Modal>
-          </Form>
-        </Modal>
-
-        <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
 
         <CertForm {...parentMethods} showVisible={showVisible} option={option} Certurls={Certurls} treeData={treeData} value={value} approverusersOptions={approverusersOptions} />
-
-
         <Card bordered={false} size="small">
           <Row>
-            <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
-              <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
-            </Col>
+            <Col span={22}/>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
                 <Icon type="left" />返回
