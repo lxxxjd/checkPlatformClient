@@ -37,14 +37,14 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const CertForm = Form.create()(props => {
 
-  const { form,option,showVisible,showCancel,Certurls,value,onSelect,treeData,reviewCertFile,renderFileInfo,renderTreeNodes,approverusersOptions} = props;
+  const { form,option,showVisible,showCancel,Certurls,value,onSelect,treeData,sealCertFile,renderFileInfo,renderTreeNodes} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
         return;
       }
-      if(option === "复核"){
-        reviewCertFile(fieldsValue);
+      if(option === "授权签字"){
+        sealCertFile();
       }
       form.resetFields();
     });
@@ -58,16 +58,8 @@ const CertForm = Form.create()(props => {
       onCancel={showCancel}
       footer={[
         <div>
-          <span>审核人：</span>
-          {form.getFieldDecorator('approver', {
-            rules: [{  required: true, message: '选择审核人' }],
-          })(
-            <Select style={{width:150,marginRight:10,marginLeft:10}} placeholder="选择审核人">
-              {approverusersOptions}
-            </Select>
-          )}
           <Button key="cancel" type="primary" onClick={showCancel}> 取消</Button>
-          {option === "复核"?[<Button key="submit2" type="primary" onClick={okHandle}>复核</Button>]:null}
+          {option === "授权签字"?[<Button key="submit2" type="primary" onClick={okHandle}>授权签字</Button>]:null}
         </div>
       ]}
       style={{ top: 10 }}
@@ -129,7 +121,7 @@ class CertificateSealDetail extends PureComponent {
     renderFormData: [], // 当前data
     renderFormColumns: [],// 当前表格的信息
 
-    approverusers:[],
+
 
     sampleColumnsLink: [ // 分析检测表格头
       {
@@ -192,8 +184,8 @@ class CertificateSealDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          {text.status==="已拟制"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.rowbackItem(text, record)}>退回&nbsp;&nbsp;</a>
+          {text.status==="已缮制"?[<a onClick={() => this.reivewItem(text, record)}>授权签字&nbsp;&nbsp;</a>]:[]}
+          <a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
@@ -285,81 +277,68 @@ class CertificateSealDetail extends PureComponent {
 
 
 
-  reviewCertFile = (fieldValue) =>{
+  sealCertFile = () =>{
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    text.reviewer = user.userName;
-    if(fieldValue.approver !==undefined){
-      text.maker = fieldValue.approver;
-      dispatch({
-        type: 'certificate/reviewCertFile',
-        payload:{
-          ...text,
-        },
-        callback: (response) => {
-          if(response.data==="success"){
-            message.success("复核成功")
-            dispatch({
-              type: 'certificate/getCertFiles',
-              payload:{
-                reportno,
-              },
-              callback: (response) => {
-              }
-            });
-
-          }else{
-            message.error("复核失败")
-          }
+    text.author = user.userName;
+    dispatch({
+      type: 'certificate/sealCertFile',
+      payload:{
+        ...text,
+      },
+      callback: (response) => {
+        if(response.data==="success"){
+          message.success("授权签字成功")
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+              reportno,
+            },
+            callback: (response) => {
+            }
+          });
+        }else{
+          message.error("授权签字失败")
         }
-      });
-    }else{
-      message.error("复核失败")
-    }
+      }
+    });
+
     this.setState({showVisible:false});
   };
 
+
+  undoCert = text =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'certificate/undoCert',
+      payload:{keyno:text.keyno},
+      callback: (response) => {
+        if(response==="success"){
+          message.success("回退成功");
+          const reportno = sessionStorage.getItem('reportno');
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+              reportno,
+            },
+          });
+        }else {
+          message.success("回退失败");
+        }
+      }
+    });
+  };
 
 
 
   reivewItem =text=>{
     const { dispatch } = this.props;
-    // 打开文件
-    const value ={
-      certCode :JSON.parse(localStorage.getItem("userinfo")).certCode,
-    };
-    dispatch({
-      type: 'certificate/getAllUserListByCertCode',
-      payload:value,
-      callback: (response2) => {
-        if(response2){
-          this.state.approverusers = response2;
-        }else {
-          message.error("加载用户数据失败");
-        }
-      }
-    });
 
     const params ={
-      osspath:text.pdfeditorpath
+      osspath:text.titlepdfpath
     };
-    dispatch({
-      type: 'certificate/getOssPdf',
-      payload:params,
-      callback: (response) => {
-        if(response.code === 200){
-          this.setState({Certurls:response.data});
-          this.setState({option:"复核"});
-          this.setState({showVisible:true});
-          this.setState({text});
-        }else {
-          message.success("打开复核文件失败");
-        }
-      }
-    });
-
 
     dispatch({
       type: 'certificate/getOssPdf',
@@ -367,11 +346,11 @@ class CertificateSealDetail extends PureComponent {
       callback: (response) => {
         if(response.code === 200){
           this.setState({Certurls:response.data});
-          this.setState({option:"复核"});
+          this.setState({option:"授权签字"});
           this.setState({showVisible:true});
           this.setState({text});
         }else {
-          message.success("打开复核文件失败");
+          message.success("打开证书文件失败");
         }
       }
     });
@@ -665,19 +644,18 @@ class CertificateSealDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {showVisible,Certurls,value,option,treeData,approverusers} = this.state
+    const {showVisible,Certurls,value,option,treeData} = this.state
 
     // 下载模板 模态框方法
     const parentMethods = {
       handleOnSelect :this.handleOnSelect,
       showCancel: this.showCancel,
       onSelect:this.onSelect,
-      reviewCertFile:this.reviewCertFile,
+      sealCertFile:this.sealCertFile,
       renderFileInfo:this.renderFileInfo,
       renderTreeNodes:this.renderTreeNodes,
     };
 
-    const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
 
 
     const reportno = sessionStorage.getItem('reportno');
@@ -693,10 +671,10 @@ class CertificateSealDetail extends PureComponent {
     return (
       <PageHeaderWrapper text={reprotText}>
 
-        <CertForm {...parentMethods} showVisible={showVisible} option={option} Certurls={Certurls} treeData={treeData} value={value} approverusersOptions={approverusersOptions} />
+        <CertForm {...parentMethods} showVisible={showVisible} option={option} Certurls={Certurls} treeData={treeData} value={value} />
         <Card bordered={false} size="small">
           <Row>
-            <Col span={22}/>
+            <Col span={22} />
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
                 <Icon type="left" />返回

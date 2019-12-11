@@ -1,6 +1,7 @@
 import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPath,
   getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,
-  getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert} from '@/services/Certificate'
+  getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,
+  getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,makeCertFile} from '@/services/Certificate'
 
 import {getOssPdf,getModelSelectName} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
@@ -31,9 +32,20 @@ export default {
     getModelSelectNameResult:{},
     getAllUserListByCertCodeResult:{},
     undoCertResult:{},
+    makeCertFileResult:{},
   },
 
   effects: {
+
+
+    *makeCertFile({ payload,callback }, { call, put }) {
+      const response = yield call(makeCertFile, payload);
+      yield put({
+        type: 'makeCertFileResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
 
     *undoCert({ payload,callback }, { call, put }) {
       const response = yield call(undoCert, payload);
@@ -341,6 +353,16 @@ export default {
         undoCertResult: payload.data,
       };
     },
+
+
+    makeCertFileResult(state, { payload }) {
+      return {
+        ...state,
+        makeCertFileResult: payload,
+      };
+    },
+
+
 
 
 

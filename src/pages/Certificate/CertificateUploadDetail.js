@@ -548,6 +548,7 @@ class CertificateUploadDetail extends PureComponent {
         });
         formData.append('creator', user.nameC);
         formData.append('modifier', user.nameC);
+        formData.append('signer', user.userName);
         formData.append('reportno', reportno);
         formData.append('name', values.recordname);
         dispatch({

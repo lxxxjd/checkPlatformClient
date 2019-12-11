@@ -114,7 +114,7 @@ class CertificateSeal extends PureComponent {
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     router.push({
-      pathname:'/Certificate/CertificateReviewDetail',
+      pathname:'/Certificate/CertificateSealDetail',
     });
   };
 

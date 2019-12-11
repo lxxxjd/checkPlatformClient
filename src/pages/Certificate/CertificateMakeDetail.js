@@ -37,14 +37,14 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const CertForm = Form.create()(props => {
 
-  const { form,option,showVisible,showCancel,Certurls,value,onSelect,treeData,reviewCertFile,renderFileInfo,renderTreeNodes,approverusersOptions} = props;
+  const { form,option,showVisible,showCancel,Certurls,value,onSelect,treeData,makeCertFile,renderFileInfo,renderTreeNodes,approverusersOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
         return;
       }
-      if(option === "复核"){
-        reviewCertFile(fieldsValue);
+      if(option === "缮制"){
+        makeCertFile(fieldsValue);
       }
       form.resetFields();
     });
@@ -60,14 +60,14 @@ const CertForm = Form.create()(props => {
         <div>
           <span>审核人：</span>
           {form.getFieldDecorator('approver', {
-            rules: [{  required: true, message: '选择审核人' }],
+            rules: [{  required: true, message: '选择授权签字人' }],
           })(
-            <Select style={{width:150,marginRight:10,marginLeft:10}} placeholder="选择审核人">
+            <Select style={{width:150,marginRight:10,marginLeft:10}} placeholder="选择授权签字人">
               {approverusersOptions}
             </Select>
           )}
           <Button key="cancel" type="primary" onClick={showCancel}> 取消</Button>
-          {option === "复核"?[<Button key="submit2" type="primary" onClick={okHandle}>复核</Button>]:null}
+          {option === "缮制"?[<Button key="submit2" type="primary" onClick={okHandle}>缮制</Button>]:null}
         </div>
       ]}
       style={{ top: 10 }}
@@ -162,7 +162,7 @@ class CertificateMakeDetail extends PureComponent {
 
   columns = [
     {
-      title: '证稿名',
+      title: '证书名',
       dataIndex: 'name',
       render: val => {
         // 取文件名
@@ -192,8 +192,8 @@ class CertificateMakeDetail extends PureComponent {
         <Fragment>
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
-          {text.status==="已拟制"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.rowbackItem(text, record)}>退回&nbsp;&nbsp;</a>
+          {text.status==="已复核"?[<a onClick={() => this.makeItem(text, record)}>缮制&nbsp;&nbsp;</a>]:[]}
+          <a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
@@ -256,6 +256,28 @@ class CertificateMakeDetail extends PureComponent {
     });
   }
 
+  undoCert = text =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'certificate/undoCert',
+      payload:{keyno:text.keyno},
+      callback: (response) => {
+        if(response==="success"){
+          message.success("回退成功");
+          const reportno = sessionStorage.getItem('reportno');
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+              reportno,
+            },
+          });
+        }else {
+          message.success("回退失败");
+        }
+      }
+    });
+  };
+
 
   ViewItem = text =>{
     const { dispatch } = this.props;
@@ -285,38 +307,35 @@ class CertificateMakeDetail extends PureComponent {
 
 
 
-  reviewCertFile = (fieldValue) =>{
+  makeCertFile = (fieldValue) =>{
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    text.reviewer = user.userName;
+    text.maker = user.userName;
     if(fieldValue.approver !==undefined){
-      text.maker = fieldValue.approver;
+      text.author = fieldValue.approver;
       dispatch({
-        type: 'certificate/reviewCertFile',
+        type: 'certificate/makeCertFile',
         payload:{
           ...text,
         },
         callback: (response) => {
           if(response.data==="success"){
-            message.success("复核成功")
+            message.success("缮制成功")
             dispatch({
               type: 'certificate/getCertFiles',
               payload:{
                 reportno,
               },
-              callback: (response) => {
-              }
             });
-
           }else{
-            message.error("复核失败")
+            message.error("缮制失败")
           }
         }
       });
     }else{
-      message.error("复核失败")
+      message.error("未选择签署人，缮制失败")
     }
     this.setState({showVisible:false});
   };
@@ -324,7 +343,7 @@ class CertificateMakeDetail extends PureComponent {
 
 
 
-  reivewItem =text=>{
+  makeItem =text=>{
     const { dispatch } = this.props;
     // 打开文件
     const value ={
@@ -343,23 +362,8 @@ class CertificateMakeDetail extends PureComponent {
     });
 
     const params ={
-      osspath:text.pdfeditorpath
+      osspath:text.pdfpath
     };
-    dispatch({
-      type: 'certificate/getOssPdf',
-      payload:params,
-      callback: (response) => {
-        if(response.code === 200){
-          this.setState({Certurls:response.data});
-          this.setState({option:"复核"});
-          this.setState({showVisible:true});
-          this.setState({text});
-        }else {
-          message.success("打开复核文件失败");
-        }
-      }
-    });
-
 
     dispatch({
       type: 'certificate/getOssPdf',
@@ -367,11 +371,11 @@ class CertificateMakeDetail extends PureComponent {
       callback: (response) => {
         if(response.code === 200){
           this.setState({Certurls:response.data});
-          this.setState({option:"复核"});
+          this.setState({option:"缮制"});
           this.setState({showVisible:true});
           this.setState({text});
         }else {
-          message.success("打开复核文件失败");
+          message.success("打开缮制文件失败");
         }
       }
     });
@@ -672,7 +676,7 @@ class CertificateMakeDetail extends PureComponent {
       handleOnSelect :this.handleOnSelect,
       showCancel: this.showCancel,
       onSelect:this.onSelect,
-      reviewCertFile:this.reviewCertFile,
+      makeCertFile:this.makeCertFile,
       renderFileInfo:this.renderFileInfo,
       renderTreeNodes:this.renderTreeNodes,
     };

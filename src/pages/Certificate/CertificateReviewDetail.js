@@ -193,7 +193,7 @@ class CertificateUploadDetail extends PureComponent {
           <a onClick={() => this.editCerticate(text, record)}>编辑</a>
           &nbsp;&nbsp;
           {text.status==="已拟制"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.rowbackItem(text, record)}>退回&nbsp;&nbsp;</a>
+          <a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
@@ -255,6 +255,28 @@ class CertificateUploadDetail extends PureComponent {
       }
     });
   }
+
+  undoCert = text =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'certificate/undoCert',
+      payload:{keyno:text.keyno},
+      callback: (response) => {
+        if(response==="success"){
+          message.success("回退成功");
+          const reportno = sessionStorage.getItem('reportno');
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+              reportno,
+            },
+          });
+        }else {
+          message.success("回退失败");
+        }
+      }
+    });
+  };
 
 
   ViewItem = text =>{
@@ -345,20 +367,6 @@ class CertificateUploadDetail extends PureComponent {
     const params ={
       osspath:text.pdfeditorpath
     };
-    dispatch({
-      type: 'certificate/getOssPdf',
-      payload:params,
-      callback: (response) => {
-        if(response.code === 200){
-          this.setState({Certurls:response.data});
-          this.setState({option:"复核"});
-          this.setState({showVisible:true});
-          this.setState({text});
-        }else {
-          message.success("打开复核文件失败");
-        }
-      }
-    });
 
 
     dispatch({

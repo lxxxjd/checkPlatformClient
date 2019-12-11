@@ -49,6 +49,16 @@ export async function sealCertFile(params) {
   });
 }
 
+export async function makeCertFile(params) {
+  return request(`/api/cert_report/makeCertFile`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+
+
 export async function deleteCertFile(params) {
     return request(`/api/cert_report/deleteCertFile?keyno=${params.keyno}`);
 }
