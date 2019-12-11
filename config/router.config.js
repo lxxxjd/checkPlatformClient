@@ -440,16 +440,29 @@ export default [
           },
 
           {
-            path: '/Certificate/CertificateFinal',
-            name: 'CertificateFinal',
-            component: './Certificate/CertificateFinal',
+            path: '/Certificate/CertificateMake',
+            name: 'CertificateMake',
+            component: './Certificate/CertificateMake',
           },
           {
-            path: '/Certificate/CertificateFinalDetail',
-            name: 'CertificateFinalDetail',
-            component: './Certificate/CertificateFinalDetail',
+            path: '/Certificate/CertificateMakeDetail',
+            name: 'CertificateMakeDetail',
+            component: './Certificate/CertificateMakeDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
+          {
+            path: '/Certificate/CertificateSeal',
+            name: 'CertificateSeal',
+            component: './Certificate/CertificateSeal',
+          },
+          {
+            path: '/Certificate/CertificateSealDetail',
+            name: 'CertificateSealDetail',
+            component: './Certificate/CertificateSealDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
 
 
         ],

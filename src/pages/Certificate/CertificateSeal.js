@@ -23,7 +23,7 @@ const { Option } = Select;
   certificate,
   loading: loading.models.certificate,
 }))
-class CertificateFinal extends PureComponent {
+class CertificateSeal extends PureComponent {
   state = {
   };
 
@@ -110,11 +110,11 @@ class CertificateFinal extends PureComponent {
   };
 
   modifyItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('_reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     router.push({
-      pathname:'/Certificate/CertificateFinalDetail',
+      pathname:'/Certificate/CertificateReviewDetail',
     });
   };
 
@@ -208,4 +208,4 @@ class CertificateFinal extends PureComponent {
   }
 }
 
-export default CertificateFinal;
+export default CertificateSeal;
