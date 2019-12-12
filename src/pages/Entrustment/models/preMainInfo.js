@@ -1,4 +1,4 @@
-import { getAllPremaininfosByCerCode, getPremaininfo, getPreRecord, getOssPdf} from '@/services/PreMainInfo';
+import { getAllPremaininfosByCerCode, getPremaininfo, getPreRecord, getOssPdf,copyPremaininfoToMaininfo} from '@/services/PreMainInfo';
 
 export default {
   	namespace: 'preMainInfo',
@@ -22,6 +22,10 @@ export default {
 	      	const response = yield call(getOssPdf, payload);
 	      	if (callback) callback(response);
 	    },
+	   	*copyPremaininfoToMaininfo({ payload ,callback}, { call, put }) {
+	      	const response = yield call(copyPremaininfoToMaininfo, payload);
+	      	if (callback) callback(response);
+	    },
 	    *getPreRecord({ payload ,callback}, { call, put }) {
       		const response = yield call(getPreRecord, payload);
       		yield put({
@@ -30,6 +34,7 @@ export default {
       		});
       		if (callback) callback(response);
    	 	},
+
   	},
   	reducers: {
   		getAllPremaininfos(state, { payload }) {

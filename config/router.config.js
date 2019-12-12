@@ -141,6 +141,12 @@ export default [
             component: './Entrustment/DetailForUnAccept',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: '/Entrustment/Accept',
+            name: 'Accept',
+            component: './Entrustment/Accept',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 

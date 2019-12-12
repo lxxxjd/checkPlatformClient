@@ -65,8 +65,9 @@ class AcceptList extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.overallstate === '未受理' ? [<a onClick={() => this.modifyItem(text, record)}>受理&nbsp;&nbsp;</a>]:[]}
+          {text.overallstate === '未受理' ? [<a onClick={() => this.acceptItem(text, record)}>受理&nbsp;&nbsp;</a>]:[]}
           {text.overallstate === '未受理' ? [<a onClick={() => this.modifyItem(text, record)}>拒绝受理&nbsp;&nbsp;</a>]:[]}
+          <a onClick={() => this.acceptItem(text, record)}>受理&nbsp;&nbsp;</a>
           <a onClick={() => this.previewItem(text, record)}>申请详情</a>
         </Fragment>
       ),
@@ -85,9 +86,11 @@ class AcceptList extends PureComponent {
     });
   }
 
-  deleteItem = text => {
-    this.setState({visible:true});
-    this.setState({prereportno:text.prereportno});
+  acceptItem = text => {
+    sessionStorage.setItem('prereportno',text.prereportno);
+    router.push({
+      pathname:'/Entrustment/Accept',
+    });
   };
 
   uploadItem = text => {
@@ -114,24 +117,21 @@ class AcceptList extends PureComponent {
 
 
   handleFormReset = () => {
-
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    const params = {
-      consigoruser:user.userName
-    };
     const { form } = this.props;
     form.resetFields();
     const { dispatch } = this.props;
     dispatch({
-      type: 'applicant/getPremaininfoList',
-      payload: params,
+      type: 'preMainInfo/getAllPremaininfosByCerCode',
+      payload: {
+        certCode:user.certCode
+      },
     });
   };
 
 
 
   handleSearch = e => {
-
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
@@ -142,10 +142,10 @@ class AcceptList extends PureComponent {
         ...fieldsValue,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
-        consigoruser:user.userName,
+        certCode:user.certCode
       };
       dispatch({
-        type: 'applicant/getPremaininfoList',
+        type: 'preMainInfo/getAllPremaininfosByCerCode',
         payload: values,
       });
     });
