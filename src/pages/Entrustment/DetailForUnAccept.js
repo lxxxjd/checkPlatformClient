@@ -82,9 +82,7 @@ class DetailForUnAccept extends Component {
             description:response.data,
           });
         }else{
-          const url = response.data;
-          this.setState({url:url});
-          //window.open(url);
+          this.setState({url:response.data});
         }
       }
     });

@@ -7,6 +7,10 @@ export async function getPremaininfo(params) {
   return request(`/api/premaininfo/getPremaininfo?prereportno=${params.prereportno}`);
 }
 
+export async function unAcceptPremaininfo(params) {
+  return request(`/api/premaininfo/unAcceptPremaininfo?prereportno=${params.prereportno}`);
+}
+
 export async function getPreRecord(params) {
   return request(`/api/preRecordInfo/getRecord?prereportno=${params.prereportno}`);
 }

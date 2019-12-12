@@ -1,4 +1,4 @@
-import { getAllPremaininfosByCerCode, getPremaininfo, getPreRecord, getOssPdf,copyPremaininfoToMaininfo} from '@/services/PreMainInfo';
+import { getAllPremaininfosByCerCode, getPremaininfo, getPreRecord, getOssPdf,copyPremaininfoToMaininfo,unAcceptPremaininfo} from '@/services/PreMainInfo';
 
 export default {
   	namespace: 'preMainInfo',
@@ -16,6 +16,10 @@ export default {
 	    },
 	    *getPremaininfo({ payload ,callback}, { call, put }) {
 	      	const response = yield call(getPremaininfo, payload);
+	      	if (callback) callback(response);
+	    },
+	    *unAcceptPremaininfo({ payload ,callback}, { call, put }) {
+	      	const response = yield call(unAcceptPremaininfo, payload);
 	      	if (callback) callback(response);
 	    },
 	    *getOssPdf({ payload ,callback}, { call, put }) {

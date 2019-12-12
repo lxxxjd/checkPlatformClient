@@ -66,8 +66,7 @@ class AcceptList extends PureComponent {
       render: (text, record) => (
         <Fragment>
           {text.overallstate === '未受理' ? [<a onClick={() => this.acceptItem(text, record)}>受理&nbsp;&nbsp;</a>]:[]}
-          {text.overallstate === '未受理' ? [<a onClick={() => this.modifyItem(text, record)}>拒绝受理&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.acceptItem(text, record)}>受理&nbsp;&nbsp;</a>
+          {text.overallstate === '未受理' ? [<a onClick={() => this.deleteItem(text, record)}>拒绝受理&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>申请详情</a>
         </Fragment>
       ),
@@ -93,14 +92,6 @@ class AcceptList extends PureComponent {
     });
   };
 
-  uploadItem = text => {
-    sessionStorage.setItem('prereportno',text.prereportno);
-    sessionStorage.setItem('applicant',text.applicant);
-    router.push({
-      pathname:'/Applicant/ModifyRecord',
-    }); 
-  };
-
   previewItem = text => {
     sessionStorage.setItem('prereportno',text.prereportno);
     router.push({
@@ -108,10 +99,26 @@ class AcceptList extends PureComponent {
     });
   };
 
-  modifyItem = text => {
-    sessionStorage.setItem('prereportno',text.prereportno);
-    router.push({
-      pathname:'/Applicant/ModifyApplication',
+  deleteItem = text => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'preMainInfo/unAcceptPremaininfo',
+      payload: {
+        prereportno:text.prereportno,
+      },
+      callback:response =>{
+        if (response.code === 200) {
+          notification.open({
+            message: '拒绝成功',
+          });
+          this.componentDidMount();
+        }else {
+          notification.open({
+            message: '拒绝失败',
+            description: response.data,
+          });
+        }
+      }
     });
   };
 
