@@ -24,6 +24,9 @@ export async function submitApplication(params) {
   	},
 	});
 }
+
+
+
 export async function updateReport(params) {
   console.log(params);
   if(params.certstyle !== null && params.certstyle !== undefined){

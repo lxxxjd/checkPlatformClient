@@ -13,6 +13,8 @@ export default {
   'menu.Entrustment.CancelForEntrustment':'撤销委托',
   'menu.Entrustment.ModifyForEntrustment':'修改委托',
   'menu.Entrustment.CopyForEntrustmentList':'复制委托',
+  'menu.Entrustment.AcceptList':'受理',
+  'menu.Entrustment.DetailForUnAccept':'受理详情',
   'menu.Entrustment.CopyForEntrustment':'复制委托详情',
   'menu.TaskAppoint': '任务指派',
   'menu.TaskAppoint.CustomerService':'客服人员',
