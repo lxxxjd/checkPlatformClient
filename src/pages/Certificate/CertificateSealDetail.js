@@ -670,7 +670,6 @@ class CertificateSealDetail extends PureComponent {
 
     return (
       <PageHeaderWrapper text={reprotText}>
-
         <CertForm {...parentMethods} showVisible={showVisible} option={option} Certurls={Certurls} treeData={treeData} value={value} />
         <Card bordered={false} size="small">
           <Row>

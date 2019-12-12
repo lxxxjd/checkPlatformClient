@@ -209,3 +209,11 @@ export async function getMainInfo(params) {
 }
 
 
+export async function downloadQualityTemp(params) {
+  return request('/api/template/download_quality_temp', {
+    method: 'POST',
+    data:params,
+  });
+}
+
+

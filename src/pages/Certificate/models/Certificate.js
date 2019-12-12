@@ -1,11 +1,11 @@
 import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPath,
   getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,
   getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,
-  getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,makeCertFile} from '@/services/Certificate'
+  getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,makeCertFile,downloadQualityTemp} from '@/services/Certificate'
 
 import {getOssPdf,getModelSelectName} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
-
+import {getSampleRegistersByReportNo  } from '@/services/Sample'
 
 
 export default {
@@ -33,6 +33,7 @@ export default {
     getAllUserListByCertCodeResult:{},
     undoCertResult:{},
     makeCertFileResult:{},
+    downloadQualityTempResult:{},
   },
 
   effects: {
@@ -159,6 +160,23 @@ export default {
       if (callback) callback(response);
     },
 
+    *getSampleRegistersByReportNo({ payload,callback }, { call, put }) {
+      const response = yield call(getSampleRegistersByReportNo, payload);
+      yield put({
+        type: 'getByReportNo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *downloadQualityTemp({ payload,callback }, { call, put }) {
+      const response = yield call(downloadQualityTemp, payload);
+      yield put({
+        type: 'downloadQualityTempResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
 
 
     *getCheckResultFetch({ payload,callback }, { call, put }) {
@@ -363,6 +381,12 @@ export default {
     },
 
 
+    downloadQualityTempResult(state, { payload }) {
+      return {
+        ...state,
+        downloadQualityTempResult: payload.data,
+      };
+    },
 
 
 

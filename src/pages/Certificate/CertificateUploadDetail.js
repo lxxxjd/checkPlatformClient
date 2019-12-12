@@ -52,7 +52,6 @@ const CertForm = Form.create()(props => {
     });
   };
 
-
   return (
     <Modal
       title={option}
@@ -101,7 +100,7 @@ const CertForm = Form.create()(props => {
 
 // 表单组件
 const CreateUploadForm = Form.create()(props => {
-  const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect } = props;
+  const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect,handleOnModelSelect,modelPlatformType,sampleRegisterOptions,checkResultOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -114,6 +113,9 @@ const CreateUploadForm = Form.create()(props => {
   const handleChange =()=>{
     form.resetFields(`tempName`,[]);
   };
+
+
+
 
   return (
     <Modal
@@ -130,7 +132,7 @@ const CreateUploadForm = Form.create()(props => {
     >
 
       <Form.Item label="证书名称">
-        {form.getFieldDecorator('downloadRecordName', {
+        {form.getFieldDecorator('fileName', {
           rules: [{ required: true, message: '请输入证书名称' }],
         })(
           <Input style={{ width: '100%' }} placeholder="证书名称" />
@@ -149,15 +151,40 @@ const CreateUploadForm = Form.create()(props => {
           </Select>
         )}
       </Form.Item>
+
       <Form.Item label="模板名称">
-        {form.getFieldDecorator('tempName', {
-          rules: [{ required: true, message: '请选择模板名称' }],
+        {form.getFieldDecorator('id', {
+           rules: [{ required: true, message: '请选择模板名称' }],
         })(
-          <Select style={{ width: '100%' }} placeholder="请选择模板名称">
+          <Select style={{ width: '100%' }} placeholder="请选择模板名称" onSelect={handleOnModelSelect}>
             {typeOptions}
           </Select>
         )}
       </Form.Item>
+
+      {modelPlatformType==="质量证书.doc" ?[
+        <Form.Item label="样品编号名称">
+          {form.getFieldDecorator('sampleno', {
+             rules: [{ required: true, message: '请选择样品编号名称' }],
+          })(
+            <Select style={{ width: '100%' }} placeholder="请选择样品编号名称">
+              {sampleRegisterOptions}
+            </Select>
+          )}
+        </Form.Item>]:null
+      }
+
+      {modelPlatformType==="重量证书.doc" ?[
+        <Form.Item label="申请项目">
+          {form.getFieldDecorator('inspway', {
+            // rules: [{ required: true, message: '请选择申请项目' }],
+          })(
+            <Select style={{ width: '100%' }} placeholder="请选择申请项目">
+              {checkResultOptions}
+            </Select>
+          )}
+        </Form.Item>]:null
+      }
 
     </Modal>
   );
@@ -202,6 +229,12 @@ class CertificateUploadDetail extends PureComponent {
     renderFormData: [], // 当前data
     renderFormColumns: [],// 当前表格的信息
     approverusers:[],
+    modelPlatformType:"",
+
+    checkResult:[], // 申请项目
+    sampleRegister:[],
+
+
 
     sampleColumnsLink: [ // 分析检测表格头
       {
@@ -647,6 +680,29 @@ class CertificateUploadDetail extends PureComponent {
 
   // 处理下载模态框打开
   showDownloadVisible = (flag) => {
+    const { dispatch, } = this.props;
+    const reportNo = sessionStorage.getItem('reportno');
+    dispatch({
+      type: 'certificate/getCheckResultFetch',
+      payload:{reportno:reportNo},
+      callback: (response) => {
+        if(response.data){
+          this.state.checkResult = response.data;
+        }
+      }
+    });
+
+    dispatch({
+      type: 'certificate/getSampleRegistersByReportNo',
+      payload: { reportno: reportNo},
+      callback: (response2) => {
+        if(response2.list !== undefined){
+          this.state.sampleRegister = response2.list;
+        }
+      }
+    });
+
+
     this.setState({
       downloadVisible: !!flag,
     });
@@ -654,6 +710,7 @@ class CertificateUploadDetail extends PureComponent {
 
   // 处理下载模态框取消
   handleDownloadCancel = (flag) => {
+
     this.setState({
       downloadVisible: !!flag,
     });
@@ -663,19 +720,40 @@ class CertificateUploadDetail extends PureComponent {
 
   // 处理下载模态框 提交表单
   handleDownloadAdd = (fields) =>{
-    const { dispatch, } = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const reportNo = sessionStorage.getItem('reportno');
-    const params = {
-      reportno:reportNo,
-      tempName:fields.tempName,
-      recordName:fields.downloadRecordName,
-    };
+    const { dispatch, } = this.props;
+    // const params = {
+    //   id:fields.id,
+    //   sampleno:fields.sampleno,
+    //   reportno:reportNo,
+    //   creator:user.nameC,
+    //   modifier:user.nameC,
+    //   fileName:fields.fileName,
+    // };
+    let params = new FormData();
+    params.append('id', fields.id);
+    params.append('sampleno', fields.sampleno);
+    params.append('reportno', reportNo);
+    params.append('creator', user.nameC);
+    params.append('modifier', user.nameC);
+    params.append('fileName', fields.fileName);
+
     dispatch({
-      type: 'testRecord/downloadPlatFromTemp',
+      type: 'certificate/downloadQualityTemp',
       payload:params,
       callback: (response) => {
-        if(response){
-          message.success("下载成功");
+        console.log(response);
+        if(response==="success"){
+          message.success("操作成功")
+          dispatch({
+            type: 'certificate/getCertFiles',
+            payload:{
+              reportno:reportNo,
+            },
+          });
+        }else if(response ===null||"null"){
+          message.success("检测结果不存在");
         }
       }
     });
@@ -683,6 +761,12 @@ class CertificateUploadDetail extends PureComponent {
       downloadVisible: false,
     });
   };
+
+  handleOnModelSelect =(key,value) =>{
+    this.state.modelPlatformType = value.key;
+    this.forceUpdate();
+  };
+
 
 
 
@@ -910,8 +994,10 @@ class CertificateUploadDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value,option,treeData,approverusers} = this.state
-    const typeOptions = modelName.map(d => <Option key={d.id} value={d.id}>{d.name}</Option>);
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,Certurls,value,option,treeData,approverusers,modelPlatformType,sampleRegister,checkResult} = this.state
+    const typeOptions = modelName.map(d => <Option key={d.name} value={d.id}>{d.name}</Option>);
+    const checkResultOptions = checkResult.map(d => <Option key={d.inspway} value={d.inspway}>{d.inspway}</Option>);
+    const sampleRegisterOptions = sampleRegister.map(d => <Option key={d.sampleno} value={d.sampleno}>{d.sampleno}{d.samplename}</Option>);
 
     // 下载模板 模态框方法
     const parentMethods = {
@@ -925,6 +1011,7 @@ class CertificateUploadDetail extends PureComponent {
       reviewCertFile:this.reviewCertFile,
       renderFileInfo:this.renderFileInfo,
       renderTreeNodes:this.renderTreeNodes,
+      handleOnModelSelect:this.handleOnModelSelect,
     };
 
     const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
@@ -979,7 +1066,7 @@ class CertificateUploadDetail extends PureComponent {
           </Form>
         </Modal>
 
-        <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} />
+        <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} modelPlatformType={modelPlatformType} checkResultOptions={checkResultOptions} sampleRegisterOptions={sampleRegisterOptions} />
 
         <CertForm {...parentMethods} showVisible={showVisible} option={option} Certurls={Certurls} treeData={treeData} value={value} approverusersOptions={approverusersOptions} />
 
