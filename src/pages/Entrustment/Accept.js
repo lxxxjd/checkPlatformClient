@@ -14,7 +14,7 @@ import {
   Popover,
   Radio,
   notification,
-  AutoComplete
+  AutoComplete,
 } from 'antd';
 
 import {connect} from 'dva';
@@ -84,12 +84,13 @@ const fieldLabels = {
 };
 
 
-@connect(({entrustment, loading}) => ({
+@connect(({entrustment,preMainInfo, loading}) => ({
   entrustment,
+  preMainInfo,
   loading: loading.models.entrustment,
 }))
 @Form.create()
-class CopyForEntrustment extends PureComponent {
+class Accept extends PureComponent {
   state = {
     width: '100%',
     value: 1,
@@ -121,7 +122,7 @@ class CopyForEntrustment extends PureComponent {
 
   componentDidMount() {
     const {form, dispatch} = this.props;
-    const reportno = sessionStorage.getItem('reportno');
+    const prereportno = sessionStorage.getItem("prereportno");
     const now = moment().format("YYYY-MM-DD HH:mm:ss");
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
@@ -138,83 +139,34 @@ class CopyForEntrustment extends PureComponent {
       },
       callback: (response) => {
         this.setState({cargos: response});
-        dispatch({
-          type: 'entrustment/getReport',
-          payload: reportno,
-          callback: (response) => {
-            form.setFieldsValue({
-              'reportdate': moment(response.reportdate, "YYYY-MM-DD"),
-              'tradeway': response.tradeway,
-              'payer': response.payer,
-              'shipname': response.shipname,
-              'cargoname': response.cargoname,
-              'quantityd': response.quantityd,
-              'agent': response.agent,
-              'applicant': response.applicant,
-              'inspwaymemo1': response.inspwaymemo1,
-              //'inspplace1':response.inspplace1,
-              'inspplace2': response.inspplace2,
-              'inspplace3': response.inspplace3,
-              'inspdate': moment(response.inspdate, "YYYY-MM-DD"),
-              'insplinkway': response.insplinkway,
-              'price': response.price,
-              'unit': response.unit,
-              'businesssort': response.businesssort,
-              'applicantname': response.applicantname,
-              'applicanttel': response.applicanttel,
-              'agentname': response.agentname,
-              'agenttel': response.agenttel,
-              'businesssource': response.businesssource,
-              'chineselocalname': response.chineselocalname,
-              'iscnas': response.incnas,
-            });
-            if(response.iscnas === 1){
-              const {cargos} = this.state;
-              for (const cargo in cargos) {
-                if (cargos[cargo].cargonamec.replace(/\s+/g, "") === response.cargoname) {
-                  const checkCode = cargos[cargo].checkCode;
-                  dispatch({
-                    type: 'entrustment/getCnasInfo',
-                    payload: {
-                      checkCode,
-                    },
-                    callback: (response) => {
-                      if (response.code === 200) {
-                        this.setState({cnasInfo: response.data});
-                      }
-                    }
-                  });
-                  dispatch({
-                    type: 'entrustment/getCnasCheckInfo',
-                    payload: {
-                      certCode:user.certCode,
-                      checkCode,
-                    },
-                    callback: (response) => {
-                      this.setState({cnasCheckInfo: response.data});
-                    }
-                  });
-                  break;
-                }
-              }
-            }
-            this.setState({cargoname:response.cargoname});
-            if(response.section !== null && response.section !== undefined){
-              form.setFieldsValue({'section': response.section.split(" ")});
-            }
-            if(response.cnasProject !== null && response.cnasProject !== undefined){
-              form.setFieldsValue({'cnasProject': response.cnasProject.split(" ")});
-            }
-            form.setFieldsValue({'inspway': response.inspway.split(" ")});
-            if (response.certstyle != null) {
-              const result = ['need'];
-              result.push(response.certstyle);
-              form.setFieldsValue({'certstyle': result});
-            } else {
-              form.setFieldsValue({'certstyle': ['noNeed']});
-            }
-          }
+      }
+    });
+    dispatch({
+      type: 'preMainInfo/getPremaininfo',
+      payload: {
+        prereportno,
+      },
+      callback: (response) => {
+        form.setFieldsValue({
+          'reportdate': moment(response.data.reportdate, "YYYY-MM-DD"),
+          'tradeway': response.data.tradeway,
+          'payer': response.data.payer,
+          'shipname': response.data.shipname,
+          'quantityd': response.data.quantityd,
+          'agent': response.data.agent,
+          'applicant': response.data.applicant,
+          'inspwaymemo1': response.data.inspwaymemo1,
+          //'inspplace1':response.data.inspplace1,
+          'inspdate': moment(response.data.inspdate, "YYYY-MM-DD"),
+          'price': response.data.price,
+          'unit': response.data.unit,
+          'applicantname': response.data.applicantname,
+          'applicanttel': response.data.applicanttel,
+          'agentname': response.data.agentname,
+          'agenttel': response.data.agenttel,
+          'chineselocalname': response.data.chineselocalname,
         });
+        form.setFieldsValue({'inspway': response.data.inspway.split(" ")});
       }
     });
     dispatch({
@@ -318,6 +270,7 @@ class CopyForEntrustment extends PureComponent {
       dispatch,
     } = this.props;
     const { cnasInfo } = this.state;
+    const prereportno = sessionStorage.getItem("prereportno");
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       if(values.inspplace1 !== null && values.inspplace1 !== undefined){
@@ -340,12 +293,19 @@ class CopyForEntrustment extends PureComponent {
           },
           callback: (response) => {
             if (response.code === 200) {
-              notification.open({
-                message: '添加成功',
-              });
-              sessionStorage.setItem('reportno', response.data.reportno);
-              router.push({
-                pathname: '/Entrustment/DetailForEntrustment',
+              dispatch({
+                type: 'preMainInfo/copyPremaininfoToMaininfo',
+                payload: {
+                  reportno:response.data.reportno,
+                  prereportno,
+                },
+                callback:response =>{
+                  if(response.code === 200){
+                    notification.open({
+                      message: '添加成功',
+                    });
+                  }
+                }
               });
             } else {
               notification.open({
@@ -1115,4 +1075,4 @@ class CopyForEntrustment extends PureComponent {
   }
 }
 
-export default CopyForEntrustment;
+export default Accept;

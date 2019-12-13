@@ -107,6 +107,11 @@ export default [
             component: './Entrustment/EntrustmentRelevance',
           },
           {
+            path: '/Entrustment/AcceptList',
+            name: 'AcceptList',
+            component: './Entrustment/AcceptList',
+          },
+          {
             path: '/Entrustment/DetailForSub',
             name: 'DetailForSub',
             component: './Entrustment/DetailForSub',
@@ -119,9 +124,27 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
+            path: '/Entrustment/ModifyRelevance',
+            name: 'ModifyRelevance',
+            component: './Entrustment/ModifyRelevance',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
             path: '/Entrustment/EntrustmentRecord',
             name: 'EntrustmentRecord',
             component: './Entrustment/EntrustmentRecord',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: '/Entrustment/DetailForUnAccept',
+            name: 'DetailForUnAccept',
+            component: './Entrustment/DetailForUnAccept',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: '/Entrustment/Accept',
+            name: 'Accept',
+            component: './Entrustment/Accept',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
