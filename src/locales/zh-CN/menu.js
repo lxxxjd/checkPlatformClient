@@ -70,10 +70,10 @@ export default {
 
   'menu.Certificate.CertificateReview':'证稿复核',
   'menu.Certificate.CertificateReviewDetail':'证稿复核详情',
-  'menu.Certificate.CertificateMake':'证稿缮制',
-  'menu.Certificate.CertificateMakeDetail':'证稿缮制详情',
-  'menu.Certificate.CertificateSeal':'证稿签字',
-  'menu.Certificate.CertificateSealDetail':'证稿签字详情',
+  'menu.Certificate.CertificateMake':'证书缮制',
+  'menu.Certificate.CertificateMakeDetail':'证书缮制详情',
+  'menu.Certificate.CertificateSeal':'证书签字',
+  'menu.Certificate.CertificateSealDetail':'证书签字详情',
 
   'menu.DictMaintain.StandardList':'标准管理',
   'menu.DictMaintain.ItemList':'指标管理',
