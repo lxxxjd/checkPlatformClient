@@ -13,7 +13,7 @@ export default {
   'menu.Entrustment.CancelForEntrustment':'撤销委托',
   'menu.Entrustment.ModifyForEntrustment':'修改委托',
   'menu.Entrustment.CopyForEntrustmentList':'复制委托',
-  'menu.Entrustment.AcceptList':'受理',
+  'menu.Entrustment.AcceptList':'委托受理',
   'menu.Entrustment.DetailForUnAccept':'受理详情',
   'menu.Entrustment.CopyForEntrustment':'复制委托详情',
   'menu.TaskAppoint': '任务指派',
@@ -68,14 +68,16 @@ export default {
   'menu.Certificate':'证稿证书',
   'menu.Certificate.CertificateUpload':'证稿拟制',
   'menu.Certificate.CertificateUploadDetail':'证稿证书详情',
+  'menu.Certificate.CertificateFinishedDetail':'上传证书详情',
+  'menu.Certificate.CertificateFinished':'上传证书',
 
 
   'menu.Certificate.CertificateReview':'证稿复核',
   'menu.Certificate.CertificateReviewDetail':'证稿复核详情',
   'menu.Certificate.CertificateMake':'证书缮制',
   'menu.Certificate.CertificateMakeDetail':'证书缮制详情',
-  'menu.Certificate.CertificateSeal':'证书签字',
-  'menu.Certificate.CertificateSealDetail':'证书签字详情',
+  'menu.Certificate.CertificateSeal':'授权签字',
+  'menu.Certificate.CertificateSealDetail':'授权签字详情',
 
   'menu.DictMaintain.StandardList':'标准管理',
   'menu.DictMaintain.ItemList':'指标管理',

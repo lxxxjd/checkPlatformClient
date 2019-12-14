@@ -486,6 +486,18 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
+          {
+            path: '/Certificate/CertificateFinished',
+            name: 'CertificateFinished',
+            component: './Certificate/CertificateFinished',
+          },
+
+          {
+            path: '/Certificate/CertificateFinishedDetail',
+            name: 'CertificateFinishedDetail',
+            component: './Certificate/CertificateFinishedDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
 
 
         ],
