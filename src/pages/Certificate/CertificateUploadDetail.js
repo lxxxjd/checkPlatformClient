@@ -385,6 +385,8 @@ class CertificateUploadDetail extends PureComponent {
   ViewItem = text =>{
     const { dispatch } = this.props;
 
+
+
     let path ;
     if (text.status === "已拟制") {
       path = text.pdfeditorpath;
@@ -392,9 +394,15 @@ class CertificateUploadDetail extends PureComponent {
       path = text.pdfpath;
     }else if(text.status === "已缮制"){
       path = text.titlepdfpath;
-    }else if(text.status === "已签署"){
+    }else if(text.status === "已签署" || "已发布"){
       path = text.certpdfpath;
     }
+
+    // 此证书通过上传产生;
+    if(text.filepath ===undefined || text.filepath ===null){
+      path = text.certpdfpath;
+    }
+
     dispatch({
       type: 'certificate/getPdfByOssPath',
       payload:{osspath:path},
@@ -504,6 +512,13 @@ class CertificateUploadDetail extends PureComponent {
 
   editCerticate = text => {
 
+    if(text.filepath ===undefined || text.filepath ===null){
+      notification.open({
+        message: '此证书通过上传产生，不可编辑',
+        description:"此证书通过上传产生，不可编辑",
+      });
+      return;
+    }
     // var wpsUrl = 'https://wwo.wps.cn/office/w/111?_w_signature=JFUosMy%2bG2Q2lWYOZ2h8I3YjwlE%3d&_w_userid=320318060202&_w_fname=test.doc&_w_appid=0af07f041df14ca27c68a2d9449d7f9f'
     // eslint-disable-next-line camelcase,no-underscore-dangle
     // eslint-disable-next-line camelcase,no-underscore-dangle

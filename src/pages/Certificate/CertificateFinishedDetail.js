@@ -13,8 +13,9 @@ import {
   notification,
   Upload,
   message,
-  Icon,
+  Icon, Select,
 } from 'antd';
+const { Option } = Select;
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
 import styles from './Certificate.less';
@@ -42,6 +43,7 @@ class CertificateFinishedDetail extends PureComponent {
     previewVisible: false,
     previewImage: '',
     fileList: [],
+    approverusers:[],
   };
 
   columns = [
@@ -92,6 +94,22 @@ class CertificateFinishedDetail extends PureComponent {
          reportno,
       },
     });
+
+    const value ={
+      certCode :JSON.parse(localStorage.getItem("userinfo")).certCode,
+    };
+    dispatch({
+      type: 'certificate/getAllUserListByCertCode',
+      payload:value,
+      callback: (response2) => {
+        if(response2){
+          this.state.approverusers = response2;
+        }else {
+          message.error("加载用户数据失败");
+        }
+      }
+    });
+
   }
 
 
@@ -105,7 +123,12 @@ class CertificateFinishedDetail extends PureComponent {
       path = text.pdfpath;
     }else if(text.status === "已缮制"){
       path = text.titlepdfpath;
-    }else if(text.status === "已签署"){
+    }else if(text.status === "已签署" || "已发布"){
+      path = text.certpdfpath;
+    }
+
+    // 此证书通过上传产生;
+    if(text.filepath ===undefined || text.filepath ===null){
       path = text.certpdfpath;
     }
     dispatch({
@@ -167,11 +190,11 @@ class CertificateFinishedDetail extends PureComponent {
         });
         formData.append('creator', user.nameC);
         formData.append('modifier', user.nameC);
-        formData.append('signer', user.userName);
         formData.append('reportno', reportno);
+        formData.append('author', values.author);
         formData.append('name', values.recordname);
         dispatch({
-          type: 'certificate/uploadCertFile',
+          type: 'certificate/uploadCertFilePdf',
           payload : formData,
           callback: (response) => {
             if(response.code === 400){
@@ -237,12 +260,11 @@ class CertificateFinishedDetail extends PureComponent {
 
   handleChange = ({ file,fileList }) => {
     // 限制图片 格式、size、分辨率
-    const isDOC = file.type === 'application/msword';
-    const isDOCX = file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const isPDF = file.type === 'application/pdf'
     const size = file.size / 1024 / 1024 < 20;
-    if (!(isDOC || isDOCX )) {
+    if (!(isPDF )) {
       Modal.error({
-        title: '只能上传DOC 、DOCX 格式的图片~',
+        title: '只能上传PDF格式~',
       });
       return;
     } if (!size) {
@@ -279,8 +301,8 @@ class CertificateFinishedDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage} = this.state
-
+    const {fileList,visible,previewVisible,previewImage,approverusers} = this.state
+    const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const applicant = sessionStorage.getItem('applicant');
@@ -324,9 +346,11 @@ class CertificateFinishedDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="授权签字人">
               {getFieldDecorator('author', {
-                rules: [{ required: true, message: '请输入证稿名称' }],
+                rules: [{ required: true, message: '请选择授权签字人' }],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入证稿名称,不超过10个字符" maxLength={10} />
+                <Select style={{width:'100%'}} placeholder="请选择授权签字人">
+                  {approverusersOptions}
+                </Select>
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>

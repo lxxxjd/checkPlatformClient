@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table
+  Table, notification,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -23,7 +23,7 @@ const { Option } = Select;
   certificate,
   loading: loading.models.certificate,
 }))
-class CertificateSeal extends PureComponent {
+class CertificatePublish extends PureComponent {
   state = {
   };
 
@@ -48,6 +48,10 @@ class CertificateSeal extends PureComponent {
     {
       title: '申请项目',
       dataIndex: 'inspway',
+    },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
     },
     {
       title: '证书名称',
@@ -83,7 +87,9 @@ class CertificateSeal extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
+          <a onClick={() => this.publishItem(text, record)}>发布</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.modifyItem(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -109,12 +115,42 @@ class CertificateSeal extends PureComponent {
     });
   };
 
+  publishItem =(text) =>{
+    const { dispatch } = this.props;
+    const formData = new FormData();
+    formData.append('reportno',text.reportno);
+    console.log(text)
+    dispatch({
+      type: 'certificate/publishCert',
+      payload:formData,
+      callback: (response) => {
+        console.log(response);
+        if(response==="success"){
+          notification.open({
+            message: '发布成功',
+            description:'发布成功',
+          });
+        }else if(response==="fail"){
+          notification.open({
+            message: '发布失败',
+            description: '发布失败',
+          });
+        }else{
+          notification.open({
+            message: '发布失败',
+            description: '发布失败',
+          });
+        }
+      }
+    });
+  };
+
   modifyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     router.push({
-      pathname:'/Certificate/CertificateSealDetail',
+      pathname:'/Certificate/CertificatePublishDetail',
     });
   };
 
@@ -208,4 +244,4 @@ class CertificateSeal extends PureComponent {
   }
 }
 
-export default CertificateSeal;
+export default CertificatePublish;

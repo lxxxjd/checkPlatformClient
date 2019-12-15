@@ -25,6 +25,18 @@ export async function uploadCertFile(params) {
     data:params,
   });
 }
+
+
+export async function uploadCertFilePdf(params) {
+  return request(`/api/cert_report/uploadCertFilePdf`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+
+
 export async function signCertFile(params) {
     return request(`/api/cert_report/signCertFile`,{
     method: 'POST',
@@ -32,6 +44,14 @@ export async function signCertFile(params) {
     data:params,
   });
 }
+
+export async function publishCert(params) {
+  return request(`/api/cert_report/publish_cert`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
 
 export async function reviewCertFile(params) {
     return request(`/api/cert_report/reviewCertFile`,{

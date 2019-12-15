@@ -1,7 +1,7 @@
 import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPath,
   getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,
   getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,
-  getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,makeCertFile,downloadQualityTemp} from '@/services/Certificate'
+  getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,makeCertFile,downloadQualityTemp,uploadCertFilePdf,publishCert} from '@/services/Certificate'
 
 import {getOssPdf,getModelSelectName} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
@@ -34,6 +34,7 @@ export default {
     undoCertResult:{},
     makeCertFileResult:{},
     downloadQualityTempResult:{},
+    publishCertResult:{},
   },
 
   effects: {
@@ -56,6 +57,8 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+
 
 
     *getAllUserListByCertCode({ payload,callback }, { call, put }) {
@@ -96,6 +99,22 @@ export default {
       const response = yield call(uploadCertFile, payload);
       if (callback) callback(response);
     },
+    *uploadCertFilePdf({ payload,callback }, { call, put }) {
+      const response = yield call(uploadCertFilePdf, payload);
+      if (callback) callback(response);
+    },
+
+
+    *publishCert({ payload,callback }, { call, put }) {
+      const response = yield call(publishCert, payload);
+      yield put({
+        type: 'publishCertResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
     *deleteCertFile({ payload,callback }, { call, put }) {
       const response = yield call(deleteCertFile, payload);
       if (callback) callback(response);
@@ -385,6 +404,14 @@ export default {
       return {
         ...state,
         downloadQualityTempResult: payload.data,
+      };
+    },
+
+
+    publishCertResult(state, { payload }) {
+      return {
+        ...state,
+        publishCertResult: payload.data,
       };
     },
 

@@ -499,6 +499,19 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
+          {
+            path: '/Certificate/CertificatePublish',
+            name: 'CertificatePublish',
+            component: './Certificate/CertificatePublish',
+          },
+
+          {
+            path: '/Certificate/CertificatePublishDetail',
+            name: 'CertificatePublishDetail',
+            component: './Certificate/CertificatePublishDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
 
         ],
       },

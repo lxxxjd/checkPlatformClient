@@ -289,7 +289,11 @@ class CertificateUploadDetail extends PureComponent {
       path = text.pdfpath;
     }else if(text.status === "已缮制"){
       path = text.titlepdfpath;
-    }else if(text.status === "已签署"){
+    }else if(text.status === "已签署" || "已发布"){
+      path = text.certpdfpath;
+    }
+    // 此证书通过上传产生;
+    if(text.filepath ===undefined || text.filepath ===null){
       path = text.certpdfpath;
     }
     dispatch({

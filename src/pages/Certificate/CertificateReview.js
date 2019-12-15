@@ -110,7 +110,7 @@ class CertificateReview extends PureComponent {
   };
 
   modifyItem = text => {
-    sessionStorage.setItem('_reportno',text.reportno);
+    sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     router.push({
