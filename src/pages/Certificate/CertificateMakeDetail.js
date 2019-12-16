@@ -289,11 +289,11 @@ class CertificateMakeDetail extends PureComponent {
       path = text.pdfpath;
     }else if(text.status === "已缮制"){
       path = text.titlepdfpath;
-    }else if(text.status === "已签署" || "已发布"){
+    }else if(text.status === "已签署" || text.status === "已发布"){
       path = text.certpdfpath;
-    }
-    // 此证书通过上传产生;
-    if(text.filepath ===undefined || text.filepath ===null){
+    }else if (text.status === "已作废"){
+      path = text.abandonpdfpath;
+    }else if(path ===undefined && (text.filepath ===undefined || text.filepath ===null)){   // 此证书通过上传产生;
       path = text.certpdfpath;
     }
     dispatch({
@@ -442,6 +442,10 @@ class CertificateMakeDetail extends PureComponent {
             description:response.data,
           });
         }else{
+          notification.open({
+            message: '删除成功',
+            description:response.data,
+          });
           dispatch({
             type: 'certificate/getCertFiles',
             payload:{

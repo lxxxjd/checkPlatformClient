@@ -80,6 +80,8 @@ export default {
   'menu.Certificate.CertificateSealDetail':'授权签字详情',
   'menu.Certificate.CertificatePublish':'证书发布',
   'menu.Certificate.CertificatePublishDetail':'证书发布详情',
+  'menu.Certificate.CertificateAbandon':'证书作废',
+  'menu.Certificate.CertificateAbandonDetail':'证书作废详情',
 
   'menu.DictMaintain.StandardList':'标准管理',
   'menu.DictMaintain.ItemList':'指标管理',

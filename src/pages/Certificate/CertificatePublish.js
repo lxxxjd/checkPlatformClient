@@ -119,12 +119,10 @@ class CertificatePublish extends PureComponent {
     const { dispatch } = this.props;
     const formData = new FormData();
     formData.append('reportno',text.reportno);
-    console.log(text)
     dispatch({
       type: 'certificate/publishCert',
       payload:formData,
       callback: (response) => {
-        console.log(response);
         if(response==="success"){
           notification.open({
             message: '发布成功',
@@ -133,7 +131,7 @@ class CertificatePublish extends PureComponent {
         }else if(response==="fail"){
           notification.open({
             message: '发布失败',
-            description: '发布失败',
+            description: '存在未完成的证书，请完成后发布',
           });
         }else{
           notification.open({

@@ -37,7 +37,7 @@ function getBase64(file) {
   certificate,
   loading: loading.models.certificate,
 }))
-class CertificatePublishDetail extends PureComponent {
+class CertificateAbandonDetail extends PureComponent {
   state = {
     approverusers:[],
   };
@@ -124,7 +124,6 @@ class CertificatePublishDetail extends PureComponent {
     }else if(path ===undefined && (text.filepath ===undefined || text.filepath ===null)){   // 此证书通过上传产生;
       path = text.certpdfpath;
     }
-
     dispatch({
       type: 'certificate/getPdfByOssPath',
       payload:{osspath:path},
@@ -188,4 +187,4 @@ class CertificatePublishDetail extends PureComponent {
   }
 }
 
-export default CertificatePublishDetail;
+export default CertificateAbandonDetail;

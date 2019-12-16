@@ -512,6 +512,19 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
+          {
+            path: '/Certificate/CertificateAbandon',
+            name: 'CertificateAbandon',
+            component: './Certificate/CertificateAbandon',
+          },
+
+          {
+            path: '/Certificate/CertificateAbandonDetail',
+            name: 'CertificateAbandonDetail',
+            component: './Certificate/CertificateAbandonDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
 
         ],
       },

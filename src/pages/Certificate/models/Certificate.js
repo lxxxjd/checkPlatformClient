@@ -1,11 +1,13 @@
 import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPath,
   getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,
   getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,
-  getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,makeCertFile,downloadQualityTemp,uploadCertFilePdf,publishCert} from '@/services/Certificate'
+  getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,
+  makeCertFile,downloadQualityTemp,uploadCertFilePdf,publishCert,applyAbandon,abandonCert} from '@/services/Certificate'
 
 import {getOssPdf,getModelSelectName} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
 import {getSampleRegistersByReportNo  } from '@/services/Sample'
+import {getAllReadRecords  } from '@/services/ReadRecord'
 
 
 export default {
@@ -35,9 +37,41 @@ export default {
     makeCertFileResult:{},
     downloadQualityTempResult:{},
     publishCertResult:{},
+    getAllReadRecordsResult:{},
+    applyAbandonResult:{},
+    abandonCertResult:{},
   },
 
   effects: {
+
+
+    *abandonCert({ payload,callback }, { call, put }) {
+      const response = yield call(abandonCert, payload);
+      yield put({
+        type: 'abandonCertResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *applyAbandon({ payload,callback }, { call, put }) {
+      const response = yield call(applyAbandon, payload);
+      yield put({
+        type: 'applyAbandonResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+    *getAllReadRecords({ payload,callback }, { call, put }) {
+      const response = yield call(getAllReadRecords, payload);
+      yield put({
+        type: 'getAllReadRecordsResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
 
 
     *makeCertFile({ payload,callback }, { call, put }) {
@@ -414,6 +448,29 @@ export default {
         publishCertResult: payload.data,
       };
     },
+
+    getAllReadRecordsResult(state, { payload }) {
+      return {
+        ...state,
+        getAllReadRecordsResult: payload.data,
+      };
+    },
+
+    applyAbandonResult(state, { payload }) {
+      return {
+        ...state,
+        applyAbandonResult: payload.data,
+      };
+    },
+
+
+    abandonCertResult(state, { payload }) {
+      return {
+        ...state,
+        abandonCertResult: payload.data,
+      };
+    },
+
 
 
 

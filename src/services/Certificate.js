@@ -237,3 +237,20 @@ export async function downloadQualityTemp(params) {
 }
 
 
+export async function applyAbandon(params) {
+  return request('/api/cert_report/apply_abandon', {
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+export async function abandonCert(params) {
+  return request('/api/cert_report/abandon_cert', {
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+
