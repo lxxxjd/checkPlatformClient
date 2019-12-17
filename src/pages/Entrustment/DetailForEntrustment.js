@@ -213,7 +213,7 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="申报数量和单位">{((report.quantityd === undefined || report.quantityd === null ) ? "":report.quantityd  )+report.unit }</Descriptions.Item>
             <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
             <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
-            <Descriptions.Item label="到达地点">{report.inspplace1}</Descriptions.Item>
+            <Descriptions.Item label="检验地点">{report.inspplace1}</Descriptions.Item>
           </Descriptions>
         </Card>
         <Card title="检查项目" className={styles.card} bordered={false}>

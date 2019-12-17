@@ -402,7 +402,7 @@ class SampleDestory extends PureComponent {
           </Row>
         </Card>
 
-        <Row >
+        <Row>
           <Col md={6} sm={10}>
             <Form.Item
               label="状态："

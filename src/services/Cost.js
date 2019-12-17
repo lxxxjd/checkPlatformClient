@@ -11,3 +11,13 @@ export async function getAllCost(params) {
   });
 }
 
+// 高级查询
+export async function selectCostByConditions(params) {
+  return request('/api/cost/selectCostByConditions', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+

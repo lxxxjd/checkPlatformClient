@@ -508,7 +508,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('customsNo', {
                     rules: [],
-                  })(<Input placeholder="报关号"/>)}
+                  })(<Input placeholder="报关号" />)}
                 </Form.Item>
               </Col>
 
