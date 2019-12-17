@@ -90,53 +90,38 @@ class CostQuery extends PureComponent {
     formValues: {},
     modalReviewVisible:false,
     modalInfo :{},
+    costResult:[],
   };
 
   columns = [
+    {
+      title: '发生日期',
+      dataIndex: 'occurdate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+    },
     {
       title: '委托编号',
       dataIndex: 'reportno',
     },
     {
-      title: '船名标识',
-      dataIndex: 'shipname',
+      title: '费用种类',
+      dataIndex: 'costtype',
     },
     {
-      title: '检查品名',
-      dataIndex: 'cargoname',
+      title: '费用名称',
+      dataIndex: 'costname',
     },
     {
-      title: '样品编号',
-      dataIndex: 'sampleno',
-
-    },
-
-    {
-      title: '样品名称',
-      dataIndex: 'samplename',
-    },
-
-    {
-      title: '样品用途',
-      dataIndex: 'sampleuse',
-    },
-
-    {
-      title: '持有人',
-      dataIndex: 'owner',
+      title: '金额',
+      dataIndex: 'costmoney',
     },
     {
-      title: '保存天数',
-      dataIndex: 'duration',
+      title: '清单号',
+      dataIndex: 'paylistno',
     },
     {
-      title: '存放位置',
-      dataIndex: 'position',
-    },
-    {
-      title: '制备日期',
-      dataIndex: 'makingdate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+      title: '接收人',
+      dataIndex: 'reciever',
     },
     {
       title: '状态',
@@ -158,6 +143,7 @@ class CostQuery extends PureComponent {
     this.init();
   }
 
+  // eslint-disable-next-line react/sort-comp
   init =() =>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
@@ -165,8 +151,11 @@ class CostQuery extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'cost/getSampleRegisterByConditions',
+      type: 'cost/selectCostByConditions',
       payload: params,
+      callback: (response) => {
+          this.state.costResult = response;
+      }
     });
   };
 
@@ -229,8 +218,11 @@ class CostQuery extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'sample/getSampleRegisterByConditions',
+        type: 'cost/selectCostByConditions',
         payload: params,
+        callback: (response) => {
+          this.state.costResult = response;
+        }
       });
     });
   };
@@ -344,16 +336,16 @@ class CostQuery extends PureComponent {
 
   remove = k => {
     const { form } = this.props;
-    // can use data-binding to get
+       // can use data-binding to get
     const keys = form.getFieldValue('keys');
     // We need at least one passenger
     // if (keys.length === 1) {
     //   return;
     // }
     this.props.form.validateFields((err, values) => {
-          if (!err) {
-      console.log('Received values of form: ', values);
-    }
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
     });
     // can use data-binding to set
     form.setFieldsValue({
@@ -400,10 +392,11 @@ class CostQuery extends PureComponent {
       loading,
     } = this.props;
 
+
     const { getFieldDecorator, getFieldValue } = this.props.form;
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
-    const { modalReviewVisible,modalInfo } = this.state;
+    const { modalReviewVisible,modalInfo ,costResult} = this.state;
     const parentMethods = {
       handleModalReviewVisible:this.handleModalReviewVisible,
     };
@@ -495,9 +488,9 @@ class CostQuery extends PureComponent {
           <div className={styles.tableList}>
             <Table
               size="middle"
-              rowKey="sampleno"
+              rowKey="keyno"
               loading={loading}
-             // dataSource={getAllCostResult.list}
+              dataSource={costResult}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
             />

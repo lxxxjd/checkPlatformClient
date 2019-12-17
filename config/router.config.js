@@ -668,6 +668,12 @@ export default [
             component: './Statistics/CostQuery',
           },
 
+          {
+            path: '/Statistics/ReportPriceMakingQuery',
+            name: 'ReportPriceMakingQuery',
+            component: './Statistics/ReportPriceMakingQuery',
+          },
+
 
 
         ],

@@ -1,34 +1,36 @@
-import {getAllCost} from '@/services/Cost'
+import {selectCostByConditions} from '@/services/Cost'
 
 
 
 export default {
   namespace: 'cost',
   state: {
-    getAllCostResult:[],
+    selectCostByConditionsResult:[]
   },
 
   effects: {
-    *getAllCost({ payload,callback }, { call, put }) {
-      const response = yield call(getAllCost, payload);
-      yield put({
-        type: 'getAllCostResult',
-        payload: response,
-      });
-      if (callback) callback(response.data);
-    },
 
+
+    *selectCostByConditions({ payload,callback}, { call, put}){
+      const response = yield call(selectCostByConditions, payload);
+      yield put({
+          type: 'selectCostByConditionsResult',
+          payload: response
+        }
+      );
+      if(callback) callback(response.data);
+    },
 
   },
 
   reducers: {
-    getAllCostResult(state, { payload }) {
+
+    selectCostByConditionsResult(state, { payload }){
       return {
         ...state,
-        getAllCostResult: payload.data,
+        selectCostByConditionsResult: payload.data,
       };
     },
-
 
   },
 };

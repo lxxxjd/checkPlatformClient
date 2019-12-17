@@ -144,5 +144,6 @@ export default {
 
   'menu.Statistics':'数据统计',
   'menu.Statistics.CostQuery':'成本统计',
+  'menu.Statistics.ReportPriceMakingQuery':'利润分析',
 
 };
