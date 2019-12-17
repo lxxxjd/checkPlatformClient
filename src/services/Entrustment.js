@@ -24,6 +24,9 @@ export async function submitApplication(params) {
   	},
 	});
 }
+
+
+
 export async function updateReport(params) {
   console.log(params);
   if(params.certstyle !== null && params.certstyle !== undefined){
@@ -92,9 +95,9 @@ export async function getContacts(params) {
 }
 export async function getAllClientName(params) {
   if(params.content != null){
-    return request(`/api/client/getAllClientName?content=${params.content}`);
+    return request(`/api/contact/getAllContacts?content=${params.content}`);
   }
-  return request('/api/client/getAllClientName');
+  return request('/api/contact/getAllContacts');
 }
 
 export async function getAllBusinessSort() {

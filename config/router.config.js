@@ -107,6 +107,11 @@ export default [
             component: './Entrustment/EntrustmentRelevance',
           },
           {
+            path: '/Entrustment/AcceptList',
+            name: 'AcceptList',
+            component: './Entrustment/AcceptList',
+          },
+          {
             path: '/Entrustment/DetailForSub',
             name: 'DetailForSub',
             component: './Entrustment/DetailForSub',
@@ -119,9 +124,27 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
+            path: '/Entrustment/ModifyRelevance',
+            name: 'ModifyRelevance',
+            component: './Entrustment/ModifyRelevance',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
             path: '/Entrustment/EntrustmentRecord',
             name: 'EntrustmentRecord',
             component: './Entrustment/EntrustmentRecord',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: '/Entrustment/DetailForUnAccept',
+            name: 'DetailForUnAccept',
+            component: './Entrustment/DetailForUnAccept',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: '/Entrustment/Accept',
+            name: 'Accept',
+            component: './Entrustment/Accept',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
@@ -426,17 +449,83 @@ export default [
             component: './Certificate/CertificateUploadDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
           {
-            path: '/Certificate/CertificateFinal',
-            name: 'CertificateFinal',
-            component: './Certificate/CertificateFinal',
+            path: '/Certificate/CertificateReview',
+            name: 'CertificateReview',
+            component: './Certificate/CertificateReview',
           },
           {
-            path: '/Certificate/CertificateFinalDetail',
-            name: 'CertificateFinalDetail',
-            component: './Certificate/CertificateFinalDetail',
+            path: '/Certificate/CertificateReviewDetail',
+            name: 'CertificateReviewDetail',
+            component: './Certificate/CertificateReviewDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
+          {
+            path: '/Certificate/CertificateMake',
+            name: 'CertificateMake',
+            component: './Certificate/CertificateMake',
+          },
+          {
+            path: '/Certificate/CertificateMakeDetail',
+            name: 'CertificateMakeDetail',
+            component: './Certificate/CertificateMakeDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Certificate/CertificateSeal',
+            name: 'CertificateSeal',
+            component: './Certificate/CertificateSeal',
+          },
+          {
+            path: '/Certificate/CertificateSealDetail',
+            name: 'CertificateSealDetail',
+            component: './Certificate/CertificateSealDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Certificate/CertificateFinished',
+            name: 'CertificateFinished',
+            component: './Certificate/CertificateFinished',
+          },
+
+          {
+            path: '/Certificate/CertificateFinishedDetail',
+            name: 'CertificateFinishedDetail',
+            component: './Certificate/CertificateFinishedDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Certificate/CertificatePublish',
+            name: 'CertificatePublish',
+            component: './Certificate/CertificatePublish',
+          },
+
+          {
+            path: '/Certificate/CertificatePublishDetail',
+            name: 'CertificatePublishDetail',
+            component: './Certificate/CertificatePublishDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Certificate/CertificateAbandon',
+            name: 'CertificateAbandon',
+            component: './Certificate/CertificateAbandon',
+          },
+
+          {
+            path: '/Certificate/CertificateAbandonDetail',
+            name: 'CertificateAbandonDetail',
+            component: './Certificate/CertificateAbandonDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+
         ],
       },
 

@@ -25,6 +25,18 @@ export async function uploadCertFile(params) {
     data:params,
   });
 }
+
+
+export async function uploadCertFilePdf(params) {
+  return request(`/api/cert_report/uploadCertFilePdf`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+
+
 export async function signCertFile(params) {
     return request(`/api/cert_report/signCertFile`,{
     method: 'POST',
@@ -32,6 +44,14 @@ export async function signCertFile(params) {
     data:params,
   });
 }
+
+export async function publishCert(params) {
+  return request(`/api/cert_report/publish_cert`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
 
 export async function reviewCertFile(params) {
     return request(`/api/cert_report/reviewCertFile`,{
@@ -48,6 +68,16 @@ export async function sealCertFile(params) {
     data:params,
   });
 }
+
+export async function makeCertFile(params) {
+  return request(`/api/cert_report/makeCertFile`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+
 
 export async function deleteCertFile(params) {
     return request(`/api/cert_report/deleteCertFile?keyno=${params.keyno}`);
@@ -171,6 +201,15 @@ export async function convertWordToPdf(params) {
   });
 }
 
+export async function getAllUserListByCertCode(params) {
+  return request('/api/user/getAllUserListByCertCode', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 
 
 export async function getSignature(params) {
@@ -179,9 +218,39 @@ export async function getSignature(params) {
 
 
 
+export async function undoCert(params) {
+  return request(`/api/cert_report/undo_cert?keyno=${params.keyno}`);
+}
+
+
 
 export async function getMainInfo(params) {
   return request(`/api/mainReport/getmainInfo?reportno=${params.reportno}`);
 }
+
+
+export async function downloadQualityTemp(params) {
+  return request('/api/template/download_quality_temp', {
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+export async function applyAbandon(params) {
+  return request('/api/cert_report/apply_abandon', {
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+export async function abandonCert(params) {
+  return request('/api/cert_report/abandon_cert', {
+    method: 'POST',
+    data:params,
+  });
+}
+
 
 

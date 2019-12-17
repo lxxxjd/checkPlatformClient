@@ -1,10 +1,13 @@
 import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPath,
   getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,
-  getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,getMainInfo,convertWordToPdf} from '@/services/Certificate'
+  getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,
+  getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,
+  makeCertFile,downloadQualityTemp,uploadCertFilePdf,publishCert,applyAbandon,abandonCert} from '@/services/Certificate'
 
 import {getOssPdf,getModelSelectName} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
-
+import {getSampleRegistersByReportNo  } from '@/services/Sample'
+import {getAllReadRecords  } from '@/services/ReadRecord'
 
 
 export default {
@@ -29,9 +32,78 @@ export default {
     getMainInfoResult:{},
     convertWortToPdfResult:{},
     getModelSelectNameResult:{},
+    getAllUserListByCertCodeResult:{},
+    undoCertResult:{},
+    makeCertFileResult:{},
+    downloadQualityTempResult:{},
+    publishCertResult:{},
+    getAllReadRecordsResult:{},
+    applyAbandonResult:{},
+    abandonCertResult:{},
   },
 
   effects: {
+
+
+    *abandonCert({ payload,callback }, { call, put }) {
+      const response = yield call(abandonCert, payload);
+      yield put({
+        type: 'abandonCertResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *applyAbandon({ payload,callback }, { call, put }) {
+      const response = yield call(applyAbandon, payload);
+      yield put({
+        type: 'applyAbandonResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+    *getAllReadRecords({ payload,callback }, { call, put }) {
+      const response = yield call(getAllReadRecords, payload);
+      yield put({
+        type: 'getAllReadRecordsResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+    *makeCertFile({ payload,callback }, { call, put }) {
+      const response = yield call(makeCertFile, payload);
+      yield put({
+        type: 'makeCertFileResult',
+        payload: response,
+      });
+      if (callback) callback(response);
+    },
+
+    *undoCert({ payload,callback }, { call, put }) {
+      const response = yield call(undoCert, payload);
+      yield put({
+        type: 'undoCertResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
+
+
+    *getAllUserListByCertCode({ payload,callback }, { call, put }) {
+      const response = yield call(getAllUserListByCertCode, payload);
+      yield put({
+        type: 'getAllUserListByCertCodeResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
     *convertWordToPdf({ payload,callback }, { call, put }) {
       const response = yield call(convertWordToPdf, payload);
       yield put({
@@ -61,6 +133,22 @@ export default {
       const response = yield call(uploadCertFile, payload);
       if (callback) callback(response);
     },
+    *uploadCertFilePdf({ payload,callback }, { call, put }) {
+      const response = yield call(uploadCertFilePdf, payload);
+      if (callback) callback(response);
+    },
+
+
+    *publishCert({ payload,callback }, { call, put }) {
+      const response = yield call(publishCert, payload);
+      yield put({
+        type: 'publishCertResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+
     *deleteCertFile({ payload,callback }, { call, put }) {
       const response = yield call(deleteCertFile, payload);
       if (callback) callback(response);
@@ -125,6 +213,23 @@ export default {
       if (callback) callback(response);
     },
 
+    *getSampleRegistersByReportNo({ payload,callback }, { call, put }) {
+      const response = yield call(getSampleRegistersByReportNo, payload);
+      yield put({
+        type: 'getByReportNo',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
+    *downloadQualityTemp({ payload,callback }, { call, put }) {
+      const response = yield call(downloadQualityTemp, payload);
+      yield put({
+        type: 'downloadQualityTempResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
 
 
     *getCheckResultFetch({ payload,callback }, { call, put }) {
@@ -305,6 +410,69 @@ export default {
         getModelSelectNameResult: payload.data,
       };
     },
+
+    getAllUserListByCertCodeResult(state, { payload }) {
+      return {
+        ...state,
+        getAllUserListByCertCodeResult: payload.data,
+      };
+    },
+
+    undoCertResult(state, { payload }) {
+      return {
+        ...state,
+        undoCertResult: payload.data,
+      };
+    },
+
+
+    makeCertFileResult(state, { payload }) {
+      return {
+        ...state,
+        makeCertFileResult: payload,
+      };
+    },
+
+
+    downloadQualityTempResult(state, { payload }) {
+      return {
+        ...state,
+        downloadQualityTempResult: payload.data,
+      };
+    },
+
+
+    publishCertResult(state, { payload }) {
+      return {
+        ...state,
+        publishCertResult: payload.data,
+      };
+    },
+
+    getAllReadRecordsResult(state, { payload }) {
+      return {
+        ...state,
+        getAllReadRecordsResult: payload.data,
+      };
+    },
+
+    applyAbandonResult(state, { payload }) {
+      return {
+        ...state,
+        applyAbandonResult: payload.data,
+      };
+    },
+
+
+    abandonCertResult(state, { payload }) {
+      return {
+        ...state,
+        abandonCertResult: payload.data,
+      };
+    },
+
+
+
 
   },
 };
