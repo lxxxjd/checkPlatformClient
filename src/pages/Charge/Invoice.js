@@ -20,18 +20,18 @@ const { Option } = Select;
 
 // 开具发票组件
 const CreateInvoiceForm = Form.create()(props => {
-  const { modalVisible, form, handleModalVisible,invoiceData,dispatch,init} = props;
+  const { modalVisible, form, handleModalVisible,invoiceData,dispatch,init,invoiceTitlesOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       let values = invoiceData;
-      if(values.invoiceStatus.trim() ==="已审核" || values.invoiceStatus.trim() ==='发票作废'){
+      if(values.paystatus.trim() ==="审核通过" || values.paystatus.trim() ==='发票作废'){
         values.invoiceTitle= fieldsValue.invoiceTitle;
         values.invoicesort= fieldsValue.invoicesort;
         values.invoiceno= fieldsValue.invoiceno;
         values.payway= fieldsValue.payway;
         values.invoiceDate= fieldsValue.invoiceDate;
-        values.invoiceStatus ='已开票';
+        values.paystatus ='发票开具';
         dispatch({
           type: 'charge/passListFictionFetch',
           payload:values,
@@ -69,7 +69,7 @@ const CreateInvoiceForm = Form.create()(props => {
             rules: [{ required: true,message: '选择到账账户！'}],
           })(
             <Select placeholder="请选择到账账户">
-              <Option value="到账账户1">到账账户1.</Option>
+              {invoiceTitlesOptions}
             </Select>
           )}
         </Form.Item>
@@ -123,7 +123,7 @@ const DestoryInvoiceForm = (props => {
   const { destoryInvoiceVisble, handleDestoryModalVisible,invoiceData,dispatch,init} = props;
   const okHandle = () => {
     let values = invoiceData;
-    values.invoiceStatus ='发票作废';
+    values.paystatus ='发票作废';
     dispatch({
       type: 'charge/passListFictionFetch',
       payload:values,
@@ -171,6 +171,7 @@ class Invoice extends PureComponent {
     modalVisible: false,
     destoryInvoiceVisble:false,
     invoiceData :{},
+    invoiceTitles:[],
   };
 
 
@@ -208,14 +209,14 @@ class Invoice extends PureComponent {
     },
     {
       title: '状态',
-      dataIndex: 'invoiceStatus',
+      dataIndex: 'paystatus',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.invoiceStatus==="已审核"||text.invoiceStatus==="发票作废"?[<a onClick={() => this.handleCreateInvoice(text, record)}>开具&nbsp;&nbsp;</a>]:[]}
-          {text.invoiceStatus==='已退款'?[<a onClick={() => this.handleDestoryInvoice(text, record)}>作废&nbsp;&nbsp;</a>]:[]}
+          {text.paystatus==="审核通过"||text.paystatus==="发票作废"?[<a onClick={() => this.handleCreateInvoice(text, record)}>开具&nbsp;&nbsp;</a>]:[]}
+          {text.paystatus==='已退款'?[<a onClick={() => this.handleDestoryInvoice(text, record)}>作废&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>查看</a>
           &nbsp;&nbsp;
         </Fragment>
@@ -245,7 +246,7 @@ class Invoice extends PureComponent {
         certCode:user.certCode
       }
     });
-  }
+  };
 
 
   handleSearch = e => {
@@ -276,11 +277,30 @@ class Invoice extends PureComponent {
 
 
   handleCreateInvoice=(text ,flag)=>{
-    if(text.invoiceStatus!==null && text.invoiceStatus!==undefined){
-      if(text.invoiceStatus.trim() ==="已审核" || text.invoiceStatus.trim() ==='发票作废'){
+    if(text.paystatus!==null && text.paystatus!==undefined){
+      if(text.paystatus.trim() ==="审核通过" || text.paystatus.trim() ==='发票作废'){
         this.handleModalVisible(flag);
         this.setState({
           invoiceData:text,
+        });
+        const {dispatch} = this.props;
+        const user = JSON.parse(localStorage.getItem("userinfo"));
+        const values = {
+          certCode:user.certCode,
+        };
+        dispatch({
+          type: 'charge/getInvoiceTitleList',
+          payload:values,
+          callback: (response) => {
+            console.log(response);
+            if(response) {
+              this.setState({
+                invoiceTitles: response,
+              });
+            }else{
+              message.success('请配置到账账户');
+            }
+          }
         });
       }else{
         message.success("开具发票状态失败");
@@ -288,12 +308,12 @@ class Invoice extends PureComponent {
     }else{
       message.success("开具发票状态失败");
     }
-  }
+  };
 
   handleDestoryInvoice=(text ,flag)=>{
-    if(text.invoiceStatus!==null && text.invoiceStatus!==undefined){
-      if(text.invoiceStatus!==null && text.invoiceStatus!==undefined && text.invoiceStatus.trim() ==="已到账"){
-        message.success("发票状态已到账,不能作废");
+    if(text.paystatus!==null && text.paystatus!==undefined){
+      if(text.paystatus!==undefined &&  text.paystatus!==null && text.paystatus.trim() ==="收讫"){
+        message.success("发票状态收讫,不能作废");
       }else if(text.invoiceDate ===null ){
         message.success("未开票,不能作废");
       }else{
@@ -305,7 +325,7 @@ class Invoice extends PureComponent {
     }else{
       message.success("未开票,不能作废");
     }
-  }
+  };
 
   // 处理发票开具 显示模态框
   handleModalVisible = (flag) => {
@@ -341,7 +361,7 @@ class Invoice extends PureComponent {
                   <Option value="listman">拟制人</Option>
                   <Option value="payer">付款人</Option>
                   <Option value="invoiceno">发票号码</Option>
-                  <Option value="invoiceStatus">状态</Option>
+                  <Option value="paystatus">状态</Option>
                 </Select>
               )}
             </Form.Item>
@@ -378,7 +398,8 @@ class Invoice extends PureComponent {
     const parentMethods = {
       handleModalVisible: this.handleModalVisible,
     };
-    const { modalVisible,invoiceData,destoryInvoiceVisble} = this.state;
+    const { modalVisible,invoiceData,destoryInvoiceVisble,invoiceTitles} = this.state;
+    const invoiceTitlesOptions = invoiceTitles.map(d => <Option key={d.namec} value={d.namec}>{d.namec}</Option>);
 
     return (
       <PageHeaderWrapper title="发票开具">
@@ -395,7 +416,7 @@ class Invoice extends PureComponent {
             />
           </div>
         </Card>
-        <CreateInvoiceForm {...parentMethods} modalVisible={modalVisible} invoiceData={invoiceData} dispatch={dispatch} init={this.init} />
+        <CreateInvoiceForm {...parentMethods} modalVisible={modalVisible} invoiceData={invoiceData} invoiceTitlesOptions={invoiceTitlesOptions} dispatch={dispatch} init={this.init} />
         <DestoryInvoiceForm handleDestoryModalVisible={this.handleDestoryModalVisible} destoryInvoiceVisble={destoryInvoiceVisble} invoiceData={invoiceData} dispatch={dispatch} init={this.init} />
       </PageHeaderWrapper>
     );

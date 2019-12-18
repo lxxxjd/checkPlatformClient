@@ -26,7 +26,7 @@ const ArrivalInvoiceForm = Form.create()(props => {
       if (err) return;
       let values = invoiceData;
       values.paydate= fieldsValue.paydate;
-      values.invoiceStatus ='已到账';
+      values.paystatus ='收讫';
       dispatch({
         type: 'charge/passListFictionFetch',
         payload:values,
@@ -34,7 +34,7 @@ const ArrivalInvoiceForm = Form.create()(props => {
           if(response==="success"){
             message.success("到账成功");
           }else{
-            message.success('到账失败');
+            message.error('到账失败');
           }
         }
       });
@@ -81,7 +81,7 @@ const RefundInvoiceForm = Form.create()(props => {
       if (err) return;
       let values = invoiceData;
       values.paydate= fieldsValue.paydate;
-      values.invoiceStatus ='已退款';
+      values.paystatus ='已退款';
       dispatch({
         type: 'charge/passListFictionFetch',
         payload:values,
@@ -188,14 +188,14 @@ class ListPay extends PureComponent {
     },
     {
       title: '状态',
-      dataIndex: 'invoiceStatus',
+      dataIndex: 'paystatus',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {(text.invoiceStatus==="已开"||text.invoiceStatus==="已开票") ?[<a onClick={() => this.handleArrivalInvoice(text, record)}>到账&nbsp;&nbsp;</a>]:[]}
-          {(text.invoiceStatus==="已到账") ?[<a onClick={() => this.handleRefundInvoice(text, record)}>退款&nbsp;&nbsp;</a>]:[]}
+          {(text.paystatus==="发票开具") ?[<a onClick={() => this.handleArrivalInvoice(text, record)}>到账&nbsp;&nbsp;</a>]:[]}
+          {(text.paystatus==="收讫") ?[<a onClick={() => this.handleRefundInvoice(text, record)}>退款&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>查看</a> &nbsp;&nbsp;
         </Fragment>
       ),
@@ -224,14 +224,13 @@ class ListPay extends PureComponent {
         certCode:user.certCode
       }
     });
-  }
+  };
 
 
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
@@ -256,33 +255,33 @@ class ListPay extends PureComponent {
 
   // 处理到账 显示模态框
   handleArrivalInvoice=(text ,flag)=>{
-    if(text.invoiceStatus!==null && text.invoiceStatus!==undefined){
-      if(text.invoiceStatus.trim() ==="已开" || text.invoiceStatus.trim() ==='已开票'){
+    if(  text.paystatus!==undefined &&  text.paystatus!==null){
+      if(text.paystatus === "发票开具" ){
         this.handleArriveModalVisible(flag);
         this.setState({
           invoiceData:text,
         });
       }else{
-        message.success("到账失败，开票状态才能到账！");
+        message.error("到账失败，开票状态才能到账！");
       }
     }else{
-      message.success("到账失败，开票状态才能到账！");
+      message.error("到账失败，开票状态才能到账！");
     }
-  }
+  };
 
   // 处理退款 显示模态框
   handleRefundInvoice=(text ,flag)=>{
-    if(text.invoiceStatus!==null && text.invoiceStatus!==undefined){
-      if(text.invoiceStatus.trim() ==="已到账"){
+    if(text.paystatus!==null && text.paystatus!==undefined){
+      if(text.paystatus ==="收讫"){
         this.handleRefundModalVisible(flag);
         this.setState({
           invoiceData:text,
         });
       }else{
-        message.success("退款失败，到账状态才能退款");
+        message.error("退款失败，收讫状态才能退款");
       }
     }else{
-      message.success("退款失败，到账状态才能退款");
+      message.error("退款失败，收讫状态才能退款");
     }
 
   }
@@ -321,7 +320,7 @@ class ListPay extends PureComponent {
                   <Option value="listman">拟制人</Option>
                   <Option value="payer">付款人</Option>
                   <Option value="invoiceno">发票号码</Option>
-                  <Option value="invoiceStatus">状态</Option>
+                  <Option value="paystatus">状态</Option>
                 </Select>
               )}
             </Form.Item>

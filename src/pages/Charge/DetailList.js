@@ -87,10 +87,18 @@ class DetailList extends PureComponent {
 
   // eslint-disable-next-line no-shadow
   initData=(val,message)=>{
-    if(val!==null){
-      return  <span>{message}:{ moment(val).format('YYYY-MM-DD')}</span>;
+    if(val!==undefined && val!==null){
+      return  <span>{message}: &nbsp;{ moment(val).format('YYYY-MM-DD')}</span>;
     }
-    return  <span> </span>;
+    return  <span> {message}:</span>;
+  };
+
+  // eslint-disable-next-line no-shadow
+  initStringData=(val,message)=>{
+    if(val!==undefined &&  val !==null){
+      return  <span>{message}: &nbsp;{val}</span>;
+    }
+    return  <span> {message}:</span>;
   };
 
 
@@ -124,7 +132,7 @@ class DetailList extends PureComponent {
               <span> 付款人：{list.payer} </span>
             </Col>
             <Col sm={5}>
-              {this.initData(list.listdate,'拟制日期')}
+              <span level={4}> 金额：{list.total} </span>
             </Col>
           </Row>
           <Row className={styles.card2}>
@@ -132,13 +140,28 @@ class DetailList extends PureComponent {
               <span> 状态：{list.paystatus} </span>
             </Col>
             <Col sm={5}>
-              <span level={4}> 金额：{list.total} </span>
+              {this.initData(list.listdate,'拟制日期')}
             </Col>
             <Col sm={5}>
               {this.initData(list.invoiceDate,'开票日期')}
             </Col>
             <Col sm={5}>
               {this.initData(list.paydate,'到账/退账日期')}
+            </Col>
+          </Row>
+
+          <Row className={styles.card2}>
+            <Col sm={5}>
+              {this.initStringData(list.invoiceTitle,'到账账户')}
+            </Col>
+            <Col sm={5}>
+              {this.initStringData(list.invoicesort,'发票类型')}
+            </Col>
+            <Col sm={5}>
+              {this.initStringData(list.invoiceno,'发票号码')}
+            </Col>
+            <Col sm={5}>
+              {this.initStringData(list.payway,'付款方式')}
             </Col>
           </Row>
           <div className={styles.tableList}>
