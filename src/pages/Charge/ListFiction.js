@@ -51,13 +51,13 @@ class ListFiction extends PureComponent {
     },
     {
       title: '状态',
-      dataIndex: 'invoiceStatus',
+      dataIndex: 'paystatus',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {(record.invoiceStatus==='未审核'||text.invoiceStatus==='已退回')?[ <span><a onClick={() => this.deleteBylistno(text, record)}>删除</a></span>]:null}
+          {(record.paystatus==='未审核'||text.paystatus==='审核退回')?[ <span><a onClick={() => this.deleteBylistno(text, record)}>删除</a></span>]:null}
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text)}>查看</a>
         </Fragment>

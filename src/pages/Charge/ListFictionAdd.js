@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table, DatePicker, message, Icon, Switch,Radio
+  Table, DatePicker, message, Icon, Switch, Radio, Modal,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -19,6 +19,67 @@ import queryStyles from '../SampleRegister/SampleQuery.less';
 const {  RangePicker } = DatePicker;
 const { Option } = Select;
 const dateFormat = 'YYYY/MM/DD';
+
+
+
+// 拟制清单
+const AddListFrom = Form.create()(props =>  {
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err){
+        return;
+      }
+      handleFormAddList(fieldsValue);
+      form.resetFields();
+      handleAddListVisible();
+    });
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="拟制清单"
+      visible={modalAddListVisible}
+      style={{ top: 100 }}
+      width={500}
+      onCancel={() => handleAddListVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleAddListVisible()}>
+          关闭
+        </Button>,
+        <Button type="primary" onClick={() => okHandle()}>
+          确认拟制
+        </Button>
+      ]}
+    >
+      <Form>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="总金额：">
+          {form.getFieldDecorator('money', {
+            initialValue:{total},
+            rules: [{ required: true}],
+          })(<label>{total}</label>)}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="清单号：">
+          {form.getFieldDecorator('listno', {
+            rules: [{ required: true,message: '请输入清单号'}],
+          })(<Input placeholder="请输入清单号" />)}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="审核人：">
+          {form.getFieldDecorator('reviewer', {
+            rules: [{ required: true,message: '请选择审核人'}],
+          })(
+            <Select placeholder="请选择审核人">
+              <Option value="徐佳待"> 徐佳待</Option>
+            </Select>)
+          }
+        </Form.Item>
+      </Form>
+
+    </Modal>
+  );
+});
+
 
 let id = 0;
 // eslint-disable-next-line no-class-assign,react/no-multi-comp
@@ -29,9 +90,10 @@ let id = 0;
 }))
 class ListFictionAdd extends PureComponent {
   state = {
-    selectedRowKeys: [],
     priceMaking:[],
-    allReporterName: [],
+    modalAddListVisible:false,
+    payer:undefined,
+    total:0,
   };
 
   columns = [
@@ -150,37 +212,43 @@ class ListFictionAdd extends PureComponent {
 
 
   handleSubmit = () => {
-    const { dispatch, form } = this.props;
     const {state} = this;
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      let priceMakingSelect=[];
-      // eslint-disable-next-line no-restricted-syntax
-      for( const i of state.selectedRowKeys){
-        let itemPrice = state.priceMaking.find(item => item.reportno === i );
-        if(itemPrice) {
-          priceMakingSelect.push(itemPrice);
+    let total = 0;
+    for(let j = 0,len = state.priceMaking.length; j < len; j++){
+      if(state.priceMaking[j].status ==="未定价"){
+        message.error('存在未定价的条目，请定价完重试');
+        return;
+      }
+      if(state.priceMaking[j].payer!==undefined){
+        state.payer = state.priceMaking[j].payer;
+      }
+      total += parseFloat(state.priceMaking[j].total);
+    }
+    this.state.total = total;
+    this.handleAddListVisible(true);
+  };
+
+  handleFormAddList =(fieldvalues)=>{
+    const {dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const values={
+      certcode:user.certCode,
+      reviewer:fieldvalues.reviewer,
+      listman:user.nameC,
+      priceMakings:this.state.priceMaking,
+      listno:fieldvalues.listno,
+      payer:this.state.payer,
+    };
+    dispatch({
+      type: 'charge/addListFetch',
+      payload: values,
+      callback: (response) => {
+        if (response === "success") {
+          message.success('清单添加成功');
+        } else {
+          message.error('清单添加失败');
         }
       }
-      const values = {
-        ...fieldsValue,
-        priceMakings:priceMakingSelect,
-        certcode:user.certCode,
-        listman:user.userName,
-      };
-      dispatch({
-        type: 'charge/addListFetch',
-        payload:values,
-        callback: (response) => {
-          console.log(response);
-          if(response==="success"){
-            message.success('添加成功');
-          }else{
-            message.success('清单号已存在，添加失败');
-          }
-        }
-      });
     });
   };
 
@@ -196,7 +264,62 @@ class ListFictionAdd extends PureComponent {
     const {state} = this;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      console.log(fieldsValue);
+
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      let mkinds=[];
+      let mvalues=[];
+      let mconditions=[];
+
+      if(fieldsValue.payer !==undefined && fieldsValue.payer !==""){
+        mkinds.push('payer');
+        mvalues.push(fieldsValue.payer);
+        mconditions.push('like');
+      }
+
+      if(fieldsValue.reportdate !==undefined && fieldsValue.reportdate.length!==0){
+        mkinds.push('reportdate');
+        mvalues.push(fieldsValue.reportdate[0].format('YYYY-MM-DD'));
+        mconditions.push('>=');
+
+        mkinds.push('reportdate');
+        mvalues.push(fieldsValue.reportdate[1].format('YYYY-MM-DD'));
+        mconditions.push('<=');
+      }
+
+      const keys = form.getFieldValue('keys');
+      for(let key in keys){
+        let k = keys[key];
+        console.log(k);
+        const kind = form.getFieldValue(`kinds${k}`);
+        const condition = form.getFieldValue(`conditions${k}`);
+        const value = form.getFieldValue(`values${k}`);
+        const checkk = form.getFieldValue(`check${k}`);
+        if( checkk ===true &&  kind!==undefined &&value !==undefined &&condition !== undefined ){
+          mkinds.push(kind );
+          mvalues.push(value);
+          mconditions.push(condition);
+        }
+      }
+      const params = {
+        kinds :mkinds,
+        values: mvalues,
+        conditions:mconditions,
+        status:fieldsValue.status,
+        certCode:user.certCode,
+      };
+      dispatch({
+        type: 'charge/getReportsFetch',
+        payload: params,
+        callback: (response) => {
+          if(response){
+            this.state.priceMaking = response;
+            message.success('查询成功');
+          }else{
+            message.error('查询失败');
+          }
+        }
+      });
+
     });
   };
 
@@ -245,9 +368,9 @@ class ListFictionAdd extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('reportdate', {
+
               })(
                 <RangePicker
-                  defaultValue={[moment('1960/10/1', dateFormat), moment('2019/10/10', dateFormat)]}
                   format={dateFormat}
                 />
               )}
@@ -259,8 +382,10 @@ class ListFictionAdd extends PureComponent {
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
             >
-              {getFieldDecorator('status',{rules: [{ message: '请输入' }],})(
-                <Radio.Group defaultValue="全部" buttonStyle="solid">
+              {getFieldDecorator('status',{rules: [{ message: '请输入' }],
+                initialValue :"全部"
+              })(
+                <Radio.Group buttonStyle="solid">
                   <Radio.Button value="全部">全部</Radio.Button>
                   <Radio.Button value="未定价">未定价</Radio.Button>
                   <Radio.Button value="已定价未拟制">已定价未拟制</Radio.Button>
@@ -339,15 +464,27 @@ class ListFictionAdd extends PureComponent {
     });
   };
 
+  handleAddListVisible = (flag) => {
+    this.setState({
+      modalAddListVisible: !!flag,
+    });
+  };
+
 
 
   render(){
     const {
-      charge:{reports},
       loading,
     } = this.props;
 
-    const {priceMaking} = this.state;
+    const {priceMaking,modalAddListVisible,total,payer} = this.state;
+
+    // 下载模板 模态框方法
+    const parentMethods = {
+      handleAddListVisible:this.handleAddListVisible,
+      handleFormAddList:this.handleFormAddList,
+    };
+
     const { getFieldDecorator, getFieldValue } = this.props.form;
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
@@ -367,7 +504,7 @@ class ListFictionAdd extends PureComponent {
               initialValue: true,
               valuePropName: 'checked',
             })(
-              <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked />
+              <Switch checkedChildren="开" unCheckedChildren="关" />
             )}
           </Form.Item>
         </Col>
@@ -382,8 +519,17 @@ class ListFictionAdd extends PureComponent {
             })(
               <Select placeholder="选择字段">
                 <Option value="reportno"> 委托编号</Option>
+                <Option value="reportno20"> 自编号</Option>
                 <Option value="shipname">船名标识</Option>
+                <Option value="applicant">申请人</Option>
+                <Option value="agent">代理人</Option>
                 <Option value="cargoname">检查品名</Option>
+                <Option value="businesssort">业务分类</Option>
+                <Option value="businesssource">业务来源</Option>
+                <Option value="tradeway">贸易方式</Option>
+                <Option value="cargosort">货物种类</Option>
+                <Option value="inspway">检查项目</Option>
+                <Option value="section">执行部门</Option>
               </Select>
             )}
           </Form.Item>
@@ -427,6 +573,7 @@ class ListFictionAdd extends PureComponent {
             <Form onSubmit={this.handleSubmit}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
+              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} />
             </Form>
             <Table
               style={{marginTop:5}}

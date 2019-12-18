@@ -471,7 +471,7 @@ class CertificateAbandon extends PureComponent {
     const {modalReadRecordVisible,ReadRecordData,modalApplyAbandonVisible,modalAbandonVisible,}  = this.state;
 
 
-    // 下载模板 模态框方法
+    // 模态框方法
     const parentMethods = {
       handleModalReadRecordVisible :this.handleModalReadRecordVisible,
       handleApplyAbandonVisible:this.handleApplyAbandonVisible,

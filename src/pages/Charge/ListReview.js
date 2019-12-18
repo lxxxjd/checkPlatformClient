@@ -51,13 +51,15 @@ class ListReview extends PureComponent {
     },
     {
       title: '状态',
-      dataIndex: 'invoiceStatus',
+      dataIndex: 'paystatus',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.invoiceStatus==="未审核"||text.invoiceStatus==="已退回"?[<a onClick={() => this.toListFictionReview(text, record)}>审核&nbsp;&nbsp;</a>]:[]}
+          {text.paystatus==="未审核"||text.paystatus==="审核退回"?[<a onClick={() => this.toListFictionReview(text, record)}>审核&nbsp;&nbsp;</a>]:[]}
+          &nbsp;&nbsp;
+          {text.paystatus==="审核通过"||text.paystatus==="发票作废"?[<a onClick={() => this.toListFictionReviewBack(text, record)}>退回&nbsp;&nbsp;</a>]:[]}
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>查看</a>
           &nbsp;&nbsp;
@@ -106,6 +108,13 @@ class ListReview extends PureComponent {
     localStorage.setItem('listListFictionReview',JSON.stringify(text));
     router.push({
       pathname:'/Charge/ListFictionReview',
+    });
+  };
+
+  toListFictionReviewBack = text => {
+    localStorage.setItem('listListFictionReviewBack',JSON.stringify(text));
+    router.push({
+      pathname:'/Charge/ListFictionReviewBack',
     });
   };
 

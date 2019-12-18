@@ -13,9 +13,11 @@ import {
   Table, DatePicker, message, Icon, Modal,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './DetailList.less';
+import styles from './ListFictionReview.less';
 
 const { Option } = Select;
+
+
 
 
 
@@ -27,7 +29,7 @@ const { Option } = Select;
   charge,
   loading: loading.models.charge,
 }))
-class DetailList extends PureComponent {
+class ListFictionReviewBack extends PureComponent {
   state = {
     list:{},
   };
@@ -60,11 +62,20 @@ class DetailList extends PureComponent {
     // },
     {
       title: '价格',
-      dataIndex: 'total',
+      dataIndex: 'price',
     },
     {
       title: '状态',
       dataIndex: 'status',
+    },
+    {
+      title: '操作',
+      render: (text, record) => (
+        <Fragment>
+          <a onClick={() => this.previewItem(text, record)}>委托详情</a>
+          &nbsp;&nbsp;
+        </Fragment>
+      ),
     },
   ];
 
@@ -74,7 +85,7 @@ class DetailList extends PureComponent {
 
   init =()=>{
     const { dispatch } = this.props;
-    const listView = JSON.parse(sessionStorage.getItem("reportnoForList"));
+    const listView = JSON.parse(localStorage.getItem("listListFictionReviewBack"));
     this.setState({list:listView});
     const values = {
       listno:listView.listno,
@@ -85,18 +96,51 @@ class DetailList extends PureComponent {
     });
   };
 
-  // eslint-disable-next-line no-shadow
-  initData=(val,message)=>{
-    if(val!==null){
-      return  <span>{message}:{ moment(val).format('YYYY-MM-DD')}</span>;
-    }
-    return  <span> </span>;
+  previewItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    router.push({
+      pathname:'/Entrustment/DetailForEntrustment',
+    });
+    localStorage.setItem('reportDetailNo',text.reportno);
   };
 
 
-  back = () =>{
-    this.props.history.goBack();
+
+
+  handlePass = () => {
+    this.handleReview('审核通过',"审核通过成功");
   };
+
+  handleReview  =(state,text) => {
+    const { dispatch} = this.props;
+    let  values = this.state.list;
+    values.paystatus=state;
+    dispatch({
+      type: 'charge/passListFictionFetch',
+      payload:values,
+      callback: (response) => {
+        if(response==="success"){
+          localStorage.setItem("listListFictionReviewBack",JSON.stringify(values));
+          this.state.list = values;
+          message.success(text);
+        }else{
+          message.success('操作失败');
+        }
+      }
+    });
+  };
+
+  handleNoPass = () => {
+    this.handleReview('审核退回',"审核退回成功");
+  };
+
+
+  back = () => {
+    router.push({
+      pathname:'/Charge/ListReview',
+    });
+  };
+
 
 
     render(){
@@ -105,11 +149,15 @@ class DetailList extends PureComponent {
       loading,
     } = this.props;
 
-    const {list} = this.state;
+
+
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
           <Row gutter={8}>
+            <Col span={2}>
+              <Button type="primary" onClick={this.handleNoPass} style={{ marginLeft: 1 }}>退回</Button>
+            </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 1  ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
                 <Icon type="left" />返回
@@ -118,27 +166,10 @@ class DetailList extends PureComponent {
           </Row>
           <Row className={styles.card}>
             <Col sm={5}>
-              <span level={4}> 清单编号：{list.listno} </span>
+              <span level={4}> 清单编号：{this.state.list.listno} </span>
             </Col>
-            <Col sm={10}>
-              <span> 付款人：{list.payer} </span>
-            </Col>
-            <Col sm={5}>
-              {this.initData(list.listdate,'拟制日期')}
-            </Col>
-          </Row>
-          <Row className={styles.card2}>
-            <Col sm={5}>
-              <span> 状态：{list.paystatus} </span>
-            </Col>
-            <Col sm={5}>
-              <span level={4}> 金额：{list.total} </span>
-            </Col>
-            <Col sm={5}>
-              {this.initData(list.invoiceDate,'开票日期')}
-            </Col>
-            <Col sm={5}>
-              {this.initData(list.paydate,'到账/退账日期')}
+            <Col sm={17}>
+              <span> 付款人：{this.state.list.payer} </span>
             </Col>
           </Row>
           <div className={styles.tableList}>
@@ -147,8 +178,7 @@ class DetailList extends PureComponent {
               dataSource={reportByListno}
               columns={this.columns}
               rowKey="reportno"
-              pagination={false}
-              // pagination={{showQuickJumper:true,showSizeChanger:true}}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
         </Card>
@@ -157,4 +187,4 @@ class DetailList extends PureComponent {
   }
 }
 
-export default DetailList;
+export default ListFictionReviewBack;

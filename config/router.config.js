@@ -397,6 +397,13 @@ export default [
           },
 
           {
+            path: '/Charge/ListFictionReviewBack',
+            name: 'ListFictionReviewBack',
+            component: './Charge/ListFictionReviewBack',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
             path: '/Charge/Invoice',
             name: 'Invoice',
             component: './Charge/Invoice',

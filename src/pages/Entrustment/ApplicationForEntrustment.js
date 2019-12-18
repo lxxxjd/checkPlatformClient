@@ -659,7 +659,7 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('payer', {
-                    //rules: [{required: true, message: '请输入付款人'}],
+                    rules: [{required: true, message: '请输入付款人'}],
                   })(
                     <Select
                       showSearch
