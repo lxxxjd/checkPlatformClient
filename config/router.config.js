@@ -686,6 +686,18 @@ export default [
         ],
       },
 
+      {
+        path: '/Main',
+        icon: 'profile',
+        name: 'Main',
+        routes: [
+          {
+            path: '/Main/Main',
+            name: 'Main',
+            component: './Main/Main',
+          },
+        ],
+      },
 
 
       {

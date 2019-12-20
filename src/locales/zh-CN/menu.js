@@ -142,6 +142,8 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
 
+  'menu.Main': '主页',
+  'menu.Main.Main': '主页',
 
   'menu.Statistics':'数据统计',
   'menu.Statistics.CostQuery':'成本统计',
