@@ -97,7 +97,7 @@ class Main extends PureComponent {
     dispatch({
       type: 'main/getReportNumDay',
       payload: {
-        certCode:user.certCode
+        certcode:user.certCode
       },
       callback: response =>{
         this.setState({reportNum:response.data});
@@ -106,7 +106,7 @@ class Main extends PureComponent {
     dispatch({
       type: 'main/getBillTotalDay',
       payload: {
-        certCode:user.certCode
+        certcode:user.certCode
       },
       callback: response =>{
         this.setState({dayDillTotal:response.data});
@@ -115,7 +115,7 @@ class Main extends PureComponent {
     dispatch({
       type: 'main/getBillTotalMonth',
       payload: {
-        certCode:user.certCode
+        certcode:user.certCode
       },
       callback: response =>{
         this.setState({mouthBillTotal:response.data});
@@ -124,7 +124,7 @@ class Main extends PureComponent {
     dispatch({
       type: 'main/getBillTotalYear',
       payload: {
-        certCode:user.certCode
+        certcode:user.certCode
       },
       callback: response =>{
         this.setState({yearBillTotal:response.data});
@@ -133,7 +133,7 @@ class Main extends PureComponent {
     dispatch({
       type: 'main/getPayTotalYear',
       payload: {
-        certCode:user.certCode
+        certcode:user.certCode
       },
       callback: response =>{
         this.setState({yearPayTotal:response.data});
@@ -197,7 +197,13 @@ class Main extends PureComponent {
     });
   };
 
-
+  transfor = value =>{
+    if(value > 1000000){
+      return (value / 100000).toFixed(2) +"万元"
+    }else{
+      return value + "元"
+    }
+  }
 
   render() {
     const {
@@ -210,30 +216,30 @@ class Main extends PureComponent {
           <Row gutter={16}>
             <Col span={6}>
               <Card size='small' bordered={false}>
-                <Text>今日开票{dayDillTotal}</Text>
+                <Text>今日开票{this.transfor(dayDillTotal)}</Text>
                 <br/>
                 <Text>今日委托{reportNum}</Text>  
               </Card>
             </Col>
             <Col span={6}>
               <Card size='small' bordered={false}>
-              {mouthBillTotal[0]>mouthBillTotal[1]?[<Text type="danger">今年本月开票{mouthBillTotal[0]}</Text>]:[<span style={{color:'#52c41a'}}>今年本月开票{mouthBillTotal[0]}</span>]}
+              {mouthBillTotal[0]>mouthBillTotal[1]?[<Text type="danger">今年本月开票{this.transfor(mouthBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年本月开票{this.transfor(mouthBillTotal[0])}</span>]}
                 <br/>
-                <Text>去年本月开票{mouthBillTotal[1]}</Text>    
+                <Text>去年本月开票{this.transfor(mouthBillTotal[1])}</Text>    
               </Card>
             </Col>
             <Col span={6}>
               <Card size='small' bordered={false}>
-              {yearBillTotal[0]>yearBillTotal[1]?[<Text type="danger">今年累计开票{yearBillTotal[0]}</Text>]:[<span style={{color:'#52c41a'}}>今年累计开票{yearBillTotal[0]}</span>]}
+              {yearBillTotal[0]>yearBillTotal[1]?[<Text type="danger">今年累计开票{this.transfor(yearBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计开票{this.transfor(yearBillTotal[0])}</span>]}
                 <br/>
-                <Text>去年累计开票{yearBillTotal[1]}</Text>             
+                <Text>去年累计开票{this.transfor(yearBillTotal[1])}</Text>             
               </Card>
             </Col>
             <Col span={6}>
               <Card size='small' bordered={false}>
-              {yearPayTotal[0]>yearPayTotal[1]?[<Text type="danger">今年累计到账{yearPayTotal[0]}</Text>]:[<span style={{color:'#52c41a'}}>今年累计到账{yearPayTotal[0]}</span>]}
+              {yearPayTotal[0]>yearPayTotal[1]?[<Text type="danger">今年累计到账{this.transfor(yearPayTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计到账{this.transfor(yearPayTotal[0])}</span>]}
                 <br/>
-                <Text>去年累计到账{yearPayTotal[1]}</Text>  
+                <Text>去年累计到账{this.transfor(yearPayTotal[1])}</Text>  
               </Card>
             </Col>          
           </Row>

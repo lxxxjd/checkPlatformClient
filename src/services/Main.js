@@ -2,23 +2,23 @@ import request from '@/utils/request';
 import { stringify } from 'qs';
 
 export async function getReportNumDay(params) {
-  return request(`/api/homepage/getReportNumDay`);
+  return request(`/api/homepage/getReportNumDay?certcode=${params.certcode}`);
 }
 
 export async function getBillTotalDay(params) {
-  return request(`/api/homepage/getBillTotalDay`);
+  return request(`/api/homepage/getBillTotalDay?certcode=${params.certcode}`);
 }
 
 export async function getBillTotalMonth(params) {
-  return request(`/api/homepage/getBillTotalMonth`);
+  return request(`/api/homepage/getBillTotalMonth?certcode=${params.certcode}`);
 }
 
 export async function getBillTotalYear(params) {
-  return request(`/api/homepage/getBillTotalYear`);
+  return request(`/api/homepage/getBillTotalYear?certcode=${params.certcode}`);
 }
 
 export async function getPayTotalYear(params) {
-  return request(`/api/homepage/getPayTotalYear`);
+  return request(`/api/homepage/getPayTotalYear?certcode=${params.certcode}`);
 }
 
 export async function getPerTask(params) {
