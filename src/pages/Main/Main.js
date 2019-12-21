@@ -148,11 +148,11 @@ class Main extends PureComponent {
         var temp = [];
         temp.push({
           'x':'去年',
-          'y':response.data[1],
+          'y':response.data[1]/10000,
         })
         temp.push({
           'x':'今年',
-          'y':response.data[0]
+          'y':response.data[0]/10000
         })
         this.setState({mouthBill:temp});
         this.setState({mouthBillTotal:response.data});
@@ -167,11 +167,11 @@ class Main extends PureComponent {
         var temp = [];
         temp.push({
           'x':'去年',
-          'y':response.data[1],
+          'y':response.data[1]/10000,
         })
         temp.push({
           'x':'今年',
-          'y':response.data[0]
+          'y':response.data[0]/10000
         })
         this.setState({yearBill:temp});
         this.setState({yearBillTotal:response.data});
@@ -186,11 +186,11 @@ class Main extends PureComponent {
         var temp = [];
         temp.push({
           'x':'去年',
-          'y':response.data[1],
+          'y':response.data[1]/10000,
         })
         temp.push({
           'x':'今年',
-          'y':response.data[0]
+          'y':response.data[0]/10000
         })
         this.setState({yearPay:temp});
         this.setState({yearPayTotal:response.data});
@@ -294,11 +294,7 @@ class Main extends PureComponent {
   };
 
   transfor = value =>{
-    if(value > 1000000){
-      return (value / 100000).toFixed(2) +"万元"
-    }else{
-      return value + "元"
-    }
+    return (value / 10000).toFixed(2) +"万元"
   }
 
   render() {
