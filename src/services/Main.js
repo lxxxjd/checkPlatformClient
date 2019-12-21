@@ -28,3 +28,7 @@ export async function getPerTask(params) {
 export async function getPerApprove(params) {
   return request(`/api/homepage/getPerApprove?approver=${params.approver}`);
 }
+
+export async function getTotalPay(params) {
+  return request(`/api/homepage/getTotalPay?username=${params.username}&certcode=${params.certcode}`);
+}

@@ -18,6 +18,7 @@ import {
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './style.less';
 import moment from 'moment';
+import { Bar } from '@/components/Charts';
 
 const { Text } = Typography;
 const FormItem = Form.Item;
@@ -28,8 +29,6 @@ const { Option } = Select;
   main,
   loading: loading.models.main,
 }))
-
-@Form.create()
 class Main extends PureComponent {
   state = {
     visible:false,
@@ -40,13 +39,17 @@ class Main extends PureComponent {
     yearBillTotal:[0,0],
     yearPayTotal:[0,0],
     perTask:[],
-    perApprove:[]
+    perApprove:[],
+    totalPay:[],
+    mouthBill:[],
+    yearBill:[],
+    yearPay:[],
   };
 
   columns = [
     {
       title: '委托编号',
-      dataIndex: 'applicant',
+      dataIndex: 'reportno',
     },
     {
       title: '检验日期',
@@ -66,26 +69,50 @@ class Main extends PureComponent {
     {
       title: '操作',
       render: (text, record) => (
-        <Fragment>
-          {text.overallstate === '未受理' ? [<a onClick={() => this.acceptItem(text, record)}>受理&nbsp;&nbsp;</a>]:[]}
-          {text.overallstate === '未受理' ? [<a onClick={() => this.deleteItem(text, record)}>拒绝受理&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.previewItem(text, record)}>申请详情</a>
+        <Fragment>          
+          <a onClick={() => this.resultItem(text, record)}>检查结果</a>
+          &nbsp;&nbsp;
+          <a onClick={() => this.recordItem(text, record)}>检查记录</a>
         </Fragment>
       ),
+    },
+  ];
+  columns2 = [
+    {
+      title: '付款人',
+      dataIndex: 'payer',
+    },
+    {
+      title: '未定价',
+      dataIndex: 'cost_1',
+    },
+    {
+      title: '已定价未拟制',
+      dataIndex: 'cost_2',
+    },
+    {
+      title: '已拟制未开具',
+      dataIndex: 'cost_3',
+    },
+    {
+      title: '已开具未收讫',
+      dataIndex: 'cost_4',
+    },
+    {
+      title: '已收讫',
+      dataIndex: 'cost_5',
     },
   ];
   columns1 = [
     {
       title: '审批内容',
-      dataIndex: 'applicant',
+      dataIndex: 'source',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.overallstate === '未受理' ? [<a onClick={() => this.acceptItem(text, record)}>受理&nbsp;&nbsp;</a>]:[]}
-          {text.overallstate === '未受理' ? [<a onClick={() => this.deleteItem(text, record)}>拒绝受理&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.previewItem(text, record)}>申请详情</a>
+          <a onClick={() => this.approveItem(text, record)}>审批</a>
         </Fragment>
       ),
     },
@@ -118,6 +145,16 @@ class Main extends PureComponent {
         certcode:user.certCode
       },
       callback: response =>{
+        var temp = [];
+        temp.push({
+          'x':'去年',
+          'y':response.data[1],
+        })
+        temp.push({
+          'x':'今年',
+          'y':response.data[0]
+        })
+        this.setState({mouthBill:temp});
         this.setState({mouthBillTotal:response.data});
       }
     });
@@ -127,6 +164,16 @@ class Main extends PureComponent {
         certcode:user.certCode
       },
       callback: response =>{
+        var temp = [];
+        temp.push({
+          'x':'去年',
+          'y':response.data[1],
+        })
+        temp.push({
+          'x':'今年',
+          'y':response.data[0]
+        })
+        this.setState({yearBill:temp});
         this.setState({yearBillTotal:response.data});
       }
     });
@@ -136,6 +183,16 @@ class Main extends PureComponent {
         certcode:user.certCode
       },
       callback: response =>{
+        var temp = [];
+        temp.push({
+          'x':'去年',
+          'y':response.data[1],
+        })
+        temp.push({
+          'x':'今年',
+          'y':response.data[0]
+        })
+        this.setState({yearPay:temp});
         this.setState({yearPayTotal:response.data});
       }
     });
@@ -152,25 +209,64 @@ class Main extends PureComponent {
     dispatch({
       type: 'main/getPerApprove',
       payload: {
-        approver:user.nameC,
+        approver:user.userName,
       },
       callback: response =>{
         this.setState({perApprove:response.data});
       }
     });
+    dispatch({
+      type: 'main/getTotalPay',
+      payload: {
+        username:user.userName ,
+        certcode:user.certCode
+      },
+      callback: response =>{
+        this.setState({totalPay:response.data});
+      }
+    });
   }
-
-  acceptItem = text => {
-    sessionStorage.setItem('prereportno',text.prereportno);
+  approveItem = text => {
+    sessionStorage.setItem('reportno',text.sourceId2);
+    sessionStorage.setItem('shipname',"");
+    sessionStorage.setItem('applicant',"");
+    if(text.source.trim() === "证书待拟制"){
+      router.push({
+        pathname:'/Certificate/CertificateUploadDetail',
+      });
+    }else if(text.source.trim() === "证书待复核"){
+      router.push({
+        pathname:'/Certificate/CertificateReviewDetail',
+      });
+    }else if(text.source.trim() === "证书待缮制"){
+      router.push({
+        pathname:'/Certificate/CertificateMakeDetail',
+      });
+    }else if(text.source.trim() === "证书待授权"){
+      router.push({
+        pathname:'/Certificate/CertificateSealDetail',
+      });
+    }else if(text.source.trim() === "证书待发布"){
+      router.push({
+        pathname:'/Certificate/CertificatePublishDetail',
+      });
+    }
+  };
+  resultItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',"");
     router.push({
-      pathname:'/Entrustment/Accept',
+      pathname:'/TestRecord/ResultDetail',
     });
   };
 
-  previewItem = text => {
-    sessionStorage.setItem('prereportno',text.prereportno);
+  recordItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',"");
     router.push({
-      pathname:'/Entrustment/DetailForUnAccept',
+      pathname:'/TestRecord/UploadDetail',
     });
   };
 
@@ -210,49 +306,82 @@ class Main extends PureComponent {
       //preMainInfo: {preMainInfoList},
       loading,
     } = this.props;
-    const {reportNum, dayDillTotal, mouthBillTotal, yearBillTotal, yearPayTotal, perTask, perApprove} = this.state;
+    const {reportNum, dayDillTotal, mouthBillTotal, yearBillTotal, yearPayTotal, perTask, perApprove, totalPay, salesData, mouthBill, yearBill, yearPay} = this.state;
     return (
       <PageHeaderWrapper>
           <Row gutter={16}>
             <Col span={6}>
               <Card size='small' bordered={false}>
-                <Text>今日开票{this.transfor(dayDillTotal)}</Text>
-                <br/>
-                <Text>今日委托{reportNum}</Text>  
+                <div align="center">
+                  <Text>今日开票{this.transfor(dayDillTotal)}</Text>
+                  <br/>
+                  <Text>今日委托{reportNum}</Text>  
+                </div>  
               </Card>
             </Col>
             <Col span={6}>
               <Card size='small' bordered={false}>
-              {mouthBillTotal[0]>mouthBillTotal[1]?[<Text type="danger">今年本月开票{this.transfor(mouthBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年本月开票{this.transfor(mouthBillTotal[0])}</span>]}
-                <br/>
-                <Text>去年本月开票{this.transfor(mouthBillTotal[1])}</Text>    
+                <Bar
+                  height={200}
+                  //title=''
+                  data={mouthBill}
+                />
+                <div align="center">
+                  {mouthBillTotal[0]>mouthBillTotal[1]?[<Text type="danger">今年本月开票{this.transfor(mouthBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年本月开票{this.transfor(mouthBillTotal[0])}</span>]}
+                  <br/>
+                  <Text>去年本月开票{this.transfor(mouthBillTotal[1])}</Text>    
+                </div>
               </Card>
             </Col>
             <Col span={6}>
               <Card size='small' bordered={false}>
-              {yearBillTotal[0]>yearBillTotal[1]?[<Text type="danger">今年累计开票{this.transfor(yearBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计开票{this.transfor(yearBillTotal[0])}</span>]}
-                <br/>
-                <Text>去年累计开票{this.transfor(yearBillTotal[1])}</Text>             
+                <Bar
+                  height={200}
+                  //title=''
+                  data={yearBill}
+                />
+                <div align="center">
+                  {yearBillTotal[0]>yearBillTotal[1]?[<Text type="danger">今年累计开票{this.transfor(yearBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计开票{this.transfor(yearBillTotal[0])}</span>]}
+                  <br/>
+                  <Text>去年累计开票{this.transfor(yearBillTotal[1])}</Text>             
+                </div>
               </Card>
             </Col>
             <Col span={6}>
-              <Card size='small' bordered={false}>
-              {yearPayTotal[0]>yearPayTotal[1]?[<Text type="danger">今年累计到账{this.transfor(yearPayTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计到账{this.transfor(yearPayTotal[0])}</span>]}
-                <br/>
-                <Text>去年累计到账{this.transfor(yearPayTotal[1])}</Text>  
+              <Card size='small' bordered={false} >
+                <Bar
+                  height={200}
+                  //title=''
+                  data={yearPay}
+                />
+                <div align="center">
+                  {yearPayTotal[0]>yearPayTotal[1]?[<Text type="danger">今年累计到账{this.transfor(yearPayTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计到账{this.transfor(yearPayTotal[0])}</span>]}
+                  <br/>
+                  <Text>去年累计到账{this.transfor(yearPayTotal[1])}</Text>  
+                </div>
               </Card>
             </Col>          
           </Row>
+          <br/>
+          <Card title="我的收费统计" size='small' bordered={false}>  
+            <Table
+              size="middle"
+              loading={loading}
+              rowKey='payer'
+              bordered
+              dataSource={totalPay}
+              columns={this.columns2}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+            />
+          </Card>
           <br/>
           <Row gutter={16}>
             <Col span={12}>
               <Card title="我的任务" size='small' bordered={false}>
                 <Table
                   size="middle"
-                  //className={styles.antTable}
-                  //rowClassName={styles.antTable2}
                   loading={loading}
-                  rowKey='prereportno'
+                  rowKey='reportno'
                   dataSource={perTask}
                   columns={this.columns}
                   pagination={{showQuickJumper:true,showSizeChanger:true}}
@@ -263,10 +392,8 @@ class Main extends PureComponent {
               <Card title="我的审批" size='small' bordered={false}>
                 <Table
                   size="middle"
-                  //className={styles.antTable}
-                  //rowClassName={styles.antTable2}
                   loading={loading}
-                  rowKey='prereportno'
+                  rowKey='source'
                   dataSource={perApprove}
                   columns={this.columns1}
                   pagination={{showQuickJumper:true,showSizeChanger:true}}

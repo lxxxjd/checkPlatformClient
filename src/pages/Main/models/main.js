@@ -1,4 +1,4 @@
-import { getReportNumDay, getBillTotalDay, getBillTotalMonth, getBillTotalYear, getPayTotalYear, getPerTask, getPerApprove} from '@/services/Main';
+import { getReportNumDay, getBillTotalDay, getBillTotalMonth, getBillTotalYear, getPayTotalYear, getPerTask, getPerApprove, getTotalPay} from '@/services/Main';
 
 export default {
   namespace: 'main',
@@ -37,6 +37,10 @@ export default {
     },
     *getPerApprove({ payload,callback }, { call, put }) {
       const response = yield call(getPerApprove, payload);
+      if (callback) callback(response);    
+    },
+    *getTotalPay({ payload,callback }, { call, put }) {
+      const response = yield call(getTotalPay, payload);
       if (callback) callback(response);    
     },
   },
