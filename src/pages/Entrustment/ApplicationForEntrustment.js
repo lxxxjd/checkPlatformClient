@@ -82,6 +82,7 @@ const fieldLabels = {
 };
 
 
+
 @connect(({entrustment, loading}) => ({
   entrustment,
   loading: loading.models.entrustment,

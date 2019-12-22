@@ -51,6 +51,7 @@ export default {
   'menu.Charge.Invoice':'开具发票',
   'menu.Charge.Cost':'成本统计',
   'menu.Charge.CostEdit':'成本登记',
+  'menu.Charge.CostListAdd':'成本清单',
   'menu.Archives':'业务归档',
   'menu.Archives.ArchivesAdd':'归档',
   'menu.Archives.ArchivesDestory':'退档',
@@ -146,5 +147,7 @@ export default {
   'menu.Statistics':'数据统计',
   'menu.Statistics.CostQuery':'成本统计',
   'menu.Statistics.ReportPriceMakingQuery':'利润分析',
+
+  'menu.CNAS.CNASCheckFourCertCode':'CNAS审查',
 
 };

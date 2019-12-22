@@ -422,6 +422,13 @@ export default [
           },
 
           {
+            path: '/Charge/CostListAdd',
+            name: 'CostListAdd',
+            component: './Charge/CostListAdd',
+          },
+
+
+          {
             path: '/Charge/CostEdit',
             name: 'CostEdit',
             component: './Charge/CostEdit',
@@ -680,9 +687,20 @@ export default [
             name: 'ReportPriceMakingQuery',
             component: './Statistics/ReportPriceMakingQuery',
           },
+        ],
+      },
 
-
-
+      //CNAS审查
+      {
+        path: '/CNAS',
+        icon: 'profile',
+        name: 'CNAS',
+        routes: [
+          {
+            path: '/CNAS/CNASCheckFourCertCode',
+            name: 'CNASCheckFourCertCode',
+            component: './CNAS/CNASCheckFourCertCode',
+          },
         ],
       },
 

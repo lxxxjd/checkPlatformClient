@@ -24,7 +24,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,costList} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -84,48 +84,54 @@ const AddListFrom = Form.create()(props =>  {
 let id = 0;
 // eslint-disable-next-line no-class-assign,react/no-multi-comp
 @Form.create()
-@connect(({ charge,loading }) => ({
-  charge,
-  loading: loading.models.charge,
+@connect(({ cost,loading }) => ({
+  cost,
+  loading: loading.models.cost,
 }))
-class ListFictionAdd extends PureComponent {
+class CostListAdd extends PureComponent {
   state = {
-    priceMaking:[],
+    costList:[],
     modalAddListVisible:false,
     payer:undefined,
     total:0,
   };
 
   columns = [
+    // 费用种类 费用名称 发生日期   金额  接收人 登记日期  登记人 状态     操作
 
     {
       title: '委托编号',
       dataIndex: 'reportno',
     },
     {
-      title: '委托日期',
-      dataIndex: 'reportdate',
+      title: '费用种类',
+      dataIndex: 'costtype',
+    },
+    {
+      title: '费用名称',
+      dataIndex: 'costname',
+    },
+    {
+      title: '发生日期',
+      dataIndex: 'occurdate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '船名标识',
-      dataIndex: 'shipname',
+      title: '金额',
+      dataIndex: 'costmoney',
     },
     {
-      title: '检查品名',
-      dataIndex: 'cargoname',
+      title: '接收人',
+      dataIndex: 'reciever',
     },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '登记人',
+      dataIndex: 'register',
     },
     {
-      title: '付款人',
-      dataIndex: 'payer',
-    },
-    {
-      title: '价格',
-      dataIndex: 'total',
+      title: '登记日期',
+      dataIndex: 'registdate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
       title: '状态',
@@ -135,8 +141,6 @@ class ListFictionAdd extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text)}>定价</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.removeExistItem(text, record)}>删除</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
@@ -150,28 +154,21 @@ class ListFictionAdd extends PureComponent {
     this.init();
   }
 
+  // eslint-disable-next-line react/sort-comp
   init =()=>{
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'charge/getReportsFetch',
+      type: 'cost/selectCostByConditions',
       payload:{
         certCode:user.certCode
       },
       callback: (response) => {
         if(response){
-            this.state.priceMaking=response;
+          this.state.costList=response;
         }else{
-          message.success('加载失败');
+          message.error('加载失败');
         }
-      }
-    });
-
-    dispatch({
-      type: 'charge/getClientName',
-      payload: {},
-      callback: (response) => {
-        this.setState({allReporterName: response})
       }
     });
 
@@ -193,15 +190,16 @@ class ListFictionAdd extends PureComponent {
   };
 
   removeExistItem = text => {
-    this.state.exist=this.listRemoveItem(this.state.priceMaking,text.reportno);
-    const dataSource = [...this.state.priceMaking];
-    this.setState({ priceMaking: dataSource.filter(item => item.reportno !== text.reportno) });
+    this.listRemoveItem(this.state.costList,text.keyno);
+    const dataSource = [...this.state.costList];
+    console.log(this.state.costList);
+    this.setState({ costList: dataSource.filter(item => item.keyno !== text.keyno) });
   };
 
   listRemoveItem = (source, match)=>{
     var len = source.length;
     while (len--) {
-      if (len in source && source[len] === match) {
+      if (len in source && source[len].keyno === match) {
         source.splice(len, 1);
       }
     }
@@ -214,15 +212,15 @@ class ListFictionAdd extends PureComponent {
   handleSubmit = () => {
     const {state} = this;
     let total = 0;
-    for(let j = 0,len = state.priceMaking.length; j < len; j++){
-      if(state.priceMaking[j].status ==="未定价"){
-        message.error('存在未定价的条目，请定价完重试');
+    for(let j = 0,len = state.costList.length; j < len; j++){
+      if(state.costList[j].status !=="已登记"){
+        message.error('存在已拟制的条目，请查询完重试');
         return;
       }
-      if(state.priceMaking[j].payer!==undefined){
-        state.payer = state.priceMaking[j].payer;
+      if(state.costList[j].payer!==undefined){
+        state.payer = state.costList[j].payer;
       }
-      total += parseFloat(state.priceMaking[j].total);
+      total += parseFloat(state.costList[j].total);
     }
     this.state.total = total;
     this.handleAddListVisible(true);
@@ -235,7 +233,7 @@ class ListFictionAdd extends PureComponent {
       certcode:user.certCode,
       reviewer:fieldvalues.reviewer,
       listman:user.nameC,
-      priceMakings:this.state.priceMaking,
+      costLists:this.state.costList,
       listno:fieldvalues.listno,
       payer:this.state.payer,
     };
@@ -261,7 +259,6 @@ class ListFictionAdd extends PureComponent {
 
   handleSearch =()=>{
     const { dispatch, form } = this.props;
-    const {state} = this;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
 
@@ -270,26 +267,38 @@ class ListFictionAdd extends PureComponent {
       let mvalues=[];
       let mconditions=[];
 
-      if(fieldsValue.payer !==undefined && fieldsValue.payer !==""){
-        mkinds.push('payer');
-        mvalues.push(fieldsValue.payer);
+      if(fieldsValue.reciever !==undefined && fieldsValue.reciever !==""){
+        mkinds.push('reciever');
+        mvalues.push(fieldsValue.reciever);
         mconditions.push('like');
       }
 
-      if(fieldsValue.reportdate !==undefined && fieldsValue.reportdate.length!==0){
-        mkinds.push('reportdate');
-        mvalues.push(fieldsValue.reportdate[0].format('YYYY-MM-DD'));
+      if(fieldsValue.occurdate !==undefined && fieldsValue.occurdate.length!==0){
+        mkinds.push('occurdate');
+        mvalues.push(fieldsValue.occurdate[0].format('YYYY-MM-DD'));
         mconditions.push('>=');
 
-        mkinds.push('reportdate');
-        mvalues.push(fieldsValue.reportdate[1].format('YYYY-MM-DD'));
+        mkinds.push('occurdate');
+        mvalues.push(fieldsValue.occurdate[1].format('YYYY-MM-DD'));
         mconditions.push('<=');
       }
+
+      if(fieldsValue.status !==undefined && fieldsValue.status.length!==0){
+       if(fieldsValue.status ==="未拟制"){
+         mkinds.push('status');
+         mvalues.push("已登记");
+         mconditions.push('=');
+       }else if(fieldsValue.status ==="已拟制"){
+         mkinds.push('status');
+         mvalues.push("已登记");
+         mconditions.push('!=');
+       }
+      }
+
 
       const keys = form.getFieldValue('keys');
       for(let key in keys){
         let k = keys[key];
-        console.log(k);
         const kind = form.getFieldValue(`kinds${k}`);
         const condition = form.getFieldValue(`conditions${k}`);
         const value = form.getFieldValue(`values${k}`);
@@ -304,15 +313,14 @@ class ListFictionAdd extends PureComponent {
         kinds :mkinds,
         values: mvalues,
         conditions:mconditions,
-        status:fieldsValue.status,
         certCode:user.certCode,
       };
       dispatch({
-        type: 'charge/getReportsFetch',
+        type: 'cost/selectCostByConditions',
         payload: params,
         callback: (response) => {
           if(response){
-            this.state.priceMaking = response;
+            this.state.costList = response;
             message.success('查询成功');
           }else{
             message.error('查询失败');
@@ -351,23 +359,23 @@ class ListFictionAdd extends PureComponent {
           </Col>
         </Row>
         <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
-          <Col md={8} sm={20}>
+          <Col md={9} sm={20}>
             <Form.Item
-              label="付款人"
+              label="接收人"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
             >
-              {getFieldDecorator('payer',{rules: [{ message: '请输入' }],})(<Input placeholder="请输入" />)}
+              {getFieldDecorator('reciever',{rules: [{ message: '请输入' }],})(<Input placeholder="请输入" />)}
             </Form.Item>
           </Col>
           <Col md={8} sm={20}>
             <Form.Item
-              label="委托日期："
+              label="发生日期："
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
               colon={false}
             >
-              {getFieldDecorator('reportdate', {
+              {getFieldDecorator('occurdate', {
 
               })(
                 <RangePicker
@@ -376,9 +384,9 @@ class ListFictionAdd extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col md={7} sm={20}>
+          <Col md={6} sm={20}>
             <Form.Item
-              label="收费状态："
+              label="成本状态："
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
             >
@@ -387,8 +395,8 @@ class ListFictionAdd extends PureComponent {
               })(
                 <Radio.Group buttonStyle="solid">
                   <Radio.Button value="全部">全部</Radio.Button>
-                  <Radio.Button value="未定价">未定价</Radio.Button>
-                  <Radio.Button value="已定价未拟制">已定价未拟制</Radio.Button>
+                  <Radio.Button value="未拟制">未拟制</Radio.Button>
+                  <Radio.Button value="已拟制">已拟制</Radio.Button>
                 </Radio.Group>)}
             </Form.Item>
           </Col>
@@ -450,19 +458,7 @@ class ListFictionAdd extends PureComponent {
     }
   };
 
-  // 定价
-  mobileItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
-    sessionStorage.setItem('reportdate',text.reportdate);
-    sessionStorage.setItem('applicant',text.applicant);
-    sessionStorage.setItem('cargoname',text.cargoname);
-    sessionStorage.setItem('inspway',text.inspway);
-    sessionStorage.setItem('FinalPriceOrigin','ListFictionAdd');
 
-    router.push({
-      pathname:'/Charge/FinalPriceDetail',
-    });
-  };
 
   handleAddListVisible = (flag) => {
     this.setState({
@@ -477,7 +473,7 @@ class ListFictionAdd extends PureComponent {
       loading,
     } = this.props;
 
-    const {priceMaking,modalAddListVisible,total,payer} = this.state;
+    const {costList,modalAddListVisible,total,payer} = this.state;
 
     // 下载模板 模态框方法
     const parentMethods = {
@@ -519,17 +515,11 @@ class ListFictionAdd extends PureComponent {
             })(
               <Select placeholder="选择字段">
                 <Option value="reportno"> 委托编号</Option>
-                <Option value="reportno20"> 自编号</Option>
                 <Option value="shipname">船名标识</Option>
-                <Option value="applicant">申请人</Option>
-                <Option value="agent">代理人</Option>
-                <Option value="cargoname">检查品名</Option>
-                <Option value="businesssort">业务分类</Option>
-                <Option value="businesssource">业务来源</Option>
-                <Option value="tradeway">贸易方式</Option>
-                <Option value="cargosort">货物种类</Option>
-                <Option value="inspway">检查项目</Option>
-                <Option value="section">执行部门</Option>
+                <Option value="costtype">费用种类</Option>
+                <Option value="costname">费用名称</Option>
+                <Option value="costmoney">金额</Option>
+                <Option value="register">登记人</Option>
               </Select>
             )}
           </Form.Item>
@@ -573,14 +563,14 @@ class ListFictionAdd extends PureComponent {
             <Form onSubmit={this.handleSubmit}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
-              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} />
+              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} costList={costList} total={total} payer={payer} />
             </Form>
             <Table
               style={{marginTop:5}}
               loading={loading}
-              dataSource={priceMaking}
+              dataSource={costList}
               columns={this.columns}
-              rowKey="reportno"
+              rowKey="keyno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
@@ -590,4 +580,4 @@ class ListFictionAdd extends PureComponent {
   }
 }
 
-export default ListFictionAdd;
+export default CostListAdd;
