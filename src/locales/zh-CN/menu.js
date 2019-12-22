@@ -14,6 +14,7 @@ export default {
   'menu.Entrustment.ModifyForEntrustment':'修改委托',
   'menu.Entrustment.CopyForEntrustmentList':'复制委托',
   'menu.Entrustment.AcceptList':'委托受理',
+  'menu.Entrustment.Accept':'委托',
   'menu.Entrustment.DetailForUnAccept':'受理详情',
   'menu.Entrustment.CopyForEntrustment':'复制委托详情',
   'menu.TaskAppoint': '任务指派',
@@ -143,6 +144,8 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
 
+  'menu.Main': '主页',
+  'menu.Main.Main': '主页',
 
   'menu.Statistics':'数据统计',
   'menu.Statistics.CostQuery':'成本统计',
