@@ -899,7 +899,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('inspplace1', {
                     rules: [],
                   })(
-                    <Cascader options={areaOptions} placeholder="请选择检验地点"/>
+                    <Cascader options={areaOptions} placeholder="请选择检验地点" />
                   )}
                 </Form.Item>
               </Col>
@@ -913,7 +913,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('inspplace2', {
                     rules: [],
                   })(
-                    <Input placeholder="请输入详细地址"/>
+                    <Input placeholder="请输入详细地址" />
                   )}
                 </Form.Item>
               </Col>

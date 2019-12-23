@@ -94,6 +94,8 @@ export default {
   'menu.DictMaintain.BusinessSort':'业务分类',
   'menu.DictMaintain.BusinessSource':'业务来源',
   'menu.DictMaintain.InvoiceTitle':'发票信息',
+  'menu.DictMaintain.SurveyStandard':'检验标准',
+  'menu.DictMaintain.Intrusment':'仪器信息',
 
   'menu.CompanyManage':'公司管理',
   'menu.CompanyManage.CompanyInfo':'公司信息',
@@ -152,5 +154,6 @@ export default {
   'menu.Statistics.ReportPriceMakingQuery':'利润分析',
 
   'menu.CNAS.CNASCheckFourCertCode':'CNAS审查',
+
 
 };

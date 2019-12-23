@@ -24,34 +24,20 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // Entrustment
-      { path: '/', redirect: '/Entrustment/ApplicationForEntrustment',authority: ['admin', 'user']},
+      { path: '/', redirect: '/Main/Main',authority: ['admin', 'user']},
 
-      // // 证书
-      // {
-      //   path: '/list',
-      //   icon: 'table',
-      //   name: 'list',
-      //   routes: [
-      //     {
-      //       path: '/list/table-list',
-      //       name: 'searchtable',
-      //       component: './List/TableList',
-      //     }
-      //   ],
-      // },
-      // //newPage
-      // {
-      //   path: "/Certificate",
-      //   icon: "file",
-      //   name: "Certificate",
-      //   routes: [
-      //     {
-      //       path: "/Certificate/Certificate",
-      //       name: "Certificate",
-      //       component: "./Certificate/Certificate"
-      //     }
-      //   ],
-      // },
+      {
+        path: '/Main',
+        icon: 'profile',
+        name: 'Main',
+        routes: [
+          {
+            path: '/Main/Main',
+            name: 'Main',
+            component: './Main/Main',
+          },
+        ],
+      },
       {
         path: "/Entrustment",
         icon: "file",
@@ -573,6 +559,19 @@ export default [
         icon: 'profile',
         name: 'DictMaintain',
         routes: [
+
+          {
+            path: '/DictMaintain/Intrusment',
+            name: 'Intrusment',
+            component: './DictMaintain/Intrusment',
+          },
+
+          {
+            path: '/DictMaintain/SurveyStandard',
+            name: 'SurveyStandard',
+            component: './DictMaintain/SurveyStandard',
+          },
+
           {
             path: '/DictMaintain/CargoList',
             name: 'CargoList',
@@ -704,18 +703,6 @@ export default [
         ],
       },
 
-      {
-        path: '/Main',
-        icon: 'profile',
-        name: 'Main',
-        routes: [
-          {
-            path: '/Main/Main',
-            name: 'Main',
-            component: './Main/Main',
-          },
-        ],
-      },
 
 
       {
