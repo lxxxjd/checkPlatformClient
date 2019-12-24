@@ -39,8 +39,9 @@ const ReviewFrom = (props => {
       destroyOnClose
       title="查看仪器详情"
       visible={modalReviewVisible}
+      width={document.body.clientWidth*0.9}
+      height={document.body.clientHeight*0.9}
       style={{ top: 100 }}
-      width={800}
       onCancel={() => handleModalReviewVisible()}
       footer={[
         <Button type="primary" onClick={() => handleModalReviewVisible()}>
@@ -581,12 +582,12 @@ class BusinessSort extends PureComponent {
       title: '国别/生产厂',
       dataIndex: 'manufacturer',
     },
-
-    {
-      title: ' 购置日期 ',
-      dataIndex: 'buydate',
-      render: val => this.isValidDate(val),
-    },
+    //
+    // {
+    //   title: ' 购置日期 ',
+    //   dataIndex: 'buydate',
+    //   render: val => this.isValidDate(val),
+    // },
 
     {
       title: ' 验收日期 ',
@@ -616,34 +617,34 @@ class BusinessSort extends PureComponent {
       dataIndex: 'custodian',
     },
 
-    {
-      title: '价值',
-      dataIndex: 'value',
-    },
-
-
-    {
-      title: '检定日期',
-      dataIndex: 'checkdate',
-      render: val => this.isValidDate(val),
-    },
-
-
-    {
-      title: '检定周期（月）',
-      dataIndex: 'checkcycle',
-    },
-
-    {
-      title: '检定单位',
-      dataIndex: 'checkCompany',
-    },
-
-    {
-      title: '报废日期',
-      dataIndex: 'scrapdate',
-      render: val => this.isValidDate(val),
-    },
+    // {
+    //   title: '价值',
+    //   dataIndex: 'value',
+    // },
+    //
+    //
+    // {
+    //   title: '检定日期',
+    //   dataIndex: 'checkdate',
+    //   render: val => this.isValidDate(val),
+    // },
+    //
+    //
+    // {
+    //   title: '检定周期（月）',
+    //   dataIndex: 'checkcycle',
+    // },
+    //
+    // {
+    //   title: '检定单位',
+    //   dataIndex: 'checkCompany',
+    // },
+    //
+    // {
+    //   title: '报废日期',
+    //   dataIndex: 'scrapdate',
+    //   render: val => this.isValidDate(val),
+    // },
 
 
     {

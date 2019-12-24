@@ -25,7 +25,7 @@ const { Option } = Select;
 
 // 修改的Form
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo } = props;
+  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo,fieldOptions,cargosortOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -37,33 +37,77 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="业务分类修改"
+      title="标准信息修改"
       style={{ top: 100 }}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="业务分类名称">
-        {form.getFieldDecorator('itemname', {
-          initialValue: modalInfo.itemname,
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="英文名称">
+        {form.getFieldDecorator('standarde', {
+          initialValue: modalInfo.standarde,
           rules: [
             {
               required: true,
-              message: "请输入业务分类名称",
+              message: "请输入英文名称",
             },
           ],
-        })(<Input placeholder="请输入业务分类名称" />)}
+        })(<Input placeholder="请输入英文名称" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="中文名称">
+        {form.getFieldDecorator('standardc', {
+          initialValue: modalInfo.standardc,
+          rules: [
+            {
+              required: true,
+              message: "请输入中文名称",
+            },
+          ],
+        })(<Input placeholder="请输入中文名称" />)}
       </FormItem>
 
 
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="货物种类">
+        {form.getFieldDecorator('cargosort', {
+          initialValue: modalInfo.cargosort,
+          rules: [
+            {
+              required: true,
+              message: "请选择货物种类",
+            },
+          ],
+        })(
+          <Select placeholder="请选择货物种类" style={{ width: '100%' }}>
+            {cargosortOptions}
+          </Select>
+        )}
+      </FormItem>
+
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检查领域">
+        {form.getFieldDecorator('field', {
+          initialValue: modalInfo.field,
+          rules: [
+            {
+              required: true,
+              message: "请选择检查领域",
+            },
+          ],
+        })(
+          <Select placeholder="请选择检查领域" style={{ width: '100%' }}>
+            {fieldOptions}
+          </Select>
+        )}
+      </FormItem>
     </Modal>
   );
 });
 
 
 const AddForm = Form.create()(props => {
-  const { addModalVisible, form, handleAdd, addHandleModalVisible } = props;
+  const { addModalVisible, form, handleAdd, addHandleModalVisible,fieldOptions,cargosortOptions } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -75,22 +119,66 @@ const AddForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="业务分类新增"
+      title="标准信息新增"
       style={{ top: 100 }}
       visible={addModalVisible}
       onOk={okHandle}
       onCancel={() => addHandleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="业务分类名称">
-        {form.getFieldDecorator('itemname', {
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="英文名称">
+        {form.getFieldDecorator('standarde', {
           rules: [
             {
               required: true,
-              message: "请输入业务分类名称",
+              message: "请输入英文名称",
             },
           ],
-        })(<Input placeholder="请输入业务分类名称" />)}
+        })(<Input placeholder="请输入英文名称" />)}
+      </FormItem>
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="中文名称">
+        {form.getFieldDecorator('standardc', {
+          rules: [
+            {
+              required: true,
+              message: "请输入中文名称",
+            },
+          ],
+        })(<Input placeholder="请输入中文名称" />)}
+      </FormItem>
+
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="货物种类">
+        {form.getFieldDecorator('cargosort', {
+          rules: [
+            {
+              required: true,
+              message: "请选择货物种类",
+            },
+          ],
+        })(
+          <Select placeholder="请选择货物种类" style={{ width: '100%' }}>
+            {cargosortOptions}
+          </Select>
+        )}
+      </FormItem>
+
+
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检查领域">
+        {form.getFieldDecorator('field', {
+          rules: [
+            {
+              required: true,
+              message: "请选择检查领域",
+            },
+          ],
+        })(
+          <Select placeholder="请选择检查领域" style={{ width: '100%' }}>
+            {fieldOptions}
+          </Select>
+        )}
       </FormItem>
 
     </Modal>
@@ -98,9 +186,9 @@ const AddForm = Form.create()(props => {
 });
 
 
-@connect(({ dict, loading }) => ({
-  dict,
-  loading: loading.models.dict,
+@connect(({ standard, loading }) => ({
+  standard,
+  loading: loading.models.standard,
 }))
 @Form.create()
 class BusinessSort extends PureComponent {
@@ -109,12 +197,31 @@ class BusinessSort extends PureComponent {
     addModalVisible:false,
     modalInfo :{},
     dataSource:[],
+
+    fieldList:[], // 检查领域
+    cargosortList:[], // 货物种类
+
   };
 
   columns = [
     {
-      title: '业务分类名称',
-      dataIndex: 'itemname',
+      title: '英文名称',
+      dataIndex: 'standarde',
+    },
+
+    {
+      title: '中文名称',
+      dataIndex: 'standardc',
+    },
+
+    {
+      title: '货物种类',
+      dataIndex: 'cargosort',
+    },
+
+    {
+      title: '领域',
+      dataIndex: 'field',
     },
 
     {
@@ -138,20 +245,21 @@ class BusinessSort extends PureComponent {
 
   init =()=>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    console.log(user);
     const { dispatch } = this.props;
     const params = {
       certCode:user.certCode
     };
     dispatch({
-      type: 'dict/getBusinessSortList',
+      type: 'standard/getSurveyStandard',
       payload: params,
       callback: (response) => {
         if (response){
-          this.state.dataSource = response.data;
+          this.state.dataSource = response;
         }
       }
     });
+
+
   };
 
   handleFormReset = () => {
@@ -172,11 +280,11 @@ class BusinessSort extends PureComponent {
         certCode:user.certCode,
       };
       dispatch({
-        type: 'dict/getBusinessSortList',
+        type: 'standard/getSurveyStandard',
         payload: values,
         callback: (response) => {
           if (response){
-            this.state.dataSource = response.data;
+            this.state.dataSource = response;
           }
         }
       });
@@ -190,7 +298,37 @@ class BusinessSort extends PureComponent {
     return [];
   };
 
+  initSelectData =()=>{
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const { dispatch } = this.props;
+    const params = {
+      certCode:user.certCode
+    };
+    dispatch({
+      type: 'standard/getCheckProjectList',
+      payload: params,
+      callback: (response) => {
+        if (response){
+          this.state.fieldList = response;
+        }
+      }
+    });
+
+    dispatch({
+      type: 'standard/getCargosort1List',
+      payload: params,
+      callback: (response) => {
+        if (response){
+          this.state.cargosortList = response;
+        }
+      }
+    });
+
+
+  };
+
   modifyItem = text => {
+    this.initSelectData();
     this.setState({
       modalInfo:text,
     });
@@ -199,12 +337,11 @@ class BusinessSort extends PureComponent {
 
   deleteItem = text =>{
     const { dispatch } = this.props;
-    const values = {
-      ...text
-    };
+    const formData = new FormData();
+    formData.append("keyno",text.keyno);
     dispatch({
-      type: 'dict/deleteBusinessSort',
-      payload:values,
+      type: 'standard/deleteSurveyStandard',
+      payload:formData,
       callback: (response) => {
         if(response==="success"){
           this.init();
@@ -218,6 +355,7 @@ class BusinessSort extends PureComponent {
 
 
   addItem = () => {
+    this.initSelectData();
     this.addHandleModalVisible(true);
   };
 
@@ -240,13 +378,16 @@ class BusinessSort extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     let prams = modalInfo;
-    prams.itemname =  fields.itemname;
+    prams.standarde =  fields.standarde;
+    prams.standardc =  fields.standardc;
+    prams.cargosort =  fields.cargosort;
+    prams.field =  fields.field;
+    prams.certcode =  user.certCode;
     const values = {
       ...prams
     };
-    console.log(values);
     dispatch({
-      type: 'dict/updateBusinessSort',
+      type: 'standard/updateSurveystandard',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -274,13 +415,13 @@ class BusinessSort extends PureComponent {
       addModalVisible: false,
     });
 
-    if( this.state.dataSource.find(item=>item.itemname === fields.itemname)){
+    if( this.state.dataSource.find(item=>(item.standarde === fields.standarde||item.standardc === fields.standardc))){
       message.success("添加项目已存在");
       return;
     }
 
     dispatch({
-      type: 'dict/addBusinessSort',
+      type: 'standard/addSurveryStandard',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -312,11 +453,14 @@ class BusinessSort extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
-                initialValue:"itemname",
+                initialValue:"standardc",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="itemname">业务分类</Option>
+                  <Option value="standardc">中文名称</Option>
+                  <Option value="standarde">英文名称</Option>
+                  <Option value="cargosort">货物种类</Option>
+                  <Option value="field">检查领域</Option>
                 </Select>
               )}
             </Form.Item>
@@ -354,21 +498,22 @@ class BusinessSort extends PureComponent {
       dispatch,
     } = this.props;
 
-    const {  modalVisible,modalInfo,addModalVisible,dataSource} = this.state;
+    const {  modalVisible,modalInfo,addModalVisible,dataSource,fieldList,cargosortList} = this.state;
     const parentMethods = {
       handleEdit: this.handleEdit,
       handleAdd:this.handleAdd,
       handleModalVisible: this.handleModalVisible,
       addHandleModalVisible:this.addHandleModalVisible,
     };
-
+    const fieldOptions = fieldList.map(d => <Option key={d.project} value={d.project}>{d.project}</Option>);
+    const cargosortOptions = cargosortList.map(d => <Option key={d.sort1} value={d.sort1}>{d.sort1}</Option>);
 
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
-            <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} />
-            <AddForm {...parentMethods} addModalVisible={addModalVisible} dispatch={dispatch} />
+            <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} fieldOptions={fieldOptions} cargosortOptions={cargosortOptions} />
+            <AddForm {...parentMethods} addModalVisible={addModalVisible} dispatch={dispatch} fieldOptions={fieldOptions} cargosortOptions={cargosortOptions} />
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"

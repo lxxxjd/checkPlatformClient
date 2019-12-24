@@ -1,4 +1,6 @@
 import {  addSurveryStandard,deleteSurveyStandard,getSurveyStandard,updateSurveystandard} from '@/services/SurveyStandard';
+import{getCheckProjectList} from '@/services/CheckProject';
+import{getCargosort1List} from '@/services/Cargosort1';
 
 
 export default {
@@ -7,6 +9,18 @@ export default {
     addSurveryStandardResult:{},getSurveyStandardResult:{},deleteSurveyStandardResult:{},updateSurveystandardResult:{},
   },
   effects: {
+
+    *getCheckProjectList({ payload,callback }, { call, put }) {
+      const response = yield call(getCheckProjectList, payload);
+      if (callback) callback(response.data);
+    },
+
+    *getCargosort1List({ payload,callback }, { call, put }) {
+      const response = yield call(getCargosort1List, payload);
+      if (callback) callback(response.data);
+    },
+
+
 
     *updateSurveystandard({ payload,callback }, { call, put }) {
       const response = yield call(updateSurveystandard, payload);
