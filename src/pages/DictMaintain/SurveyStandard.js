@@ -191,7 +191,7 @@ const AddForm = Form.create()(props => {
   loading: loading.models.standard,
 }))
 @Form.create()
-class BusinessSort extends PureComponent {
+class SurveyStandard extends PureComponent {
   state = {
     modalVisible: false,
     addModalVisible:false,
@@ -530,4 +530,4 @@ class BusinessSort extends PureComponent {
   }
 }
 
-export default BusinessSort;
+export default SurveyStandard;

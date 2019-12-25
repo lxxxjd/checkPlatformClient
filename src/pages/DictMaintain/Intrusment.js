@@ -306,7 +306,7 @@ const CreateForm = Form.create()(props => {
             {
             },
           ],
-        })( <Select placeholder="选择字段" style={{ width: '100%' }}>
+        })( <Select placeholder="选择状态" style={{ width: '100%' }}>
           <Option value="报废"> 报废</Option>
         </Select>)}
       </FormItem>
@@ -550,7 +550,7 @@ const AddForm = Form.create()(props => {
   loading: loading.models.intrusment,
 }))
 @Form.create()
-class BusinessSort extends PureComponent {
+class Intrusment extends PureComponent {
   state = {
     modalVisible: false,
     addModalVisible:false,
@@ -991,4 +991,4 @@ class BusinessSort extends PureComponent {
   }
 }
 
-export default BusinessSort;
+export default Intrusment;

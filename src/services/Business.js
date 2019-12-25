@@ -1,8 +1,7 @@
 import request from '@/utils/request';
 import { stringify } from 'qs';
 
-// getBusinessSortList,addBusinessSort,updateBusinessSort,deleteBusinessSort,
-// getBusinessSourceList,addBusinessSource,updateusinessSource,deleteBusinessSource
+
 export async function getBusinessSortList(params) {
   return request(`/api/business_sort/getBusinessSortList`,{
     method: 'POST',

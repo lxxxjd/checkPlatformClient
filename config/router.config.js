@@ -700,6 +700,29 @@ export default [
             name: 'CNASCheckFourCertCode',
             component: './CNAS/CNASCheckFourCertCode',
           },
+
+          {
+            path: '/CNAS/CNASCheckStandard',
+            name: 'CNASCheckStandard',
+            component: './CNAS/CNASCheckStandard',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/CNAS/CNASCheckInsMan',
+            name: 'CNASCheckInsMan',
+            component: './CNAS/CNASCheckInsMan',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/CNAS/CNASCheckAuthor',
+            name: 'CNASCheckAuthor',
+            component: './CNAS/CNASCheckAuthor',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+
         ],
       },
 

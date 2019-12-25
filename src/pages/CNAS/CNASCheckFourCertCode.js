@@ -82,13 +82,12 @@ class CNASCheckFourCertCode extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyI123tem(text, record)}>检验标准</a>
+          <a onClick={() => this.gotoCNASCheck(text, "/CNAS/CNASCheckStandard")}>检验标准</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.delet123eItem(text, record)}>检验人员</a>
+          <a onClick={() => this.gotoCNASCheck(text, "/CNAS/CNASCheckInsMan")}>检验人员</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.delet123eItem(text, record)}>授权签字</a>
+          <a onClick={() => this.gotoCNASCheck(text, "/CNAS/CNASCheckAuthor")}>授权人员</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.delet123eItem(text, record)}>仪器设备</a>
         </Fragment>
       ),
     },
@@ -97,6 +96,14 @@ class CNASCheckFourCertCode extends PureComponent {
   componentDidMount() {
     this.init();
   }
+
+  gotoCNASCheck=(text,path)=>{
+    sessionStorage.setItem('CNASCheckStandard_CheckCode',text.checkCode);
+    router.push({
+      pathname:path,
+    });
+  };
+
 
 
   init =()=> {
