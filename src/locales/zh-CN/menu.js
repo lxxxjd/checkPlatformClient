@@ -59,6 +59,7 @@ export default {
   'menu.Charge.CostlistReview':'成本审核',
   'menu.Charge.CostListDetailReviewBack':'成本审核退回',
   'menu.Charge.CostListDetailReviewPass':'成本审核通过',
+  'menu.Charge.CostlistPay':'成本支付',
   'menu.Archives':'业务归档',
   'menu.Archives.ArchivesAdd':'归档',
   'menu.Archives.ArchivesDestory':'退档',

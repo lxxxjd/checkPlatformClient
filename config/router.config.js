@@ -426,6 +426,13 @@ export default [
             component: './Charge/CostlistReview',
           },
 
+          {
+            path: '/Charge/CostlistPay',
+            name: 'CostlistPay',
+            component: './Charge/CostlistPay',
+          },
+
+
 
           {
             path: '/Charge/CostEdit',
