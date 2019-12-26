@@ -158,26 +158,6 @@ class CostlistEdit extends PureComponent {
     });
   };
 
-  deleteItem = text =>{
-    const { dispatch } = this.props;
-    const values = {
-      ...text
-    };
-    dispatch({
-      type: 'costlist/deleteCostlist',
-      payload:values,
-      callback: (response) => {
-        if(response==="success"){
-          this.init();
-          message.success("删除成功");
-        } else{
-          message.success("删除失败");
-        }
-      }
-    });
-  };
-  
-
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },

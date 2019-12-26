@@ -453,6 +453,7 @@ export default [
             path: '/Charge/CostListDetailReviewPass',
             name: 'CostListDetailReviewPass',
             component: './Charge/CostListDetailReviewPass',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
 
@@ -460,6 +461,7 @@ export default [
             path: '/Charge/CostListDetailReviewBack',
             name: 'CostListDetailReviewBack',
             component: './Charge/CostListDetailReviewBack',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
 
