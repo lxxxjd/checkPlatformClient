@@ -407,10 +407,23 @@ export default [
             component: './Charge/Cost',
           },
 
+
+          {
+            path: '/Charge/CostlistEdit',
+            name: 'CostlistEdit',
+            component: './Charge/CostlistEdit',
+          },
+
           {
             path: '/Charge/CostListAdd',
             name: 'CostListAdd',
             component: './Charge/CostListAdd',
+          },
+
+          {
+            path: '/Charge/CostlistReview',
+            name: 'CostlistReview',
+            component: './Charge/CostlistReview',
           },
 
 
@@ -421,12 +434,35 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
+
           {
             path: '/Charge/DetailList',
             name: 'DetailList',
             component: './Charge/DetailList',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
+          {
+            path: '/Charge/CostListDetail',
+            name: 'CostListDetail',
+            component: './Charge/CostListDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Charge/CostListDetailReviewPass',
+            name: 'CostListDetailReviewPass',
+            component: './Charge/CostListDetailReviewPass',
+          },
+
+
+          {
+            path: '/Charge/CostListDetailReviewBack',
+            name: 'CostListDetailReviewBack',
+            component: './Charge/CostListDetailReviewBack',
+          },
+
+
 
         ],
       },

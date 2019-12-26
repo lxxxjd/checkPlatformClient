@@ -1,5 +1,6 @@
 import InspmanDetail from '../../pages/TaskAppoint/InspmanDetail';
 import CertificateReview from '../../pages/Certificate/CertificateReview';
+import CostlistEdit from '../../pages/Charge/CostlistEdit';
 
 export default {
   'menu.home': '首页',
@@ -50,9 +51,14 @@ export default {
   'menu.Charge.DetailList':'清单详情',
   'menu.Charge.ListPay':'收入到账',
   'menu.Charge.Invoice':'开具发票',
-  'menu.Charge.Cost':'成本统计',
+  'menu.Charge.Cost':'成本登记',
+  'menu.Charge.CostlistEdit':'成本清单',
   'menu.Charge.CostEdit':'成本登记',
-  'menu.Charge.CostListAdd':'成本清单',
+  'menu.Charge.CostListAdd':'成本拟制',
+  'menu.Charge.CostListDetail':'成本清单详情',
+  'menu.Charge.CostlistReview':'成本审核',
+  'menu.Charge.CostListDetailReviewBack':'成本审核退回',
+  'menu.Charge.CostListDetailReviewPass':'成本审核通过',
   'menu.Archives':'业务归档',
   'menu.Archives.ArchivesAdd':'归档',
   'menu.Archives.ArchivesDestory':'退档',

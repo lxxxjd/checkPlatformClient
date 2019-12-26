@@ -24,7 +24,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,costList} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,costList,paycompany} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -34,6 +34,15 @@ const AddListFrom = Form.create()(props =>  {
       form.resetFields();
       handleAddListVisible();
     });
+  };
+
+  const getDate=()=>{
+    const now = new Date();
+    const year = now.getFullYear(); // 得到年份
+    const month = now.getMonth();// 得到月份
+    const date = now.getDate();// 得到日期
+    const sec = now.getSeconds();// 得到秒
+    return year+month+date+sec;
   };
 
   return (
@@ -61,16 +70,25 @@ const AddListFrom = Form.create()(props =>  {
           })(<label>{total}</label>)}
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="清单号：">
-          {form.getFieldDecorator('listno', {
+          {form.getFieldDecorator('paylistno', {
+            initialValue:getDate(),
             rules: [{ required: true,message: '请输入清单号'}],
           })(<Input placeholder="请输入清单号" />)}
+        </Form.Item>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="接收人：">
+          {form.getFieldDecorator('paycompany', {
+            initialValue:paycompany,
+            rules: [{ required: true,message: '请输入接收人'}],
+          })(<Input placeholder="请输入接收人" />)}
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="审核人：">
           {form.getFieldDecorator('reviewer', {
             rules: [{ required: true,message: '请选择审核人'}],
           })(
             <Select placeholder="请选择审核人">
-              <Option value="徐佳待"> 徐佳待</Option>
+              <Option value="xjd"> 徐佳待</Option>
+
+
             </Select>)
           }
         </Form.Item>
@@ -92,7 +110,7 @@ class CostListAdd extends PureComponent {
   state = {
     costList:[],
     modalAddListVisible:false,
-    payer:undefined,
+    paycompany:undefined,
     total:0,
   };
 
@@ -212,15 +230,20 @@ class CostListAdd extends PureComponent {
   handleSubmit = () => {
     const {state} = this;
     let total = 0;
+    if(state.costList.length ===0){
+      message.error('未删选到条目，请重试');
+      return;
+    }
+
     for(let j = 0,len = state.costList.length; j < len; j++){
       if(state.costList[j].status !=="已登记"){
         message.error('存在已拟制的条目，请查询完重试');
         return;
       }
-      if(state.costList[j].payer!==undefined){
-        state.payer = state.costList[j].payer;
+      if(state.costList[j].reciever!==undefined){
+        state.paycompany = state.costList[j].reciever;
       }
-      total += parseFloat(state.costList[j].total);
+      total += parseFloat(state.costList[j].costmoney);
     }
     this.state.total = total;
     this.handleAddListVisible(true);
@@ -229,16 +252,22 @@ class CostListAdd extends PureComponent {
   handleFormAddList =(fieldvalues)=>{
     const {dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    const values={
-      certcode:user.certCode,
-      reviewer:fieldvalues.reviewer,
+
+    const costlist={
+      paylistno:fieldvalues.paylistno,
+      paycompany:fieldvalues.paycompany,
       listman:user.nameC,
-      costLists:this.state.costList,
-      listno:fieldvalues.listno,
-      payer:this.state.payer,
+      certcode:user.certCode,
     };
+
+    const values={
+      costlist,
+      reviewer:fieldvalues.reviewer,
+      costs:this.state.costList,
+    };
+
     dispatch({
-      type: 'charge/addListFetch',
+      type: 'cost/addList',
       payload: values,
       callback: (response) => {
         if (response === "success") {
@@ -251,11 +280,6 @@ class CostListAdd extends PureComponent {
   };
 
 
-  back = () => {
-    router.push({
-      pathname:'/Charge/ListFiction',
-    });
-  };
 
   handleSearch =()=>{
     const { dispatch, form } = this.props;
@@ -270,7 +294,7 @@ class CostListAdd extends PureComponent {
       if(fieldsValue.reciever !==undefined && fieldsValue.reciever !==""){
         mkinds.push('reciever');
         mvalues.push(fieldsValue.reciever);
-        mconditions.push('like');
+        mconditions.push('=');
       }
 
       if(fieldsValue.occurdate !==undefined && fieldsValue.occurdate.length!==0){
@@ -354,7 +378,6 @@ class CostListAdd extends PureComponent {
               </Button>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleSubmit}>拟制
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>返回</Button>
             </span>
           </Col>
         </Row>
@@ -473,7 +496,7 @@ class CostListAdd extends PureComponent {
       loading,
     } = this.props;
 
-    const {costList,modalAddListVisible,total,payer} = this.state;
+    const {costList,modalAddListVisible,total,paycompany} = this.state;
 
     // 下载模板 模态框方法
     const parentMethods = {
@@ -563,7 +586,7 @@ class CostListAdd extends PureComponent {
             <Form onSubmit={this.handleSubmit}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
-              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} costList={costList} total={total} payer={payer} />
+              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} costList={costList} total={total} paycompany={paycompany} />
             </Form>
             <Table
               style={{marginTop:5}}

@@ -273,7 +273,7 @@ class ListFictionAdd extends PureComponent {
       if(fieldsValue.payer !==undefined && fieldsValue.payer !==""){
         mkinds.push('payer');
         mvalues.push(fieldsValue.payer);
-        mconditions.push('like');
+        mconditions.push('=');
       }
 
       if(fieldsValue.reportdate !==undefined && fieldsValue.reportdate.length!==0){

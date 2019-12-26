@@ -21,3 +21,12 @@ export async function selectCostByConditions(params) {
   });
 }
 
+export async function addList(params) {
+  return request('/api/costlist/addList', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
