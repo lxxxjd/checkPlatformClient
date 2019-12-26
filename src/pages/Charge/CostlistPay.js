@@ -69,9 +69,9 @@ class CostlistPay extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.hasPay(text, record)}>支付</a>
+          {text.status==="审核通过"?[<a onClick={() => this.hasPay(text, record)}>支付</a>]:[]}
           &nbsp;&nbsp;
-          <a onClick={() => this.payBack(text, record)}>退款</a>
+          {text.status==="已支付"?[<a onClick={() => this.payBack(text, record)}>退款</a>]:[]}
           &nbsp;&nbsp;
           <a onClick={() => this.goToCostlistDetail(text, record)}>查看</a>
         </Fragment>

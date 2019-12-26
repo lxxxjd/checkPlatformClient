@@ -66,9 +66,9 @@ class CostlistEdit extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.goToCostlistDetailReviewPass(text, record)}>通过</a>
+          {text.status==="已拟制"||text.status==="审核退回"?[<a onClick={() => this.goToCostlistDetailReviewPass(text, record)}>通过</a>]:[]}
           &nbsp;&nbsp;
-          <a onClick={() => this.goToCostlistDetailReviewBack(text, record)}>退回</a>
+          {text.status==="审核通过"?[<a onClick={() => this.goToCostlistDetailReviewBack(text, record)}>退回</a>]:[]}
           &nbsp;&nbsp;
           <a onClick={() => this.goToCostlistDetail(text, record)}>查看</a>
         </Fragment>
