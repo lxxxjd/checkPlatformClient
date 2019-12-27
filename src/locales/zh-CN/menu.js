@@ -1,5 +1,6 @@
 import InspmanDetail from '../../pages/TaskAppoint/InspmanDetail';
 import CertificateReview from '../../pages/Certificate/CertificateReview';
+import CostlistEdit from '../../pages/Charge/CostlistEdit';
 
 export default {
   'menu.home': '首页',
@@ -14,6 +15,7 @@ export default {
   'menu.Entrustment.ModifyForEntrustment':'修改委托',
   'menu.Entrustment.CopyForEntrustmentList':'复制委托',
   'menu.Entrustment.AcceptList':'委托受理',
+  'menu.Entrustment.Accept':'委托',
   'menu.Entrustment.DetailForUnAccept':'受理详情',
   'menu.Entrustment.CopyForEntrustment':'复制委托详情',
   'menu.TaskAppoint': '任务指派',
@@ -41,15 +43,23 @@ export default {
   'menu.Charge':'财务管理',
   'menu.Charge.FinalPrice':'最终定价',
   'menu.Charge.FinalPriceDetail':'最终定价详情',
-  'menu.Charge.ListFiction':'清单拟制',
-  'menu.Charge.ListFictionAdd':'清单新增',
-  'menu.Charge.ListFictionReview':'清单审核详情',
+  'menu.Charge.ListFiction':'清单编辑',
+  'menu.Charge.ListFictionAdd':'清单拟制',
+  'menu.Charge.ListFictionReview':'清单审核通过详情',
+  'menu.Charge.ListFictionReviewBack':'清单审核退回详情',
   'menu.Charge.ListReview':'清单审核',
   'menu.Charge.DetailList':'清单详情',
-  'menu.Charge.ListPay':'费用到账',
-  'menu.Charge.Invoice':'发票开具',
-  'menu.Charge.Cost':'成本统计',
+  'menu.Charge.ListPay':'收入到账',
+  'menu.Charge.Invoice':'开具发票',
+  'menu.Charge.Cost':'成本登记',
+  'menu.Charge.CostlistEdit':'成本清单',
   'menu.Charge.CostEdit':'成本登记',
+  'menu.Charge.CostListAdd':'成本拟制',
+  'menu.Charge.CostListDetail':'成本清单详情',
+  'menu.Charge.CostlistReview':'成本审核',
+  'menu.Charge.CostListDetailReviewBack':'成本审核退回',
+  'menu.Charge.CostListDetailReviewPass':'成本审核通过',
+  'menu.Charge.CostlistPay':'成本支付',
   'menu.Archives':'业务归档',
   'menu.Archives.ArchivesAdd':'归档',
   'menu.Archives.ArchivesDestory':'退档',
@@ -91,6 +101,8 @@ export default {
   'menu.DictMaintain.BusinessSort':'业务分类',
   'menu.DictMaintain.BusinessSource':'业务来源',
   'menu.DictMaintain.InvoiceTitle':'发票信息',
+  'menu.DictMaintain.SurveyStandard':'检验标准',
+  'menu.DictMaintain.Intrusment':'仪器信息',
 
   'menu.CompanyManage':'公司管理',
   'menu.CompanyManage.CompanyInfo':'公司信息',
@@ -141,6 +153,8 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
 
+  'menu.Main': '主页',
+  'menu.Main.Main': '主页',
 
   'menu.Statistics':'数据统计',
   'menu.Statistics.BusinessIncome':'业务收入',
@@ -148,4 +162,10 @@ export default {
   'menu.Statistics.ReportPriceMakingQuery':'利润分析',
   'menu.Statistics.IncomeDistribution':'收入分配',
   'menu.Statistics.ExpenditureBurden':'支出负担',
+  'menu.CNAS':'CNAS管理',
+  'menu.CNAS.CNASCheckFourCertCode':'CNAS信息',
+  'menu.CNAS.CNASCheckStandard':'CNAS标准',
+  'menu.CNAS.CNASCheckInsMan':'CNAS检查人员',
+  'menu.CNAS.CNASCheckAuthor':'CNAS授权签字',
+
 };

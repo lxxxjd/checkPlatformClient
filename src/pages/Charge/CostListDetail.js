@@ -18,49 +18,50 @@ import styles from './DetailList.less';
 const { Option } = Select;
 
 
-
-
-
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ charge, loading }) => ({
-  charge,
-  loading: loading.models.charge,
+@connect(({ costlist, loading }) => ({
+  costlist,
+  loading: loading.models.costlist,
 }))
-class DetailList extends PureComponent {
+class CostListDetail extends PureComponent {
   state = {
     list:{},
+    dataSource:[],
   };
 
   columns = [
     {
-      title: '委托编号',
-      dataIndex: 'reportno',
+      title: '费用名称',
+      dataIndex: 'costname',
     },
     {
-      title: '委托日期',
-      dataIndex: 'reportdate',
+      title: '费用种类',
+      dataIndex: 'costtype',
+    },
+
+    {
+      title: '发生日期',
+      dataIndex: 'occurdate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '船名标识',
-      dataIndex: 'shipname',
+      title: '金额',
+      dataIndex: 'costmoney',
     },
     {
-      title: '检查品名',
-      dataIndex: 'cargoname',
+      title: '接收人',
+      dataIndex: 'reciever',
+    },
+
+    {
+      title: '登记日期',
+      dataIndex: 'registdate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
-    },
-    // {
-    //   title: '付款人',
-    //   dataIndex: 'payer',
-    // },
-    {
-      title: '价格',
-      dataIndex: 'total',
+      title: '登记人',
+      dataIndex: 'register',
     },
     {
       title: '状态',
@@ -74,14 +75,18 @@ class DetailList extends PureComponent {
 
   init =()=>{
     const { dispatch } = this.props;
-    const listView = JSON.parse(sessionStorage.getItem("reportnoForList"));
+    const listView = JSON.parse(sessionStorage.getItem("CostListDetail_costlist"));
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     this.setState({list:listView});
-    const values = {
-      listno:listView.listno,
-    };
+    const values = new FormData();
+    values.append("paylistno",listView.paylistno);
+    values.append("certcode",user.certCode);
     dispatch({
-      type: 'charge/getReportListBylistnoFetch',
+      type: 'costlist/getCostBylistNO',
       payload:values,
+      callback: (response) => {
+        this.state.dataSource = response;
+      }
     });
   };
 
@@ -90,7 +95,7 @@ class DetailList extends PureComponent {
     if(val!==undefined && val!==null){
       return  <span>{message}: &nbsp;{ moment(val).format('YYYY-MM-DD')}</span>;
     }
-    return  <span> {message}:</span>;
+    return  <span />;
   };
 
   // eslint-disable-next-line no-shadow
@@ -98,7 +103,7 @@ class DetailList extends PureComponent {
     if(val!==undefined &&  val !==null){
       return  <span>{message}: &nbsp;{val}</span>;
     }
-    return  <span> {message}:</span>;
+    return  <span />;
   };
 
 
@@ -109,11 +114,10 @@ class DetailList extends PureComponent {
 
     render(){
     const {
-      charge:{reportByListno},
       loading,
     } = this.props;
 
-    const {list} = this.state;
+    const {list,dataSource} = this.state;
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
@@ -125,53 +129,49 @@ class DetailList extends PureComponent {
             </Col>
           </Row>
           <Row className={styles.card}>
-            <Col sm={5}>
-              <span level={4}> 清单编号：{list.listno} </span>
+            <Col sm={6}>
+              <span level={4}> 清单编号：{list.paylistno} </span>
             </Col>
-            <Col sm={10}>
-              <span> 付款人：{list.payer} </span>
-            </Col>
-            <Col sm={5}>
-              <span level={4}> 金额：{list.total} </span>
+            <Col sm={12}>
+              <span> 接收人：{list.paycompany} </span>
             </Col>
           </Row>
           <Row className={styles.card2}>
-            <Col sm={5}>
-              <span> 状态：{list.paystatus} </span>
+            <Col sm={6}>
+              <span level={4}> 金额：{list.listmoney} </span>
             </Col>
-            <Col sm={5}>
-              {this.initData(list.listdate,'拟制日期')}
+            <Col sm={6}>
+              <span> 拟制人：{list.listman} </span>
             </Col>
-            <Col sm={5}>
-              {this.initData(list.invoiceDate,'开票日期')}
+            <Col sm={6}>
+              <span> 状态：{list.status} </span>
             </Col>
-            <Col sm={5}>
-              {this.initData(list.paydate,'到账/退账日期')}
+            <Col sm={6}>
+              {this.initData(list.statusDate,'状态日期')}
             </Col>
           </Row>
-
           <Row className={styles.card2}>
-            <Col sm={5}>
-              {this.initStringData(list.invoiceTitle,'到账账户')}
+            <Col sm={6}>
+              {this.initStringData(list.reviewer,'审核人')}
             </Col>
-            <Col sm={5}>
-              {this.initStringData(list.invoicesort,'发票类型')}
+            <Col sm={6}>
+              {this.initData(list.reviewDate,'审核日期')}
             </Col>
-            <Col sm={5}>
-              {this.initStringData(list.invoiceno,'发票号码')}
+            <Col sm={6}>
+              {this.initStringData(list.refundMan,'退款人')}
             </Col>
-            <Col sm={5}>
-              {this.initStringData(list.payway,'付款方式')}
+            <Col sm={6}>
+              {this.initData(list.refundDate,'退款日期')}
             </Col>
           </Row>
           <div className={styles.tableList}>
             <Table
               loading={loading}
-              dataSource={reportByListno}
+              dataSource={dataSource}
               columns={this.columns}
-              rowKey="reportno"
-              pagination={false}
-              // pagination={{showQuickJumper:true,showSizeChanger:true}}
+              rowKey="keyno"
+              // pagination={false}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
         </Card>
@@ -180,4 +180,4 @@ class DetailList extends PureComponent {
   }
 }
 
-export default DetailList;
+export default CostListDetail;

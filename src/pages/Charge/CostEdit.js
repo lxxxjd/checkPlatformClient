@@ -185,14 +185,17 @@ const CostAddNewForm = Form.create()(props => {
             rules: [{ required: true,message: '选择费用种类'}],
           })(
             <Select placeholder="请选择费用种类">
-              <Option value="车辆">劳务费.</Option>
-              <Option value="耗材">差旅费</Option>
-              <Option value="餐饮费">邮寄费</Option>
-              <Option value="住宿费">误支费</Option>
-              <Option value="交通费">分包费</Option>
+              <Option value="车辆">车辆</Option>
+              <Option value="耗材">耗材</Option>
+              <Option value="餐饮费">餐饮费</Option>
+              <Option value="住宿费">住宿费</Option>
               <Option value="外聘劳务">交通费</Option>
-              <Option value="仪器设备">其他费</Option>
-              <Option value="药品试剂">其他费</Option>
+              <Option value="仪器设备">仪器设备</Option>
+              <Option value="药品试剂">药品试剂</Option>
+              <Option value="交通费">交通费</Option>
+              <Option value="邮寄费">邮寄费</Option>
+              <Option value="误支费">误支费</Option>
+              <Option value="其他费">其他费</Option>
             </Select>
           )}
         </Form.Item>

@@ -260,7 +260,13 @@ class CertificateAbandon extends PureComponent {
     },
   ];
 
+
+
   componentDidMount() {
+    this.init();
+  }
+
+  init =()=>{
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
@@ -269,7 +275,7 @@ class CertificateAbandon extends PureComponent {
         certCode:user.certCode
       }
     });
-  }
+  };
 
   applyAbandon = (text)=>{
     this.handleApplyAbandonVisible(true);
@@ -290,7 +296,7 @@ class CertificateAbandon extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const formData = new FormData();
     formData.append('reportno',AbandonText.reportno);
-    formData.append('applyname',user.username);
+    formData.append('applyname',user.userName);
     formData.append('reason',fieldValues.dealreason);
     dispatch({
       type: 'certificate/applyAbandon',
@@ -298,6 +304,7 @@ class CertificateAbandon extends PureComponent {
       callback: (response) => {
         if(response==="success"){
           message.success("申请作废成功");
+          this.init();
         }else{
           message.error("申请作废失败");
         }
@@ -313,7 +320,7 @@ class CertificateAbandon extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const formData = new FormData();
     formData.append('reportno',AbandonText.reportno);
-    formData.append('abandoner',user.username);
+    formData.append('abandoner',user.userName);
     formData.append('abandonreason',fieldValues.abandonreason);
     dispatch({
       type: 'certificate/abandonCert',
@@ -321,6 +328,7 @@ class CertificateAbandon extends PureComponent {
       callback: (response) => {
         if(response==="success"){
           message.success("作废成功");
+          this.init();
         }else{
           message.error("作废失败");
         }
@@ -357,35 +365,7 @@ class CertificateAbandon extends PureComponent {
     this.handleModalReadRecordVisible(true);
 };
 
-  publishItem =(text) =>{
-    const { dispatch } = this.props;
-    const formData = new FormData();
-    formData.append('reportno',text.reportno);
-    console.log(text)
-    dispatch({
-      type: 'certificate/publishCert',
-      payload:formData,
-      callback: (response) => {
-        console.log(response);
-        if(response==="success"){
-          notification.open({
-            message: '发布成功',
-            description:'发布成功',
-          });
-        }else if(response==="fail"){
-          notification.open({
-            message: '发布失败',
-            description: '存在未完成的证书，请完成后发布',
-          });
-        }else{
-          notification.open({
-            message: '发布失败',
-            description: '发布失败',
-          });
-        }
-      }
-    });
-  };
+
 
   modifyItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -491,7 +471,7 @@ class CertificateAbandon extends PureComponent {
     const {modalReadRecordVisible,ReadRecordData,modalApplyAbandonVisible,modalAbandonVisible,}  = this.state;
 
 
-    // 下载模板 模态框方法
+    // 模态框方法
     const parentMethods = {
       handleModalReadRecordVisible :this.handleModalReadRecordVisible,
       handleApplyAbandonVisible:this.handleApplyAbandonVisible,

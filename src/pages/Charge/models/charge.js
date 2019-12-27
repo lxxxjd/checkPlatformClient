@@ -1,6 +1,7 @@
 import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getAllCost ,
   addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost} from '@/services/Charge';
 import { getAllClientName } from '@/services/Entrustment';
+import { getInvoiceTitleList } from '@/services/InvoiceTitle';
 
 export default {
   namespace: 'charge',
@@ -12,6 +13,7 @@ export default {
     deleteinfo:{}, // 删除返回信息
     reportByListno:[], // 按listno 返回所有report
     passListFictionResult:{}, // 审核返回值
+    getInvoiceTitleListResult:[],
     costData:[],  // 成本信息
     costInfoData:[],  // 成本信息
     costAddResult:{}, // 添加成本返回信息
@@ -19,6 +21,17 @@ export default {
     costUpdateResult:{}, // 更新成本信息
   },
   effects: {
+
+
+    *getInvoiceTitleList({ payload,callback }, { call, put }) {
+      const response = yield call(getInvoiceTitleList, payload);
+      yield put({
+        type: 'getInvoiceTitleListResult',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
     *fetch({ payload,callback }, { call, put }) {
       const response = yield call(getAllList, payload);
       yield put({
@@ -240,6 +253,14 @@ export default {
         clientName: payload.data,
       };
     },
+
+    getInvoiceTitleListResult(state, { payload }) {
+      return {
+        ...state,
+        getInvoiceTitleListResult: payload.data,
+      };
+    },
+
 
   }
 

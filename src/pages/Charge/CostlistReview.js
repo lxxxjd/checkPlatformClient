@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
-import { connect } from 'dva';
+import { connect } from 'dva/index';
 import router from 'umi/router';
-import moment from 'moment';
 import {
   Row,
   Col,
@@ -11,27 +10,30 @@ import {
   Button,
   Select,
   Table, message,
-} from 'antd';
+} from 'antd/lib/index';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import moment from 'moment/moment';
 import styles from '../table.less';
 
+const FormItem = Form.Item;
 const { Option } = Select;
 
-/* eslint react/no-multi-comp:0 */
-@Form.create()
-@connect(({ charge, loading }) => ({
-  charge,
-  loading: loading.models.charge,
+@connect(({ costlist, loading }) => ({
+  costlist,
+  loading: loading.models.costlist,
 }))
-class ListFiction extends PureComponent {
+@Form.create()
+class CostlistEdit extends PureComponent {
   state = {
+    dataSource:[],
   };
 
   columns = [
     {
       title: '清单号',
-      dataIndex: 'listno',
+      dataIndex: 'paylistno',
     },
+
     {
       title: '拟制日期',
       dataIndex: 'listdate',
@@ -42,90 +44,59 @@ class ListFiction extends PureComponent {
       dataIndex: 'listman',
     },
     {
-      title: '付款人',
-      dataIndex: 'payer',
+      title: '接收人',
+      dataIndex: 'paycompany',
     },
     {
       title: '金额',
-      dataIndex: 'total',
+      dataIndex: 'listmoney',
     },
     {
-      title: '状态',
-      dataIndex: 'paystatus',
+      title: '状态日期',
+      dataIndex: 'statusDate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
+
+    {
+      title: '状态',
+      dataIndex: 'status',
+    },
+
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {(record.paystatus==='未审核'||text.paystatus==='审核退回')?[ <span><a onClick={() => this.deleteBylistno(text, record)}>删除</a></span>]:null}
+          {text.status==="已拟制"||text.status==="审核退回"?[<a onClick={() => this.goToCostlistDetailReviewPass(text, record)}>通过</a>]:[]}
           &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text)}>查看</a>
+          {text.status==="审核通过"?[<a onClick={() => this.goToCostlistDetailReviewBack(text, record)}>退回</a>]:[]}
+          &nbsp;&nbsp;
+          <a onClick={() => this.goToCostlistDetail(text, record)}>查看</a>
         </Fragment>
       ),
     },
   ];
 
+
+
+
   componentDidMount() {
     this.init();
   }
 
-
-
-  deleteBylistno = text => {
+  init =()=>{
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
-    const values = {
-      listno :text.listno,
+    const params = {
+      certCode:user.certCode
     };
     dispatch({
-      type: 'charge/deleteBylistnoFetch',
-      payload: values,
+      type: 'costlist/getCostlistList',
+      payload: params,
       callback: (response) => {
-        if(response==="success"){
-          message.success('删除成功');
-          this.init();
-        }else{
-          message.success('删除失败');
+        if (response){
+          this.state.dataSource = response.data;
         }
       }
-    });
-  };
-
-  init =()=>{
-    const { dispatch } = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    dispatch({
-      type: 'charge/fetch',
-      payload:{
-        certCode:user.certCode
-      }
-    });
-  }
-
-
-  previewItem = text => {
-    sessionStorage.setItem('reportnoForList',JSON.stringify(text));
-    router.push({
-      pathname:'/Charge/DetailList',
-    });
-  };
-
-  handleSearch = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-        certCode:user.certCode,
-      };
-      dispatch({
-        type: 'charge/fetch',
-        payload: values,
-      });
     });
   };
 
@@ -135,7 +106,57 @@ class ListFiction extends PureComponent {
     this.init();
   };
 
+  goToCostlistDetailReviewPass = text => {
+    sessionStorage.setItem('CostListDetailReviewPass_costlist',JSON.stringify(text));
+    router.push({
+      pathname:'/Charge/CostListDetailReviewPass',
+    });
+  };
 
+  goToCostlistDetailReviewBack = text => {
+    sessionStorage.setItem('CostListDetailReviewBack_costlist',JSON.stringify(text));
+    router.push({
+      pathname:'/Charge/CostListDetailReviewBack',
+    });
+  };
+
+
+  handleSearch = e=> {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const values = {
+        kind :fieldsValue.kind.trim(),
+        value: fieldsValue.value.trim(),
+        certCode:user.certCode,
+      };
+      dispatch({
+        type: 'costlist/getCostlistList',
+        payload: values,
+        callback: (response) => {
+          if (response){
+            this.state.dataSource = response.data;
+          }
+        }
+      });
+    });
+  };
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
+
+  goToCostlistDetail = text => {
+    sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
+    router.push({
+      pathname:'/Charge/CostListDetail',
+    });
+  };
 
   renderSimpleForm() {
     const {
@@ -144,29 +165,34 @@ class ListFiction extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={3}>
+          <Col md={3} sm={20}>
             <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:"paylistno",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="listno">清单号</Option>
+                  <Option value="paylistno">清单号</Option>
+                  <Option value="paycompany">接收人</Option>
                   <Option value="listman">拟制人</Option>
-                  <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
+                  <Option value="refundMan">退款人</Option>
+                  <Option value="status">状态</Option>
+
                 </Select>
               )}
             </Form.Item>
           </Col>
-          <Col span={6}>
-            <Form.Item>
+          <Col md={6} sm={20}>
+            <FormItem>
               {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
-            </Form.Item>
+            </FormItem>
           </Col>
 
-          <Col span={5}>
+          <Col md={8} sm={20}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -174,7 +200,6 @@ class ListFiction extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toListFictionAdd}>新建</Button>
             </span>
           </Col>
         </Row>
@@ -182,17 +207,15 @@ class ListFiction extends PureComponent {
     );
   }
 
-  toListFictionAdd= () => {
-    router.push({
-      pathname:'/Charge/ListFictionAdd',
-    });
-  };
+
+
 
   render() {
     const {
-      charge:{data},
       loading,
     } = this.props;
+
+    const { dataSource} = this.state;
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
@@ -201,9 +224,9 @@ class ListFiction extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={data}
+              dataSource={dataSource}
               columns={this.columns}
-              rowKey="listno"
+              rowKey="paylistno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
@@ -213,4 +236,4 @@ class ListFiction extends PureComponent {
   }
 }
 
-export default ListFiction;
+export default CostlistEdit;

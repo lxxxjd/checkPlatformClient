@@ -72,8 +72,6 @@ class ListFictionReview extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>定价</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
           &nbsp;&nbsp;
         </Fragment>
@@ -96,7 +94,7 @@ class ListFictionReview extends PureComponent {
       type: 'charge/getReportListBylistnoFetch',
       payload:values,
     });
-  }
+  };
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -110,13 +108,13 @@ class ListFictionReview extends PureComponent {
 
 
   handlePass = () => {
-    this.handleReview('已审核',"审核通过成功");
-  }
+    this.handleReview('审核通过',"审核通过成功");
+  };
 
   handleReview  =(state,text) => {
     const { dispatch} = this.props;
     let  values = this.state.list;
-    values.invoiceStatus=state;
+    values.paystatus=state;
     dispatch({
       type: 'charge/passListFictionFetch',
       payload:values,
@@ -130,61 +128,18 @@ class ListFictionReview extends PureComponent {
         }
       }
     });
-  }
+  };
 
   handleNoPass = () => {
-    this.handleReview('已退回',"退回成功");
-  }
+    this.handleReview('审核退回',"退回成功");
+  };
 
 
   back = () => {
     router.push({
-      pathname:'/Charge/ListFiction',
+      pathname:'/Charge/ListReview',
     });
   };
-
-
-
-  renderSimpleForm() {
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={6}>
-            <Form.Item
-              label="清单号"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              colon={false} >
-              {getFieldDecorator('listno', {
-                rules: [{ required: true, message: '请输入清单号' }],
-              })(<Input title="清单号" style={{ width: '100%' }} placeholder="请输入清单号" />)}
-            </Form.Item>
-          </Col>
-
-          <Col span={6}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-              label="付款人"
-            >
-              {getFieldDecorator('payer', {
-                rules: [{  message: '请选择付款人' }],
-              })(
-                <Select placeholder="请选择付款人">
-                  <Option value="FIBRANT CO., LTD.">FIBRANT CO., LTD.</Option>
-                  <Option value="applicant">委托人</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
 
 
 
@@ -203,10 +158,6 @@ class ListFictionReview extends PureComponent {
             <Col span={2}>
               <Button type="primary" onClick={this.handlePass}>通过</Button>
             </Col>
-            <Col span={2}>
-              <Button type="primary" onClick={this.handleNoPass} style={{ marginLeft: 1 }}>退回</Button>
-            </Col>
-
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 1  ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
                 <Icon type="left" />返回

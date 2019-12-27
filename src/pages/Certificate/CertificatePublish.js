@@ -98,6 +98,10 @@ class CertificatePublish extends PureComponent {
   ];
 
   componentDidMount() {
+   this.init();
+  }
+
+  init =()=>{
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
@@ -106,7 +110,7 @@ class CertificatePublish extends PureComponent {
         certCode:user.certCode
       }
     });
-  }
+  };
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -128,6 +132,7 @@ class CertificatePublish extends PureComponent {
             message: '发布成功',
             description:'发布成功',
           });
+          this.init();
         }else if(response==="fail"){
           notification.open({
             message: '发布失败',

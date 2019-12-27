@@ -24,34 +24,20 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // Entrustment
-      { path: '/', redirect: '/Entrustment/ApplicationForEntrustment',authority: ['admin', 'user']},
+      { path: '/', redirect: '/Main/Main',authority: ['admin', 'user']},
 
-      // // 证书
-      // {
-      //   path: '/list',
-      //   icon: 'table',
-      //   name: 'list',
-      //   routes: [
-      //     {
-      //       path: '/list/table-list',
-      //       name: 'searchtable',
-      //       component: './List/TableList',
-      //     }
-      //   ],
-      // },
-      // //newPage
-      // {
-      //   path: "/Certificate",
-      //   icon: "file",
-      //   name: "Certificate",
-      //   routes: [
-      //     {
-      //       path: "/Certificate/Certificate",
-      //       name: "Certificate",
-      //       component: "./Certificate/Certificate"
-      //     }
-      //   ],
-      // },
+      {
+        path: '/Main',
+        icon: 'profile',
+        name: 'Main',
+        routes: [
+          {
+            path: '/Main/Main',
+            name: 'Main',
+            component: './Main/Main',
+          },
+        ],
+      },
       {
         path: "/Entrustment",
         icon: "file",
@@ -380,20 +366,26 @@ export default [
             component: './Charge/ListFiction',
           },
           {
+            path: '/Charge/ListFictionAdd',
+            name: 'ListFictionAdd',
+            component: './Charge/ListFictionAdd',
+          },
+          {
             path: '/Charge/ListReview',
             name: 'ListReview',
             component: './Charge/ListReview',
           },
           {
-            path: '/Charge/ListFictionAdd',
-            name: 'ListFictionAdd',
-            component: './Charge/ListFictionAdd',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-          {
             path: '/Charge/ListFictionReview',
             name: 'ListFictionReview',
             component: './Charge/ListFictionReview',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Charge/ListFictionReviewBack',
+            name: 'ListFictionReviewBack',
+            component: './Charge/ListFictionReviewBack',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
@@ -415,6 +407,33 @@ export default [
             component: './Charge/Cost',
           },
 
+
+          {
+            path: '/Charge/CostlistEdit',
+            name: 'CostlistEdit',
+            component: './Charge/CostlistEdit',
+          },
+
+          {
+            path: '/Charge/CostListAdd',
+            name: 'CostListAdd',
+            component: './Charge/CostListAdd',
+          },
+
+          {
+            path: '/Charge/CostlistReview',
+            name: 'CostlistReview',
+            component: './Charge/CostlistReview',
+          },
+
+          {
+            path: '/Charge/CostlistPay',
+            name: 'CostlistPay',
+            component: './Charge/CostlistPay',
+          },
+
+
+
           {
             path: '/Charge/CostEdit',
             name: 'CostEdit',
@@ -422,12 +441,37 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
+
           {
             path: '/Charge/DetailList',
             name: 'DetailList',
             component: './Charge/DetailList',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
+          {
+            path: '/Charge/CostListDetail',
+            name: 'CostListDetail',
+            component: './Charge/CostListDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Charge/CostListDetailReviewPass',
+            name: 'CostListDetailReviewPass',
+            component: './Charge/CostListDetailReviewPass',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+
+          {
+            path: '/Charge/CostListDetailReviewBack',
+            name: 'CostListDetailReviewBack',
+            component: './Charge/CostListDetailReviewBack',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+
 
         ],
       },
@@ -560,6 +604,19 @@ export default [
         icon: 'profile',
         name: 'DictMaintain',
         routes: [
+
+          {
+            path: '/DictMaintain/Intrusment',
+            name: 'Intrusment',
+            component: './DictMaintain/Intrusment',
+          },
+
+          {
+            path: '/DictMaintain/SurveyStandard',
+            name: 'SurveyStandard',
+            component: './DictMaintain/SurveyStandard',
+          },
+
           {
             path: '/DictMaintain/CargoList',
             name: 'CargoList',
@@ -691,6 +748,41 @@ export default [
             name: 'ExpenditureBurden',
             component: './Statistics/ExpenditureBurden',
           }
+        ],
+      },
+
+      //CNAS审查
+      {
+        path: '/CNAS',
+        icon: 'profile',
+        name: 'CNAS',
+        routes: [
+          {
+            path: '/CNAS/CNASCheckFourCertCode',
+            name: 'CNASCheckFourCertCode',
+            component: './CNAS/CNASCheckFourCertCode',
+          },
+
+          {
+            path: '/CNAS/CNASCheckStandard',
+            name: 'CNASCheckStandard',
+            component: './CNAS/CNASCheckStandard',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/CNAS/CNASCheckInsMan',
+            name: 'CNASCheckInsMan',
+            component: './CNAS/CNASCheckInsMan',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/CNAS/CNASCheckAuthor',
+            name: 'CNASCheckAuthor',
+            component: './CNAS/CNASCheckAuthor',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 
