@@ -662,6 +662,11 @@ export default [
         name: 'Statistics',
         routes: [
 
+          {
+            path: '/Statistics/BusinessIncome',
+            name: 'BusinessIncome',
+            component: './Statistics/BusinessIncome',
+          },
 
           {
             path: '/Statistics/CostQuery',
@@ -675,8 +680,17 @@ export default [
             component: './Statistics/ReportPriceMakingQuery',
           },
 
+          {
+            path: '/Statistics/IncomeDistribution',
+            name: 'IncomeDistribution',
+            component: './Statistics/IncomeDistribution',
+          },
 
-
+          {
+            path: '/Statistics/ExpenditureBurden',
+            name: 'ExpenditureBurden',
+            component: './Statistics/ExpenditureBurden',
+          }
         ],
       },
 

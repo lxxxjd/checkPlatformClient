@@ -143,7 +143,9 @@ export default {
 
 
   'menu.Statistics':'数据统计',
+  'menu.Statistics.BusinessIncome':'业务收入',
   'menu.Statistics.CostQuery':'成本统计',
   'menu.Statistics.ReportPriceMakingQuery':'利润分析',
-
+  'menu.Statistics.IncomeDistribution':'收入分配',
+  'menu.Statistics.ExpenditureBurden':'支出负担',
 };
