@@ -46,3 +46,19 @@ export async function getCostBylistNO(params) {
   });
 }
 
+// 数据统计-支出负担-查询
+export async function selectCostListsByConditions(params) {
+  return request('/api/costlist/selectCostListsByCondtions', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 数据统计-支出负担-查询总额
+export async function selectCostListTotalByConditions(params) {
+  return request('/api/costlist/selectCostListTotalByConditions', {
+      method: 'POST',
+      data: params,
+  });
+}
+
