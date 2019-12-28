@@ -719,6 +719,11 @@ export default [
         name: 'Statistics',
         routes: [
 
+          {
+            path: '/Statistics/BusinessIncome',
+            name: 'BusinessIncome',
+            component: './Statistics/BusinessIncome',
+          },
 
           {
             path: '/Statistics/CostQuery',
@@ -731,6 +736,18 @@ export default [
             name: 'ReportPriceMakingQuery',
             component: './Statistics/ReportPriceMakingQuery',
           },
+
+          {
+            path: '/Statistics/IncomeDistribution',
+            name: 'IncomeDistribution',
+            component: './Statistics/IncomeDistribution',
+          },
+
+          {
+            path: '/Statistics/ExpenditureBurden',
+            name: 'ExpenditureBurden',
+            component: './Statistics/ExpenditureBurden',
+          }
         ],
       },
 
@@ -766,8 +783,6 @@ export default [
             component: './CNAS/CNASCheckAuthor',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
-
-
         ],
       },
 

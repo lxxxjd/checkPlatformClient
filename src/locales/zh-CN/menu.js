@@ -157,14 +157,15 @@ export default {
   'menu.Main.Main': '主页',
 
   'menu.Statistics':'数据统计',
+  'menu.Statistics.BusinessIncome':'业务收入',
   'menu.Statistics.CostQuery':'成本统计',
   'menu.Statistics.ReportPriceMakingQuery':'利润分析',
-
+  'menu.Statistics.IncomeDistribution':'收入分配',
+  'menu.Statistics.ExpenditureBurden':'支出负担',
   'menu.CNAS':'CNAS管理',
   'menu.CNAS.CNASCheckFourCertCode':'CNAS信息',
   'menu.CNAS.CNASCheckStandard':'CNAS标准',
   'menu.CNAS.CNASCheckInsMan':'CNAS检查人员',
   'menu.CNAS.CNASCheckAuthor':'CNAS授权签字',
-
 
 };
