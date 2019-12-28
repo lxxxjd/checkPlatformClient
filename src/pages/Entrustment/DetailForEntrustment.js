@@ -72,6 +72,7 @@ class DetailForEnturstment extends Component {
       }
     });
   }
+
   componentDidMount(){
     const {
       entrustment:{ report  },

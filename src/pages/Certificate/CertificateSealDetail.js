@@ -79,7 +79,7 @@ const CertForm = Form.create()(props => {
             </Row>
           </div>
         </Content>
-        <Sider theme='light' width={280} style={{paddingLeft:15}}>
+        <Sider theme='light' width={310} style={{paddingLeft:60}}>
           <Tree showLine defaultExpandedKeys={['reportDetail']} defaultExpandAll onSelect={onSelect}>{renderTreeNodes(treeData)}</Tree>
         </Sider>
       </Layout>

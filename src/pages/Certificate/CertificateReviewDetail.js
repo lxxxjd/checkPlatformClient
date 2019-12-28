@@ -71,12 +71,12 @@ const CertForm = Form.create()(props => {
         </div>
       ]}
       style={{ top: 10 }}
-      width={document.body.clientWidth}
-      height={document.body.clientHeight}
+      width={document.body.clientWidth*0.9}
+      height={document.body.clientHeight*0.9}
     >
       <Layout>
-        <Content>
-          <div style={{backgroundColor:'white'}}>
+        <Content style={{margin:10}}>
+          <div>
             <Row>
               <Col span={12}>
                 <embed src={Certurls} style={{width:'90%', height:document.body.clientHeight*0.8}} type="application/pdf" />
@@ -87,7 +87,7 @@ const CertForm = Form.create()(props => {
             </Row>
           </div>
         </Content>
-        <Sider theme='light' width={280} style={{paddingLeft:15}}>
+        <Sider theme='light' width={310}>
           <Tree showLine defaultExpandedKeys={['reportDetail']} defaultExpandAll onSelect={onSelect}>{renderTreeNodes(treeData)}</Tree>
         </Sider>
       </Layout>
@@ -555,7 +555,7 @@ class CertificateUploadDetail extends PureComponent {
   renderReportForm() {
     const {reportDetail} = this.state;
     return (
-      <div style={{width:'100%',backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white',padding:10}}>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="业务信息" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
           <Descriptions.Item label="委托编号">{reportDetail.reportno}</Descriptions.Item>
           <Descriptions.Item label="委托日期">{moment(reportDetail.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
@@ -593,7 +593,7 @@ class CertificateUploadDetail extends PureComponent {
   renderCheckForm() {
     const {checkData} = this.state;
     return (
-      <div style={{width:'100%',backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white',padding:10}}>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="现场检查" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
           <Descriptions.Item label="检查项目">{checkData.inspway}</Descriptions.Item>
           <Descriptions.Item label="开始日期">{moment(checkData.begindate).format('YYYY-MM-DD')}</Descriptions.Item>
@@ -612,7 +612,7 @@ class CertificateUploadDetail extends PureComponent {
   renderLinkFileForm (){
     const  {urls}  = this.state;
     return (
-      <div style={{width:'100%',backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white',padding:10}}>
         <embed runat="server" src={urls} style={{width:'100%', height:document.body.clientHeight*0.8}} type="application/pdf" />
       </div>
     );
@@ -625,7 +625,7 @@ class CertificateUploadDetail extends PureComponent {
     const {renderFormData,renderFormColumns} = this.state;
     const {loading} = this.props;
     return (
-      <div style={{width:'100%',backgroundColor:'white'}}>
+      <div style={{width:'100%',backgroundColor:'white',padding:10}}>
         <Table
           size="middle"
           dataSource={renderFormData}
