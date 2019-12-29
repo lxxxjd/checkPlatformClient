@@ -96,11 +96,8 @@ export default {
     },
 
     *updateUser({ payload,callback }, { call, put }) {
+      console.log("nbb");
       const response = yield call(updateUser, payload);
-      yield put({
-        type: 'getUpdateUserResult',
-        payload: response,
-      });
       if (callback) callback(response.data);
     },
 

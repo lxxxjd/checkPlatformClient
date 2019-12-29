@@ -76,6 +76,11 @@ export async function checkUserName(params) {
 
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function updateUser(params) {
+  if(params.role !== null && params.role !== undefined){
+    const role = params.role.join(' ');
+    params.role = role;
+  }
+  console.log("ser");
   return request(`/api/user/updateUser`,{
     method: 'POST',
     data: {
@@ -87,6 +92,10 @@ export async function updateUser(params) {
 //
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function addUser(params) {
+  if(params.role !== null && params.role !== undefined){
+    const role = params.role.join(' ');
+    params.role = role;
+  }
   return request(`/api/user/addUser`,{
     method: 'POST',
     data: {

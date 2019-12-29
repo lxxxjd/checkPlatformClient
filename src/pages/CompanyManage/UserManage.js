@@ -11,7 +11,8 @@ import {
   Input,
   Button,
   Select,
-  Table, message, Modal, DatePicker,Upload,Icon
+  Radio,
+  Table, message, Modal, DatePicker,Upload,Icon,InputNumber
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment';
@@ -43,7 +44,6 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户名">
         {form.getFieldDecorator('userName', {
           initialValue: modalInfo.userName,
@@ -62,7 +62,7 @@ const CreateForm = Form.create()(props => {
           rules: [
             {
               required: true,
-              message: "请输入不重复的用户名",
+              message: "请输入密码",
             },
           ],
         })(<Input placeholder="请输入密码" />)}
@@ -74,7 +74,7 @@ const CreateForm = Form.create()(props => {
           rules: [
             {
               required: true,
-              message: "请输入不重复的用户名",
+              message: "请输入姓名",
             },
           ],
         })(<Input placeholder="请输入姓名" />)}
@@ -83,12 +83,24 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地址">
         {form.getFieldDecorator('place', {
           initialValue: modalInfo.place,
+          rules: [
+            {
+              required: true,
+              message: "请输入地址",
+            },
+          ],
         })(<Input placeholder="请输入地址" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
         {form.getFieldDecorator('tel', {
           initialValue: modalInfo.tel,
+          rules: [
+            {
+              required: true,
+              message: "请输入电话",
+            },
+          ],
         })(<Input placeholder="请输入电话" />)}
       </FormItem>
 
@@ -96,19 +108,147 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
         {form.getFieldDecorator('section', {
           initialValue: modalInfo.section,
+          rules: [
+            {
+              required: true,
+              message: "请输入部门",
+            },
+          ],
         })(<Input placeholder="请输入部门" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色" colon={false}>
         {form.getFieldDecorator('role', {
           initialValue: modalInfo.role,
+          rules: [
+            {
+              required: true,
+              message: "请选择角色",
+            },
+          ],
         })(
-          <Select style={{width:300}} placeholder="选择角色">
-            <Option value="管理员">管理员</Option>
+          <Select style={{width:300}} placeholder="选择角色" mode="tags">
+            <Option value="总经理">总经理</Option>
+            <Option value="业务副总">业务副总</Option>
+            <Option value="财务副总">财务副总</Option>
+            <Option value="操作经理">操作经理</Option>
+            <Option value="实验室主任">实验室主任</Option>
+            <Option value="财务经理">财务经理</Option>
             <Option value="客服人员">客服人员</Option>
             <Option value="检验人员">检验人员</Option>
             <Option value="检测人员">检测人员</Option>
+            <Option value="财务人员">财务人员</Option>
           </Select>)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="生日" colon={false}>
+        {form.getFieldDecorator('birthday', {
+          initialValue: moment(modalInfo.birthday,"YYYY-MM-DD"),
+        })(
+            <DatePicker
+              placeholder="生日"
+              format="YYYY-MM-DD"
+              getPopupContainer={trigger => trigger.parentNode}
+            />
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="身份证号" colon={false}>
+        {form.getFieldDecorator('idcard', {
+          initialValue: modalInfo.idcard,
+
+          rules: [
+          {
+            required: true,
+            message: "请输入身份证号",
+          },
+          {
+            type: 'number',            
+            transform(value) {
+              if (value) {
+                return Number(value);
+              }
+            }, message: '请输入数字'
+          }],
+        })(
+            <Input  placeholder="请输入身份证号"/>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="文化程度" colon={false}>
+        {form.getFieldDecorator('education', {
+          initialValue: modalInfo.education,
+        })(
+          <Select style={{width:300}} placeholder="选择文化程度">
+            <Option value="初中">初中</Option>
+            <Option value="高中">高中</Option>
+            <Option value="专科">专科</Option>
+            <Option value="本科">本科</Option>
+            <Option value="硕士">硕士</Option>
+            <Option value="博士">博士</Option>
+          </Select>)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="专业" colon={false}>
+        {form.getFieldDecorator('major', {
+          initialValue: modalInfo.major,
+        })(
+            <Input  placeholder="请输入专业"/>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="性别" colon={false}>
+        {form.getFieldDecorator('sex', {
+          initialValue: modalInfo.sex,
+        })(
+            <Radio.Group>
+              <Radio value="男">男</Radio>
+              <Radio value="女">女</Radio>
+            </Radio.Group>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="是否授权签字人" colon={false}>
+        {form.getFieldDecorator('isauthorize', {
+          initialValue: modalInfo.isauthorize,
+          rules: [
+            {
+              required: true,
+              message: "请选择是否授权签字人",
+            },
+          ],
+        })(
+            <Radio.Group>
+              <Radio value="是">是</Radio>
+              <Radio value="否">否</Radio>
+            </Radio.Group>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="职务" colon={false}>
+        {form.getFieldDecorator('workduty', {
+          initialValue: modalInfo.workduty,
+        })(
+            <Input  placeholder="请输入职务"/>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="入岗日期" colon={false}>
+        {form.getFieldDecorator('enterdate', {
+          initialValue: moment(modalInfo.enterdate,"YYYY-MM-DD"),
+        })(
+            <DatePicker
+              placeholder="入岗日期"
+              format="YYYY-MM-DD"
+              getPopupContainer={trigger => trigger.parentNode}
+            />
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="专业年限" colon={false}>
+        {form.getFieldDecorator('majoryears', {
+          initialValue: modalInfo.majoryears,
+        })(
+            <InputNumber  placeholder="年"/>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="岗位年限" colon={false}>
+        {form.getFieldDecorator('workyears', {
+          initialValue: modalInfo.workyears,
+        })(
+            <InputNumber  placeholder="年"/>
+          )}
       </FormItem>
 
     </Modal>
@@ -152,7 +292,7 @@ const AddForm = Form.create()(props => {
           rules: [
             {
               required: true,
-              message: "请输入不重复的用户名",
+              message: "请输入请输入密码",
             },
           ],
         })(<Input placeholder="请输入密码" />)}
@@ -163,7 +303,7 @@ const AddForm = Form.create()(props => {
           rules: [
             {
               required: true,
-              message: "请输入不重复的用户名",
+              message: "请输入请输入姓名",
             },
           ],
         })(<Input placeholder="请输入姓名" />)}
@@ -171,31 +311,167 @@ const AddForm = Form.create()(props => {
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="地址">
         {form.getFieldDecorator('place', {
+          rules: [
+            {
+              required: true,
+              message: "请输入请输入地址",
+            },
+          ],
         })(<Input placeholder="请输入地址" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="电话">
         {form.getFieldDecorator('tel', {
+          rules: [
+            {
+              required: true,
+              message: "请输入请输入电话",
+            },
+          ],
         })(<Input placeholder="请输入电话" />)}
       </FormItem>
 
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
         {form.getFieldDecorator('section', {
+          rules: [
+            {
+              required: true,
+              message: "请输入请输入部门",
+            },
+          ],
         })(<Input placeholder="请输入部门" />)}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色" colon={false}>
         {form.getFieldDecorator('role', {
+           rules: [
+            {
+              required: true,
+              message: "请选择角色",
+            },
+          ],
         })(
-          <Select style={{width:300}} placeholder="选择角色">
-            <Option value="管理员">管理员</Option>
+          <Select style={{width:300}} placeholder="选择角色" mode="tags">
+            <Option value="总经理">总经理</Option>
+            <Option value="业务副总">业务副总</Option>
+            <Option value="财务副总">财务副总</Option>
+            <Option value="操作经理">操作经理</Option>
+            <Option value="实验室主任">实验室主任</Option>
+            <Option value="财务经理">财务经理</Option>
             <Option value="客服人员">客服人员</Option>
             <Option value="检验人员">检验人员</Option>
             <Option value="检测人员">检测人员</Option>
+            <Option value="财务人员">财务人员</Option>
+
           </Select>)}
       </FormItem>
-
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="生日" colon={false}>
+        {form.getFieldDecorator('birthday', {
+        })(
+            <DatePicker
+              placeholder="生日"
+              format="YYYY-MM-DD"
+              getPopupContainer={trigger => trigger.parentNode}
+            />
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="身份证号" colon={false}>
+        {form.getFieldDecorator('idcard', {
+          rules: [
+          {
+            required: true,
+            message: "请输入身份证号",
+          },
+          {
+            type: 'number', 
+            transform(value) {
+              if (value) {
+                return Number(value);
+              }
+            },
+            message: '请输入数字'
+          }],
+        })(
+            <Input  placeholder="请输入身份证号"/>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="文化程度" colon={false}>
+        {form.getFieldDecorator('education', {
+        })(
+          <Select style={{width:300}} placeholder="选择文化程度">
+            <Option value="初中">初中</Option>
+            <Option value="高中">高中</Option>
+            <Option value="专科">专科</Option>
+            <Option value="本科">本科</Option>
+            <Option value="硕士">硕士</Option>
+            <Option value="博士">博士</Option>
+          </Select>)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="专业" colon={false}>
+        {form.getFieldDecorator('major', {
+        })(
+            <Input  placeholder="请输入专业"/>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="性别" colon={false}>
+        {form.getFieldDecorator('sex', {
+        })(
+            <Radio.Group>
+              <Radio value="男">男</Radio>
+              <Radio value="女">女</Radio>
+            </Radio.Group>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="是否授权签字" colon={false}>
+        {form.getFieldDecorator('isauthorize', {
+          rules: [
+            {
+              required: true,
+              message: "请选择是否授权签字",
+            },
+          ],
+        })(
+            <Radio.Group>
+              <Radio value="是">是</Radio>
+              <Radio value="否">否</Radio>
+            </Radio.Group>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="职务" colon={false}>
+        {form.getFieldDecorator('workduty', {
+          rules: [
+            {
+              required: true,
+              message: "请输入职务",
+            },
+          ],
+        })(
+            <Input  placeholder="请输入职务"/>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="入岗日期" colon={false}>
+        {form.getFieldDecorator('enterdate', {
+        })(
+            <DatePicker
+              placeholder="入岗日期"
+              format="YYYY-MM-DD"
+              getPopupContainer={trigger => trigger.parentNode}
+            />
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="专业年限" colon={false}>
+        {form.getFieldDecorator('majoryears', {
+        })(
+            <InputNumber  placeholder="年限"/>
+          )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="岗位年限" colon={false}>
+        {form.getFieldDecorator('workyears', {
+        })(
+            <InputNumber  placeholder="年"/>
+          )}
+      </FormItem>
     </Modal>
   );
 });
@@ -436,6 +712,10 @@ class UserManage extends PureComponent {
     });
   };
   modifyItem = text => {
+    var temp = Object.assign({}, text);
+    const roles = temp.role.split(' ');
+    console.log(roles);
+    temp.role = roles;
     this.setState({
       modalInfo:text,
     });
@@ -497,12 +777,22 @@ class UserManage extends PureComponent {
     prams.tel =  fields.tel;
     prams.section =  fields.section;
     prams.role =  fields.role;
-    const values = {
-      ...prams,
-    };
+    prams.birthday = fields.birthday;
+    prams.idcard = fields.idcard;
+    prams.isauthorize = fields.isauthorize;
+    prams.sex = fields.sex;
+    prams.majoryears = fields.majoryears;
+    prams.workduty = fields.workduty;
+    prams.major = fields.major;
+    prams.enterdate = fields.enterdate;
+    prams.workyears = fields.workyears;
+    prams.education = fields.education;
+    console.log(prams);
     dispatch({
       type: 'company/updateUser',
-      payload:values,
+      payload:{
+        ...prams
+      },
       callback: (response) => {
         if(response==="success")
           message.success("保存成功");
