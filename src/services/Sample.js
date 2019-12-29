@@ -14,12 +14,7 @@ export async function getAllSampleRegister(params) {
 
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function getSampleRegistersByReportNo(params) {
-  return request(`/api/sampleRegister/getSampleRegistersByReportNo`,{
-    method: 'POST',
-    data: {
-      ...params,
-    },
-  });
+  return request(`/api/sampleRegister/getSampleRegistersByReportNo?reportno=${params.reportno}`);
 }
 
 
