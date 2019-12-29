@@ -714,6 +714,11 @@ export default [
             component: './CompanyManage/CompanyUpload',
           },
           {
+            path: '/CompanyManage/Info',
+            name: 'Info',
+            component: './CompanyManage/Info',
+          },
+          {
             path: '/CompanyManage/ManRecord',
             name: 'ManRecord',
             component: './CompanyManage/ManRecord',

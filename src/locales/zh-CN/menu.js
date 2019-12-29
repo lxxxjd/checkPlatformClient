@@ -113,7 +113,7 @@ export default {
   'menu.CompanyManage.TestMan':'分包方',
   'menu.CompanyManage.Port':'常用地点',
   'menu.CompanyManage.ManRecord':'上传文件',
-
+  'menu.CompanyManage.Info':'个人信息',
 
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
