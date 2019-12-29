@@ -23,6 +23,8 @@ const itemRender = (route, params, routes, paths) => {
               {(params.text.shipname===undefined ||params.text.shipname==="")?[]:[<span style={{ marginLeft: 40 }}>船名标识：{params.text.shipname}</span>]}
               {(params.text.sampleno===undefined ||params.text.sampleno==="")?[]:[<span style={{ marginLeft: 40 }}>样品编号：{params.text.sampleno}</span>]}
               {(params.text.cargoname===undefined ||params.text.cargoname==="")?[]:[<span style={{ marginLeft: 40 }}>检查品名：{params.text.cargoname}</span>]}
+              {(params.text.diviceName===undefined ||params.text.diviceName==="")?[]:[<span style={{ marginLeft: 40 }}>仪器名称：{params.text.diviceName}</span>]}
+              {(params.text.nameC===undefined ||params.text.nameC==="")?[]:[<span style={{ marginLeft: 40 }}>人员名称：{params.text.nameC}</span>]}
             </div> );
     // eslint-disable-next-line consistent-return
       return;
