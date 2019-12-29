@@ -722,7 +722,7 @@ export default [
           {
             path: '/Statistics/BusinessIncome',
             name: 'BusinessIncome',
-            component: './Statistics/BusinessIncome',
+            component: './Statistics/BusinessIncomeQuery',
           },
 
           {
@@ -740,13 +740,13 @@ export default [
           {
             path: '/Statistics/IncomeDistribution',
             name: 'IncomeDistribution',
-            component: './Statistics/IncomeDistribution',
+            component: './Statistics/IncomeDistributionQuery',
           },
 
           {
             path: '/Statistics/ExpenditureBurden',
             name: 'ExpenditureBurden',
-            component: './Statistics/ExpenditureBurden',
+            component: './Statistics/ExpenditureBurdenQuery',
           }
         ],
       },
