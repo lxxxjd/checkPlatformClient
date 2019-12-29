@@ -318,6 +318,8 @@ class UserManage extends PureComponent {
           {text.signurl !== null ?[<a onClick={() => this.previewItem(text, record)}>查看签名&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.uploadItem(text, record)}>上传签名</a>
           &nbsp;&nbsp;
+          <a onClick={() => this.fileItem(text, record)}>上传文件</a>
+          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
@@ -408,6 +410,12 @@ class UserManage extends PureComponent {
     return [];
   };
 
+  fileItem = text => {
+    sessionStorage.setItem('nameC',text.nameC);
+    router.push({
+      pathname:'/CompanyManage/ManRecord',
+    });
+  };
 
   previewItem = text =>{
     this.setState({previewVisible:true});

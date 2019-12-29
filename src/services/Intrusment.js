@@ -30,6 +30,10 @@ export async function getInstrument(params) {
   });
 }
 
+export async function getUrl(params) {
+  return request(`/api/cert_report/get_pdf?osspath=${params.url}`);
+}
+
 // deleteInstrument
 export async function deleteInstrument(params) {
   return request(`/api/instrument/deleteInstrument`,{
@@ -38,3 +42,23 @@ export async function deleteInstrument(params) {
   });
 }
 
+export async function deleteInstrumentRecord(params) {
+  return request(`/api/recordinstrument/deleteRecord?keyno=${params.keyno}`);
+}
+
+export async function getInstrumentRecord(params) {
+  return request(`/api/recordinstrument/getRecord`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function uploadInstrumentRecord(params) {
+    return request(`/api/recordinstrument/uploadRecord`,{
+    method: 'POST',
+    // headers: { 'Content-Type': 'multipart/form-data;'},
+    data:params,
+  });
+}

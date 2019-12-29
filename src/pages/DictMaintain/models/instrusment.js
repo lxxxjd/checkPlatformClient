@@ -1,4 +1,4 @@
-import { addInstrument,getInstrument,deleteInstrument,updateInstrument} from '@/services/Intrusment';
+import { addInstrument,getInstrument,deleteInstrument,updateInstrument, getInstrumentRecord, uploadInstrumentRecord, deleteInstrumentRecord, getUrl} from '@/services/Intrusment';
 
 
 
@@ -17,9 +17,24 @@ export default {
       });
       if (callback) callback(response.data);
     },
+    
+    *getUrl({ payload,callback }, { call, put }) {
+      const response = yield call(getUrl, payload);
+      if (callback) callback(response);
+    },
 
-
-
+    *deleteInstrumentRecord({ payload,callback }, { call, put }) {
+      const response = yield call(deleteInstrumentRecord, payload);
+      if (callback) callback(response);
+    },
+    *uploadInstrumentRecord({ payload,callback }, { call, put }) {
+      const response = yield call(uploadInstrumentRecord, payload);
+      if (callback) callback(response);
+    },
+    *getInstrumentRecord({ payload,callback }, { call, put }) {
+      const response = yield call(getInstrumentRecord, payload);
+      if (callback) callback(response);
+    },
     *addInstrument({ payload,callback }, { call, put }) {
       const response = yield call(addInstrument, payload);
       yield put({

@@ -73,6 +73,27 @@ export async function checkUserName(params) {
 }
 
 
+export async function deleteManRecord(params) {
+  return request(`/api/recordman/deleteRecord?keyno=${params.keyno}`);
+}
+
+export async function getManRecord(params) {
+  return request(`/api/recordman/getRecord`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function uploadManRecord(params) {
+    return request(`/api/recordman/uploadRecord`,{
+    method: 'POST',
+    // headers: { 'Content-Type': 'multipart/form-data;'},
+    data:params,
+  });
+}
+
 
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function updateUser(params) {
