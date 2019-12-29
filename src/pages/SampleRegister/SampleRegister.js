@@ -111,7 +111,7 @@ class SampleRegister extends PureComponent {
   };
 
   toRegisterDetail = text => {
-    localStorage.setItem('reportSampleRegisterDetailNo',text.reportno);
+    sessionStorage.setItem('reportSampleRegisterDetailNo',text.reportno);
     router.push({
       pathname:'/SampleRegister/SampleRegisterDetail',
     });

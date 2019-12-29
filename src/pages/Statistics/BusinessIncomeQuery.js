@@ -10,48 +10,73 @@ import {
   Input,
   Button,
   Select,
-  Table, message,
+  Table, message, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
 
 const { Option } = Select;
 
+let id = 0;
+
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ charge, loading }) => ({
-  charge,
-  loading: loading.models.charge,
+@connect(({ businessIncome, loading }) => ({
+  businessIncome,
+  loading: loading.models.businessIncome,
 }))
-class ListFiction extends PureComponent {
+
+class BusinessIncomeQuery extends PureComponent {
   state = {
+    selectBusinessIncomesByConditionsResult: [],
+    selectBusinessIncomeTotalByConditionsResult: {}
   };
 
   columns = [
     {
-      title: '清单号',
-      dataIndex: 'listno',
+      title: '委托编号',
+      dataIndex: '',
     },
     {
-      title: '拟制日期',
-      dataIndex: 'listdate',
+      title: '委托日期',
+      dataIndex: '',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '拟制人',
-      dataIndex: 'listman',
+      title: '委托人',
+      dataIndex: '',
     },
     {
-      title: '付款人',
-      dataIndex: 'payer',
+      title: '检查品名',
+      dataIndex: '',
     },
     {
-      title: '金额',
-      dataIndex: 'total',
+      title: '申报数量',
+      dataIndex: '',
+    },
+    {
+      title: '检查项目',
+      dataIndex: '',
+    },
+    {
+      title: '检验费',
+      dataIndex: '',
+    },
+    {
+      title: '清单号',
+      dataIndex: '',
+    },
+    {
+      title: '发票号',
+      dataIndex: '',
+    },
+    {
+      title: '到账',
+      dataIndex: '',
     },
     {
       title: '状态',
-      dataIndex: 'paystatus',
+      dataIndex: '',
     },
     {
       title: '操作',
@@ -70,63 +95,40 @@ class ListFiction extends PureComponent {
   }
 
 
-
-  deleteBylistno = text => {
-    const { dispatch } = this.props;
-    const values = {
-      listno :text.listno,
-    };
-    dispatch({
-      type: 'charge/deleteBylistnoFetch',
-      payload: values,
-      callback: (response) => {
-        if(response==="success"){
-          message.success('删除成功');
-          this.init();
-        }else{
-          message.success('删除失败');
-        }
-      }
-    });
-  };
-
   init =()=>{
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'charge/fetch',
+      type: 'businessIncome/selectBusinessIncomesByConditions',
       payload:{
         certCode:user.certCode
       }
     });
-  }
+  };
 
 
   previewItem = text => {
     sessionStorage.setItem('reportnoForList',JSON.stringify(text));
     router.push({
-      pathname:'/Charge/DetailList',
+      pathname:'',
     });
   };
 
+  // 查询
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
-        certCode:user.certCode,
-      };
-      dispatch({
-        type: 'charge/fetch',
-        payload: values,
-      });
-    });
+  };
+
+  // 查询总额
+  handleTotalSearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+  };
+
+  // 导出excel表格
+  handleExport = () => {
+
   };
 
   handleFormReset = () => {
@@ -137,44 +139,43 @@ class ListFiction extends PureComponent {
 
 
 
+
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const { RangePicker } = DatePicker;
+    const {selectBusinessIncomeTotalByConditionsResult} = this.state;
+
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={16}>
+          <Col span={8}>
+            <div>申报数量总和：{selectBusinessIncomeTotalByConditionsResult.declaredQuantityTotal}</div>
+          </Col>
+          <Col span={8}>
+            <div>批次总和：{selectBusinessIncomeTotalByConditionsResult.recordQuantityTotal}</div>
+          </Col>
+          <Col span={8}>
+            <div>检验费总和：{selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal}</div>
+          </Col>
+        </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={3}>
-            <Form.Item
-              colon={false}
-            >
-              {getFieldDecorator('kind', {
-                rules: [{  message: '搜索类型' }],
-              })(
-                <Select placeholder="搜索类型">
-                  <Option value="listno">清单号</Option>
-                  <Option value="listman">拟制人</Option>
-                  <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <Form.Item>
-              {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
-            </Form.Item>
-          </Col>
-
+          {/* 下拉框和日期范围选择控件 */}
           <Col span={5}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
               </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleTotalSearch}>
+                查询总额
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toListFictionAdd}>新建</Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleAdvanceSearch}>
+                高级检索
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleExport}>
+                导出
+              </Button>
             </span>
           </Col>
         </Row>
@@ -182,15 +183,37 @@ class ListFiction extends PureComponent {
     );
   }
 
-  toListFictionAdd= () => {
-    router.push({
-      pathname:'/Charge/ListFictionAdd',
+  add = () => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    // eslint-disable-next-line no-plusplus
+    const nextKeys = keys.concat(id++);
+    // can use data-binding to set
+    // important! notify form to detect changes
+    form.setFieldsValue({
+      keys: nextKeys,
     });
+  };
+
+
+  flag = 0;
+
+  handleAdvanceSearch =()=>{
+    if(this.flag ===0){
+      let i =4;
+      while(i>0){
+        this.add();
+        // eslint-disable-next-line no-plusplus
+        i--;
+      }
+      this.flag = 1;
+    }
   };
 
   render() {
     const {
-      charge:{data},
+      businessIncome:{data},
       loading,
     } = this.props;
     return (
@@ -213,4 +236,4 @@ class ListFiction extends PureComponent {
   }
 }
 
-export default ListFiction;
+export default BusinessIncomeQuery;

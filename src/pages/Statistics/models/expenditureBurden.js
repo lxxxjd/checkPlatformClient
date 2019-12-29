@@ -22,7 +22,7 @@ export default {
     * selectCostListTotalByConditions({payload, callback}, {call, put}){
       const response =yield call(selectCostListTotalByConditions, payload);
       yield put({
-        type: 'selectCostListTotalByConditions',
+        type: 'selectCostListTotalByConditionsResult',
         payload: response
       });
       if(callback) callback(response.data);
