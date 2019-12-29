@@ -103,7 +103,6 @@ export default {
   'menu.DictMaintain.InvoiceTitle':'发票信息',
   'menu.DictMaintain.SurveyStandard':'检验标准',
   'menu.DictMaintain.Intrusment':'仪器信息',
-  'menu.DictMaintain.IntrusmentRecord':'仪器文件',
 
   'menu.CompanyManage':'公司管理',
   'menu.CompanyManage.CompanyInfo':'公司信息',
@@ -112,7 +111,7 @@ export default {
   'menu.CompanyManage.Department':'部门管理',
   'menu.CompanyManage.TestMan':'分包方',
   'menu.CompanyManage.Port':'常用地点',
-  'menu.CompanyManage.ManRecord':'上传文件',
+
 
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',

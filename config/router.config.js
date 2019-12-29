@@ -658,11 +658,7 @@ export default [
             name: 'InvoiceTitle',
             component: './DictMaintain/InvoiceTitle',
           },
-          {
-            path: '/DictMaintain/IntrusmentRecord',
-            name: 'IntrusmentRecord',
-            component: './DictMaintain/IntrusmentRecord',
-          },
+
 
 
         ],
@@ -708,12 +704,7 @@ export default [
             name: 'CompanyUpload',
             component: './CompanyManage/CompanyUpload',
           },
-          {
-            path: '/CompanyManage/ManRecord',
-            name: 'ManRecord',
-            component: './CompanyManage/ManRecord',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
+
 
 
         ],
