@@ -1,5 +1,6 @@
 import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser,
-  getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,getUrl,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent} from '@/services/Company';
+  getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,getUrl,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
+  , getManRecord, uploadManRecord, deleteManRecord} from '@/services/Company';
 
 export default {
   namespace: 'company',
@@ -26,6 +27,18 @@ export default {
 
   },
   effects: {
+    *deleteManRecord({ payload,callback }, { call, put }) {
+      const response = yield call(deleteManRecord, payload);
+      if (callback) callback(response);
+    },
+    *uploadManRecord({ payload,callback }, { call, put }) {
+      const response = yield call(uploadManRecord, payload);
+      if (callback) callback(response);
+    },
+    *getManRecord({ payload,callback }, { call, put }) {
+      const response = yield call(getManRecord, payload);
+      if (callback) callback(response);
+    },
     *uploadFile({ payload,callback }, { call, put }) {
       const response = yield call(uploadFile, payload);
       if (callback) callback(response);
@@ -83,11 +96,8 @@ export default {
     },
 
     *updateUser({ payload,callback }, { call, put }) {
+      console.log("nbb");
       const response = yield call(updateUser, payload);
-      yield put({
-        type: 'getUpdateUserResult',
-        payload: response,
-      });
       if (callback) callback(response.data);
     },
 

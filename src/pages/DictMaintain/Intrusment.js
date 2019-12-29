@@ -657,6 +657,8 @@ class Intrusment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
+          <a onClick={() => this.uploadItem(text, record)}>上传文件</a>
+          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
@@ -787,7 +789,12 @@ class Intrusment extends PureComponent {
     this.addHandleModalVisible(true);
   };
 
-
+  uploadItem = text => {
+    sessionStorage.setItem('diviceName',text.divicename);
+    router.push({
+      pathname:'/DictMaintain/IntrusmentRecord',
+    });
+  };
 
 
   handleModalVisible = (flag) => {
