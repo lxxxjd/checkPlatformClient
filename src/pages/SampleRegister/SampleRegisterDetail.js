@@ -225,12 +225,12 @@ class SampleRegisterDetail extends PureComponent {
 
   init =() =>{
     const { dispatch } = this.props;
-    const reportNo = localStorage.getItem('reportSampleRegisterDetailNo');
+    const reportNo = sessionStorage.getItem('reportSampleRegisterDetailNo');
     dispatch({
       type: 'sample/getSampleRegistersByReportNo',
       payload: { reportno: reportNo,},
     });
-  }
+  };
 
   modifyItem = (text,flag) => {
     this.setState({
