@@ -22,11 +22,6 @@ import queryStyles from './ReportPriceMakingQuery.less'
 import styles from '../table.less';
 
 
-
-
-
-
-
 let id = 0;
 
 // 正文页面
@@ -365,7 +360,6 @@ class ReportPriceMakingQuery extends PureComponent {
               })(
                 <RangePicker
                   format="YYYY-MM-DD"
-                  onChange={this.dateRangeChange}
                 />
               )}
             </Form.Item>

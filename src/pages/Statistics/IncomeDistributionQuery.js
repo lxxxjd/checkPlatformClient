@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table, message,
+  Table, message, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -19,35 +19,49 @@ const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ charge, loading }) => ({
-  charge,
-  loading: loading.models.charge,
+@connect(({ incomeDistribution, loading }) => ({
+  incomeDistribution,
+  loading: loading.models.incomeDistribution,
 }))
-class ListFiction extends PureComponent {
+class IncomeDistributionQuery extends PureComponent {
   state = {
+    selectListInfosByConditionsResult: [],
+    selectListInfoTotalByConditionsResult: {},
+
   };
 
   columns = [
+    {
+      title: '清单日期',
+      dataIndex: 'listdate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+    },
     {
       title: '清单号',
       dataIndex: 'listno',
     },
     {
-      title: '拟制日期',
-      dataIndex: 'listdate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
-    },
-    {
-      title: '拟制人',
-      dataIndex: 'listman',
+      title: '金额',
+      dataIndex: 'total',
+
     },
     {
       title: '付款人',
       dataIndex: 'payer',
     },
     {
-      title: '金额',
-      dataIndex: 'total',
+      title: '开票日期',
+      dataIndex: 'invoiceDate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+    },
+    {
+      title: '发票号码',
+      dataIndex: 'invoiceno',
+    },
+    {
+      title: '到账日期',
+      dataIndex: 'paydate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
       title: '状态',
@@ -70,45 +84,39 @@ class ListFiction extends PureComponent {
   }
 
 
-
-  deleteBylistno = text => {
-    const { dispatch } = this.props;
-    const values = {
-      listno :text.listno,
-    };
-    dispatch({
-      type: 'charge/deleteBylistnoFetch',
-      payload: values,
-      callback: (response) => {
-        if(response==="success"){
-          message.success('删除成功');
-          this.init();
-        }else{
-          message.success('删除失败');
-        }
-      }
-    });
-  };
-
   init =()=>{
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'charge/fetch',
-      payload:{
-        certCode:user.certCode
-      }
+      type: 'incomeDistribution/selectListInfosByConditions',
+      payload: {
+        certCode: user.certCode
+      },
+      callback: (response) => {
+        this.state.selectListInfosByConditionsResult = response;
+
+        dispatch({
+          type: 'incomeDistribution/selectListInfoTotalByConditions',
+          payload: {
+            certCode: user.certCode
+          },
+          callback: (response2) => {
+            this.state.selectListInfoTotalByConditionsResult = response2;
+          }
+        });
+      },
     });
-  }
+  };
 
 
   previewItem = text => {
     sessionStorage.setItem('reportnoForList',JSON.stringify(text));
     router.push({
-      pathname:'/Charge/DetailList',
+      pathname:'',
     });
   };
 
+  // 查询
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -116,15 +124,100 @@ class ListFiction extends PureComponent {
       console.log(err);
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
-      const values = {
-        ...fieldsValue,
-        kind :fieldsValue.kind,
-        value: fieldsValue.value,
+      const mkinds=[];
+      const mvalues=[];
+      const mconditions=[];
+
+      // 得到进账账户
+      if(fieldsValue.payer !== undefined){
+        if(fieldsValue.payer !== null){
+          mkinds.push("payer");
+          mconditions.push("=");
+          mvalues.push(fieldsValue.payer);
+        }
+      }
+
+      // 得到到账日期区间
+      if(fieldsValue.paydate !== undefined){
+        if(fieldsValue.paydate !== null){
+          mkinds.push("paydate");
+          mconditions.push(">=");
+          mvalues.push(moment(fieldsValue.paydate[0]).format('YYYY-MM-DD'));
+          mkinds.push("paydate");
+          mconditions.push("<=");
+          mvalues.push(moment(fieldsValue.paydate[1]).format('YYYY-MM-DD'));
+        }
+      }
+
+      const params = {
+        kinds: mkinds,
+        conditions: mconditions,
+        values: mvalues,
         certCode:user.certCode,
       };
       dispatch({
-        type: 'charge/fetch',
-        payload: values,
+        type: 'incomeDistribution/selectListInfosByConditions',
+        payload: params,
+        callback: (response) => {
+          this.state.selectListInfosByConditionsResult = response;
+
+          dispatch({
+            type: 'incomeDistribution/selectListInfoTotalByConditions',
+            payload: params,
+            callback: (response2) => {
+              this.state.selectListInfoTotalByConditionsResult = response2;
+            }
+          });
+        }
+      });
+    });
+  };
+
+  // 查询总额
+  handleTotalSearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      console.log(err);
+      if (err) return;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const mkinds=[];
+      const mvalues=[];
+      const mconditions=[];
+
+      // 得到进账账户
+      if(fieldsValue.payer !== undefined){
+        if(fieldsValue.payer !== null){
+          mkinds.push("payer");
+          mconditions.push("=");
+          mvalues.push(fieldsValue.payer);
+        }
+      }
+
+      // 得到到账日期区间
+      if(fieldsValue.paydate !== undefined){
+        if(fieldsValue.paydate.length !== 0){
+          mkinds.push("paydate");
+          mconditions.push(">=");
+          mvalues.push(moment(fieldsValue.paydate[0]).format('YYYY-MM-DD'));
+          mkinds.push("paydate");
+          mconditions.push("<=");
+          mvalues.push(moment(fieldsValue.paydate[1]).format('YYYY-MM-DD'));
+        }
+      }
+
+      const params = {
+        kinds: mkinds,
+        conditions: mconditions,
+        values: mvalues,
+        certCode:user.certCode,
+      };
+      dispatch({
+        type: 'incomeDistribution/selectListInfoTotalByConditions',
+        payload: params,
+        callback: (response) => {
+          this.state.selectListInfoTotalByConditionsResult = response;
+        }
       });
     });
   };
@@ -141,40 +234,47 @@ class ListFiction extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const { RangePicker } = DatePicker;
+    const {selectListInfoTotalByConditionsResult} = this.state;
+
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={16}>
+          <Col span={8}>
+            <div>开票总额：{selectListInfoTotalByConditionsResult!==undefined && selectListInfoTotalByConditionsResult!== null?selectListInfoTotalByConditionsResult.billingTotal:0}</div>
+          </Col>
+          <Col span={8}>
+            <div>到账总额：{selectListInfoTotalByConditionsResult!==undefined && selectListInfoTotalByConditionsResult!== null?selectListInfoTotalByConditionsResult.receivedTotal:0}</div>
+          </Col>
+        </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={3}>
+          <Col span={6}>
             <Form.Item
-              colon={false}
+              label="进账账户"
             >
-              {getFieldDecorator('kind', {
-                rules: [{  message: '搜索类型' }],
+              {getFieldDecorator('payer',{})(<Input placeholder="请输入" />)}
+            </Form.Item>
+          </Col>
+          <Col span={7}>
+            <Form.Item
+              label="到账日期"
+            >
+              {getFieldDecorator('paydate',{
               })(
-                <Select placeholder="搜索类型">
-                  <Option value="listno">清单号</Option>
-                  <Option value="listman">拟制人</Option>
-                  <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
-                </Select>
+                <RangePicker
+                  format="YYYY-MM-DD"
+                />
               )}
             </Form.Item>
           </Col>
-          <Col span={6}>
-            <Form.Item>
-              {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
-            </Form.Item>
-          </Col>
-
           <Col span={5}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
               </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleTotalSearch}>
+                查询总额
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toListFictionAdd}>新建</Button>
             </span>
           </Col>
         </Row>
@@ -182,17 +282,12 @@ class ListFiction extends PureComponent {
     );
   }
 
-  toListFictionAdd= () => {
-    router.push({
-      pathname:'/Charge/ListFictionAdd',
-    });
-  };
-
   render() {
     const {
-      charge:{data},
       loading,
     } = this.props;
+
+    const {selectListInfosByConditionsResult} = this.state;
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
@@ -201,7 +296,7 @@ class ListFiction extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={data}
+              dataSource={selectListInfosByConditionsResult}
               columns={this.columns}
               rowKey="listno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
@@ -213,4 +308,4 @@ class ListFiction extends PureComponent {
   }
 }
 
-export default ListFiction;
+export default IncomeDistributionQuery;
