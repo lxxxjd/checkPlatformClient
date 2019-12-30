@@ -48,7 +48,7 @@ export async function getCostBylistNO(params) {
 
 // 数据统计-支出负担-查询
 export async function selectCostListsByConditions(params) {
-  return request('/api/costlist/selectCostListsByCondtions', {
+  return request('/api/costlist/selectCostListsByConditions', {
     method: 'POST',
     data: params,
   });
