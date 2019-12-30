@@ -1,6 +1,6 @@
 import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser,
   getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,getUrl,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
-  , getManRecord, uploadManRecord, deleteManRecord} from '@/services/Company';
+  , getManRecord, uploadManRecord, deleteManRecord, getUser} from '@/services/Company';
 
 export default {
   namespace: 'company',
@@ -29,6 +29,10 @@ export default {
   effects: {
     *deleteManRecord({ payload,callback }, { call, put }) {
       const response = yield call(deleteManRecord, payload);
+      if (callback) callback(response);
+    },
+    *getUser({ payload,callback }, { call, put }) {
+      const response = yield call(getUser, payload);
       if (callback) callback(response);
     },
     *uploadManRecord({ payload,callback }, { call, put }) {
@@ -96,9 +100,8 @@ export default {
     },
 
     *updateUser({ payload,callback }, { call, put }) {
-      console.log("nbb");
       const response = yield call(updateUser, payload);
-      if (callback) callback(response.data);
+      if (callback) callback(response);
     },
 
     *addUser({ payload,callback }, { call, put }) {

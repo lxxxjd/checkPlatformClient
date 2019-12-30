@@ -770,6 +770,10 @@ class UserManage extends PureComponent {
   handleEdit = (fields,modalInfo) => {
     const { dispatch } = this.props;
     let prams = modalInfo;
+    if(fields.role !== null && fields.role !== undefined){
+      const role = fields.role.join(' ');
+      prams.role = role;
+    }
     prams.userName =  fields.userName;
     prams.password =  fields.password;
     prams.nameC =  fields.nameC;
@@ -794,7 +798,7 @@ class UserManage extends PureComponent {
         ...prams
       },
       callback: (response) => {
-        if(response==="success")
+        if(response.code === 200)
           message.success("保存成功");
         else{
           message.success("保存失败");

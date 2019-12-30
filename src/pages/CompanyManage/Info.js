@@ -23,9 +23,9 @@ import styles from './company.less';
 import moment from 'moment'
 
 @Form.create()
-@connect(({ user, loading }) => ({
-  user,
-  loading: loading.models.user,
+@connect(({ company, loading }) => ({
+  company,
+  loading: loading.models.company,
 }))
 class Info extends PureComponent {
 
@@ -61,26 +61,36 @@ class Info extends PureComponent {
 	      dispatch,
 	    } = this.props;
 	    const {validateFieldsAndScroll} = form;
-	    let user  = this.state.user;
+	    const user = JSON.parse(localStorage.getItem("userinfo"));
 	    validateFieldsAndScroll((error, values) => {
 	      if (!error) {
 	        // submit the values
-	        user.namee = form.getFieldValue('namee');
-	       	user.adres = form.getFieldValue('adres');
-	        user.account = form.getFieldValue('account');
-	        user.bank = form.getFieldValue('bank');
-	        user.belongto = form.getFieldValue('belongto');
 	        dispatch({
-	          type: 'user/updateuser',
+	          type: 'company/updateUser',
 	          payload: {
-	          	...user,
+	          	userName:user.userName,
+	          	nameC:user.nameC,
+	          	role:user.role,
+	          	isauthorize:user.isauthorize,
+	          	...values,
 	          },
 	          callback: (response) => {
 	            if (response.code === 200) {
-	              notification.open({
+		            dispatch({
+			          type: 'company/getUser',
+			          payload: {
+			          	name:user.userName,
+			          },
+			          callback: (response) => {
+			            if (response.code === 200) {
+	        				localStorage.setItem("userinfo",JSON.stringify(response.data));
+	        				this.componentDidMount();
+			            } 
+			          }
+			        });
+	             notification.open({
 	                message: '修改成功',
 	              });
-	              this.componentDidMount();
 	            } else {
 	              notification.open({
 	                message: '添加失败',
