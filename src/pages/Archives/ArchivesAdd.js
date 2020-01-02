@@ -147,7 +147,7 @@ class ArchivesAdd extends PureComponent {
         }
       }
     });
-  }
+  };
 
 
 

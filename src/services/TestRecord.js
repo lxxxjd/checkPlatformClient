@@ -95,3 +95,11 @@ export async function downloadPlatFromTemp(params) {
   return request(`/api/template/downloadPlatFromTemp?tempName=${params.tempName}&reportno=${params.reportno}&recordName=${params.recordName}`);
 }
 
+
+export async function saveResultList(params) {
+  const values = params.values;
+  return request(`/api/testdetail/saveResultList`, {
+    method: 'POST',
+    data: values
+  });
+}

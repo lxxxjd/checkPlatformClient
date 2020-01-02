@@ -18,8 +18,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
-import Search from './Search.js'
-
+import Search from './Search.js';
 const SearchForm = Form.create()(Search);
 
 const CheckboxGroup = Checkbox.Group;
@@ -121,7 +120,8 @@ class ResultUpdate extends PureComponent {
          certCode : certCode,
       }
     });
-  }
+  };
+
   detailItem = text => {
     const { dispatch } = this.props;
     dispatch({
@@ -132,13 +132,15 @@ class ResultUpdate extends PureComponent {
       }
     });
     this.setState({ visible : true });
-  }
+  };
+
   uploadItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
       pathname:'/InspectionAnalysis/ResultRecord',
     });
   };
+
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
@@ -155,9 +157,11 @@ class ResultUpdate extends PureComponent {
       pathname:'/InspectionAnalysis/ResultUpdateDetail',
     });
   };
+
   handleCancel = () =>{
     this.setState({visible:false});
-  }
+  };
+
   render() {
     const {
       inspectionAnalysis: {samples,detail},
@@ -170,7 +174,7 @@ class ResultUpdate extends PureComponent {
       <PageHeaderWrapper title="检验安排">
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}><SearchForm></SearchForm></div>
+            <div className={styles.tableListForm}><SearchForm /></div>
             <Table
               size="middle"
               loading={loading}

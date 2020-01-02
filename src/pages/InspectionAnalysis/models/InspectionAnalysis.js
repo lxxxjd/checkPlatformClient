@@ -2,6 +2,7 @@ import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,del
   getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,
   deleteTestBySampleNo,updateTestInfo,getSamplesByFilter,loadDetails,getTestStandard,modifyDetail} from '@/services/InspectionAnalysis'
 
+import {saveResultList} from '@/services/TestRecord'
 
 
 export default {
@@ -24,6 +25,12 @@ export default {
   },
 
   effects: {
+
+    *saveResultList({ payload,callback }, { call, put }) {
+      const response = yield call(saveResultList, payload);
+      if (callback) callback(response.data);
+    },
+
     *getSamplesByFilter({ payload,callback }, { call, put }) {
       const response = yield call(getSamplesByFilter, payload);
       yield put({
