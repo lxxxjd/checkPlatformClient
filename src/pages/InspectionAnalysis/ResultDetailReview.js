@@ -79,6 +79,46 @@ class ResultDetailReview extends PureComponent {
     });
   };
 
+  reviewPass =()=>{
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const sampleno = sessionStorage.getItem('sampleno');
+    dispatch({
+      type: 'inspectionAnalysis/reviewSampleRegister',
+      payload:{
+        reportno : reportno,
+        sampleno : sampleno ,
+      },
+      callback: (response) => {
+       if(response ==="success"){
+         message.success("复核通过");
+       }else{
+         message.error("操作失败")
+       }
+      }
+    });
+  };
+
+  reviewReturn =()=>{
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    const sampleno = sessionStorage.getItem('sampleno');
+    dispatch({
+      type: 'inspectionAnalysis/returnSampleRegister',
+      payload:{
+        reportno : reportno,
+        sampleno : sampleno ,
+      },
+      callback: (response) => {
+        if(response ==="success"){
+          message.success("退回成功");
+        }else{
+          message.error("操作失败")
+        }
+      }
+    });
+  };
+
   back = () =>{
     this.props.history.goBack();
   };
@@ -91,6 +131,7 @@ class ResultDetailReview extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const sampleno = sessionStorage.getItem('sampleno');
+    const passOrReturn = sessionStorage.getItem('result_review_pass_or_return');
     const reprotText= {
       reportno,
       shipname,
@@ -102,8 +143,8 @@ class ResultDetailReview extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col sm={22}>
-              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.saveAll}>通过</Button>
-              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.init}>退回</Button>
+              {passOrReturn==="pass"?<Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.reviewPass}>通过</Button>:[]}
+              {passOrReturn==="return"?<Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.reviewReturn}>退回</Button>:[]}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>

@@ -109,6 +109,16 @@ export async function getSamplesByFilter(params) {
   return request(`/api/sampleRegister/getSamplesByFilter?kind=${params.kind}&value=${params.value}&certCode=${params.certCode}`);
 }
 
+
+export async function reviewSampleRegister(params) {
+  return request(`/api/sampleRegister/reviewSampleRegister?reportno=${params.reportno}&sampleno=${params.sampleno}`);
+}
+
+export async function returnSampleRegister(params) {
+  return request(`/api/sampleRegister/returnSampleRegister?reportno=${params.reportno}&sampleno=${params.sampleno}`);
+}
+
+
 export async function deleteDetails(params) {
   return request(`/api/testdetail/deleteDetails`,{
     method: 'POST',

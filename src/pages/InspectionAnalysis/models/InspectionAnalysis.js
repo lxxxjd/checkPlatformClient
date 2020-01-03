@@ -1,6 +1,8 @@
 import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
   getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,
-  deleteTestBySampleNo,updateTestInfo,getSamplesByFilter,loadDetails,getTestStandard,modifyDetail} from '@/services/InspectionAnalysis'
+  deleteTestBySampleNo,updateTestInfo,getSamplesByFilter,loadDetails,getTestStandard,modifyDetail,
+  reviewSampleRegister,returnSampleRegister,
+} from '@/services/InspectionAnalysis'
 
 import {saveResultList} from '@/services/TestRecord'
 
@@ -25,6 +27,16 @@ export default {
   },
 
   effects: {
+
+    *reviewSampleRegister({ payload,callback }, { call, put }) {
+      const response = yield call(reviewSampleRegister, payload);
+      if (callback) callback(response.data);
+    },
+
+    *returnSampleRegister({ payload,callback }, { call, put }) {
+      const response = yield call(returnSampleRegister, payload);
+      if (callback) callback(response.data);
+    },
 
     *saveResultList({ payload,callback }, { call, put }) {
       const response = yield call(saveResultList, payload);

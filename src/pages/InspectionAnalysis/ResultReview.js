@@ -77,10 +77,9 @@ class ResultReview extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.goToReview(text, record)}>审核</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.detailItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
+          {text.state==="已录入"?[<a onClick={() => this.goToReviewPass(text, record)}>通过&nbsp;&nbsp;</a>]:[]}
+          {text.state==="已复核"?<a onClick={() => this.goToReviewReturn(text, record)}>退回 &nbsp;&nbsp;</a>:[]}
+          <a onClick={() => this.detailItem(text, record)}>查看</a> &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -141,7 +140,8 @@ class ResultReview extends PureComponent {
     localStorage.setItem('reportDetailNo',text.reportno);
   };
 
-  goToReview= text => {
+  goToReviewPass= text => {
+    sessionStorage.setItem('result_review_pass_or_return',"pass");
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('sampleno',text.sampleno);
@@ -149,6 +149,17 @@ class ResultReview extends PureComponent {
       pathname:'/InspectionAnalysis/ResultDetailReview',
     });
   };
+
+  goToReviewReturn= text => {
+    sessionStorage.setItem('result_review_pass_or_return',"return");
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('sampleno',text.sampleno);
+    router.push({
+      pathname:'/InspectionAnalysis/ResultDetailReview',
+    });
+  };
+
 
 
 
