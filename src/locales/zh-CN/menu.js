@@ -1,6 +1,7 @@
 import InspmanDetail from '../../pages/TaskAppoint/InspmanDetail';
 import CertificateReview from '../../pages/Certificate/CertificateReview';
 import CostlistEdit from '../../pages/Charge/CostlistEdit';
+import ResultReview from '../../pages/InspectionAnalysis/ResultReview';
 
 export default {
   'menu.home': '首页',
@@ -74,6 +75,8 @@ export default {
   'menu.InspectionAnalysis.SampleDetail':'样品结果详情',
   'menu.InspectionAnalysis.ResultUpdate':'结果录入',
   'menu.InspectionAnalysis.ResultUpdateDetail':'结果录入详情',
+  'menu.InspectionAnalysis.ResultDetailReview':'结果审核详情',
+  'menu.InspectionAnalysis.ResultReview':'结果审核',
   'menu.InspectionAnalysis.ResultRecord':'测试结果文件',
   'menu.Certificate':'证稿证书',
   'menu.Certificate.CertificateUpload':'证稿拟制',

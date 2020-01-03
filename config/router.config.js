@@ -320,6 +320,20 @@ export default [
             name: 'ResultUpdate',
             component: './InspectionAnalysis/ResultUpdate',
           },
+
+          {
+            path: '/InspectionAnalysis/ResultReview',
+            name: 'ResultReview',
+            component: './InspectionAnalysis/ResultReview',
+          },
+
+          {
+            path: '/InspectionAnalysis/ResultDetailReview',
+            name: 'ResultDetailReview',
+            component: './InspectionAnalysis/ResultDetailReview',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
           {
             path: '/InspectionAnalysis/ResultUpdateDetail',
             name: 'ResultUpdateDetail',

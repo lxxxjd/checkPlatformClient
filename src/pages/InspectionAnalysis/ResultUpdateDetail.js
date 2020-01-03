@@ -107,8 +107,6 @@ class EditableCell extends React.Component {
 }
 
 
-
-
 /* eslint react/no-multi-comp:0 */
 @connect(({ inspectionAnalysis, loading }) => ({
   inspectionAnalysis,
@@ -342,8 +340,8 @@ class ResultUpdateDetail extends PureComponent {
                 {getFieldDecorator('result', {
                   rules: [{ required: true, message: '请输入结果' }],
                 })(
-                    <Input placeholder="请输入结果" />
-                  )}
+                  <Input placeholder="请输入结果" />
+                )}
               </Form.Item>
             </Form>
           </Modal>
