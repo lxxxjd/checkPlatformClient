@@ -1,6 +1,6 @@
 import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser,
   getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,getUrl,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
-  , getManRecord, uploadManRecord, deleteManRecord, getUser} from '@/services/Company';
+  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor} from '@/services/Company';
 
 export default {
   namespace: 'company',
@@ -33,6 +33,10 @@ export default {
     },
     *getUser({ payload,callback }, { call, put }) {
       const response = yield call(getUser, payload);
+      if (callback) callback(response);
+    },
+    *uploadUserAuthor({ payload,callback }, { call, put }) {
+      const response = yield call(uploadUserAuthor, payload);
       if (callback) callback(response);
     },
     *uploadManRecord({ payload,callback }, { call, put }) {

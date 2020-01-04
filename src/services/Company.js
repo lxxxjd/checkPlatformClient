@@ -38,6 +38,13 @@ export async function updateCompany(params) {
   });
 }
 
+export async function uploadUserAuthor(params) {
+  return request(`/api/user/upload_author`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
 export async function uploadUserSeal(params) {
   return request(`/api/user/upload_sign`,{
     method: 'POST',

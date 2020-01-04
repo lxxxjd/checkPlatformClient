@@ -42,7 +42,7 @@ function getBase64(file) {
   company,
   loading: loading.models.company,
 }))
-class CompanyUpload extends PureComponent {
+class ManUpload extends PureComponent {
   state = {
     visible:false,
     previewVisible: false,
@@ -55,18 +55,18 @@ class CompanyUpload extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const username = sessionStorage.getItem('username');
     dispatch({
-      type: 'company/getCompany',
+      type: 'company/getUser',
       payload:{
-         certCode : user.certCode,
+         name : username,
       },
       callback:(response)=>{
         if(response.code === 200){
           dispatch({
             type: 'company/getUrl',
             payload:{
-               url : response.data.seal,
+               url : response.data.signurl,
             },
             callback:(response)=>{
               if(response.code === 200){
@@ -77,7 +77,7 @@ class CompanyUpload extends PureComponent {
           dispatch({
             type: 'company/getUrl',
             payload:{
-               url : response.data.documenthead,
+               url : response.data.authorizeurl,
             },
             callback:(response)=>{
               if(response.code === 200){
@@ -95,19 +95,19 @@ class CompanyUpload extends PureComponent {
       form: { validateFieldsAndScroll },
       dispatch,
     } = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const username = sessionStorage.getItem('username');
     const {uploadType} = this.state;
     console.log(uploadType);
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         let formData = new FormData();
         values.MultipartFile.fileList.forEach(file => {
-          formData.append('file', file.originFileObj);
+          formData.append('multipartFile', file.originFileObj);
         });
-        formData.append('certCode',user.certCode);
+        formData.append('username',username);
         if(uploadType ==='sign'){
           dispatch({
-            type: 'company/uploadSeal',
+            type: 'company/uploadUserSeal',
             payload : formData,
             callback: (response) => {
               if(response.code === 400){
@@ -122,7 +122,7 @@ class CompanyUpload extends PureComponent {
           });
         }else if(uploadType === 'head'){
           dispatch({
-            type: 'company/uploadDocumentHead',
+            type: 'company/uploadUserAuthor',
             payload : formData,
             callback: (response) => {
               if(response.code === 400){
@@ -137,7 +137,6 @@ class CompanyUpload extends PureComponent {
           });
         }
         this.setState({ visible: false });
-        form.resetFields();
       }
       console.log(error);
     });
@@ -231,11 +230,14 @@ class CompanyUpload extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,signUrl,headUrl} = this.state
-
+    const {fileList,visible,previewVisible,previewImage,signUrl,headUrl} = this.state;
+    const username = sessionStorage.getItem('username');
+    const reprotText = {
+        nameC:username
+    };
     // 下载模板 模态框方法
     return (
-      <PageHeaderWrapper >
+      <PageHeaderWrapper text={reprotText}>
         <Modal
           title="图片上传"
           visible={visible}
@@ -268,7 +270,7 @@ class CompanyUpload extends PureComponent {
         <Card  size="small">
           <Row>
             <Col span={24}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传盖章图片</Button>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传签名</Button>
             </Col>
           </Row>
           <img src={signUrl} width="100" height="100"/>
@@ -277,7 +279,7 @@ class CompanyUpload extends PureComponent {
         <Card  size="small">
           <Row>
             <Col span={24}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传抬头图片</Button>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传授权图片</Button>
             </Col>
           </Row>
           <img src={headUrl} width="100" height="100"/>
@@ -287,4 +289,4 @@ class CompanyUpload extends PureComponent {
   }
 }
 
-export default CompanyUpload;
+export default ManUpload;

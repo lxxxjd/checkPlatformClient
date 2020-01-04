@@ -475,66 +475,6 @@ const AddForm = Form.create()(props => {
     </Modal>
   );
 });
-const UploadForm = Form.create()(props => {
-  const { visible, form, handleUpload, handleCancel ,fileList, handleChange} = props;
-  const getBase64 = (file) =>{
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  };
-  const handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-
-    this.setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true,
-    });
-  };
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      handleUpload(fieldsValue);
-    });
-  };
-  const uploadButton = (
-      <div>
-        <Icon type="plus" />
-        <div className="ant-upload-text">Upload</div>
-      </div>
-  );
-  return (
-    <Modal
-      title="上传签名"
-      visible={visible}
-      onOk={okHandle}
-      onCancel={handleCancel}
-    >
-      <Form>
-        <Form.Item label="文件上传">
-          {form.getFieldDecorator('MultipartFile', {
-            rules: [{ required: true, message: '请选择上传文件' }],
-          })(
-            <Upload
-              //action="http://localhost:8000/api/recordinfo/upload"
-              //data={{'reportno':reportno}}
-              listType="picture-card"
-              fileList={fileList}
-              onPreview={handlePreview}
-              onChange={handleChange}
-            >
-              {fileList.length >= 1 ? null : uploadButton}
-            </Upload>
-          )}
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-});
 
 
 @connect(({ company, loading }) => ({
@@ -743,6 +683,10 @@ class UserManage extends PureComponent {
   };
 
   uploadItem = (text) =>{
+    sessionStorage.setItem('username',text.userName);
+    router.push({
+      pathname:'/CompanyManage/ManUpload',
+    });
     this.setState({username:text.userName});
     this.setState({visible:true});
   };
@@ -889,39 +833,6 @@ class UserManage extends PureComponent {
     );
   };
 
-  handleUpload = (values) =>{
-    const {
-      dispatch,
-      form
-    } = this.props
-    const {username} = this.state;
-    let formData = new FormData();
-    console.log(values);
-    values.MultipartFile.fileList.forEach(file => {
-      formData.append('multipartFile', file.originFileObj);
-    });
-    formData.append('username',username);
-    dispatch({
-      type: 'company/uploadUserSeal',
-      payload : formData,
-      callback: (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '添加失败',
-            description:response.data,
-          });
-        }else{
-          notification.open({
-            message: '上传成功',
-          });
-        }
-      }
-    });
-    this.init();
-    this.setState({ visible: false });
-    form.resetFields();
-  };
-
   handleCancel = () =>{
     const {
       form
@@ -938,14 +849,13 @@ class UserManage extends PureComponent {
       dispatch,
     } = this.props;
 
-    const {  modalVisible,modalInfo,addModalVisible,dataSource,fileList,visible, previewVisible, signUrl} = this.state;
+    const {  modalVisible,modalInfo,addModalVisible,dataSource,fileList, previewVisible, signUrl} = this.state;
     const parentMethods = {
       handleEdit: this.handleEdit,
       handleAdd:this.handleAdd,
       handleModalVisible: this.handleModalVisible,
       addHandleModalVisible:this.addHandleModalVisible,
       handleChange : this.handleChange,
-      handleUpload : this.handleUpload,
       handleCancel : this.handleCancel,
     };
 
@@ -956,7 +866,6 @@ class UserManage extends PureComponent {
           <div className={styles.tableList}>
             <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} />
             <AddForm {...parentMethods} addModalVisible={addModalVisible} dispatch={dispatch} />
-            <UploadForm {...parentMethods} fileList={fileList} visible={visible} dispatch={dispatch} />
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"

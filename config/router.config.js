@@ -738,6 +738,12 @@ export default [
             component: './CompanyManage/ManRecord',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          {
+            path: '/CompanyManage/ManUpload',
+            name: 'ManUpload',
+            component: './CompanyManage/ManUpload',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
         ],
       },
 
