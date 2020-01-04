@@ -152,6 +152,7 @@ class CopyForEntrustment extends PureComponent {
               'agent': response.agent,
               'applicant': response.applicant,
               'inspwaymemo1': response.inspwaymemo1,
+              'customsNo':response.customsNo,
               //'inspplace1':response.inspplace1,
               'inspplace2': response.inspplace2,
               'inspplace3': response.inspplace3,
@@ -253,7 +254,6 @@ class CopyForEntrustment extends PureComponent {
         certCode: user.certCode,
       },
       callback: (response) => {
-        console.log(response);
         this.setState({departments: response.data})
       }
     });
@@ -262,7 +262,6 @@ class CopyForEntrustment extends PureComponent {
       payload: {
       },
       callback: (response) => {
-        console.log(response);
         this.setState({customsOption: response.data})
       }
     });
@@ -326,7 +325,6 @@ class CopyForEntrustment extends PureComponent {
       if(values.customsName !== null && values.customsName !== undefined){
         values.customsName = values.customsName[1];
       }
-      console.log(error);
       if (!error) {
         // submit the values
         dispatch({
@@ -417,7 +415,6 @@ class CopyForEntrustment extends PureComponent {
     }
   };
   changeIsCustoms = e =>{
-    console.log(e);
     if (e.target.value === 1) {
       this.setState({isCustoms:true});
     } else {
@@ -480,7 +477,6 @@ class CopyForEntrustment extends PureComponent {
   };
 
   onAppliantChange = value => {
-    console.log(value);
     const {dispatch} = this.props;
     dispatch({
       type: 'entrustment/getContacts',

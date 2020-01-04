@@ -156,12 +156,12 @@ class ModifyForEntrustment extends PureComponent {
               'inspwaymemo1': response.inspwaymemo1,
               //'inspplace1':response.inspplace1,
               'inspplace2': response.inspplace2,
-              'inspplace3': response.inspplace3,
               'reportno20': response.reportno20,
               'inspdate': moment(response.inspdate, "YYYY-MM-DD"),
-              'insplinkway': response.insplinkway,
+              //'insplinkway': response.insplinkway,
               'price': response.price,
               'unit': response.unit,
+              'customsNo':response.customsNo,
               'businesssort': response.businesssort,
               'applicantname': response.applicantname,
               'applicanttel': response.applicanttel,
@@ -256,7 +256,6 @@ class ModifyForEntrustment extends PureComponent {
         certCode: user.certCode,
       },
       callback: (response) => {
-        console.log(response);
         this.setState({departments: response.data})
       }
     });
@@ -265,7 +264,6 @@ class ModifyForEntrustment extends PureComponent {
       payload: {
       },
       callback: (response) => {
-        console.log(response);
         this.setState({customsOption: response.data})
       }
     });
@@ -344,15 +342,12 @@ class ModifyForEntrustment extends PureComponent {
           callback: (response) => {
             if (response.code === 200) {
               notification.open({
-                message: '添加成功',
+                message: '修改成功',
               });
-              sessionStorage.setItem('reportno', response.data.reportno);
-              router.push({
-                pathname: '/Entrustment/DetailForEntrustment',
-              });
+              this.componentDidMount();
             } else {
               notification.open({
-                message: '添加失败',
+                message: '修改失败',
                 description: response.data,
               });
             }
@@ -417,7 +412,6 @@ class ModifyForEntrustment extends PureComponent {
     }
   };
   changeIsCustoms = e =>{
-    console.log(e);
     if (e.target.value === 1) {
       this.setState({isCustoms:true});
     } else {
@@ -480,7 +474,6 @@ class ModifyForEntrustment extends PureComponent {
   };
 
   onAppliantChange = value => {
-    console.log(value);
     const {dispatch} = this.props;
     dispatch({
       type: 'entrustment/getContacts',
