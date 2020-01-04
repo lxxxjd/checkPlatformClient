@@ -676,6 +676,7 @@ export default [
             path: '/DictMaintain/IntrusmentRecord',
             name: 'IntrusmentRecord',
             component: './DictMaintain/IntrusmentRecord',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
 
@@ -716,11 +717,6 @@ export default [
             path: '/CompanyManage/CompanyInfo',
             name: 'CompanyInfo',
             component: './CompanyManage/CompanyInfo',
-          },
-          {
-            path: '/CompanyManage/CompanyUpload',
-            name: 'CompanyUpload',
-            component: './CompanyManage/CompanyUpload',
           },
           {
             path: '/CompanyManage/CompanyUpload',

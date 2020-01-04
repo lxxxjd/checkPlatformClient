@@ -161,7 +161,7 @@ const CreateForm = Form.create()(props => {
             message: "请输入身份证号",
           },
           {
-            type: 'number',            
+            type: 'number',
             transform(value) {
               if (value) {
                 return Number(value);
@@ -384,7 +384,7 @@ const AddForm = Form.create()(props => {
             message: "请输入身份证号",
           },
           {
-            type: 'number', 
+            type: 'number',
             transform(value) {
               if (value) {
                 return Number(value);
@@ -711,13 +711,14 @@ class UserManage extends PureComponent {
       }
     });
   };
+
   modifyItem = text => {
     var temp = Object.assign({}, text);
     const roles = temp.role.split(' ');
     console.log(roles);
     temp.role = roles;
     this.setState({
-      modalInfo:text,
+      modalInfo:temp,
     });
     this.handleModalVisible(true);
   };
@@ -770,17 +771,23 @@ class UserManage extends PureComponent {
   handleEdit = (fields,modalInfo) => {
     const { dispatch } = this.props;
     let prams = modalInfo;
+    let role = "";
     if(fields.role !== null && fields.role !== undefined){
-      const role = fields.role.join(' ');
-      prams.role = role;
+      for(let i=0;fields.role.length!==undefined && i<fields.role.length;i++){
+        if(i!==fields.role.length-1){
+          role+= `${fields.role[i]} `;
+        }else{
+          role+= `${fields.role[i]}`;
+        }
+      }
     }
+    prams.role = role;
     prams.userName =  fields.userName;
     prams.password =  fields.password;
     prams.nameC =  fields.nameC;
     prams.place =  fields.place;
     prams.tel =  fields.tel;
     prams.section =  fields.section;
-    prams.role =  fields.role;
     prams.birthday = fields.birthday;
     prams.idcard = fields.idcard;
     prams.isauthorize = fields.isauthorize;
@@ -791,7 +798,6 @@ class UserManage extends PureComponent {
     prams.enterdate = fields.enterdate;
     prams.workyears = fields.workyears;
     prams.education = fields.education;
-    console.log(prams);
     dispatch({
       type: 'company/updateUser',
       payload:{
@@ -832,7 +838,7 @@ class UserManage extends PureComponent {
       addModalVisible: false,
     });
     this.init();
-  }
+  };
 
 
 
