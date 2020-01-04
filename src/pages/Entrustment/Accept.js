@@ -16,7 +16,7 @@ import {
   notification,
   AutoComplete,
 } from 'antd';
-
+import router from 'umi/router';
 import {connect} from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
@@ -303,6 +303,9 @@ class Accept extends PureComponent {
                   if(response.code === 200){
                     notification.open({
                       message: '添加成功',
+                    });
+                    router.push({
+                      pathname:'/Entrustment/AcceptList',
                     });
                   }
                 }

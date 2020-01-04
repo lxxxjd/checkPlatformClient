@@ -536,6 +536,13 @@ class ResultDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="重量">
               {getFieldDecorator('weight', {
+                rules: [{
+                  type: 'number',
+                  transform(value) {
+                    if (value) {
+                      return Number(value);
+                    }
+                  }, message: '请输入数字' }]
               })(
                   <Input />
                 )}
