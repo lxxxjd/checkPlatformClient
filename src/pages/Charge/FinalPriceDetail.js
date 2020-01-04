@@ -35,6 +35,7 @@ class FinalPriceDetail extends PureComponent {
     formValues: {},
     value:'',
     checkProject:[],
+    priceway:"",
   };
 
   componentDidMount() {
@@ -55,6 +56,7 @@ class FinalPriceDetail extends PureComponent {
             form.setFieldsValue({
               'total': response.data.total,
             });
+            this.setState({priceway:response.data.priceway.trim()});
             if(response.data.priceway.trim() === "按单价"){
               form.setFieldsValue({
                 'choose': response.data.choose.trim(),
@@ -82,9 +84,41 @@ class FinalPriceDetail extends PureComponent {
       value: e.target.value,
     });
     const {
-      form
+      form,
+      dispatch
     } = this.props;
     form.resetFields();
+    const reportNo = sessionStorage.getItem('reportno');
+    if(e.target.value === this.state.priceway){
+      dispatch({
+        type: 'charge/getPriceMaking',
+        payload:{
+           reportNo,
+        },
+        callback : (response) =>{
+          if (response.code === 200) {
+            if(response.data != null){
+              this.setState({value:response.data.priceway.trim()});
+              form.setFieldsValue({
+                'total': response.data.total,
+              });
+              if(response.data.priceway.trim() === "按单价"){
+                form.setFieldsValue({
+                  'choose': response.data.choose.trim(),
+                  'price': parseInt(response.data.price.trim()),
+                  'quantity': parseInt(response.data.quantity.trim()),
+                });
+              }
+            }
+          } else {
+            notification.open({
+              message: '获取失败',
+              description: response.data,
+            });
+          }
+        }
+      });
+    }
   };
 
   sum = () =>{
