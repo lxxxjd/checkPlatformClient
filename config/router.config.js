@@ -484,7 +484,12 @@ export default [
             component: './Charge/CostListDetailReviewBack',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
-
+          {
+            path: '/Charge/FinalPriceAdd',
+            name: 'FinalPriceAdd',
+            component: './Charge/FinalPriceAdd',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
 
 
         ],

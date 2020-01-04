@@ -62,6 +62,10 @@ export async function getPriceMaking(params) {
   return request(`/api/pricemaking/getPriceMaking?reportNo=${params.reportNo}`);
 }
 
+export async function getCheckResultInspway(params) {
+  return request(`/api/checkResult/getCheckResultInspway?reportno=${params.reportno}&inspway=${params.inspway}`);
+}
+
 export async function getReportPriceMaking(params) {
   return request(`/api/pricemaking/getReportPriceMaking`, {
     method: 'POST',

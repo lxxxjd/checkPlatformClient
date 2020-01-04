@@ -43,6 +43,7 @@ export default {
   'menu.SampleRegister.SampleDestory':'样品销毁',
   'menu.Charge':'财务管理',
   'menu.Charge.FinalPrice':'最终定价',
+  'menu.Charge.FinalPriceAdd':'定价',
   'menu.Charge.FinalPriceDetail':'最终定价详情',
   'menu.Charge.ListFiction':'清单编辑',
   'menu.Charge.ListFictionAdd':'清单拟制',

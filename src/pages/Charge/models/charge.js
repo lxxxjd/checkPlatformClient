@@ -1,5 +1,5 @@
 import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getAllCost ,
-  addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost} from '@/services/Charge';
+  addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost, getCheckResultInspway} from '@/services/Charge';
 import { getAllClientName } from '@/services/Entrustment';
 import { getInvoiceTitleList } from '@/services/InvoiceTitle';
 
@@ -62,7 +62,10 @@ export default {
       const response = yield call(getPriceMaking, payload);
       if (callback) callback(response);
     },
-
+    *getCheckResultInspway({ payload,callback }, { call, put }) {
+      const response = yield call(getCheckResultInspway, payload);
+      if (callback) callback(response);
+    },
     *deleteBylistnoFetch({ payload,callback }, { call, put }) {
       const response = yield call(deleteBylistno, payload);
       yield put({

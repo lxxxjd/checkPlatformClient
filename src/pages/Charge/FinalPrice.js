@@ -123,6 +123,7 @@ class FinalPrice extends PureComponent {
       pathname:'/Entrustment/DetailForEntrustment',
     });
   };
+
   mobileItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('reportdate',text.reportdate);
@@ -130,9 +131,16 @@ class FinalPrice extends PureComponent {
     sessionStorage.setItem('cargoname',text.cargoname);
     sessionStorage.setItem('inspway',text.inspway);
     sessionStorage.setItem('FinalPriceOrigin','FinalPrice');
-    router.push({
-      pathname:'/Charge/FinalPriceDetail',
-    });
+    sessionStorage.setItem('quantityd',text.quantityd);
+    if(text.status === '未定价'){
+      router.push({
+        pathname:'/Charge/FinalPriceAdd',
+      });
+    }else{
+      router.push({
+        pathname:'/Charge/FinalPriceDetail',
+      });
+    }
   };
 
   handleFormReset = () => {
