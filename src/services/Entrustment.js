@@ -43,7 +43,7 @@ export async function updateReport(params) {
   }
   const inspway = params.inspway.join(' ');
   params.inspway = inspway;
-  return request('/api/report/add_report', {
+  return request('/api/report/update_report', {
     method: 'POST',
     data: {
       ...params,
