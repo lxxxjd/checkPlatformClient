@@ -113,8 +113,10 @@ class ListFictionReview extends PureComponent {
 
   handleReview  =(state,text) => {
     const { dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     let  values = this.state.list;
     values.paystatus=state;
+    values.reviewMan=user.nameC;
     dispatch({
       type: 'charge/passListFictionFetch',
       payload:values,

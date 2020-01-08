@@ -2,6 +2,7 @@ import InspmanDetail from '../../pages/TaskAppoint/InspmanDetail';
 import CertificateReview from '../../pages/Certificate/CertificateReview';
 import CostlistEdit from '../../pages/Charge/CostlistEdit';
 import ResultReview from '../../pages/InspectionAnalysis/ResultReview';
+import ListFile from '../../pages/Charge/ListFile';
 
 export default {
   'menu.home': '首页',
@@ -62,6 +63,10 @@ export default {
   'menu.Charge.CostListDetailReviewBack':'成本审核退回',
   'menu.Charge.CostListDetailReviewPass':'成本审核通过',
   'menu.Charge.CostlistPay':'成本支付',
+
+  'menu.Charge.ListFile':'收费清单',
+  'menu.Charge.CostlistFile':'支付清单',
+
   'menu.Archives':'业务归档',
   'menu.Archives.ArchivesAdd':'归档',
   'menu.Archives.ArchivesDestory':'退档',

@@ -141,6 +141,20 @@ export async function addCost(params) {
 
 
 
+// 收费清单文件
+export async function downloadListTemp(params) {
+  return request(`/api/template/download_list_temp`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// 签署界面的关联委托的品质信息
+export async function getPdfByOssPath(params) {
+  return request(`/api/cert_report/get_pdf?osspath=${params.osspath}`);
+}
+
 
 
 

@@ -389,6 +389,13 @@ export default [
             name: 'ListReview',
             component: './Charge/ListReview',
           },
+
+          {
+            path: '/Charge/ListFile',
+            name: 'ListFile',
+            component: './Charge/ListFile',
+          },
+
           {
             path: '/Charge/ListFictionReview',
             name: 'ListFictionReview',
@@ -438,6 +445,12 @@ export default [
             path: '/Charge/CostlistReview',
             name: 'CostlistReview',
             component: './Charge/CostlistReview',
+          },
+
+          {
+            path: '/Charge/CostlistFile',
+            name: 'CostlistFile',
+            component: './Charge/CostlistFile',
           },
 
           {
