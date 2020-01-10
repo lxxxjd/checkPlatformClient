@@ -1,5 +1,5 @@
 import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getAllCost ,
-  addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost, getCheckResultInspway,downloadListTemp,getPdfByOssPath} from '@/services/Charge';
+  addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost, getCheckResultInspway,downloadListTemp,downloadCostListTemp,getPdfByOssPath} from '@/services/Charge';
 import { getAllClientName } from '@/services/Entrustment';
 import { getInvoiceTitleList } from '@/services/InvoiceTitle';
 
@@ -24,6 +24,11 @@ export default {
 
     *getPdfByOssPath({ payload,callback }, { call, put }) {
       const response = yield call(getPdfByOssPath, payload);
+      if (callback) callback(response.data);
+    },
+
+    *downloadCostListTemp({ payload,callback }, { call, put }) {
+      const response = yield call(downloadCostListTemp, payload);
       if (callback) callback(response.data);
     },
 

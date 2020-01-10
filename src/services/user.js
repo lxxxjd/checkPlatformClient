@@ -7,3 +7,7 @@ export async function query() {
 export async function queryCurrent() {
   return request('/api/currentUser');
 }
+
+export async function getMan(params) {
+  return request(`/api/user/getMan?certcode=${params.certcode}&func=${params.func}`);
+}

@@ -3,9 +3,7 @@ import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,del
   deleteTestBySampleNo,updateTestInfo,getSamplesByFilter,loadDetails,getTestStandard,modifyDetail,
   reviewSampleRegister,returnSampleRegister,
 } from '@/services/InspectionAnalysis'
-
 import {saveResultList} from '@/services/TestRecord'
-
 
 export default {
   namespace: 'inspectionAnalysis',

@@ -211,6 +211,7 @@ class ResultDetail extends PureComponent {
       }
     });
   }
+
   modifyItem = text => {
     const { form ,dispatch} = this.props;
     form.setFieldsValue({['inspway']:text.inspway});
@@ -233,6 +234,7 @@ class ResultDetail extends PureComponent {
          reportno : reportno,
       }
     });
+
     dispatch({
       type: 'checkResult/getTaskByReportNoAndInspway',
       payload:{
@@ -260,6 +262,7 @@ class ResultDetail extends PureComponent {
     this.setState({visible:true});
     this.setState({keyno:text.keyno});
   };
+  
   deleteItem = text => {
     const {
       dispatch,

@@ -36,7 +36,6 @@ const { Header, Footer, Sider, Content } = Layout;
 
 
 const CertForm = Form.create()(props => {
-
   const { form,option,showVisible,showCancel,Certurls,value,onSelect,treeData,reviewCertFile,renderFileInfo,renderTreeNodes,approverusersOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -353,18 +352,20 @@ class CertificateUploadDetail extends PureComponent {
 
   reivewItem =text=>{
     const { dispatch } = this.props;
-    // 打开文件
-    const value ={
-      certCode :JSON.parse(localStorage.getItem("userinfo")).certCode,
-    };
+
+    // 配置
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'certificate/getAllUserListByCertCode',
-      payload:value,
-      callback: (response2) => {
-        if(response2){
-          this.state.approverusers = response2;
-        }else {
-          message.error("加载用户数据失败");
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"证稿复核" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置审核人用户角色");
         }
       }
     });
@@ -713,7 +714,7 @@ class CertificateUploadDetail extends PureComponent {
         <CertForm {...parentMethods} showVisible={showVisible} option={option} Certurls={Certurls} treeData={treeData} value={value} approverusersOptions={approverusersOptions} />
         <Card bordered={false} size="small">
           <Row>
-            <Col span={22}/>
+            <Col span={22} />
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
                 <Icon type="left" />返回

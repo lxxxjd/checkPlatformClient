@@ -156,6 +156,14 @@ export async function getPdfByOssPath(params) {
 }
 
 
+// 收费清单文件
+export async function downloadCostListTemp(params) {
+  return request(`/api/template/download_costlist_temp`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
 
 
 

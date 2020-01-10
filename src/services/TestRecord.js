@@ -97,9 +97,8 @@ export async function downloadPlatFromTemp(params) {
 
 
 export async function saveResultList(params) {
-  const values = params.values;
-  return request(`/api/testdetail/saveResultList`, {
+  return request(`/api/testdetail/saveResultList?reviewer=${params.reviewer}&certcode=${params.certcode}`, {
     method: 'POST',
-    data: values
+    data: params.details
   });
 }

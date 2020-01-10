@@ -5,7 +5,8 @@ import {getCostlistList,addCostlist,updateCostlist,deleteCostlist,getCostBylistN
 export default {
   namespace: 'costlist',
   state: {
-    selectCostByConditionsResult:[]
+    selectCostByConditionsResult:[],
+    dataSource:[],
   },
 
   effects: {

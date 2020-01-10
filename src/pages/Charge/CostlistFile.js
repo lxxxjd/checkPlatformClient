@@ -9,7 +9,7 @@ import {
   Input,
   Button,
   Select,
-  Table, message,
+  Table, message, Modal,
 } from 'antd/lib/index';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment/moment';
@@ -17,6 +17,7 @@ import styles from '../table.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const { confirm } = Modal;
 
 @connect(({ costlist, loading }) => ({
   costlist,
@@ -58,6 +59,12 @@ class CostlistFile extends PureComponent {
     },
 
     {
+      title: 'oss文件',
+      dataIndex: 'osspath',
+      render: val => this.valView(val),
+    },
+
+    {
       title: '状态',
       dataIndex: 'status',
     },
@@ -66,9 +73,9 @@ class CostlistFile extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.goToCostlistDetail(text, record)}>查看</a>
-          &nbsp;&nbsp;
-          {text.status==="已拟制"||text.status==="已退款"||text.status==="审核退回"?[<a onClick={() => this.deleteItem(text, record)}>删除</a>]:[]}
+          {text.osspath===null||text.osspath===undefined?[<a onClick={() => this.handleFile(text, '确定要生成清单吗')}>生成清单&nbsp;&nbsp;</a>]:[]}
+          {text.osspath!==null&&text.osspath!==undefined?[<a onClick={() => this.handleFile(text, '确定要刷新清单吗')}>刷新清单&nbsp;&nbsp;</a>]:[]}
+          {text.osspath!==null&&text.osspath!==undefined?[ <a onClick={() => this.previewItem(text, record)}>查看文件</a>]:[]}
         </Fragment>
       ),
     },
@@ -97,6 +104,33 @@ class CostlistFile extends PureComponent {
       }
     });
   };
+
+
+
+  // 截取最后的文件名
+  valView = val => {
+    if(val !==undefined && val !==null && val!==""){
+      const name=val.substring(val.lastIndexOf("/")+1);
+      return <span>{name}</span>;
+    }
+    return <span />;
+  };
+
+  previewItem = text => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'charge/getPdfByOssPath',
+      payload:{osspath:text.osspath},
+      callback: (response) => {
+        if(response){
+          window.open(response);
+        }else{
+          message.error("查看失败，请生成成本清单文件");
+        }
+      }
+    });
+  };
+
 
   handleFormReset = () => {
     const { form } = this.props;
@@ -134,37 +168,41 @@ class CostlistFile extends PureComponent {
     return [];
   };
 
-  goToCostlistDetail = text => {
-    sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
-    router.push({
-      pathname:'/Charge/CostListDetail',
-    });
-  };
 
-  deleteItem = text =>{
+
+  handleOk =(text)=>{
     const { dispatch } = this.props;
-    const values = {
-      ...text
-    };
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const values = new FormData();
+    values.append("certcode",user.certCode);
+    values.append("paylistno",text.paylistno);
     dispatch({
-      type: 'costlist/deleteCostlist',
+      type: 'charge/downloadCostListTemp',
       payload:values,
       callback: (response) => {
         if(response==="success"){
           this.init();
-          message.success("删除成功");
-        } else{
-          message.success("删除失败");
+          message.success("生成成本清单文件，操作成功");
+        }else{
+          message.error("生成成本清单文件，操作失败");
         }
       }
     });
   };
 
-
-  addItem = () => {
-    router.push({
-      pathname:'/Charge/CostListAdd',
+  handleFile = (text,title) =>{
+    const {handleOk} = this;
+    confirm({
+      title,
+      okText:"确定",
+      cancelText:"取消",
+      onOk() {
+        message.success("清单文件正在拟制中，请稍等几秒...");
+        handleOk(text);
+      },
+      onCancel() {},
     });
+
   };
 
 
@@ -210,9 +248,6 @@ class CostlistFile extends PureComponent {
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
-              </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.addItem}>
-                新增
               </Button>
             </span>
           </Col>

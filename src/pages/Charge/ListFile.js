@@ -16,7 +16,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
 
 const { Option } = Select;
-
+const { confirm } = Modal;
 
 
 /* eslint react/no-multi-comp:0 */
@@ -52,7 +52,7 @@ class ListFile extends PureComponent {
       title: 'oss文件',
       dataIndex: 'osspath',
       render: val => this.valView(val),
-},
+    },
     {
       title: '状态',
       dataIndex: 'paystatus',
@@ -62,9 +62,9 @@ class ListFile extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.osspath===null||text.osspath===undefined?[<a onClick={() => this.createListFile(text, record)}>生成清单&nbsp;&nbsp;</a>]:[]}
-          {text.osspath!==null&&text.osspath!==undefined?[<a onClick={() => this.createListFile(text, record)}>刷新清单&nbsp;&nbsp;</a>]:[]}
-          {text.osspath!==null&&text.osspath!==undefined?[ <a onClick={() => this.previewItem(text, record)}>查看</a>]:[]}
+          {text.osspath===null||text.osspath===undefined?[<a onClick={() => this.handleFile(text, '确定要生成清单吗')}>生成清单&nbsp;&nbsp;</a>]:[]}
+          {text.osspath!==null&&text.osspath!==undefined?[<a onClick={() => this.handleFile(text, '确定要刷新清单吗')}>刷新清单&nbsp;&nbsp;</a>]:[]}
+          {text.osspath!==null&&text.osspath!==undefined?[ <a onClick={() => this.previewItem(text, record)}>查看文件</a>]:[]}
           &nbsp;&nbsp;
         </Fragment>
       ),
@@ -101,26 +101,37 @@ class ListFile extends PureComponent {
     });
   };
 
-
-  createListFile = text =>{
+  handleFile = (text,title) =>{
     const { dispatch } = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const values = new FormData();
-    values.append("certcode",user.certCode);
-    values.append("listno",text.listno);
-    dispatch({
-      type: 'charge/downloadListTemp',
-      payload:values,
-      callback: (response) => {
-        if(response==="success"){
-          message.success("生成收费清单文件，操作成功");
-          this.init();
-        }else{
-          message.error("生成收费清单文件，操作失败");
-        }
-      }
+    const {init} = this;
+    confirm({
+      title,
+      okText:"确定",
+      cancelText:"取消",
+      onOk() {
+        message.success("清单文件正在拟制中，请稍等几秒...");
+        const user = JSON.parse(localStorage.getItem("userinfo"));
+        const values = new FormData();
+        values.append("certcode",user.certCode);
+        values.append("listno",text.listno);
+        dispatch({
+          type: 'charge/downloadListTemp',
+          payload:values,
+          callback: (response) => {
+            if(response==="success"){
+              init();
+              message.success("生成收费清单文件，操作成功");
+            }else{
+              message.error("生成收费清单文件，操作失败");
+            }
+          }
+        });
+      },
+      onCancel() {},
     });
+
   };
+
 
   init =()=>{
     const { dispatch } = this.props;
