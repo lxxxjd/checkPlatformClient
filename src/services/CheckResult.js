@@ -35,13 +35,25 @@ export async function deleteCheckResult(params) {
   return request(`/api/checkResult/deleteCheckResult?keyno=${params.keyno}`);
 }
 
+
 export async function getInstrument(params) {
-  return request(`/api/checkResult/getInstrument`);
+  return request(`/api/instrument/getInstrument`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
 }
 
 export async function getStandard(params) {
-  return request(`/api/checkResult/getStandard`);
+  return request(`/api/surveystandard/getSurveyStandard`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
 }
+
 
 export async function getProject(params) {
   return request(`/api/inspway/get_project?reportno=${params.reportno}`);
