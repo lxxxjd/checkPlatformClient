@@ -762,7 +762,12 @@ export default [
             name: 'BusinessIncome',
             component: './Statistics/BusinessIncomeQuery',
           },
-
+          {
+            path: '/Statistics/BusinessIncomeDetail',
+            name: 'BusinessIncomeDetail',
+            component: './Statistics/BusinessIncomeDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
           {
             path: '/Statistics/CostQuery',
             name: 'CostQuery',

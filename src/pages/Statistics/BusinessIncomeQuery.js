@@ -35,40 +35,40 @@ class BusinessIncomeQuery extends PureComponent {
   columns = [
     {
       title: '委托编号',
-      dataIndex: '',
+      dataIndex: 'reportNo',
     },
     {
       title: '委托日期',
-      dataIndex: '',
+      dataIndex: 'reportDate',
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
       title: '委托人',
-      dataIndex: '',
+      dataIndex: 'reportMan',
     },
     {
       title: '检查品名',
-      dataIndex: '',
+      dataIndex: 'cargoName',
     },
     {
       title: '申报数量',
-      dataIndex: '',
+      dataIndex: 'quantityD',
     },
     {
       title: '检查项目',
-      dataIndex: '',
+      dataIndex: 'inspWay',
     },
     {
       title: '检验费',
-      dataIndex: '',
+      dataIndex: 'total',
     },
     {
       title: '清单号',
-      dataIndex: '',
+      dataIndex: 'listNo',
     },
     {
       title: '发票号',
-      dataIndex: '',
+      dataIndex: 'invoiceNo',
     },
     {
       title: '到账',
@@ -76,7 +76,7 @@ class BusinessIncomeQuery extends PureComponent {
     },
     {
       title: '状态',
-      dataIndex: '',
+      dataIndex: 'overAllState',
     },
     {
       title: '操作',
@@ -108,9 +108,9 @@ class BusinessIncomeQuery extends PureComponent {
 
 
   previewItem = text => {
-    sessionStorage.setItem('reportnoForList',JSON.stringify(text));
+    sessionStorage.setItem('reportno',text.reportNo);
     router.push({
-      pathname:'',
+      pathname:'BusinessIncomeDetail',
     });
   };
 
@@ -213,7 +213,7 @@ class BusinessIncomeQuery extends PureComponent {
 
   render() {
     const {
-      businessIncome:{data},
+      businessIncome:{selectBusinessIncomesByConditionsResult},
       loading,
     } = this.props;
     return (
@@ -224,7 +224,7 @@ class BusinessIncomeQuery extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={data}
+              dataSource={selectBusinessIncomesByConditionsResult}
               columns={this.columns}
               rowKey="listno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
