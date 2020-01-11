@@ -32,6 +32,19 @@ class CostListDetail extends PureComponent {
 
   columns = [
     {
+      title: '委托编号',
+      dataIndex: 'reportno',
+    },
+    {
+      title: '委托日期',
+      dataIndex: 'reportdate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+    },
+    {
+      title: '检查品名',
+      dataIndex: 'cargoname',
+    },
+    {
       title: '费用名称',
       dataIndex: 'costname',
     },

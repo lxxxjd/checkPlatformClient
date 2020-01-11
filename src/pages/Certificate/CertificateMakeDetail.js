@@ -349,18 +349,20 @@ class CertificateMakeDetail extends PureComponent {
 
   makeItem =text=>{
     const { dispatch } = this.props;
-    // 打开文件
-    const value ={
-      certCode :JSON.parse(localStorage.getItem("userinfo")).certCode,
-    };
+
+    // 配置审核人
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'certificate/getAllUserListByCertCode',
-      payload:value,
-      callback: (response2) => {
-        if(response2){
-          this.state.approverusers = response2;
-        }else {
-          message.error("加载用户数据失败");
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"授权签字" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置审核人用户角色");
         }
       }
     });

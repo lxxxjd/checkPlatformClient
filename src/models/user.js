@@ -1,4 +1,4 @@
-import { query as queryUsers, queryCurrent } from '@/services/user';
+import { query as queryUsers, queryCurrent,getMan} from '@/services/user';
 
 export default {
   namespace: 'user',
@@ -9,6 +9,11 @@ export default {
   },
 
   effects: {
+    *getMan({ payload,callback }, { call, put }) {
+      const response = yield call(getMan, payload);
+      if (callback) callback(response.data);
+    },
+
     *fetch(_, { call, put }) {
       const response = yield call(queryUsers);
       yield put({
@@ -16,6 +21,7 @@ export default {
         payload: response,
       });
     },
+
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
       yield put({

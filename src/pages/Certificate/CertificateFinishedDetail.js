@@ -44,6 +44,8 @@ class CertificateFinishedDetail extends PureComponent {
     previewImage: '',
     fileList: [],
     approverusers:[],
+
+    authorusers:[],
   };
 
   columns = [
@@ -95,17 +97,34 @@ class CertificateFinishedDetail extends PureComponent {
       },
     });
 
-    const value ={
-      certCode :JSON.parse(localStorage.getItem("userinfo")).certCode,
-    };
+    // 配置授权签字人
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'certificate/getAllUserListByCertCode',
-      payload:value,
-      callback: (response2) => {
-        if(response2){
-          this.state.approverusers = response2;
-        }else {
-          message.error("加载用户数据失败");
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"授权签字" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({authorusers:response});
+        }else{
+          message.error("未配置授权签字用户角色");
+        }
+      }
+    });
+
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"证书发布" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置发布人用户角色");
         }
       }
     });
@@ -196,6 +215,7 @@ class CertificateFinishedDetail extends PureComponent {
         formData.append('reportno', reportno);
         formData.append('author', values.author);
         formData.append('name', values.recordname);
+        formData.append('publisher', values.publisher);
         dispatch({
           type: 'certificate/uploadCertFilePdf',
           payload : formData,
@@ -304,8 +324,9 @@ class CertificateFinishedDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,approverusers} = this.state
+    const {fileList,visible,previewVisible,previewImage,approverusers,authorusers} = this.state
     const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
+    const authorusersOptions = authorusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const applicant = sessionStorage.getItem('applicant');
@@ -352,6 +373,16 @@ class CertificateFinishedDetail extends PureComponent {
                 rules: [{ required: true, message: '请选择授权签字人' }],
               })(
                 <Select style={{width:'100%'}} placeholder="请选择授权签字人">
+                  {authorusersOptions}
+                </Select>
+              )}
+            </Form.Item>
+
+            <Form.Item label="证书发布人">
+              {getFieldDecorator('publisher', {
+                rules: [{ required: true, message: '请选择授证书发布人' }],
+              })(
+                <Select style={{width:'100%'}} placeholder="请选择授证书发布人">
                   {approverusersOptions}
                 </Select>
               )}

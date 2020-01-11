@@ -1,5 +1,6 @@
 
-import {getStandard,getInstrument,addCheckResult,updateCheckResult,deleteCheckResult,getProject,getCheckResult,getTaskByReportNoAndInspway} from '@/services/CheckResult'
+import {getStandard,getInstrument,addCheckResult,updateCheckResult,
+  deleteCheckResult,getProject,getCheckResult,getTaskByReportNoAndInspway} from '@/services/CheckResult'
 
 
 

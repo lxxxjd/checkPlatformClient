@@ -316,8 +316,6 @@ class CertificateUploadDetail extends PureComponent {
       payload:{
          reportno,
       },
-      callback: (response) => {
-      }
     });
 
     const reportnNo =reportno;
@@ -458,18 +456,19 @@ class CertificateUploadDetail extends PureComponent {
   signItem =text=>{
 
     const { dispatch } = this.props;
-    // 打开文件
-    const param ={
-      certCode :JSON.parse(localStorage.getItem("userinfo")).certCode,
-    };
+
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'certificate/getAllUserListByCertCode',
-      payload:param,
-      callback: (response2) => {
-        if(response2){
-          this.state.approverusers = response2;
-        }else {
-          message.error("加载用户数据失败");
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"证稿复核" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置审核人用户角色");
         }
       }
     });

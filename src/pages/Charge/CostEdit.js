@@ -301,13 +301,11 @@ class Cost extends PureComponent {
           <a onClick={() => this.handleAddUpdateCost(text, true)}>修改</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
         </Fragment>
       ),
     },
   ];
-
+  // &nbsp;&nbsp;<a onClick={() => this.previewItem(text, record)}>查看</a>
 
   componentDidMount() {
     this.init();

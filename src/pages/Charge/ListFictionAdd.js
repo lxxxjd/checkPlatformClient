@@ -24,7 +24,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking,invoiceTitlesOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -65,6 +65,15 @@ const AddListFrom = Form.create()(props =>  {
             rules: [{ required: true,message: '请输入清单号'}],
           })(<Input placeholder="请输入清单号" />)}
         </Form.Item>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="到账账户：">
+          {form.getFieldDecorator('invoiceTitle', {
+            rules: [{ required: true,message: '选择到账账户！'}],
+          })(
+            <Select placeholder="请选择到账账户">
+              {invoiceTitlesOptions}
+            </Select>
+          )}
+        </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="审核人：">
           {form.getFieldDecorator('reviewer', {
             rules: [{ required: true,message: '请选择审核人'}],
@@ -94,6 +103,7 @@ class ListFictionAdd extends PureComponent {
     modalAddListVisible:false,
     payer:undefined,
     total:0,
+    invoiceTitles:[],
   };
 
   columns = [
@@ -167,13 +177,6 @@ class ListFictionAdd extends PureComponent {
       }
     });
 
-    dispatch({
-      type: 'charge/getClientName',
-      payload: {},
-      callback: (response) => {
-        this.setState({allReporterName: response})
-      }
-    });
 
   };
 
@@ -212,20 +215,44 @@ class ListFictionAdd extends PureComponent {
 
 
   handleSubmit = () => {
-    const {state} = this;
-    let total = 0;
-    for(let j = 0,len = state.priceMaking.length; j < len; j++){
-      if(state.priceMaking[j].status ==="未定价"){
-        message.error('存在未定价的条目，请定价完重试');
-        return;
+    const {dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const values = {
+      certCode:user.certCode,
+    };
+    dispatch({
+      type: 'charge/getInvoiceTitleList',
+      payload:values,
+      callback: (response) => {
+
+        // 设置账户
+        if(response!==undefined && response.length !==undefined && response.length >0) {
+          this.setState({
+            invoiceTitles: response,
+          });
+
+          // 拟制操作
+          const {state} = this;
+          let total = 0;
+          for(let j = 0,len = state.priceMaking.length; j < len; j++){
+            if(state.priceMaking[j].status ==="未定价"){
+              message.error('存在未定价的条目，请定价完重试');
+              return;
+            }
+            if(state.priceMaking[j].payer!==undefined){
+              state.payer = state.priceMaking[j].payer;
+            }
+            total += parseFloat(state.priceMaking[j].total);
+          }
+          this.state.total = total;
+          this.handleAddListVisible(true);
+
+        }else{
+          message.success('请配置到账账户');
+        }
       }
-      if(state.priceMaking[j].payer!==undefined){
-        state.payer = state.priceMaking[j].payer;
-      }
-      total += parseFloat(state.priceMaking[j].total);
-    }
-    this.state.total = total;
-    this.handleAddListVisible(true);
+    });
+
   };
 
   handleFormAddList =(fieldvalues)=>{
@@ -238,6 +265,7 @@ class ListFictionAdd extends PureComponent {
       priceMakings:this.state.priceMaking,
       listno:fieldvalues.listno,
       payer:this.state.payer,
+      invoiceTitle:fieldvalues.invoiceTitle,
     };
     dispatch({
       type: 'charge/addListFetch',
@@ -477,13 +505,15 @@ class ListFictionAdd extends PureComponent {
       loading,
     } = this.props;
 
-    const {priceMaking,modalAddListVisible,total,payer} = this.state;
+    const {priceMaking,modalAddListVisible,total,payer,invoiceTitles} = this.state;
 
     // 下载模板 模态框方法
     const parentMethods = {
       handleAddListVisible:this.handleAddListVisible,
       handleFormAddList:this.handleFormAddList,
     };
+
+    const invoiceTitlesOptions = invoiceTitles.map(d => <Option key={d.namec} value={d.namec}>{d.namec}</Option>);
 
     const { getFieldDecorator, getFieldValue } = this.props.form;
     getFieldDecorator('keys', { initialValue: [] });
@@ -573,7 +603,7 @@ class ListFictionAdd extends PureComponent {
             <Form onSubmit={this.handleSubmit}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
-              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} />
+              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} invoiceTitlesOptions={invoiceTitlesOptions} />
             </Form>
             <Table
               style={{marginTop:5}}

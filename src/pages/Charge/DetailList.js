@@ -54,12 +54,12 @@ class DetailList extends PureComponent {
       title: '申请项目',
       dataIndex: 'inspway',
     },
-    // {
-    //   title: '付款人',
-    //   dataIndex: 'payer',
-    // },
     {
-      title: '价格',
+      title: '检验地点',
+      dataIndex: 'inspplace2',
+    },
+    {
+      title: '检验费',
       dataIndex: 'total',
     },
     {
@@ -125,42 +125,41 @@ class DetailList extends PureComponent {
             </Col>
           </Row>
           <Row className={styles.card}>
-            <Col sm={5}>
+            <Col sm={6}>
               <span level={4}> 清单编号：{list.listno} </span>
             </Col>
-            <Col sm={10}>
+            <Col sm={9}>
               <span> 付款人：{list.payer} </span>
             </Col>
-            <Col sm={5}>
-              <span level={4}> 金额：{list.total} </span>
+            <Col sm={9}>
+              {this.initStringData(list.invoiceTitle,'到账账户')}
             </Col>
           </Row>
           <Row className={styles.card2}>
-            <Col sm={5}>
+            <Col sm={6}>
               <span> 状态：{list.paystatus} </span>
             </Col>
-            <Col sm={5}>
+            <Col sm={6}>
               {this.initData(list.listdate,'拟制日期')}
             </Col>
-            <Col sm={5}>
+            <Col sm={6}>
               {this.initData(list.invoiceDate,'开票日期')}
             </Col>
-            <Col sm={5}>
+            <Col sm={6}>
               {this.initData(list.paydate,'到账/退账日期')}
             </Col>
           </Row>
-
           <Row className={styles.card2}>
-            <Col sm={5}>
-              {this.initStringData(list.invoiceTitle,'到账账户')}
+            <Col sm={6}>
+              <span level={4}> 金额：{list.total} </span>
             </Col>
-            <Col sm={5}>
+            <Col sm={6}>
               {this.initStringData(list.invoicesort,'发票类型')}
             </Col>
-            <Col sm={5}>
+            <Col sm={6}>
               {this.initStringData(list.invoiceno,'发票号码')}
             </Col>
-            <Col sm={5}>
+            <Col sm={6}>
               {this.initStringData(list.payway,'付款方式')}
             </Col>
           </Row>

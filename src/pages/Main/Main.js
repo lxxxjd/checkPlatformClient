@@ -69,7 +69,7 @@ class Main extends PureComponent {
     {
       title: '操作',
       render: (text, record) => (
-        <Fragment>          
+        <Fragment>
           <a onClick={() => this.resultItem(text, record)}>检查结果</a>
           &nbsp;&nbsp;
           <a onClick={() => this.recordItem(text, record)}>检查记录</a>
@@ -119,6 +119,8 @@ class Main extends PureComponent {
   ];
 
   componentDidMount() {
+    console.log(document.body.clientWidth);
+    console.log(document.body.clientHeight);
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     dispatch({
@@ -311,8 +313,8 @@ class Main extends PureComponent {
                 <div align="center">
                   <Text>今日开票{this.transfor(dayDillTotal)}</Text>
                   <br/>
-                  <Text>今日委托{reportNum}</Text>  
-                </div>  
+                  <Text>今日委托{reportNum}</Text>
+                </div>
               </Card>
             </Col>
             <Col span={6}>
@@ -325,7 +327,7 @@ class Main extends PureComponent {
                 <div align="center">
                   {mouthBillTotal[0]>mouthBillTotal[1]?[<Text type="danger">今年本月开票{this.transfor(mouthBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年本月开票{this.transfor(mouthBillTotal[0])}</span>]}
                   <br/>
-                  <Text>去年本月开票{this.transfor(mouthBillTotal[1])}</Text>    
+                  <Text>去年本月开票{this.transfor(mouthBillTotal[1])}</Text>
                 </div>
               </Card>
             </Col>
@@ -339,7 +341,7 @@ class Main extends PureComponent {
                 <div align="center">
                   {yearBillTotal[0]>yearBillTotal[1]?[<Text type="danger">今年累计开票{this.transfor(yearBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计开票{this.transfor(yearBillTotal[0])}</span>]}
                   <br/>
-                  <Text>去年累计开票{this.transfor(yearBillTotal[1])}</Text>             
+                  <Text>去年累计开票{this.transfor(yearBillTotal[1])}</Text>
                 </div>
               </Card>
             </Col>
@@ -353,13 +355,13 @@ class Main extends PureComponent {
                 <div align="center">
                   {yearPayTotal[0]>yearPayTotal[1]?[<Text type="danger">今年累计到账{this.transfor(yearPayTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计到账{this.transfor(yearPayTotal[0])}</span>]}
                   <br/>
-                  <Text>去年累计到账{this.transfor(yearPayTotal[1])}</Text>  
+                  <Text>去年累计到账{this.transfor(yearPayTotal[1])}</Text>
                 </div>
               </Card>
-            </Col>          
+            </Col>
           </Row>
           <br/>
-          <Card title="我的收费统计" size='small' bordered={false}>  
+          <Card title="我的收费统计" size='small' bordered={false}>
             <Table
               size="middle"
               loading={loading}

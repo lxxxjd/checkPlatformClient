@@ -24,7 +24,7 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // Entrustment
-      { path: '/', redirect: '/Main/Main',authority: ['admin', 'user']},
+      { path: '/', redirect: '/Main/Main'},
 
       {
         path: '/Main',
@@ -42,7 +42,7 @@ export default [
         path: "/Entrustment",
         icon: "file",
         name: "Entrustment",
-        authority: ['admin', 'user'],
+        authority: ["操作经理","admin"],
         routes: [
           {
             path: "/Entrustment/ApplicationForEntrustment",
@@ -389,6 +389,13 @@ export default [
             name: 'ListReview',
             component: './Charge/ListReview',
           },
+
+          {
+            path: '/Charge/ListFile',
+            name: 'ListFile',
+            component: './Charge/ListFile',
+          },
+
           {
             path: '/Charge/ListFictionReview',
             name: 'ListFictionReview',
@@ -438,6 +445,12 @@ export default [
             path: '/Charge/CostlistReview',
             name: 'CostlistReview',
             component: './Charge/CostlistReview',
+          },
+
+          {
+            path: '/Charge/CostlistFile',
+            name: 'CostlistFile',
+            component: './Charge/CostlistFile',
           },
 
           {

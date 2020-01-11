@@ -21,6 +21,108 @@ import style from './ResultUpdate.less';
 const FormItem = Form.Item;
 const { Option } = Select;
 
+
+
+
+
+// 提交审核
+const SaveListFrom = Form.create()(props =>  {
+  const { form, modalSaveListVisible, handleModalSaveListVisible,handleSaveList,reviewUsersOptions} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err){
+        return;
+      }
+      handleSaveList(fieldsValue);
+      form.resetFields();
+      handleModalSaveListVisible();
+    });
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="提交审核"
+      visible={modalSaveListVisible}
+      style={{ top: 100 }}
+      width={500}
+      onCancel={() => handleModalSaveListVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleModalSaveListVisible()}>
+          关闭
+        </Button>,
+        <Button type="primary" onClick={() => okHandle()}>
+          保存
+        </Button>
+      ]}
+    >
+      <Form>
+        <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="审核人：">
+          {form.getFieldDecorator('reviewer', {
+            rules: [{ required: true,message: '请选择审核人'}],
+          })(
+            <Select placeholder="请选择审核人">
+              {reviewUsersOptions}
+            </Select>
+          )
+          }
+        </Form.Item>
+      </Form>
+
+    </Modal>
+  );
+});
+
+
+
+// 提交审核
+const UpdateForm = Form.create()(props =>  {
+  const { form, visible, handleVisible,handleOk} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err){
+        return;
+      }
+      handleOk(fieldsValue);
+      form.resetFields();
+      handleVisible();
+    });
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="录入样品指标"
+      visible={visible}
+      style={{ top: 100 }}
+      width={500}
+      onCancel={() => handleVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleVisible()}>
+          关闭
+        </Button>,
+        <Button type="primary" onClick={() => okHandle()}>
+          保存
+        </Button>
+      ]}
+    >
+      <Form>
+        <Form.Item label="结果">
+          {form.getFieldDecorator('result', {
+            rules: [{ required: true, message: '请输入结果' }],
+          })(
+            <Input placeholder="请输入结果" />
+          )}
+        </Form.Item>
+      </Form>
+
+    </Modal>
+  );
+});
+
+
+
+
 // 可编辑的表格
 const EditableContext = React.createContext();
 
@@ -121,6 +223,9 @@ class ResultUpdateDetail extends PureComponent {
     testDetail:null,
 
     dataSource: [],
+    modalSaveListVisible:false,
+    reviewUsers:[],
+
 
   };
 
@@ -170,8 +275,8 @@ class ResultUpdateDetail extends PureComponent {
     dispatch({
       type: 'inspectionAnalysis/getAllDetails',
       payload:{
-        reportno : reportno,
-        sampleno : sampleno ,
+        reportno,
+        sampleno ,
       },
       callback: (response) => {
         if(response && response.length!==undefined){
@@ -190,42 +295,73 @@ class ResultUpdateDetail extends PureComponent {
     this.props.history.goBack();
   };
 
-  handleOk = () => {
+  handleModalSaveListVisible = (flag) => {
+    this.setState({
+      modalSaveListVisible: !!flag,
+    });
+  };
+
+  handleSaveList =(fieldvalues)=>{
+    this.saveAll(fieldvalues.reviewer);
+  };
+
+
+  handleOk = (fieldsValue) => {
     const {testDetail} = this.state;
     var value = testDetail;
-    const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      value.testresult =  form.getFieldValue('result');
-      dispatch({
-        type: 'inspectionAnalysis/addResult',
-        payload: value,
-        callback:response => {
-          if(response.code === 200){
-            notification.open({
-              message: '录入成功',
-            });
-          }else{
-            notification.open({
-              message: '录入失败',
-              description:response.data,
-            });
-          }
+    const { dispatch } = this.props;
+    value.testresult = fieldsValue.result;
+    dispatch({
+      type: 'inspectionAnalysis/addResult',
+      payload: value,
+      callback:response => {
+        if(response.code === 200){
+          notification.open({
+            message: '录入成功',
+          });
+        }else{
+          notification.open({
+            message: '录入失败',
+            description:response.data,
+          });
         }
-      });
+      }
     });
-    form.resetFields();
     this.setState({ visible: false });
-
   };
 
   handleCancel = () =>{
     this.setState({ visible: false });
   };
 
+  handleVisible= (flag) =>{
+    this.setState({  visible: !!flag, });
+  };
+
+
   modifyItem = text => {
     this.setState({ testDetail: text});
-    this.setState({ visible: true });
+    this.handleVisible(true);
+  };
+
+  openSaveModal = ()=>{
+    const { dispatch } = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"结果复核" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({reviewUsers:response});
+        }else{
+          message.error("未配置审核人用户角色");
+        }
+      }
+    });
+    this.handleModalSaveListVisible(true);
   };
 
   handleSave = row => {
@@ -239,16 +375,22 @@ class ResultUpdateDetail extends PureComponent {
     this.setState({ dataSource: newData });
   };
 
-  saveAll =()=>{
+  saveAll =(reviewer)=>{
     const {dispatch} = this.props;
     const {dataSource} = this.state;
-    const values = [];
+    const details = [];
     for(let i =0 ;i<dataSource.length;i++){
-      values.push(dataSource[i]);
+      details.push(dataSource[i]);
     }
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const values ={
+      details,
+      reviewer,
+      certcode:user.certCode,
+    };
     dispatch({
       type: 'inspectionAnalysis/saveResultList',
-      payload: {values},
+      payload: values,
       callback:response => {
         if(response==="success"){
           notification.open({
@@ -267,12 +409,19 @@ class ResultUpdateDetail extends PureComponent {
 
   render() {
     const {
-      inspectionAnalysis: {detail},
       loading,
-      form: { getFieldDecorator },
-
     } = this.props;
-    const {visible,dataSource} = this.state;
+    const {visible,dataSource,modalSaveListVisible,reviewUsers} = this.state;
+    const reviewUsersOptions = reviewUsers.map(d => <Option value={d.userName}>{d.nameC}</Option>);
+    // 下载模板 模态框方法
+    const parentMethods = {
+      handleModalSaveListVisible:this.handleModalSaveListVisible,
+      handleSaveList:this.handleSaveList,
+      handleVisible:this.handleVisible,
+      handleOk:this.handleOk,
+    };
+
+
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const sampleno = sessionStorage.getItem('sampleno');
@@ -309,7 +458,7 @@ class ResultUpdateDetail extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col sm={22}>
-              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.saveAll}>保存</Button>
+              <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.openSaveModal}>提交</Button>
               <Button style={{ marginBottom: 12 , marginRight:12}} type="primary" onClick={this.init}>重置</Button>
             </Col>
             <Col span={2}>
@@ -318,6 +467,8 @@ class ResultUpdateDetail extends PureComponent {
               </Button>
             </Col>
           </Row>
+          <SaveListFrom {...parentMethods} modalSaveListVisible={modalSaveListVisible} reviewUsersOptions={reviewUsersOptions}  />
+          <UpdateForm {...parentMethods} visible={visible} />
           <div className={styles.tableList}>
             <Table
               components={components}
@@ -329,22 +480,6 @@ class ResultUpdateDetail extends PureComponent {
               rowKey="keyno"
             />
           </div>
-          <Modal
-            title="录入样品指标"
-            visible={visible}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-          >
-            <Form>
-              <Form.Item label="结果">
-                {getFieldDecorator('result', {
-                  rules: [{ required: true, message: '请输入结果' }],
-                })(
-                  <Input placeholder="请输入结果" />
-                )}
-              </Form.Item>
-            </Form>
-          </Modal>
         </Card>
       </PageHeaderWrapper>
     );

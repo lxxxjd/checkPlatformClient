@@ -66,11 +66,9 @@ const CreateInvoiceForm = Form.create()(props => {
       <Form>
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="到账账户">
           {form.getFieldDecorator('invoiceTitle', {
-            rules: [{ required: true,message: '选择到账账户！'}],
+            initialValue:invoiceData.invoiceTitle,
           })(
-            <Select placeholder="请选择到账账户">
-              {invoiceTitlesOptions}
-            </Select>
+            <Input disabled />
           )}
         </Form.Item>
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="发票类型">

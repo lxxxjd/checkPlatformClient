@@ -306,9 +306,11 @@ const CreateForm = Form.create()(props => {
             {
             },
           ],
-        })( <Select placeholder="选择状态" style={{ width: '100%' }}>
-          <Option value="报废"> 报废</Option>
-        </Select>)}
+        })(
+          <Select placeholder="选择状态" style={{ width: '100%' }}>
+            <Option value="报废"> 报废</Option>
+            <Option value="正常"> 正常</Option>
+          </Select>)}
       </FormItem>
 
 

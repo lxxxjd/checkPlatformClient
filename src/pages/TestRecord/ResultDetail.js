@@ -160,6 +160,7 @@ class ResultDetail extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'checkResult/getCheckResult',
       payload:{
@@ -169,6 +170,7 @@ class ResultDetail extends PureComponent {
     dispatch({
       type: 'checkResult/getStandard',
       payload:{
+        certCode:user.certCode,
       },
       callback : (response) => {
         if(response.code === 400){
@@ -181,7 +183,7 @@ class ResultDetail extends PureComponent {
           var standards = [];
           for (var i = 0 ;i < standardsData.length ; i ++ ) {
               standards.push({
-                key: standardsData[i],
+                key: standardsData[i].standarde,
               });
           }
         }
@@ -191,6 +193,7 @@ class ResultDetail extends PureComponent {
     dispatch({
       type: 'checkResult/getInstrument',
       payload:{
+        certCode:user.certCode,
       },
       callback :(response) =>{
         if(response.code === 400){
@@ -203,7 +206,7 @@ class ResultDetail extends PureComponent {
           var instrument = [];
           for (var i = 0 ;i < instrumentData.length ; i ++ ) {
               instrument.push({
-                key: instrumentData[i],
+                key: instrumentData[i].diviceId,
               });
           }
         }
@@ -211,6 +214,7 @@ class ResultDetail extends PureComponent {
       }
     });
   }
+
   modifyItem = text => {
     const { form ,dispatch} = this.props;
     form.setFieldsValue({['inspway']:text.inspway});
@@ -233,6 +237,7 @@ class ResultDetail extends PureComponent {
          reportno : reportno,
       }
     });
+
     dispatch({
       type: 'checkResult/getTaskByReportNoAndInspway',
       payload:{
@@ -260,6 +265,7 @@ class ResultDetail extends PureComponent {
     this.setState({visible:true});
     this.setState({keyno:text.keyno});
   };
+
   deleteItem = text => {
     const {
       dispatch,
@@ -606,3 +612,4 @@ class ResultDetail extends PureComponent {
 }
 
 export default ResultDetail;
+
