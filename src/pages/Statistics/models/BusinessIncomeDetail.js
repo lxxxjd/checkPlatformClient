@@ -3,6 +3,8 @@ import { getCheckResult} from '@/services/CheckResult';
 import { getRecordInfo, getOssPdf} from '@/services/TestRecord';
 import { getTestByReportNo} from '@/services/TestInfo';
 import { getCertFiles} from '@/services/Certificate';
+import { getTestBySampleNo } from '@/services/InspectionAnalysis'
+import { getPriceMakingList } from '@/services/Business'
 
 export default {
   namespace: 'businessIncomeDetail',
@@ -40,7 +42,15 @@ export default {
       if (callback) callback(response);
     },
     *getCertFiles({ payload ,callback}, { call, put }) {
-      const response = yield call(getTestByReportNo, payload);
+      const response = yield call(getCertFiles, payload);
+      if (callback) callback(response);
+    },
+    *getTestBySampleNo({ payload ,callback}, { call, put }) {
+      const response = yield call(getTestBySampleNo, payload);
+      if (callback) callback(response);
+    },
+    *getPriceMakingList({ payload ,callback}, { call, put }) {
+      const response = yield call(getPriceMakingList, payload);
       if (callback) callback(response);
     },
   },

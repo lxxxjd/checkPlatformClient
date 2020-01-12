@@ -24,61 +24,69 @@ class BusinessIncomeDetail extends Component {
     test:[],
     testRecord:[],
     certFile:[],
+    testInfo:[],
+    pricemaking:{}, 
   };
 
   columns = [
     {
       title: '检查项目',
-      dataIndex: 'recordname',
-      render: val => {
-        //取文件名
-        var pattern = /\.{1}[a-z]{1,}$/;
-        if (pattern.exec(val) !== null) {
-          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
-        } else {
-          return <span>{val}</span>;
-        }
-      }
+      dataIndex: 'inspway',
     },
     {
       title: '开始日期',
-      dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
-    },
-    {
-      title: '结束日期',
-      dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
-    },
-    {
-      title: '检查人员',
-      dataIndex: 'recordname',
+      dataIndex: 'begindate',
       render: val => {
-        //取文件名
-        var pattern = /\.{1}[a-z]{1,}$/;
-        if (pattern.exec(val) !== null) {
-          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
-        } else {
-          return <span>{val}</span>;
+        if(val != null){
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
         }
       }
     },
     {
-      title: '数/重量',
-      dataIndex: 'recordname',
+      title: '结束日期',
+      dataIndex: 'finishdate',
+      render: val => {
+        if(val != null){
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
+        }
+      }
     },
     {
-      title: '操作',
-      render: (text, record) => (
-        <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
-        </Fragment>
-      ),
+      title: '检查人员',
+      dataIndex: 'inspman',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+             result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
     },
+    {
+      title: '数/重量',
+      dataIndex: 'weight',
+    },
+    // {
+    //   title: '操作',
+    //   render: (text, record) => (
+    //     <Fragment>
+    //       <a onClick={() => this.previewItem(text, record)}>查看</a>
+    //     </Fragment>
+    //   ),
+    // },
   ];
 
   columns1 = [
@@ -98,9 +106,11 @@ class BusinessIncomeDetail extends Component {
     {
       title: '上传日期',
       dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
+      render: val => {
+        if(val != null){
+          <span>{moment(val).format('YYYY-MM-DD')}</span>
+        }
+      }
     },
     {
       title: '操作',
@@ -116,35 +126,28 @@ class BusinessIncomeDetail extends Component {
   columns2 = [
     {
       title: '检验机构',
-      dataIndex: 'recordname',
+      dataIndex: 'testman',
     },
     {
       title: '转委托日期',
-      dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
-    },
-    {
-      title: '转委托人',
-      dataIndex: 'recorddate',
-    },
-    {
-      title: '转委托项目',
-      dataIndex: 'recordname',
+      dataIndex: 'assigndate',
       render: val => {
-        //取文件名
-        var pattern = /\.{1}[a-z]{1,}$/;
-        if (pattern.exec(val) !== null) {
-          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
-        } else {
-          return <span>{val}</span>;
+        if(val != null){
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
         }
       }
     },
     {
+      title: '转委托人',
+      dataIndex: 'assignman',
+    },
+    {
+      title: '转委托项目',
+      dataIndex: 'inspway',
+    },
+    {
       title: '转委托费用',
-      dataIndex: 'recordname',
+      dataIndex: 'totalfee',
     },
   ];
 
@@ -155,14 +158,16 @@ class BusinessIncomeDetail extends Component {
     },
     {
       title: '样品名称',
-      dataIndex: 'recorddate',
+      dataIndex: 's',
     },
     {
       title: '指派日期',
       dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
+      render: val => {
+        if(val != null){
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
+        }
+      }
     },
     {
       title: '检测人员',
@@ -191,20 +196,24 @@ class BusinessIncomeDetail extends Component {
     {
       title: '分包日期',
       dataIndex: 'recordname',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
+      render: val => {
+        if(val != null){
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
+        }
+      }
     },
     {
       title: '实验室',
-      dataIndex: 'recorddate',
+      dataIndex: 's',
     },
     {
       title: '状态日期',
       dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
+      render: val => {
+        if(val != null){
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
+        }
+      }
     },
     {
       title: '状态',
@@ -229,13 +238,15 @@ class BusinessIncomeDetail extends Component {
     {
       title: '上传日期',
       dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
+      render: val => {
+        if(val != null){
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
+        }
+      }
     },
     {
       title: '上传人',
-      dataIndex: 'recorddate',
+      dataIndex: 'creator',
     },
     {
       title: '操作',
@@ -250,7 +261,7 @@ class BusinessIncomeDetail extends Component {
   columns6 = [
     {
       title: '证书名称',
-      dataIndex: 'recordname',
+      dataIndex: 'name',
       render: val => {
         //取文件名
         var pattern = /\.{1}[a-z]{1,}$/;
@@ -262,25 +273,27 @@ class BusinessIncomeDetail extends Component {
       }
     },
     {
-      title: '操作日期',
-      dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
+      title: '上传日期',
+      dataIndex: 'create_time',
+      render: val => {
+        if(val != null){
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
+        }
+      }
     },
     {
-      title: '操作人',
-      dataIndex: 'recorddate',
+      title: '上传人',
+      dataIndex: 'creator',
     },
     {
       title: '状态',
-      dataIndex: 'recorddate',
+      dataIndex: 'status',
     },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
+          <a onClick={() => this.previewCertItem(text, record)}>查看</a>
         </Fragment>
       ),
     },
@@ -350,6 +363,17 @@ class BusinessIncomeDetail extends Component {
         }
       }
     });
+    dispatch({
+      type: 'businessIncomeDetail/getPriceMakingList',
+      payload:{
+         reportno,
+      },
+      callback:response=>{
+        if(response.code === 200){
+          this.setState({pricemaking:response.data});
+        }
+      }
+    });
   }
 
   componentDidMount(){
@@ -377,14 +401,11 @@ class BusinessIncomeDetail extends Component {
   }
   previewItem = text => {
     const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const params = {
-      ...text,
-      reportno:reportno
-    };
     dispatch({
-      type: 'businessIncomeDetail/getRecord',
-      payload:params,
+      type: 'businessIncomeDetail/getOssPdf',
+      payload:{
+        osspath:text.filepath
+      },
       callback:(response) =>{
         if(response.code === 400){
           notification.open({
@@ -393,13 +414,45 @@ class BusinessIncomeDetail extends Component {
           });
         }else{
           const url = response.data;
-          this.setState({url:url});
-          //window.open(url);
+          window.open(url);
         }
       }
     });
   };
 
+  previewCertItem = text =>{
+  const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    var path = "";
+    if (text.status === "已拟制") {   
+      path = text.pdfeditorpath; 
+    }else if(text.status === "已复核"){   
+      path = text.pdfpath; 
+    }else if(text.status === "已缮制"){   
+      path = text.titlepdfpath; 
+    }else if(text.status === "已签署" || text.status === "已发布"){   
+      path = text.certpdfpath; 
+    }else if (text.status === "已作废"){   
+      path = text.abandonpdfpath;
+    }
+    dispatch({
+      type: 'businessIncomeDetail/getOssPdf',
+      payload:{
+        osspath:path
+      },
+      callback:(response) =>{
+        if(response.code === 400){
+          notification.open({
+            message: '打开失败',
+            description:response.data,
+          });
+        }else{
+          const url = response.data;
+          window.open(url);
+        }
+      }
+    });
+  };
 
   back = () =>{
     this.props.history.goBack();
@@ -411,7 +464,7 @@ class BusinessIncomeDetail extends Component {
       loading
     } = this.props;
     const { report  } = businessIncomeDetail;
-    const { cnasInfo, checkResult, checkRecord, test, testRecord, certFile} = this.state;
+    const { cnasInfo, checkResult, checkRecord, test, testRecord, certFile, pricemaking} = this.state;
     return (
       <PageHeaderWrapper loading={loading}>
         <Card bordered={false}>
@@ -494,7 +547,7 @@ class BusinessIncomeDetail extends Component {
         </Card>
         <Card>
           <Descriptions size="large" title="当前状态" style={{ marginBottom: 32 }} bordered>
-            <Descriptions.Item label="状态日期">{report.overalltime}</Descriptions.Item>
+            <Descriptions.Item label="状态日期">{pricemaking.overalltime !== null ? moment(pricemaking.overalltime).format('YYYY-MM-DD'):null}</Descriptions.Item>
             <Descriptions.Item label="当前状态">{report.overallstate}</Descriptions.Item>
           </Descriptions>
         </Card>
@@ -505,7 +558,7 @@ class BusinessIncomeDetail extends Component {
               loading={loading}
               dataSource={checkResult}
               columns={this.columns}
-              rowKey="recordname"
+              rowKey="inspway"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
@@ -515,7 +568,7 @@ class BusinessIncomeDetail extends Component {
             <Table
               size="middle"
               loading={loading}
-              dataSource={testRecord}
+              dataSource={checkRecord}
               columns={this.columns1}
               rowKey="recordname"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
@@ -529,7 +582,7 @@ class BusinessIncomeDetail extends Component {
               loading={loading}
               dataSource={test}
               columns={this.columns2}
-              rowKey="recordname"
+              rowKey="testman"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
@@ -577,10 +630,26 @@ class BusinessIncomeDetail extends Component {
               loading={loading}
               dataSource={certFile}
               columns={this.columns6}
-              rowKey="recordname"
+              rowKey="name"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
+        </Card>
+        <Card>
+          <Descriptions size="large" title="计收费" style={{ marginBottom: 32 }} bordered>
+            <Descriptions.Item label="定价日期">{pricemaking.pricedate !== null ? moment(pricemaking.pricedate).format('YYYY-MM-DD'):null}</Descriptions.Item>
+            <Descriptions.Item label="定价人">{pricemaking.priceman}</Descriptions.Item>
+            <Descriptions.Item label="定价金额">{pricemaking.total}</Descriptions.Item>
+            <Descriptions.Item label="清单日期">{pricemaking.listdate !== null ? moment(pricemaking.listdate).format('YYYY-MM-DD'):null}</Descriptions.Item>
+            <Descriptions.Item label="拟单人">{pricemaking.listman}</Descriptions.Item>
+            <Descriptions.Item label="拟单号">{pricemaking.listno}</Descriptions.Item>
+            <Descriptions.Item label="发票日期">{pricemaking.invoiceDate !== null ? moment(pricemaking.invoiceDate).format('YYYY-MM-DD'):null}</Descriptions.Item>
+            <Descriptions.Item label="开票人">{pricemaking.invoiceno}</Descriptions.Item>
+            <Descriptions.Item label="发票号码">{pricemaking.invoiceno}</Descriptions.Item>
+            <Descriptions.Item label="到账日期">{pricemaking.paydate !== null ? moment(pricemaking.paydate).format('YYYY-MM-DD'):null}</Descriptions.Item>
+            <Descriptions.Item label="到账日期">{pricemaking.listman}</Descriptions.Item>
+            <Descriptions.Item label="到账状态">{pricemaking.paystatus}</Descriptions.Item>
+          </Descriptions>
         </Card>
       </PageHeaderWrapper>
     );

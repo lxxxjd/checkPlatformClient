@@ -63,6 +63,24 @@ class DetailForEnturstment extends Component {
     dispatch({
       type: 'entrustment/getReport',
       payload: reportnNo,
+      callback:response=>{
+        const report = response;
+        if(report.cnasCode !==undefined && report.cnasCode !==null  ){
+          if(report.iscnas === "1"){
+            dispatch({
+              type: 'entrustment/getCnasInfo',
+              payload: {
+                checkCode:report.cnasCode,
+              },
+              callback: (response) => {
+                if (response.code === 200) {
+                  this.setState({cnasInfo: response.data});
+                }
+              }
+            });
+          }
+        }
+      }
     });
     dispatch({
       type: 'testRecordEntrustment/getRecordInfo',
@@ -79,21 +97,7 @@ class DetailForEnturstment extends Component {
       dispatch
     } = this.props;
 
-    if(report.cnasCode!==undefined && report.cnasCode!==null  ){
-      if(report.iscnas === 1){
-        dispatch({
-          type: 'entrustment/getCnasInfo',
-          payload: {
-            checkCode:report.cnasCode,
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              this.setState({cnasInfo: response.data});
-            }
-          }
-        });
-      }
-    }
+  
 
   }
   previewItem = text => {
@@ -204,7 +208,7 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="自编号">{report.reportno20}</Descriptions.Item>
             <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
             <Descriptions.Item label="执行部门">{report.section}</Descriptions.Item>
-            <Descriptions.Item label="海关部门">{report.costomsName}</Descriptions.Item>
+            <Descriptions.Item label="海关部门">{report.customsName}</Descriptions.Item>
 
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
