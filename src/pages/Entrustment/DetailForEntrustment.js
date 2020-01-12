@@ -91,15 +91,6 @@ class DetailForEnturstment extends Component {
     });
   }
 
-  componentDidMount(){
-    const {
-      entrustment:{ report  },
-      dispatch
-    } = this.props;
-
-  
-
-  }
   previewItem = text => {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');

@@ -305,6 +305,24 @@ class BusinessIncomeDetail extends Component {
     dispatch({
       type: 'businessIncomeDetail/getReport',
       payload: reportno,
+      callback:response=>{
+        const report = response;
+        if(report.cnasCode !==undefined && report.cnasCode !==null  ){
+          if(report.iscnas === "1"){
+            dispatch({
+              type: 'entrustment/getCnasInfo',
+              payload: {
+                checkCode:report.cnasCode,
+              },
+              callback: (response) => {
+                if (response.code === 200) {
+                  this.setState({cnasInfo: response.data});
+                }
+              }
+            });
+          }
+        }
+      }
     });
     dispatch({
       type: 'businessIncomeDetail/getCheckResult',
@@ -374,30 +392,6 @@ class BusinessIncomeDetail extends Component {
         }
       }
     });
-  }
-
-  componentDidMount(){
-    const {
-      businessIncomeDetail:{ report  },
-      dispatch
-    } = this.props;
-
-    if(report.cnasCode!==undefined && report.cnasCode!==null  ){
-      if(report.iscnas === 1){
-        dispatch({
-          type: 'businessIncomeDetail/getCnasInfo',
-          payload: {
-            checkCode:report.cnasCode,
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              this.setState({cnasInfo: response.data});
-            }
-          }
-        });
-      }
-    }
-
   }
   previewItem = text => {
     const { dispatch } = this.props;
