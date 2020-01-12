@@ -26,6 +26,9 @@ class BusinessIncomeDetail extends Component {
     certFile:[],
     testInfo:[],
     pricemaking:{}, 
+    sample:[],
+    visible:false,
+    detail:[],
   };
 
   columns = [
@@ -108,7 +111,7 @@ class BusinessIncomeDetail extends Component {
       dataIndex: 'recorddate',
       render: val => {
         if(val != null){
-          <span>{moment(val).format('YYYY-MM-DD')}</span>
+          return <span>{moment(val).format('YYYY-MM-DD')}</span>
         }
       }
     },
@@ -154,39 +157,30 @@ class BusinessIncomeDetail extends Component {
   columns3 = [
     {
       title: '样品编号',
-      dataIndex: 'recordname',
+      dataIndex: 'sampleno',
     },
     {
       title: '样品名称',
-      dataIndex: 's',
+      dataIndex: 'samplename',
     },
     {
       title: '指派日期',
-      dataIndex: 'recorddate',
+      dataIndex: 'makingdate',
       render: val => {
         if(val != null){
           return <span>{moment(val).format('YYYY-MM-DD')}</span>
         }
       }
     },
-    {
-      title: '检测人员',
-      dataIndex: 'recordname',
-      render: val => {
-        //取文件名
-        var pattern = /\.{1}[a-z]{1,}$/;
-        if (pattern.exec(val) !== null) {
-          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
-        } else {
-          return <span>{val}</span>;
-        }
-      }
-    },
+    // {
+    //   title: '检测人员',
+    //   dataIndex: 'testmans',
+    // },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
+          <a onClick={() => this.detailItem(text, record)}>查看</a>
         </Fragment>
       ),
     },
@@ -298,6 +292,30 @@ class BusinessIncomeDetail extends Component {
       ),
     },
   ];
+
+  columns7 = [
+    {
+      title: '指标名称',
+      dataIndex: 'itemC',
+    },
+    {
+      title: '英文名称',
+      dataIndex: 'itemE',
+    },
+    {
+      title: '检测标准',
+      dataIndex: 'teststandard',
+    },
+    {
+      title: '单位',
+      dataIndex: 'unit',
+    },
+    {
+      title: '结果',
+      dataIndex: 'testresult',
+    },
+  ];
+
   componentWillMount() {
     const reportno = sessionStorage.getItem("reportno");
     const { dispatch } = this.props;
@@ -392,7 +410,42 @@ class BusinessIncomeDetail extends Component {
         }
       }
     });
-  }
+    dispatch({
+      type: 'businessIncomeDetail/getAllSampleAndTestMan',
+      payload:{
+         certCode : user.certCode,
+         kind:'reportno',
+         value:reportno
+      },
+      callback:response=>{
+        if(response.code === 200){
+          this.setState({sample:response.data});
+        }
+      }    
+    });
+  };
+
+  handleCancel = () =>{
+    this.setState({visible:false});
+  };
+
+  detailItem = text => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'businessIncomeDetail/getAllDetails',
+      payload:{
+         reportno : text.reportno ,
+         sampleno : text.sampleno ,
+      },
+      callback:response=>{
+        if(response.code === 200){
+          this.setState({detail:response.data});
+        }
+      }   
+    });
+    this.setState({ visible : true });
+  };
+
   previewItem = text => {
     const { dispatch } = this.props;
     dispatch({
@@ -458,7 +511,7 @@ class BusinessIncomeDetail extends Component {
       loading
     } = this.props;
     const { report  } = businessIncomeDetail;
-    const { cnasInfo, checkResult, checkRecord, test, testRecord, certFile, pricemaking} = this.state;
+    const { cnasInfo, checkResult, checkRecord, test, testRecord, certFile, pricemaking, sample, detail, visible} = this.state;
     return (
       <PageHeaderWrapper loading={loading}>
         <Card bordered={false}>
@@ -541,7 +594,7 @@ class BusinessIncomeDetail extends Component {
         </Card>
         <Card>
           <Descriptions size="large" title="当前状态" style={{ marginBottom: 32 }} bordered>
-            <Descriptions.Item label="状态日期">{pricemaking.overalltime !== null ? moment(pricemaking.overalltime).format('YYYY-MM-DD'):null}</Descriptions.Item>
+            <Descriptions.Item label="状态日期">{report.overalltime !== null ? moment(report.overalltime).format('YYYY-MM-DD'):null}</Descriptions.Item>
             <Descriptions.Item label="当前状态">{report.overallstate}</Descriptions.Item>
           </Descriptions>
         </Card>
@@ -586,7 +639,7 @@ class BusinessIncomeDetail extends Component {
             <Table
               size="middle"
               loading={loading}
-              //dataSource={recordData}
+              dataSource={sample.list}
               columns={this.columns3}
               rowKey="recordname"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
@@ -645,6 +698,21 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="到账状态">{pricemaking.paystatus}</Descriptions.Item>
           </Descriptions>
         </Card>
+        <Modal
+            title="结果详情"
+            visible={visible}
+            footer={null}
+            onCancel={this.handleCancel}
+          >
+            <Table
+              size="middle"
+              loading={loading}
+              dataSource={detail}
+              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              columns={this.columns7}
+              rowKey="keyno"
+            />
+          </Modal>
       </PageHeaderWrapper>
     );
   }

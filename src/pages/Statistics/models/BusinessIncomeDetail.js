@@ -3,7 +3,7 @@ import { getCheckResult} from '@/services/CheckResult';
 import { getRecordInfo, getOssPdf} from '@/services/TestRecord';
 import { getTestByReportNo} from '@/services/TestInfo';
 import { getCertFiles} from '@/services/Certificate';
-import { getTestBySampleNo } from '@/services/InspectionAnalysis'
+import { getTestBySampleNo, getAllSampleAndTestMan , getAllDetails} from '@/services/InspectionAnalysis'
 import { getPriceMakingList } from '@/services/Business'
 
 export default {
@@ -20,6 +20,14 @@ export default {
         payload: response,
       });
       if (callback) callback(response.data);
+    },
+    *getAllSampleAndTestMan({ payload ,callback}, { call, put }) {
+      const response = yield call(getAllSampleAndTestMan, payload);
+      if (callback) callback(response);
+    },
+    *getAllDetails({ payload,callback }, { call, put }) {
+      const response = yield call(getAllDetails, payload);
+      if (callback) callback(response);
     },
     *getCnasInfo({ payload ,callback}, { call, put }) {
       const response = yield call(getCnasInfo, payload);
