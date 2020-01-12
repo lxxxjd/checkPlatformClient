@@ -274,7 +274,7 @@ class CostQuery extends PureComponent {
                 rules: [{  message: '选择字段' }],
               })(
                 <Select placeholder="选择字段">
-                  <Option value="reportno"> 委托编号</Option>
+                  <Option value="reportno">委托编号</Option>
                   <Option value="shipname">船名标识</Option>
                   <Option value="cargoname">检查品名</Option>
                   <Option value="sampleno">样品编号</Option>

@@ -140,12 +140,14 @@ class BusinessIncomeQuery extends PureComponent {
 
 
 
+  // eslint-disable-next-line react/sort-comp
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
     } = this.props;
     const { RangePicker } = DatePicker;
     const {selectBusinessIncomeTotalByConditionsResult} = this.state;
+    const {selectBusinessIncomesByConditionsResult} = this.state;
 
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
@@ -161,8 +163,41 @@ class BusinessIncomeQuery extends PureComponent {
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          {/* 下拉框和日期范围选择控件 */}
-          <Col span={5}>
+          {/* 下拉框 */}
+          <Col span={4}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+            >
+              {getFieldDecorator("statisticFields", {
+              })(
+                <Select placeholder="选择字段">
+                  <Option value="reportdate">委托日期</Option>
+                  <Option value="检查完毕">检查完毕</Option>
+                  <Option value="测试完毕">测试完毕</Option>
+                  <Option value="拟证完毕">证书完毕</Option>
+                  <Option value="已发布">发布日期</Option>
+                </Select>
+              )}
+            </Form.Item>
+          </Col>
+          {/* 日期范围选择控件 */}
+          <Col span={10}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+            >
+              {getFieldDecorator("statisticDateRange", {
+              })(
+                <RangePicker
+                  format="YYYY-MM-DD"
+                />
+              )}
+            </Form.Item>
+          </Col>
+          <Col span={10}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
@@ -182,6 +217,27 @@ class BusinessIncomeQuery extends PureComponent {
       </Form>
     );
   }
+
+  remove = k => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    // We need at least one passenger
+    // if (keys.length === 1) {
+    //   return;
+    // }
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+    // can use data-binding to set
+    form.setFieldsValue({
+      keys: keys.filter(key => key !== k),
+    });
+
+
+  };
 
   add = () => {
     const { form } = this.props;
