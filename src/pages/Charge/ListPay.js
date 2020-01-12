@@ -27,6 +27,9 @@ const ArrivalInvoiceForm = Form.create()(props => {
       let values = invoiceData;
       values.paydate= fieldsValue.paydate;
       values.paystatus ='收讫';
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      values.payregistMan =   user.nameC;
+
       dispatch({
         type: 'charge/passListFictionFetch',
         payload:values,
@@ -82,6 +85,9 @@ const RefundInvoiceForm = Form.create()(props => {
       let values = invoiceData;
       values.paydate= fieldsValue.paydate;
       values.paystatus ='已退款';
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      values.payregistMan =   user.nameC;
+
       dispatch({
         type: 'charge/passListFictionFetch',
         payload:values,
