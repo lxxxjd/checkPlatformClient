@@ -31,6 +31,8 @@ const CreateInvoiceForm = Form.create()(props => {
         values.invoiceno= fieldsValue.invoiceno;
         values.payway= fieldsValue.payway;
         values.invoiceDate= fieldsValue.invoiceDate;
+        const user = JSON.parse(localStorage.getItem("userinfo"));
+        values.invoiceMan=   user.nameC;
         values.paystatus ='发票开具';
         dispatch({
           type: 'charge/passListFictionFetch',
@@ -121,7 +123,9 @@ const DestoryInvoiceForm = (props => {
   const { destoryInvoiceVisble, handleDestoryModalVisible,invoiceData,dispatch,init} = props;
   const okHandle = () => {
     let values = invoiceData;
-    values.paystatus ='发票作废';
+    values.paystatus = '发票作废';
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    values.invoiceMan =   user.nameC;
     dispatch({
       type: 'charge/passListFictionFetch',
       payload:values,
