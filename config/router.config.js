@@ -17,6 +17,19 @@ export default [
       },
     ],
   },
+
+  {
+    path: '/home',
+    component: '../layouts/BlankLayout',
+    routes: [
+      { path: '/home', redirect: '/home/homepage' },
+      { path: '/home/homepage', name: 'homepage', component: './HomePage/HomePage' },
+      {
+        component: '404',
+      },
+    ],
+  },
+
   // app
   {
     path: '/',
