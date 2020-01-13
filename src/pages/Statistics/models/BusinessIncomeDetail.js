@@ -3,6 +3,8 @@ import { getCheckResult} from '@/services/CheckResult';
 import { getRecordInfo, getOssPdf} from '@/services/TestRecord';
 import { getTestByReportNo} from '@/services/TestInfo';
 import { getCertFiles} from '@/services/Certificate';
+import { getTestBySampleNo, getAllSampleAndTestMan , getAllDetails} from '@/services/InspectionAnalysis'
+import { getPriceMakingList } from '@/services/Business'
 
 export default {
   namespace: 'businessIncomeDetail',
@@ -18,6 +20,14 @@ export default {
         payload: response,
       });
       if (callback) callback(response.data);
+    },
+    *getAllSampleAndTestMan({ payload ,callback}, { call, put }) {
+      const response = yield call(getAllSampleAndTestMan, payload);
+      if (callback) callback(response);
+    },
+    *getAllDetails({ payload,callback }, { call, put }) {
+      const response = yield call(getAllDetails, payload);
+      if (callback) callback(response);
     },
     *getCnasInfo({ payload ,callback}, { call, put }) {
       const response = yield call(getCnasInfo, payload);
@@ -40,7 +50,15 @@ export default {
       if (callback) callback(response);
     },
     *getCertFiles({ payload ,callback}, { call, put }) {
-      const response = yield call(getTestByReportNo, payload);
+      const response = yield call(getCertFiles, payload);
+      if (callback) callback(response);
+    },
+    *getTestBySampleNo({ payload ,callback}, { call, put }) {
+      const response = yield call(getTestBySampleNo, payload);
+      if (callback) callback(response);
+    },
+    *getPriceMakingList({ payload ,callback}, { call, put }) {
+      const response = yield call(getPriceMakingList, payload);
       if (callback) callback(response);
     },
   },

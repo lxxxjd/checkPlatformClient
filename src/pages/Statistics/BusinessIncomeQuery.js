@@ -71,8 +71,8 @@ class BusinessIncomeQuery extends PureComponent {
       dataIndex: 'invoiceNo',
     },
     {
-      title: '到账',
-      dataIndex: '',
+      title: '到账状态',
+      dataIndex: 'payStatus',
     },
     {
       title: '状态',

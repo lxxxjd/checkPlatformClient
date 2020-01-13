@@ -78,3 +78,8 @@ export async function deleteBusinessSource(params) {
   });
 }
 
+
+export async function getPriceMakingList(params) {
+  return request(`/api/pricemaking/getPriceMakingList?reportno=${params.reportno}`);
+}
+
