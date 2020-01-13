@@ -26,7 +26,7 @@ const { Footer } = Layout;
 @Form.create()
 class HomePage extends Component {
   state = {
-
+    url:"http://www.xnjfbm.vip",
   };
 
   componentWillUnmount() {
@@ -34,27 +34,27 @@ class HomePage extends Component {
   }
 
   toCompany = ()=>{
-    window.open("http://localhost:82/user/login")
+    window.open(`${this.state.url}:82/user/login`)
   };
 
   toConsignor = ()=>{
-    window.open("http://localhost:84/user/login")
+    window.open(`${this.state.url}:84/user/login`)
   };
 
   toCustoms = ()=>{
-    window.open("http://localhost:85/user/login")
+    window.open(`${this.state.url}:85/user/login`)
   };
 
   toCNAS = ()=>{
-    window.open("http://localhost:86/user/login")
+    window.open(`${this.state.url}:86/user/login`)
   };
 
   toMain = ()=>{
-    window.open("http://localhost:83/user/login")
+    window.open(`${this.state.url}:83/user/login`)
   };
 
   toTry = ()=>{
-    window.open("http://localhost:83/user/register")
+    window.open(`${this.state.url}:83/user/register`)
   };
 
 
