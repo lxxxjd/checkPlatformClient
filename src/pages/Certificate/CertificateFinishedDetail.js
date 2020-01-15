@@ -78,8 +78,7 @@ class CertificateFinishedDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
+          {(text.status==="已签署"&& text.pdfeditorpath===null)?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>
         </Fragment>
       ),
@@ -197,6 +196,7 @@ class CertificateFinishedDetail extends PureComponent {
   };
 
   handleOk = () =>{
+    message.success("正在上传证书，请稍等几秒");
     const {
       form: { validateFieldsAndScroll },
       dispatch,

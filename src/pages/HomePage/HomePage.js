@@ -33,6 +33,7 @@ class HomePage extends Component {
 
   }
 
+
   toCompany = ()=>{
     window.open(`${this.state.url}:82/user/login`)
   };

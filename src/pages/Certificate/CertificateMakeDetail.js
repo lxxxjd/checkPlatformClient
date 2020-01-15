@@ -190,13 +190,11 @@ class CertificateMakeDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.editCerticate(text, record)}>编辑</a>
-          &nbsp;&nbsp;
+
           {text.status==="已复核"?[<a onClick={() => this.makeItem(text, record)}>缮制&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
-          {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
+          {text.status==="已缮制"?[<a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>]:[]}
+          {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[<p style={{color:'grey'}}>查看</p>]}
+
         </Fragment>
       ),
     },
@@ -312,6 +310,7 @@ class CertificateMakeDetail extends PureComponent {
 
 
   makeCertFile = (fieldValue) =>{
+    message.success("正在缮制，请稍等几秒...");
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');

@@ -141,13 +141,11 @@ const CreateUploadForm = Form.create()(props => {
 
       <Form.Item label="文件来源">
         {form.getFieldDecorator('type', {
+          initialValue:"platform",
           rules: [{ required: true, message: '请选择文件来源' }],
         })(
           <Select style={{ width: '100%' }} placeholder="请选择文件来源" onSelect={handleOnSelect} onChange={handleChange}>
             <Option value="platform">平台模板</Option>
-            <Option value="company">公司模板</Option>
-            <Option value="person">个人模板</Option>
-            <Option value="blank">空白模板</Option>
           </Select>
         )}
       </Form.Item>
@@ -294,13 +292,11 @@ class CertificateUploadDetail extends PureComponent {
     {
       title: '操作',
       render: (text, record) => (
-        <Fragment>
-          <a onClick={() => this.editCerticate(text, record)}>编辑</a>
-          &nbsp;&nbsp;
+        <Fragment>、
+          {text.status==="待拟制"?[<a onClick={() => this.editCerticate(text, record)}>编辑&nbsp;&nbsp;</a>]:[]}
           {text.status==="待拟制"?[<a onClick={() => this.signItem(text, record)}>拟制&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
+          {text.status==="已拟制"?[<a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>]:[]}
+          {text.status==="待拟制"?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
@@ -415,6 +411,7 @@ class CertificateUploadDetail extends PureComponent {
 
 
   handleSign =(fieldValue)=>{
+    message.success("正在拟制，请稍等几秒...");
     const{text} = this.state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
@@ -454,9 +451,8 @@ class CertificateUploadDetail extends PureComponent {
 
 
   signItem =text=>{
-
+    message.success("正在拉取数据，请稍等几秒...");
     const { dispatch } = this.props;
-
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'user/getMan',
@@ -508,7 +504,6 @@ class CertificateUploadDetail extends PureComponent {
 
 
   editCerticate = text => {
-
     if(text.filepath ===undefined || text.filepath ===null){
       notification.open({
         message: '此证书通过上传产生，不可编辑',
@@ -536,7 +531,7 @@ class CertificateUploadDetail extends PureComponent {
             const _w_signature = response.data;
             // eslint-disable-next-line camelcase
             const wpsUrl = `https://121.199.20.146:81/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
-            window.open('about:blank').location.href=wpsUrl;
+            window.open(wpsUrl);
           } else {
             notification.open({
               message: '加载失败',

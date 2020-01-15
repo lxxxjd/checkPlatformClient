@@ -10,12 +10,13 @@ import {
   Input,
   Button,
   Select,
-  Table, notification,
+  Table, notification,message,Modal
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
 import moment from 'moment';
 const { Option } = Select;
+const { confirm } = Modal;
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
@@ -121,30 +122,29 @@ class CertificatePublish extends PureComponent {
 
   publishItem =(text) =>{
     const { dispatch } = this.props;
-    const formData = new FormData();
-    formData.append('reportno',text.reportno);
-    dispatch({
-      type: 'certificate/publishCert',
-      payload:formData,
-      callback: (response) => {
-        if(response==="success"){
-          notification.open({
-            message: '发布成功',
-            description:'发布成功',
-          });
-          this.init();
-        }else if(response==="fail"){
-          notification.open({
-            message: '发布失败',
-            description: '存在未完成的证书，请完成后发布',
-          });
-        }else{
-          notification.open({
-            message: '发布失败',
-            description: '发布失败',
-          });
-        }
-      }
+    confirm({
+      title:"确定要发布此委托记录吗？",
+      okText:"确定",
+      cancelText:"取消",
+      onOk() {
+        const formData = new FormData();
+        formData.append('reportno',text.reportno);
+        dispatch({
+          type: 'certificate/publishCert',
+          payload:formData,
+          callback: (response) => {
+            if(response==="success"){
+              message.success("发布成功");
+              this.init();
+            }else if(response==="fail"){
+              message.error("发布失败,存在未完成的证书或错误，请完成后发布");
+            }else{
+              message.error("发布失败,存在未完成的证书或错误，请完成后发布");
+            }
+          }
+        });
+      },
+      onCancel() {},
     });
   };
 
@@ -161,7 +161,6 @@ class CertificatePublish extends PureComponent {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
