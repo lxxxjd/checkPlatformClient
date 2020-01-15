@@ -20,8 +20,15 @@ export async function getAllSampleAndTestMan(params) {
   });
 }
 
-
-
+export async function getAllSampleAndTestCompany(params) {
+  return request(`/api/sampleRegister/getAllSampleAndTestCompany`,{
+    method: 'POST',
+    data: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
 
 export async function addResult(params) {
   return request(`/api/testdetail/addResult`,{

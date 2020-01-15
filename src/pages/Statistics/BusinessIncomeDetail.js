@@ -29,6 +29,7 @@ class BusinessIncomeDetail extends Component {
     sample:[],
     visible:false,
     detail:[],
+    sampleCompany:[],
   };
 
   columns = [
@@ -189,7 +190,7 @@ class BusinessIncomeDetail extends Component {
   columns4 = [
     {
       title: '分包日期',
-      dataIndex: 'recordname',
+      dataIndex: 'assigndate',
       render: val => {
         if(val != null){
           return <span>{moment(val).format('YYYY-MM-DD')}</span>
@@ -198,20 +199,20 @@ class BusinessIncomeDetail extends Component {
     },
     {
       title: '实验室',
-      dataIndex: 's',
+      dataIndex: 'testman',
     },
-    {
-      title: '状态日期',
-      dataIndex: 'recorddate',
-      render: val => {
-        if(val != null){
-          return <span>{moment(val).format('YYYY-MM-DD')}</span>
-        }
-      }
-    },
+    // {
+    //   title: '状态日期',
+    //   dataIndex: 'recorddate',
+    //   render: val => {
+    //     if(val != null){
+    //       return <span>{moment(val).format('YYYY-MM-DD')}</span>
+    //     }
+    //   }
+    // },
     {
       title: '状态',
-      dataIndex: 'recordname',
+      dataIndex: 'state',
     },
   ];
 
@@ -423,6 +424,19 @@ class BusinessIncomeDetail extends Component {
         }
       }    
     });
+    dispatch({
+      type: 'businessIncomeDetail/getAllSampleAndTestCompany',
+      payload:{
+         certCode : user.certCode,
+         kind:'sr.reportno',
+         value:reportno
+      },
+      callback:response=>{
+        if(response.code === 200){
+          this.setState({sampleCompany:response.data});
+        }
+      }    
+    });
   };
 
   handleCancel = () =>{
@@ -511,7 +525,7 @@ class BusinessIncomeDetail extends Component {
       loading
     } = this.props;
     const { report  } = businessIncomeDetail;
-    const { cnasInfo, checkResult, checkRecord, test, testRecord, certFile, pricemaking, sample, detail, visible} = this.state;
+    const { cnasInfo, checkResult, checkRecord, test, testRecord, certFile, pricemaking, sample, detail, visible, sampleCompany} = this.state;
     return (
       <PageHeaderWrapper loading={loading}>
         <Card bordered={false}>
@@ -651,7 +665,7 @@ class BusinessIncomeDetail extends Component {
             <Table
               size="middle"
               loading={loading}
-              //dataSource={recordData}
+              dataSource={sampleCompany.list}
               columns={this.columns4}
               rowKey="recordname"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
