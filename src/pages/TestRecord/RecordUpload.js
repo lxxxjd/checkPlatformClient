@@ -42,12 +42,16 @@ class RecordUpload extends PureComponent {
       dataIndex: 'shipname',
     },
     {
-      title: '货号',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
       title: '申请项目',
       dataIndex: 'inspway',
+    },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
     },
     {
       title: '文件名称',
@@ -86,8 +90,8 @@ class RecordUpload extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
-          &nbsp;&nbsp;
+          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
+            :[<a onClick={() => this.modifyItem(text, record)}>编辑&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -117,6 +121,7 @@ class RecordUpload extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('reacordupload_overallstate',text.overallstate);
     router.push({
       pathname:'/TestRecord/UploadDetail',
     });

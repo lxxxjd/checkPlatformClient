@@ -31,6 +31,7 @@ const { Option } = Select;
 @Form.create()
 class ModifyRelevance extends PureComponent {
   state = {
+    overallstate:undefined,
   };
 
   addColumns = [
@@ -56,6 +57,10 @@ class ModifyRelevance extends PureComponent {
     {
       title: '检查品名',
       dataIndex: 'cargoname',
+    },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
     },
     {
       title: '关联委托号',
@@ -90,6 +95,61 @@ class ModifyRelevance extends PureComponent {
       ),
     },
   ];
+
+  addColumns2 = [
+    {
+      title: '委托编号',
+      dataIndex: 'reportno',
+    },
+    {
+      title: '委托日期',
+      dataIndex: 'reportdate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '委托人',
+      dataIndex: 'applicant',
+    },
+    {
+      title: '船名标识',
+      dataIndex: 'shipname',
+    },
+    {
+      title: '检查品名',
+      dataIndex: 'cargoname',
+    },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
+      title: '关联委托号',
+      dataIndex: 'reportlink',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split(" ");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j = 0 ; j < contentStr.length ; j ++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+  ];
+
   deleteColumns = [
     {
       title: '委托编号',
@@ -115,6 +175,10 @@ class ModifyRelevance extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
@@ -123,7 +187,43 @@ class ModifyRelevance extends PureComponent {
       ),
     },
   ];
+
+  deleteColumns2 = [
+    {
+      title: '委托编号',
+      dataIndex: 'reportno',
+    },
+    {
+      title: '委托日期',
+      dataIndex: 'reportdate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '委托人',
+      dataIndex: 'applicant',
+    },
+    {
+      title: '船名标识',
+      dataIndex: 'shipname',
+    },
+    {
+      title: '检查品名',
+      dataIndex: 'cargoname',
+    },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+  ];
+
+
   componentDidMount() {
+
+    // 获取状态
+    this.setState({overallstate:sessionStorage.getItem('overallstate_relevance')});
+
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const reportNo = sessionStorage.getItem('reportno');
@@ -269,13 +369,6 @@ class ModifyRelevance extends PureComponent {
               </Button>
             </span>
           </Col>
-          <Col span={2}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" style={{ paddingLeft:0,paddingRight:15}} onClick={this.back}>
-                  <Icon type="left" />返回
-              </Button>
-            </span>
-          </Col>
         </Row>
       </Form>
     );
@@ -295,34 +388,50 @@ class ModifyRelevance extends PureComponent {
     };
     return (
       <PageHeaderWrapper text={reprotText}>
-        <Card title="已关联委托" bordered={false} className={styles.card}  size="small">
+        <Card size="small">
+          <Row>
+            <Col span={22}>
+              <span style={{color:"black"}}>已关联委托</span>
+            </Col>
+            <Col span={2}>
+              <span className={styles.submitButtons}>
+                <Button type="primary" style={{ paddingLeft:0,paddingRight:15}} onClick={this.back}>
+                  <Icon type="left" />返回
+                </Button>
+              </span>
+            </Col>
+          </Row>
+        </Card>
+        <Card bordered={false} className={styles.card} size="small">
           <div className={styles.tableList}>
             <Table
               size="middle"
               loading={loading}
-              columns={this.deleteColumns}
+              columns={this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?this.deleteColumns2:this.deleteColumns}
               dataSource={link}
-              showHeader={false}
+              // showHeader={false}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               rowKey="reportno"
             />
           </div>
         </Card>
-        <Card title="请选择需关联的委托" bordered={false} className={styles.card}  size="small">
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
-            <Table
-              size="middle"
-              rowSelection={this.rowSelection}
-              loading={loading}
-              columns={this.addColumns}
-              onSelectRow={this.handleSelectRows}
-              dataSource={report}
-              rowKey="reportno"              
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
-            />
-          </div>
-        </Card>
+        {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?[]:[
+          <Card title="请选择需关联的委托" bordered={false} className={styles.card} size="small">
+            <div className={styles.tableList}>
+              <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+              <Table
+                size="middle"
+                rowSelection={this.rowSelection}
+                loading={loading}
+                columns={this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?this.addColumns2:this.addColumns}
+                onSelectRow={this.handleSelectRows}
+                dataSource={report}
+                rowKey="reportno"
+                pagination={{showQuickJumper:true,showSizeChanger:true}}
+              />
+            </div>
+          </Card>
+        ]}
       </PageHeaderWrapper>
     );
   }

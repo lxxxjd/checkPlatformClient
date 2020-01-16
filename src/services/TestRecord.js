@@ -29,7 +29,7 @@ export async function getRecordInfo(params) {
 
 
 export async function getRecord(params) {
-  return request(`/api/recordinfo/get_record?recordname=${params.recordname}&reportno=${params.reportno}`);
+  return request(`/api/recordinfo/get_record?recordname=${params.recordname}&reportno=${params.reportno}&source=${params.source}`);
 }
 
 export async function getOssPdf(params) {

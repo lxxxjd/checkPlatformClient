@@ -109,7 +109,8 @@ class ResultRecord extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const params = {
       ...text,
-      reportno:reportno
+      reportno:reportno,
+      source : '测试报告',
     };
     dispatch({
       type: 'testRecord/getRecord',

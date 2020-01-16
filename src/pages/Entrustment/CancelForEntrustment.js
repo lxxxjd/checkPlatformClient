@@ -70,11 +70,14 @@ class CancelForEntrustment extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.cancelItem(text, record)}>撤销</a>
-          &nbsp;&nbsp;
+          {!(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.cancelItem(text, record)}>撤销&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -114,14 +117,12 @@ class CancelForEntrustment extends PureComponent {
     const { formValues } = this.state;
     form.validateFields((err, fieldsValue) => {
 
-      console.log(err);
       const filters = Object.keys(filtersArg).reduce((obj, key) => {
         const newObj = { ...obj };
         newObj[key] = getValue(filtersArg[key]);
         return newObj;
       }, {});
       const user = JSON.parse(localStorage.getItem("userinfo"));
-      //console.log(formValues);
       const params = {
         currentPage: pagination.current,
         pageSize: pagination.pageSize,

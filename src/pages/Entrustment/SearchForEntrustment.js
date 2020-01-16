@@ -64,13 +64,15 @@ class SearchForEntrustment extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.uploadItem(text, record)}>上传文件</a>
-          &nbsp;&nbsp;
+          {!(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>]:[]}
+          {!(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.uploadItem(text, record)}>上传文件&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -214,6 +216,7 @@ class SearchForEntrustment extends PureComponent {
                   <Option value="applicant">委托人</Option>
                   <Option value="shipname">船名标识</Option>
                   <Option value="cargoname">检查品名</Option>
+                  <Option value="overallstate">状态</Option>
                 </Select>
               )}
             </Form.Item>

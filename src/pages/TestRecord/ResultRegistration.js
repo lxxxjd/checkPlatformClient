@@ -42,7 +42,7 @@ class ResultRegistration extends PureComponent {
       dataIndex: 'shipname',
     },
     {
-      title: '货号',
+      title: '检验品名',
       dataIndex: 'cargoname',
     },
     {
@@ -50,11 +50,16 @@ class ResultRegistration extends PureComponent {
       dataIndex: 'inspway',
     },
     {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
-          &nbsp;&nbsp;
+
+          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
+            :[<a onClick={() => this.modifyItem(text, record)}>编辑&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -84,6 +89,7 @@ class ResultRegistration extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('resultdetail_overallstate',text.overallstate);
     router.push({
       pathname:'/TestRecord/ResultDetail',
     });

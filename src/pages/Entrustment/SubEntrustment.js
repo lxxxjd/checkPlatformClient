@@ -51,6 +51,10 @@ class SubEntrustment extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
       title: '转委托公司',
       dataIndex: 'company',
       render: (text, record) => {
@@ -75,8 +79,8 @@ class SubEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.detailItem(text, record)}>编辑</a>
-          &nbsp;&nbsp;
+          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
+            :[<a onClick={() => this.modifyItem(text, record)}>编辑&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -101,11 +105,13 @@ class SubEntrustment extends PureComponent {
       }
     });
   }
+
   detailItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     sessionStorage.setItem('inspway',text.inspway)
+    sessionStorage.setItem('overallstate',text.overallstate)
     router.push({
       pathname:'/Entrustment/DetailForSub',
     });

@@ -250,8 +250,8 @@ class CertificateAbandon extends PureComponent {
       render: (text, record) => (
         <Fragment>
 
-          {(text.overallstate==="已发布")?[<a onClick={() => this.applyAbandon(text, record)}>申请作废&nbsp;&nbsp;</a>]:[<span>申请作废&nbsp;&nbsp;</span>]}
-          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.AbandonView(text, record)}>作废&nbsp;&nbsp;</a>]:[<span>作废&nbsp;&nbsp;</span>]}
+          {(text.overallstate==="已发布")?[<a onClick={() => this.applyAbandon(text, record)}>申请作废&nbsp;&nbsp;</a>]:[]}
+          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.AbandonView(text, record)}>作废&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.viewReadRecord(text, record)}>已阅人</a> &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>查看</a> &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>

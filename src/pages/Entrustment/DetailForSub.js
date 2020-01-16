@@ -39,6 +39,7 @@ class DetailForSub extends PureComponent {
     showPrice:false,
     report:null,
     priceMakeing:null,
+    overallstate:undefined,
   };
 
   columns = [
@@ -66,21 +67,53 @@ class DetailForSub extends PureComponent {
       title: '转委托要求',
       dataIndex: 'inspwaymemo1',
     },
+
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
+          {!(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[<a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>]:[]}
+          {!(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
   ];
 
+  columns2 = [
+    {
+      title: '转委托公司',
+      dataIndex: 'testman',
+    },
+    {
+      title: '转委托项目',
+      dataIndex: 'inspway',
+    },
+    {
+      title: '计价方式',
+      dataIndex: 'priceway',
+    },
+    {
+      title: '单价',
+      dataIndex: 'price',
+    },
+    {
+      title: '总价',
+      dataIndex: 'totalfee',
+    },
+    {
+      title: '转委托要求',
+      dataIndex: 'inspwaymemo1',
+    },
+
+  ];
+
+
+
 
   componentDidMount() {
+    const overallstate = sessionStorage.getItem('overallstate');
+    this.setState({overallstate:overallstate});
+
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const reportno = sessionStorage.getItem('reportno');
@@ -152,7 +185,6 @@ class DetailForSub extends PureComponent {
     const allInspway = sessionStorage.getItem('inspway').split(" ");
 
     this.setState({ checkProject : allInspway });
-    console.log(this.state.checkProject);
     form.setFieldsValue({['testman']:text.testman});
     form.setFieldsValue({['price']:text.price});
     form.setFieldsValue({['priceway']:text.priceway});
@@ -160,6 +192,7 @@ class DetailForSub extends PureComponent {
     form.setFieldsValue({['inspwaymemo1']:text.inspwaymemo1});
     this.setState({showPrice:text.priceway });
   };
+
 
   handleOk = () =>{
     const {
@@ -205,7 +238,6 @@ class DetailForSub extends PureComponent {
         this.setState({ visible: false });
         form.resetFields();
       }
-      console.log(error);
     });
   };
 
@@ -375,7 +407,8 @@ class DetailForSub extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
+              {(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[]:
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
@@ -388,7 +421,7 @@ class DetailForSub extends PureComponent {
               size="middle"
               loading={loading}
               dataSource={TestInfo}
-              columns={this.columns}
+              columns={this.state.overallstate==="已发布"||this.state.overallstate==="申请作废"?this.columns2:this.columns}
               rowKey="testman"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />

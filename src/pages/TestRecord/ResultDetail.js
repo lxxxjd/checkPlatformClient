@@ -43,6 +43,7 @@ class ResultDetail extends PureComponent {
     targetPeople : [],
     selectedPeople : [],
     keyno:null,
+    overallstate:undefined,
   };
 
   columns = [
@@ -145,19 +146,125 @@ class ResultDetail extends PureComponent {
       dataIndex: 'result',
     },
     {
-      title: '操作',
-      render: (text, record) => (
-        <Fragment>
-          <a onClick={() => this.modifyItem(text, record)} >编辑</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)} >删除</a>
-        </Fragment>
-      ),
+        title: '操作',
+        render: (text, record) => (
+          <Fragment>
+            <a onClick={() => this.modifyItem(text, record)}>编辑</a>
+            &nbsp;&nbsp;
+            <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          </Fragment>
+        ),
+    },
+  ];
+
+  columns2 = [
+    {
+      title: '申请项目',
+      dataIndex: 'inspway',
+    },
+    {
+      title: '重量',
+      dataIndex: 'weight',
+    },
+    {
+      title: '人员',
+      dataIndex: 'inspman',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
+      title: '仪器',
+      dataIndex: 'instrument',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
+      title: '标准',
+      dataIndex: 'standard',
+      render: (text, record) => {
+        if(typeof(text) === undefined || text === null){
+          return;
+        }
+        let  contentStr = [];
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br></br>;
+        for( let  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            result=contentStr[j];
+          }else{
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
+    {
+      title: '开始日期',
+      dataIndex: 'begindate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '结束日期',
+      dataIndex: 'finishdate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '结果',
+      dataIndex: 'result',
     },
   ];
 
 
+
   componentDidMount() {
+
+    // 获取状态
+    this.setState({overallstate:sessionStorage.getItem('resultdetail_overallstate')});
+
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -587,7 +694,8 @@ class ResultDetail extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
+              {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" ? [] :
+                [<Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>]}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
@@ -600,7 +708,7 @@ class ResultDetail extends PureComponent {
               size="middle"
               loading={loading}
               dataSource={data}
-              columns={this.columns}
+              columns={this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" ? this.columns2 :this.columns}
               rowKey="testman"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />

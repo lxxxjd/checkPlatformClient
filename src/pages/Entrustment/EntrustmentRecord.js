@@ -107,7 +107,8 @@ class EntrustmentRecord extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const params = {
       ...text,
-      reportno: reportno
+      reportno: reportno,
+      source: '委托',
     };
     dispatch({
       type: 'testRecordEntrustment/getRecord',

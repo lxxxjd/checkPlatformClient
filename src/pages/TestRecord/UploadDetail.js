@@ -128,6 +128,7 @@ class UploadDetail extends PureComponent {
     modelName:[],
     url:null,
     showVisible:false,
+    overallstate:undefined,
   };
 
   columns = [
@@ -159,10 +160,8 @@ class UploadDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>查看</a>&nbsp;&nbsp;
+          {(this.state.overallstate==="申请作废"||this.state.overallstate==="已发布")?[] :[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]}
         </Fragment>
       ),
     },
@@ -170,6 +169,9 @@ class UploadDetail extends PureComponent {
 
 
   componentDidMount() {
+    // 设置状态
+    this.setState({overallstate:sessionStorage.getItem('reacordupload_overallstate')});
+
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
@@ -186,7 +188,8 @@ class UploadDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const params = {
       ...text,
-      reportno:reportno
+      reportno:reportno,
+      source:"检查记录",
     };
     dispatch({
       type: 'mTestRecord/getRecord',
@@ -199,8 +202,8 @@ class UploadDetail extends PureComponent {
           });
         }else{
           const url = response.data;
+          // window.open(url);
           this.setState({url:url});
-          //window.open(url);
         }
       }
     });
@@ -412,9 +415,11 @@ class UploadDetail extends PureComponent {
   back = () =>{
     this.props.history.goBack();
   };
+
   showCancel = () =>{
     this.setState({showVisible:false});
-  }
+  };
+
   render() {
     const uploadButton = (
       <div>
@@ -428,7 +433,7 @@ class UploadDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible,overallstate} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
     // 下载模板 模态框方法
@@ -491,7 +496,7 @@ class UploadDetail extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
+              {(overallstate==="申请作废"||overallstate==="已发布")?[]:[ <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>]}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
@@ -518,13 +523,10 @@ class UploadDetail extends PureComponent {
           style={{ top: 10 }}
           width={800}
         >
-          <embed src={url} width="700" height="600"/>
+          <embed src={url} width="700" height="600" type="application/pdf" />
         </Modal>
       </PageHeaderWrapper>
     );
   }
 }
-/*         <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
-          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>批量上传</Button>
-          <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.show}>工作目录</Button>*/
 export default UploadDetail;
