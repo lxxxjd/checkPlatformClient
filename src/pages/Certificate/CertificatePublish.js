@@ -122,6 +122,7 @@ class CertificatePublish extends PureComponent {
 
   publishItem =(text) =>{
     const { dispatch } = this.props;
+    const {init} = this;
     confirm({
       title:"确定要发布此委托记录吗？",
       okText:"确定",
@@ -135,7 +136,7 @@ class CertificatePublish extends PureComponent {
           callback: (response) => {
             if(response==="success"){
               message.success("发布成功");
-              this.init();
+              init();
             }else if(response==="fail"){
               message.error("发布失败,存在未完成的证书或错误，请完成后发布");
             }else{

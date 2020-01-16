@@ -252,5 +252,10 @@ export async function abandonCert(params) {
   });
 }
 
-
-
+// get申请作废理由
+export async function getAbandonApplyReason(params) {
+  return request('/api/cert_report/get_abandon_applyreason', {
+    method: 'POST',
+    data:params,
+  });
+}

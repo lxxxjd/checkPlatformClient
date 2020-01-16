@@ -2,7 +2,7 @@ import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPat
   getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,
   getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,
   getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,
-  makeCertFile,downloadQualityTemp,uploadCertFilePdf,publishCert,applyAbandon,abandonCert} from '@/services/Certificate'
+  makeCertFile,downloadQualityTemp,uploadCertFilePdf,publishCert,applyAbandon,abandonCert,getAbandonApplyReason} from '@/services/Certificate'
 
 import {getOssPdf,getModelSelectName} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
@@ -44,6 +44,10 @@ export default {
 
   effects: {
 
+    *getAbandonApplyReason({ payload,callback }, { call, put }) {
+      const response = yield call(getAbandonApplyReason, payload);
+      if (callback) callback(response.data);
+    },
 
     *abandonCert({ payload,callback }, { call, put }) {
       const response = yield call(abandonCert, payload);

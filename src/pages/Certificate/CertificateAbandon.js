@@ -67,7 +67,7 @@ const ApplayAbandonFrom = Form.create()(props =>  {
 
 // 作废
 const AbandonFrom = Form.create()(props =>  {
-  const { form, modalAbandonVisible, handleAbandonVisible,handleAbandon} = props;
+  const { form, modalAbandonVisible, handleAbandonVisible,handleAbandon,applyreason} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -98,6 +98,7 @@ const AbandonFrom = Form.create()(props =>  {
       <Form>
         <Form.Item label="作废理由">
           {form.getFieldDecorator('abandonreason', {
+            initialValue:(applyreason!==undefined && applyreason!==null)?applyreason:null,
             // rules: [{ required: true ,message: '选择发票号码！'}],
           })(<TextArea rows={5} placeholder="请输入作废理由" />)}
         </Form.Item>
@@ -183,6 +184,8 @@ class CertificateAbandon extends PureComponent {
     modalAbandonVisible:false,
     AbandonText:{},
     ReadRecordData:[],
+
+    applyreason:"",
   };
 
   columns = [
@@ -246,14 +249,11 @@ class CertificateAbandon extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.applyAbandon(text, record)}>申请作废</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.Abandon(text, record)}>作废</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.viewReadRecord(text, record)}>已阅人</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
+
+          {(text.overallstate==="已发布")?[<a onClick={() => this.applyAbandon(text, record)}>申请作废&nbsp;&nbsp;</a>]:[<span>申请作废&nbsp;&nbsp;</span>]}
+          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.AbandonView(text, record)}>作废&nbsp;&nbsp;</a>]:[<span>作废&nbsp;&nbsp;</span>]}
+          <a onClick={() => this.viewReadRecord(text, record)}>已阅人</a> &nbsp;&nbsp;
+          <a onClick={() => this.modifyItem(text, record)}>查看</a> &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -277,14 +277,101 @@ class CertificateAbandon extends PureComponent {
     });
   };
 
+  // 判断是否存在已阅人，是否可以需要申请作废
   applyAbandon = (text)=>{
-    this.handleApplyAbandonVisible(true);
-    this.state.AbandonText = text;
+    const { dispatch } = this.props;
+    const {AbandonText} = this.state;
+    const values = new FormData();
+    values.append('reportno',AbandonText.reportno);
+    dispatch({
+      type: 'certificate/getAllReadRecords',
+      payload:values,
+      callback: (response) => {
+        if(response){
+          // 判断是否存在已阅人记录，且状态为已阅
+          let flag = 0;
+          for(let i=0;response.length!==undefined && i<response.length;i++){
+            if(response[i].state==="已阅"){
+              flag=1;
+              break;
+            }
+          }
+          // 存在已阅人
+          if(flag ===1){
+            // 需要申请作废
+            this.handleApplyAbandonVisible(true);
+            this.state.AbandonText = text;
+          }else{ // 不存在已阅
+            Modal.success({
+              content: "不存在已阅人记录，直接作废即可！",
+            });
+          }
+        }else{
+          // 不存在已阅人
+          Modal.success({
+            content: "不存在已阅人记录，直接作废即可！",
+          });
+        }
+      }
+    });
   };
 
+
+  // 判断是否存在已阅人，是否可以直接作废
+  AbandonView= (text)=>{
+    const { dispatch } = this.props;
+    const values = new FormData();
+    values.append('reportno',text.reportno);
+    dispatch({
+      type: 'certificate/getAllReadRecords',
+      payload:values,
+      callback: (response) => {
+        if(response){
+          // 判断是否存在已阅人记录，且状态为已阅
+          let flag = 0;
+          for(let i=0;response.length!==undefined && i<response.length;i++){
+            if(response[i].state==="已阅"){
+              flag=1;
+              break;
+            }
+          }
+          // 存在已阅人
+          if(flag ===1){
+            // 需要申请作废
+            Modal.success({
+              content: "请先查看已阅人，然后申请作废，并联系已阅人退回！",
+            });
+          }else{ // 不存在已阅,直接作废即可
+            this.Abandon(text);
+          }
+        }else{
+          // 不存在已阅,直接作废即可
+          this.Abandon(text);
+        }
+      }
+    });
+  };
+
+  // 作废，展开模态框，拉取申请作废的理由
   Abandon = (text)=>{
-    this.handleAbandonVisible(true);
-    this.state.AbandonText = text;
+    const { dispatch } = this.props;
+    const formData = new FormData();
+    formData.append('reportno',text.reportno);
+    dispatch({
+      type: 'certificate/getAbandonApplyReason',
+      payload:formData,
+      callback: (response) => {
+        if(response){
+          this.state.applyreason = response.applyreason;
+        }else{
+          this.state.applyreason = undefined;
+        }
+        this.handleAbandonVisible(true);
+        this.state.AbandonText = text;
+      }
+    });
+
+
   };
 
 
@@ -315,6 +402,7 @@ class CertificateAbandon extends PureComponent {
 
   // 作废
   handleAbandon = (fieldValues)=>{
+    message.success("正在作废所有证书，请稍等几秒...")
     const { dispatch } = this.props;
     const {AbandonText} = this.state;
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -469,7 +557,7 @@ class CertificateAbandon extends PureComponent {
       certificate:{data},
       loading,
     } = this.props;
-    const {modalReadRecordVisible,ReadRecordData,modalApplyAbandonVisible,modalAbandonVisible,}  = this.state;
+    const {modalReadRecordVisible,ReadRecordData,modalApplyAbandonVisible,modalAbandonVisible,applyreason}  = this.state;
 
 
     // 模态框方法
@@ -490,7 +578,7 @@ class CertificateAbandon extends PureComponent {
 
             <ReadRecordFrom {...parentMethods} modalReadRecordVisible={modalReadRecordVisible} ReadRecordData={ReadRecordData} loading={loading} />
             <ApplayAbandonFrom {...parentMethods} modalApplyAbandonVisible={modalApplyAbandonVisible} />
-            <AbandonFrom {...parentMethods} modalAbandonVisible={modalAbandonVisible} />
+            <AbandonFrom {...parentMethods} modalAbandonVisible={modalAbandonVisible} applyreason={applyreason} />
             <Table
               size="middle"
               loading={loading}
