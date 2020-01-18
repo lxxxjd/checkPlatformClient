@@ -36,6 +36,7 @@ const ArrivalInvoiceForm = Form.create()(props => {
         callback: (response) => {
           if(response==="success"){
             message.success("到账成功");
+            init();
           }else{
             message.error('到账失败');
           }
@@ -94,6 +95,7 @@ const RefundInvoiceForm = Form.create()(props => {
         callback: (response) => {
           if(response==="success"){
             message.success("退款成功");
+            init();
           }else{
             message.success('退款失败');
           }
@@ -191,6 +193,10 @@ class ListPay extends PureComponent {
         }
         return  <span> </span>;
       },
+    },
+    {
+      title: '收讫人',
+      dataIndex: 'payregistMan',
     },
     {
       title: '状态',
@@ -362,6 +368,7 @@ class ListPay extends PureComponent {
 
     const parentMethods = {
       handleArriveModalVisible: this.handleArriveModalVisible,
+      init:this.init,
     };
     const { arrivalModalVisble,invoiceData,refundInvoiceVisble} = this.state;
 

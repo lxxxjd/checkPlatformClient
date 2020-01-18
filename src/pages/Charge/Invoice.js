@@ -40,6 +40,7 @@ const CreateInvoiceForm = Form.create()(props => {
           callback: (response) => {
             if(response==="success"){
               message.success("开具发票成功");
+              init();
             }else{
               message.success('开具发票失败');
             }
@@ -132,6 +133,7 @@ const DestoryInvoiceForm = (props => {
       callback: (response) => {
         if(response==="success"){
           message.success("开具作废成功");
+          init();
         }else{
           message.success('开具作废失败');
         }
@@ -198,6 +200,10 @@ class Invoice extends PureComponent {
     {
       title: '发票号码',
       dataIndex: 'invoiceno',
+    },
+    {
+      title: '发票开具人',
+      dataIndex: 'invoiceMan',
     },
     {
       title: '开具日期',
@@ -399,6 +405,7 @@ class Invoice extends PureComponent {
 
     const parentMethods = {
       handleModalVisible: this.handleModalVisible,
+      init:this.init,
     };
     const { modalVisible,invoiceData,destoryInvoiceVisble,invoiceTitles} = this.state;
     const invoiceTitlesOptions = invoiceTitles.map(d => <Option key={d.namec} value={d.namec}>{d.namec}</Option>);
