@@ -112,7 +112,7 @@ class IncomeDistributionQuery extends PureComponent {
   previewItem = text => {
     sessionStorage.setItem('reportnoForList',JSON.stringify(text));
     router.push({
-      pathname:'',
+      pathname:'/Charge/DetailList',
     });
   };
 

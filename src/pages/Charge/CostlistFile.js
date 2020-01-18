@@ -59,7 +59,7 @@ class CostlistFile extends PureComponent {
     },
 
     {
-      title: 'oss文件',
+      title: '文件名',
       dataIndex: 'osspath',
       render: val => this.valView(val),
     },

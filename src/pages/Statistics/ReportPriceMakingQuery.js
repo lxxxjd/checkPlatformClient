@@ -103,6 +103,8 @@ class ReportPriceMakingQuery extends PureComponent {
     this.init();
   }
 
+
+
   // eslint-disable-next-line react/sort-comp
   init =() =>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -119,13 +121,15 @@ class ReportPriceMakingQuery extends PureComponent {
     });
   };
 
-  // here to change
-  previewItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
+  handleReview = (flag,text) => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('reportNoForCostEdit',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
+    router.push({
+      pathname:'/Statistics/ReportPriceMakingQueryDetail',
+    });
   };
+
 
   handleFormReset = () => {
     const { form } = this.props;

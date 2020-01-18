@@ -324,7 +324,7 @@ class Cost extends PureComponent {
     const { dispatch } = this.props;
     const params = {
       ...text
-    }
+    };
     dispatch({
       type: 'charge/deleteCostFetch',
       payload: params,
@@ -352,7 +352,7 @@ class Cost extends PureComponent {
     this.setState({
       CostItemData:text,
     });
-  }
+  };
 
   // 处理新增 显示模态框
   handleModalAddNewVisible = (flag) => {
@@ -374,12 +374,12 @@ class Cost extends PureComponent {
     const { dispatch } = this.props;
     const params ={
       reportNo
-    }
+    };
     dispatch({
       type: 'charge/getCostInfosFetch',
       payload: params
     });
-  }
+  };
 
 
 

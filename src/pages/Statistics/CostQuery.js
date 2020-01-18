@@ -228,8 +228,12 @@ class CostQuery extends PureComponent {
   };
 
   handleReview = (flag,text) => {
-    this.handleModalReviewVisible(flag);
-    this.state.modalInfo = text;
+    sessionStorage.setItem('reportno',text.reportno);
+    localStorage.setItem('reportDetailNo',text.reportno);
+    sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
+    router.push({
+      pathname:'/Statistics/CostQueryDetail',
+    });
   };
 
 

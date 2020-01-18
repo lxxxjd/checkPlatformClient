@@ -806,12 +806,25 @@ export default [
             name: 'CostQuery',
             component: './Statistics/CostQuery',
           },
+          {
+            path: '/Statistics/CostQueryDetail',
+            name: 'CostQueryDetail',
+            component: './Statistics/CostQueryDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
 
           {
             path: '/Statistics/ReportPriceMakingQuery',
             name: 'ReportPriceMakingQuery',
             component: './Statistics/ReportPriceMakingQuery',
           },
+          {
+            path: '/Statistics/ReportPriceMakingQueryDetail',
+            name: 'ReportPriceMakingQueryDetail',
+            component: './Statistics/ReportPriceMakingQueryDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
 
           {
             path: '/Statistics/IncomeDistribution',

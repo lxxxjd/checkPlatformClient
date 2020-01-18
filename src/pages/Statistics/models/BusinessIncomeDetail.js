@@ -5,6 +5,8 @@ import { getTestByReportNo} from '@/services/TestInfo';
 import { getCertFiles} from '@/services/Certificate';
 import { getTestBySampleNo, getAllSampleAndTestMan , getAllDetails, getAllSampleAndTestCompany} from '@/services/InspectionAnalysis'
 import { getPriceMakingList } from '@/services/Business'
+import {getCostBylistNO} from '@/services/Costlist'
+import {getAllCost} from '@/services/Charge'
 
 export default {
   namespace: 'businessIncomeDetail',
@@ -13,6 +15,17 @@ export default {
   },
 
   effects: {
+    // 成本信息
+    *getCostInfosFetch({ payload,callback }, { call, put }) {
+      const response = yield call(getAllCost, payload);
+      if (callback) callback(response.data);
+    },
+
+    *getCostBylistNO({ payload,callback}, { call, put}){
+      const response = yield call(getCostBylistNO, payload);
+      if(callback) callback(response.data);
+    },
+
     *getReport({ payload,callback }, { call, put }) {
       const response = yield call(queryReport, payload);
       yield put({

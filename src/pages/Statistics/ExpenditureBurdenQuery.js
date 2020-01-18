@@ -101,9 +101,9 @@ class ExpenditureBurdenQuery extends PureComponent {
 
 
   previewItem = text => {
-    sessionStorage.setItem('reportnoForList',JSON.stringify(text));
+    sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
     router.push({
-      pathname:'',
+      pathname:'/Charge/CostListDetail',
     });
   };
 

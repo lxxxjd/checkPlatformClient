@@ -83,7 +83,8 @@ class InspectionArrangement extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.testman!==undefined && text.testman!==null && text.testman!=="" && text.state==="已添加"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[]}
+          {text.testman!==undefined && text.testman!==null && text.testman!=="" && text.state==="已添加"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]
+            :[<span>分包&nbsp;&nbsp;</span>]}
           <a onClick={() => this.detailItem(text, record)}>查看</a>    &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -175,6 +176,7 @@ class InspectionArrangement extends PureComponent {
       }
     });
   };
+
   show = text =>{
     const {
       form,
@@ -195,6 +197,7 @@ class InspectionArrangement extends PureComponent {
     });
     this.setState({ visible: true });
   };
+
   onChange = e =>{
     if(e.target.value === "按单价"  || e.target.value ==="按比例"){
       this.setState({showPrice:true});
@@ -202,9 +205,11 @@ class InspectionArrangement extends PureComponent {
       this.setState({showPrice:false});
     }
   };
+
   handleCancel = () =>{
     this.setState({ visible: false });
   };
+
   render() {
     const {
       inspectionAnalysis: {samplesSubcontact},
