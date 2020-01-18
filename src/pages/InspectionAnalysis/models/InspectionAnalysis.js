@@ -1,7 +1,7 @@
 import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
   getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,
   deleteTestBySampleNo,updateTestInfo,getSamplesByFilter,loadDetails,getTestStandard,modifyDetail,
-  reviewSampleRegister,returnSampleRegister,
+  reviewSampleRegister,returnSampleRegister,getAllSampleAndTestCompany,
 } from '@/services/InspectionAnalysis'
 import {saveResultList} from '@/services/TestRecord'
 
@@ -12,6 +12,12 @@ export default {
       list : [],
       pagination : {},
     },
+
+    samplesSubcontact : {
+      list : [],
+      pagination : {},
+    },
+
     testInfo: [],
     companyName : [],
     detail : [],
@@ -26,7 +32,7 @@ export default {
 
   effects: {
 
-    *reviewSampleRegister({ payload,callback }, { call, put }) {
+       *reviewSampleRegister({ payload,callback }, { call, put }) {
       const response = yield call(reviewSampleRegister, payload);
       if (callback) callback(response.data);
     },
@@ -69,6 +75,17 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+
+    *getAllSampleAndTestCompany({ payload,callback }, { call, put }) {
+      const response = yield call(getAllSampleAndTestCompany, payload);
+      yield put({
+        type: 'getAllSampleAndTestCompanyInfo',
+        payload:response,
+      });
+      if (callback) callback(response.data);
+    },
+
     *getCompany({ payload,callback }, { call, put }) {
       const response = yield call(getCompany, payload);
       yield put({
@@ -192,6 +209,15 @@ export default {
         samples: payload.data,
       };
     },
+
+    getAllSampleAndTestCompanyInfo(state, { payload }) {
+      return {
+        ...state,
+        samplesSubcontact: payload.data,
+      };
+    },
+
+
     getAllTaskInspmans(state, { payload }) {
       return {
         ...state,

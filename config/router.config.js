@@ -301,9 +301,20 @@ export default [
         name: 'InspectionAnalysis',
         routes: [
           {
+            path: '/InspectionAnalysis/SampleIndex',
+            name: 'SampleIndex',
+            component: './InspectionAnalysis/SampleIndex',
+          },
+          {
             path: '/InspectionAnalysis/InspectionArrangement',
             name: 'InspectionArrangement',
             component: './InspectionAnalysis/InspectionArrangement',
+          },
+
+          {
+            path: '/InspectionAnalysis/InspectionSubcontract',
+            name: 'InspectionSubcontract',
+            component: './InspectionAnalysis/InspectionSubcontract',
           },
           {
             path: '/InspectionAnalysis/InspectionArrangementDetail',
@@ -311,11 +322,7 @@ export default [
             component: './InspectionAnalysis/InspectionArrangementDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
-          {
-            path: '/InspectionAnalysis/SampleIndex',
-            name: 'SampleIndex',
-            component: './InspectionAnalysis/SampleIndex',
-          },
+
           {
             path: '/InspectionAnalysis/SampleDetail',
             name: 'SampleDetail',

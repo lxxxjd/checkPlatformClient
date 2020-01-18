@@ -60,6 +60,10 @@ class SampleRegister extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '委托状态',
+      dataIndex: 'overallstate',
+    },
+    {
       title: '样品编号',
       dataIndex: 'sampleno',
       render: (text, record) => {
@@ -76,7 +80,7 @@ class SampleRegister extends PureComponent {
         for( let  j = 0 ; j < contentStr.length ; j ++){
           if(j===0){
             result=contentStr[j];
-          }else if(j%2===0){
+          }else if(j%1===0){
             result=<span>{result}{br}{contentStr[j]}</span>;
           }else{
             result=<span>{result}&nbsp;{contentStr[j]}</span>;
@@ -89,8 +93,8 @@ class SampleRegister extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toRegisterDetail(text, record)}>编辑</a>
-          &nbsp;&nbsp;
+          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.toRegisterDetail(text, record)}>查看&nbsp;&nbsp;</a>]
+            :[<a onClick={() => this.toRegisterDetail(text, record)}>编辑&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -112,6 +116,7 @@ class SampleRegister extends PureComponent {
 
   toRegisterDetail = text => {
     sessionStorage.setItem('reportSampleRegisterDetailNo',text.reportno);
+    sessionStorage.setItem('reportSampleRegisterDetail_overallstate',text.overallstate);
     router.push({
       pathname:'/SampleRegister/SampleRegisterDetail',
     });

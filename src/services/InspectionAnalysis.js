@@ -15,17 +15,17 @@ export async function getAllSampleAndTestMan(params) {
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }
 
+
+// 样品分包
 export async function getAllSampleAndTestCompany(params) {
   return request(`/api/sampleRegister/getAllSampleAndTestCompany`,{
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }

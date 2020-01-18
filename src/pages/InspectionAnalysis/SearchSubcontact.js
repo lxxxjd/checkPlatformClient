@@ -18,7 +18,7 @@ import styles from './Search.less';
   inspectionAnalysis,
   loading: loading.models.inspectionAnalysis,
 }))
-class Search  extends PureComponent {
+class SearchSubcontact  extends PureComponent {
 	handleSearch = e => {
 	    e.preventDefault();
 	    const { dispatch, form } = this.props;
@@ -34,11 +34,12 @@ class Search  extends PureComponent {
 	        value: fieldsValue.value,
 	      };
 	      dispatch({
-      		type: 'inspectionAnalysis/getAllSampleAndTestMan',
+      		type: 'inspectionAnalysis/getAllSampleAndTestCompany',
 	        payload: values,
 	      });
 	    });
   	};
+
   	handleFormReset = () => {
 	    const { form } = this.props;
 	    form.resetFields();
@@ -48,7 +49,7 @@ class Search  extends PureComponent {
 	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
 	    const { dispatch } = this.props;
 	    dispatch({
-      		type: 'inspectionAnalysis/getAllSampleAndTestMan',
+      		type: 'inspectionAnalysis/getAllSampleAndTestCompany',
       		payload:{
          		certCode : certCode,
      		}
@@ -102,4 +103,4 @@ class Search  extends PureComponent {
 	    );
 	 }
 }
-export default Search;
+export default SearchSubcontact;

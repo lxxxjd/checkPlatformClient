@@ -36,11 +36,7 @@ const SearchForm = Form.create()(Search);
 @Form.create()
 class InspectionArrangement extends PureComponent {
   state = {
-    formValues: {},
-    visible:false,
-    allCompanyName:[],
-    selectEntrustment:null,
-    showPrice:false,
+
   };
 
   columns = [
@@ -105,11 +101,8 @@ class InspectionArrangement extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>人员</a>
-          &nbsp;&nbsp;
-          {text.state==="已添加"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.detailItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.mobileItem(text, record)}>人员</a> &nbsp;&nbsp;
+          <a onClick={() => this.detailItem(text, record)}>查看</a>&nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -126,20 +119,9 @@ class InspectionArrangement extends PureComponent {
          certCode : certCode,
       }
     });
-    dispatch({
-      type: 'inspectionAnalysis/getCompany',
-      payload: {
-        certCode : certCode,
-        type:"实验室",
-      },
-      callback: (response) => {
-        this.setState({allCompanyName:response})
-      }
-    });
   }
 
   mobileItem = text => {
-    console.log(text)
     localStorage.setItem('taskInspmanDetail',JSON.stringify(text));
     router.push({
       pathname:'/InspectionAnalysis/InspmanDetail',
@@ -165,91 +147,17 @@ class InspectionArrangement extends PureComponent {
     });
   };
 
-  handleOk = () =>{
-    const {
-      form: {validateFieldsAndScroll},
-      dispatch,
-    } = this.props;
-    validateFieldsAndScroll((error, values) => {
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const reportno =  sessionStorage.getItem('reportno');
-      const sampleno =  sessionStorage.getItem('sampleno');
-      if (!error) {
-        // submit the values
-        dispatch({
-          type: 'inspectionAnalysis/assign',
-          payload: {
-            ...values,
-            assignman: user.nameC,
-            assignsort:'品质分包',
-            nameC:user.nameC,
-            reportno,
-            sampleno,
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-              dispatch({
-                type: 'inspectionAnalysis/getAllSample',
-                payload:{
-                   certCode : certCode,
-                }
-              });
-              message.success("添加成功");
-            } else {
-              message.error("添加失败");
-            }
-            this.setState({ visible: false });
-          }
-        });
-        form.resetFields();
 
-      }
-    });
-  };
-  show = text =>{
-    const {
-      form,
-      dispatch,
-    } = this.props;
-    sessionStorage.setItem('reportno',text.reportno);
-    sessionStorage.setItem('sampleno',text.sampleno);
-    dispatch({
-      type: 'inspectionAnalysis/getReport',
-      payload: {
-        reportno:text.reportno,
-      },
-      callback: (response) => {
-        if (response.code === 200) {
-          form.setFieldsValue({'inspwaymemo1':response.data.inspwaymemo1});
-        }
-      }
-    });
-    this.setState({ visible: true });
-  };
-  onChange = e =>{
-    if(e.target.value === "按单价"  || e.target.value ==="按比例"){
-      this.setState({showPrice:true});
-    }else{
-      this.setState({showPrice:false});
-    }
-  };
-  handleCancel = () =>{
-    this.setState({ visible: false });
-  };
   render() {
     const {
       inspectionAnalysis: {samples},
-      form: { getFieldDecorator },
       loading,
     } = this.props;
-    const { visible ,allCompanyName,showPrice} = this.state;
-    const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="检验安排">
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}><SearchForm></SearchForm></div>
+            <div className={styles.tableListForm}><SearchForm /></div>
             <Table
               size="middle"
               loading={loading}
@@ -260,80 +168,6 @@ class InspectionArrangement extends PureComponent {
             />
           </div>
         </Card>
-        <Modal
-            title="分包"
-            visible={visible}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-          >
-            <Form>
-              <Form.Item label="分包实验室">
-                {getFieldDecorator('testman', {
-                  rules: [{ required: true, message: '请选择分包实验室' }],
-                })(<Select
-                      showSearch
-                      placeholder="请选择"
-                      filterOption={false}
-                      onSearch={this.handleSearch}
-                    >
-                  {companyNameOptions}
-                    </Select>
-                  )}
-              </Form.Item>
-              <Form.Item label="分包日期">
-                {getFieldDecorator('assigndate', {
-                  rules: [{ required: true, message: '请选择分包日期' }],
-                })(
-                    <DatePicker
-                      placeholder="委托日期"
-                      style={{ width: '100%' }}
-                      format="YYYY-MM-DD"
-                      getPopupContainer={trigger => trigger.parentNode}
-                    />
-                  )}
-              </Form.Item>
-              <Form.Item label="计价方式">
-                {getFieldDecorator('priceway', {
-                  rules: [{ required: true, message: '请选择计价方式' }],
-                })(
-                  <Radio.Group onChange={this.onChange}>
-                    <Radio value="按单价">按单价</Radio>
-                    <Radio value="按批次">按批次</Radio>
-                    <Radio value="按比例">按比例</Radio>
-                  </Radio.Group>,
-                )}
-              </Form.Item>
-              {
-                {true:
-                  <Form.Item label="单价/比例">
-                    { getFieldDecorator('price', {
-                      rules:
-                      showPrice === true
-                      ? [{ required: 'true', message: '请输入单价比例' }]
-                      : []
-                    })(
-                      <Input />
-                     )
-                    }
-                  </Form.Item>
-                }[showPrice]
-              }
-              <Form.Item label="总计费用">
-                {getFieldDecorator('totalfee', {
-                  rules: [{ required: true, message: '请输入总计费用' }],
-                })(
-                      <Input placeholder="请输入总计费用" />
-                  )}
-              </Form.Item>
-              <Form.Item label=" 备注">
-                {getFieldDecorator('inspwaymemo1', {
-                  rules: [],
-                })(
-                  <Input placeholder="请输入备注" />
-                  )}
-              </Form.Item>
-            </Form>
-          </Modal>
       </PageHeaderWrapper>
     );
   }

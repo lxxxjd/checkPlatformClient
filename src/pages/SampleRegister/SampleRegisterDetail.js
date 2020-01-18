@@ -170,6 +170,7 @@ class SampleRegisterDetail extends PureComponent {
     visible:false,
     modifyModalVisble:false,
     sampledata:{},
+    overallstate:undefined,
   };
 
   columns = [
@@ -218,8 +219,46 @@ class SampleRegisterDetail extends PureComponent {
     },
   ];
 
+  columns1 = [
+    {
+      title: '样品编号',
+      dataIndex: 'sampleno',
+    },
+    {
+      title: '样品名称',
+      dataIndex: 'samplename',
+    },
+    {
+      title: '样品用途',
+      dataIndex: 'sampleuse',
+    },
+    {
+      title: '数量',
+      dataIndex: 'weight',
+    },
+    {
+      title: '持有人',
+      dataIndex: 'owner',
+    },
+    {
+      title: '保存天数',
+      dataIndex: 'duration',
+    },
+    {
+      title: '存放位置',
+      dataIndex: 'position',
+    },
+    {
+      title: '制样日期',
+      dataIndex: 'makingdate',
+      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+    },
+  ];
+
 
   componentDidMount() {
+    const overallstate = sessionStorage.getItem('reportSampleRegisterDetail_overallstate');
+    this.setState({overallstate});
     this.init();
   }
 
@@ -335,7 +374,7 @@ class SampleRegisterDetail extends PureComponent {
     const parentMethods = {
       handleModifyModalVisble: this.handleModifyModalVisble,
     };
-    const { modifyModalVisble,sampledata} = this.state;
+    const { modifyModalVisble,sampledata,overallstate} = this.state;
 
 
     const reportNo = localStorage.getItem('reportSampleRegisterDetailNo');
@@ -443,7 +482,7 @@ class SampleRegisterDetail extends PureComponent {
         <Card bordered={false}>
           <Row gutter={16} style={{ marginBottom: 5 }}>
             <Col span={22}>
-              <Button type="primary" onClick={this.show}>新建</Button>
+              {overallstate==="已发布"|| overallstate==="申请作废"?[]:[<Button type="primary" onClick={this.show}>新建</Button>]}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
@@ -456,7 +495,7 @@ class SampleRegisterDetail extends PureComponent {
               size="middle"
               loading={loading}
               dataSource={sampleDetail.list}
-              columns={this.columns}
+              columns={overallstate==="已发布"|| overallstate==="申请作废"?this.columns1:this.columns}
               rowKey="sampleno"
               pagination={{ showQuickJumper: true, showSizeChanger: true }}
             />
