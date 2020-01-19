@@ -748,8 +748,10 @@ class UserManage extends PureComponent {
         ...prams
       },
       callback: (response) => {
-        if(response.code === 200)
+        if(response.code === 200){
           message.success("保存成功");
+          this.componentDidMount();
+        }
         else{
           message.success("保存失败");
         }

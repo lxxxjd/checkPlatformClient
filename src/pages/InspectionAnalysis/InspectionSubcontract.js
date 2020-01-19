@@ -164,9 +164,10 @@ class InspectionArrangement extends PureComponent {
                    certCode : certCode,
                 }
               });
-              message.success("添加成功");
+              message.success("分包成功");
+              this.componentDidMount();
             } else {
-              message.error("添加失败");
+              message.error("分包失败");
             }
             this.setState({ visible: false });
           }

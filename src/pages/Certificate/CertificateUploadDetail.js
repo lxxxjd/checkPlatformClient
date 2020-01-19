@@ -292,7 +292,7 @@ class CertificateUploadDetail extends PureComponent {
     {
       title: '操作',
       render: (text, record) => (
-        <Fragment>、
+        <Fragment>
           {text.status==="待拟制"?[<a onClick={() => this.editCerticate(text, record)}>编辑&nbsp;&nbsp;</a>]:[]}
           {text.status==="待拟制"?[<a onClick={() => this.signItem(text, record)}>拟制&nbsp;&nbsp;</a>]:[]}
           {text.status==="已拟制"?[<a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>]:[]}

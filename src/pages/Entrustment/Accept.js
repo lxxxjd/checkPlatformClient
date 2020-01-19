@@ -302,7 +302,7 @@ class Accept extends PureComponent {
                 callback:response =>{
                   if(response.code === 200){
                     notification.open({
-                      message: '添加成功',
+                      message: '受理成功',
                     });
                     router.push({
                       pathname:'/Entrustment/AcceptList',

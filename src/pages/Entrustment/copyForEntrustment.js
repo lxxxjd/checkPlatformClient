@@ -17,6 +17,7 @@ import {
   AutoComplete
 } from 'antd';
 
+import router from 'umi/router';
 import {connect} from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
@@ -169,8 +170,18 @@ class CopyForEntrustment extends PureComponent {
               'chineselocalname': response.chineselocalname,
               'iscnas': response.incnas,
             });
-            if(response.iscnas === 1){
+            if(response.iscostoms === "1"){
+              this.setState({isCustoms:true});
+              form.setFieldsValue({
+                'iscostoms': 1,
+                // 'customsName': response.customsName,
+              });
+            }
+            if(response.iscnas === '1'){
               const {cargos} = this.state;
+              form.setFieldsValue({
+                'iscnas': 1,
+              });
               for (const cargo in cargos) {
                 if (cargos[cargo].cargonamec.replace(/\s+/g, "") === response.cargoname) {
                   const checkCode = cargos[cargo].checkCode;
@@ -928,7 +939,7 @@ class CopyForEntrustment extends PureComponent {
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('quantityD', {
+                  {getFieldDecorator('quantityd', {
                     rules: [{
                       whitespace: true,
                       type: 'number',

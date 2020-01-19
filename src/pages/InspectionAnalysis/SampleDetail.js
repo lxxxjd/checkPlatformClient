@@ -54,7 +54,7 @@ class SampleDetail extends PureComponent {
     },
     {
       title: '检测标准',
-      dataIndex: 'standard',
+      dataIndex: 'teststandard',
     },
     {
       title: '单位',

@@ -278,13 +278,13 @@ class DetailForSub extends PureComponent {
     const price = form.getFieldValue('price');
     if(price !=="" && price !== undefined){
       if(showPrice === '按单价'){
-        if(priceMakeing.quantity !=="" && priceMakeing.quantity !== undefined){
+        if(priceMakeing.quantity !=="" && priceMakeing.quantity !== null){
           form.setFieldsValue({['totalfee']: price * parseFloat(priceMakeing.quantity) });
-        }else if(report.quantity !=="" && report.quantity !== undefined) {
-          form.setFieldsValue({['totalfee']: price * parseFloat(report.quantityd) });
+        }else if(report.quantityd !=="" && report.quantityd !== null) {
+          form.setFieldsValue({['totalfee']: Number(price) * parseFloat(report.quantityd) });
         }
       }else if(showPrice === '按比例'){
-        if(priceMakeing.total !=="" && priceMakeing.total !== undefined){
+        if(priceMakeing.total !=="" && priceMakeing.total !== null){
           form.setFieldsValue({['totalfee']: price * parseFloat(priceMakeing.total) });
         }
       }

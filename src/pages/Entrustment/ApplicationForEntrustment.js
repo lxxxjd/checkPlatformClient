@@ -15,6 +15,7 @@ import {
   AutoComplete
 } from 'antd';
 
+import router from 'umi/router';
 import {connect} from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
@@ -822,7 +823,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('quantityD', {
+                  {getFieldDecorator('quantityd', {
                     rules: [{
                       whitespace: true,
                       type: 'number',
