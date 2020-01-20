@@ -1,6 +1,7 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
-        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos} from '@/services/Entrustment';
+        getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,
+  getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo} from '@/services/Entrustment';
 
 export default {
   namespace: 'entrustment',
@@ -22,6 +23,13 @@ export default {
   },
 
   effects: {
+
+    // 报关号查重
+    *getRepeatCustomsNo({ payload , callback}, { call, put }) {
+      const response = yield call(getRepeatCustomsNo, payload);
+      if (callback) callback(response.data);
+    },
+
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryAllReports, payload);
       yield put({

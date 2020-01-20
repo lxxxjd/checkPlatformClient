@@ -32,3 +32,4 @@ export async function getPerApprove(params) {
 export async function getTotalPay(params) {
   return request(`/api/homepage/getTotalPay?username=${params.username}&certcode=${params.certcode}`);
 }
+

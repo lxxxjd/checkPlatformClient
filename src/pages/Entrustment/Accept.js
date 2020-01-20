@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react';
+import { formatMessage } from 'umi-plugin-react/locale';
 import {
   Card,
   Button,
@@ -263,7 +264,7 @@ class Accept extends PureComponent {
     );
   };
 
- 
+
   validate = () => {
     const {
       form: {validateFieldsAndScroll},
@@ -491,6 +492,24 @@ class Accept extends PureComponent {
     }
   };
 
+  // 查重海关报关号
+  getRepeatCustomsNo = (rule, value, callback) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'entrustment/getRepeatCustomsNo',
+      payload:{customsNo:value},
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.customsNo.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.customsNo.error' }));
+        }
+      }
+    });
+  };
+
   render() {
     const {
       form: {getFieldDecorator},
@@ -567,7 +586,7 @@ class Accept extends PureComponent {
                 >
                   {getFieldDecorator('reportno20', {
                     rules: [],
-                  })(<Input placeholder="自编号"/>)}
+                  })(<Input placeholder="自编号" />)}
                 </Form.Item>
               </Col>
 
@@ -579,8 +598,11 @@ class Accept extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('customsNo', {
-                    rules: [],
-                  })(<Input placeholder="报关号"/>)}
+                    rules: [
+                      {
+                        validator: this.getRepeatCustomsNo,
+                      }],
+                  })(<Input placeholder="报关号" />)}
                 </Form.Item>
               </Col>
 
@@ -734,7 +756,7 @@ class Accept extends PureComponent {
                   {getFieldDecorator('payer', {
                     //rules: [{required: true, message: '请输入付款人'}],
                   })(
-                    <Select                       
+                    <Select
                       showSearch
                       placeholder="请选择付款人"
                       filterOption={false}

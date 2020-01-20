@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react';
+import { formatMessage } from 'umi-plugin-react/locale';
 import {
   Card,
   Button,
@@ -418,6 +419,23 @@ class ApplicationForEntrustment extends PureComponent {
     }
   };
 
+  getRepeatCustomsNo = (rule, value, callback) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'entrustment/getRepeatCustomsNo',
+      payload:{customsNo:value},
+      callback: (response) => {
+       if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.customsNo.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+         callback(formatMessage({ id: 'validation.customsNo.error' }));
+       }
+      }
+    });
+  };
+
   render() {
     const {
       form: {getFieldDecorator},
@@ -438,8 +456,7 @@ class ApplicationForEntrustment extends PureComponent {
                                                                 value={d.contactName}>{d.contactName}</Option>);
     //申请人选项
     return (
-      <PageHeaderWrapper
-      >
+      <PageHeaderWrapper>
         <Card bordered={false}>
           <Row gutter={16}>
             <Col span={2}>
@@ -496,7 +513,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('reportno20', {
                     rules: [],
-                  })(<Input placeholder="自编号"/>)}
+                  })(<Input placeholder="自编号" />)}
                 </Form.Item>
               </Col>
 
@@ -508,7 +525,11 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('customsNo', {
-                    rules: [],
+                    rules: [
+                      {
+                        validator: this.getRepeatCustomsNo,
+                      },
+                    ],
                   })(<Input placeholder="报关号" />)}
                 </Form.Item>
               </Col>

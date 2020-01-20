@@ -138,3 +138,7 @@ export async function cancelReportItem(params) {
   });
 }
 
+// 报关号查重
+export async function getRepeatCustomsNo(params) {
+  return request(`/api/report/getRepeatCustomsNo?customsNo=${params.customsNo}`);
+}
