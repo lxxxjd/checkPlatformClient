@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
+import { formatMessage } from 'umi-plugin-react/locale';
 
 import {
   Row,
@@ -420,6 +421,34 @@ class UploadDetail extends PureComponent {
     this.setState({showVisible:false});
   };
 
+  // 文件名查重
+  getRepeatRecordName = (rule, value, callback) => {
+    // 不存在文件名判空
+    if(value===undefined || value===null || value===""){
+      callback(formatMessage({ id: 'validation.recordinfo.noexist' }));
+    }
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    let formData = new FormData();
+    formData.append("reportno",reportno);
+    formData.append("recordname",value);
+    formData.append("source","检查记录");
+    dispatch({
+      type: 'recordinfo_testRecord/getRepeatRecordName',
+      payload:formData,
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.recordinfo.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.recordinfo.error' }));
+        }
+      }
+    });
+  };
+
+
   render() {
     const uploadButton = (
       <div>
@@ -480,7 +509,7 @@ class UploadDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="文件名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入文件名称' }],
+                rules: [{required: true,validator:this.getRepeatRecordName,}],
               })(
                 <Input style={{ width: '100%' }} placeholder="请输入文件名称" />
               )}

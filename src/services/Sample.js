@@ -28,12 +28,7 @@ export async function addSamleRegister(params) {
 }
 
 export async function deleteSamleRegister(params) {
-  return request(`/api/sampleRegister/deleteSamleRegister`,{
-    method: 'POST',
-    data: {
-      ...params,
-    },
-  });
+  return request(`/api/sampleRegister/deleteSamleRegister?sampleno=${params.sampleno}&reportno=${params.reportno}`);
 }
 
 export async function selectSampleRegisterByConditions(params) {
@@ -58,6 +53,14 @@ export async function selectSampleByConditionsDestory(params) {
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function setSampleStatus(params) {
   return request(`/api/sampleRegister/setSampleStatus`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+// 样品编号查重
+export async function getRepeatSampleNo(params) {
+  return request(`/api/sampleRegister/getRepeatSampleNo`,{
     method: 'POST',
     data:params,
   });

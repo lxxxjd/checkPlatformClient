@@ -259,3 +259,11 @@ export async function getAbandonApplyReason(params) {
     data:params,
   });
 }
+
+
+export async function getRepeatName(params) {
+  return request('/api/cert_report/getRepeatName', {
+    method: 'POST',
+    data:params,
+  });
+}

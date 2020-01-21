@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import moment from 'moment';
+import { formatMessage } from 'umi-plugin-react/locale';
 import {
   Row,
   Col,
@@ -24,7 +25,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking,invoiceTitlesOptions} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking,invoiceTitlesOptions,approverusersOptions,getRepeatListNo} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -62,7 +63,7 @@ const AddListFrom = Form.create()(props =>  {
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="清单号：">
           {form.getFieldDecorator('listno', {
-            rules: [{ required: true,message: '请输入清单号'}],
+            rules: [{required: true,validator:getRepeatListNo,}],
           })(<Input placeholder="请输入清单号" />)}
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="到账账户：">
@@ -79,7 +80,7 @@ const AddListFrom = Form.create()(props =>  {
             rules: [{ required: true,message: '请选择审核人'}],
           })(
             <Select placeholder="请选择审核人">
-              <Option value="徐佳待"> 徐佳待</Option>
+              {approverusersOptions}
             </Select>)
           }
         </Form.Item>
@@ -104,6 +105,7 @@ class ListFictionAdd extends PureComponent {
     payer:undefined,
     total:0,
     invoiceTitles:[],
+    approverusers:[],
   };
 
   columns = [
@@ -220,6 +222,22 @@ class ListFictionAdd extends PureComponent {
     const values = {
       certCode:user.certCode,
     };
+
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"清单审核" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置审核人用户角色");
+        }
+      }
+    });
+
     dispatch({
       type: 'charge/getInvoiceTitleList',
       payload:values,
@@ -348,6 +366,32 @@ class ListFictionAdd extends PureComponent {
         }
       });
 
+    });
+  };
+
+  // 收费清单编号查重
+  getRepeatListNo = (rule, value, callback) => {
+    // 样品编号不存在
+    if(value===undefined || value===null || value===""){
+      callback(formatMessage({ id: 'validation.listno.noexist' }));
+    }
+    const { dispatch } = this.props;
+    let formData = new FormData();
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    formData.append("certcode",user.certCode);
+    formData.append("listno",value);
+    dispatch({
+      type: 'charge/getRepeatListNo',
+      payload:formData,
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.listno.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.listno.error' }));
+        }
+      }
     });
   };
 
@@ -505,15 +549,17 @@ class ListFictionAdd extends PureComponent {
       loading,
     } = this.props;
 
-    const {priceMaking,modalAddListVisible,total,payer,invoiceTitles} = this.state;
+    const {priceMaking,modalAddListVisible,total,payer,invoiceTitles,approverusers} = this.state;
 
     // 下载模板 模态框方法
     const parentMethods = {
       handleAddListVisible:this.handleAddListVisible,
       handleFormAddList:this.handleFormAddList,
+      getRepeatListNo:this.getRepeatListNo,
     };
 
     const invoiceTitlesOptions = invoiceTitles.map(d => <Option key={d.namec} value={d.namec}>{d.namec}</Option>);
+    const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
 
     const { getFieldDecorator, getFieldValue } = this.props.form;
     getFieldDecorator('keys', { initialValue: [] });
@@ -603,7 +649,7 @@ class ListFictionAdd extends PureComponent {
             <Form onSubmit={this.handleSubmit}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
-              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} invoiceTitlesOptions={invoiceTitlesOptions} />
+              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} invoiceTitlesOptions={invoiceTitlesOptions} approverusersOptions={approverusersOptions} />
             </Form>
             <Table
               style={{marginTop:5}}

@@ -3,6 +3,7 @@ import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,
   getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo} from '@/services/Entrustment';
 
+
 export default {
   namespace: 'entrustment',
   state: {
@@ -23,6 +24,7 @@ export default {
   },
 
   effects: {
+
 
     // 报关号查重
     *getRepeatCustomsNo({ payload , callback}, { call, put }) {

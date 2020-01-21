@@ -8,4 +8,3 @@ export async function getAllReadRecords(params) {
     data: params,
   });
 }
-

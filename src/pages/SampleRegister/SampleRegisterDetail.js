@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
+import { formatMessage } from 'umi-plugin-react/locale';
 
 import {
   Row,
@@ -280,9 +281,13 @@ class SampleRegisterDetail extends PureComponent {
 
   deleteItem = text => {
     const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportSampleRegisterDetailNo');
     dispatch({
       type: 'sample/deleteSamleRegister',
-      payload: { sampleno: text.sampleno},
+      payload: {
+        sampleno: text.sampleno,
+        reportno,
+      },
       callback: (response) => {
         if (response) {
           message.success("删除成功");
@@ -304,7 +309,7 @@ class SampleRegisterDetail extends PureComponent {
         return;
       }
       form.resetFields();
-      const reportNo = localStorage.getItem('reportSampleRegisterDetailNo');
+      const reportNo = sessionStorage.getItem('reportSampleRegisterDetailNo');
       const value ={
         duration: fieldsValue.duration,
         makingdate: fieldsValue.makingdate,
@@ -352,6 +357,30 @@ class SampleRegisterDetail extends PureComponent {
     });
   };
 
+  // 样品编号查重
+  getRepeatSampleNo = (rule, value, callback) => {
+    // 样品编号不存在
+    if(value===undefined || value===null || value===""){
+      callback(formatMessage({ id: 'validation.sampleno.noexist' }));
+    }
+    const { dispatch } = this.props;
+    let formData = new FormData();
+    formData.append("sampleno",value);
+    dispatch({
+      type: 'sample/getRepeatSampleNo',
+      payload:formData,
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.sampleno.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.sampleno.error' }));
+        }
+      }
+    });
+  };
+
 
   render() {
 
@@ -377,7 +406,7 @@ class SampleRegisterDetail extends PureComponent {
     const { modifyModalVisble,sampledata,overallstate} = this.state;
 
 
-    const reportNo = localStorage.getItem('reportSampleRegisterDetailNo');
+    const reportNo = sessionStorage.getItem('reportSampleRegisterDetailNo');
     return (
       <PageHeaderWrapper title="样品已登记信息">
         <Modal
@@ -389,7 +418,7 @@ class SampleRegisterDetail extends PureComponent {
           <Form>
             <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品编号">
               {getFieldDecorator('sampleno', {
-                rules: [{ required: true, message: '请输入样品编号' }],
+                rules: [{required: true,validator:this.getRepeatSampleNo,}],
                 initialValue:reportNo
               })(<Input placeholder="请输入样品编号" />)}
             </Form.Item>

@@ -1,6 +1,6 @@
 import {getAllSampleRegister,getSampleRegistersByReportNo ,
   addSamleRegister,deleteSamleRegister,selectSampleRegisterByConditions,selectSampleByConditionsDestory,
-  setSampleStatus,getModelSelectName,updateSampleRegisters
+  setSampleStatus,getModelSelectName,updateSampleRegisters,getRepeatSampleNo
 
 } from '@/services/Sample'
 
@@ -36,6 +36,13 @@ export default {
   },
 
   effects: {
+
+    // 样品编号查重
+    *getRepeatSampleNo({ payload,callback }, { call, put }) {
+      const response = yield call(getRepeatSampleNo, payload);
+      if (callback) callback(response.data);
+    },
+
     *getSampleRegister({ payload,callback }, { call, put }) {
       const response = yield call(getAllSampleRegister, payload);
       yield put({

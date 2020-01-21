@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
+import { formatMessage } from 'umi-plugin-react/locale';
 import {
   Row,
   Col,
@@ -311,6 +312,33 @@ class CertificateFinishedDetail extends PureComponent {
   };
 
 
+  // 文件名查重
+  getRepeatName = (rule, value, callback) => {
+    // 不存在文件名判空
+    if(value===undefined || value===null || value===""){
+      callback(formatMessage({ id: 'validation.certname.noexist' }));
+    }
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    let formData = new FormData();
+    formData.append("reportno",reportno);
+    formData.append("name",value);
+    dispatch({
+      type: 'certificate/getRepeatName',
+      payload:formData,
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.certname.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.certname.error' }));
+        }
+      }
+    });
+  };
+
+
   render() {
     const uploadButton = (
       <div>
@@ -363,7 +391,7 @@ class CertificateFinishedDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="证稿名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入证稿名称' }],
+                rules: [{required: true,validator:this.getRepeatName,}],
               })(
                 <Input style={{ width: '100%' }} placeholder="请输入证稿名称,不超过10个字符" maxLength={10} />
               )}

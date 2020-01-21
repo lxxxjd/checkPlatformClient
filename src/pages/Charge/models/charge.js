@@ -1,5 +1,6 @@
 import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getAllCost ,
-  addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost, getCheckResultInspway,downloadListTemp,downloadCostListTemp,getPdfByOssPath} from '@/services/Charge';
+  addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost, getCheckResultInspway,
+  downloadListTemp,downloadCostListTemp,getPdfByOssPath,getRepeatListNo,getRepeatPayListNo} from '@/services/Charge';
 import { getAllClientName } from '@/services/Entrustment';
 import { getInvoiceTitleList } from '@/services/InvoiceTitle';
 
@@ -21,6 +22,17 @@ export default {
     costUpdateResult:{}, // 更新成本信息
   },
   effects: {
+
+    *getRepeatPayListNo({ payload,callback }, { call, put }) {
+      const response = yield call(getRepeatPayListNo, payload);
+      if (callback) callback(response.data);
+    },
+
+
+    *getRepeatListNo({ payload,callback }, { call, put }) {
+      const response = yield call(getRepeatListNo, payload);
+      if (callback) callback(response.data);
+    },
 
     *getPdfByOssPath({ payload,callback }, { call, put }) {
       const response = yield call(getPdfByOssPath, payload);

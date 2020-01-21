@@ -164,6 +164,23 @@ export async function downloadCostListTemp(params) {
   });
 }
 
+//  查重，查listno不能重复
+export async function getRepeatListNo(params) {
+  return request(`/api/list/getRepeatListNo`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+//  查重，查costlistno不能重复
+export async function getRepeatPayListNo(params) {
+  return request(`/api/costlist/getRepeatPayListNo`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
 
 
 

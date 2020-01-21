@@ -1,6 +1,8 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
+import { formatMessage } from 'umi-plugin-react/locale';
+
 
 import {
   Layout,
@@ -100,7 +102,8 @@ const CertForm = Form.create()(props => {
 
 // 表单组件
 const CreateUploadForm = Form.create()(props => {
-  const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect,handleOnModelSelect,modelPlatformType,sampleRegisterOptions,checkResultOptions} = props;
+  const { downloadVisible, form, handleDownloadAdd, handleDownloadCancel,typeOptions,handleOnSelect,
+    handleOnModelSelect,modelPlatformType,sampleRegisterOptions,checkResultOptions,getRepeatName} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -133,7 +136,7 @@ const CreateUploadForm = Form.create()(props => {
 
       <Form.Item label="证书名称">
         {form.getFieldDecorator('fileName', {
-          rules: [{ required: true, message: '请输入证书名称' }],
+          rules: [{required: true,validator:getRepeatName,}],
         })(
           <Input style={{ width: '100%' }} placeholder="证书名称" />
         )}
@@ -544,7 +547,6 @@ class CertificateUploadDetail extends PureComponent {
   };
 
   deleteItem = text => {
-    console.log(text);
     const {
       dispatch,
     } = this.props;
@@ -991,6 +993,31 @@ class CertificateUploadDetail extends PureComponent {
     }
   };
 
+  // 文件名查重
+  getRepeatName = (rule, value, callback) => {
+    // 不存在文件名判空
+    if(value===undefined || value===null || value===""){
+      callback(formatMessage({ id: 'validation.certname.noexist' }));
+    }
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    let formData = new FormData();
+    formData.append("reportno",reportno);
+    formData.append("name",value);
+    dispatch({
+      type: 'certificate/getRepeatName',
+      payload:formData,
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.certname.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.certname.error' }));
+        }
+      }
+    });
+  };
 
 
   render() {
@@ -1024,6 +1051,7 @@ class CertificateUploadDetail extends PureComponent {
       renderFileInfo:this.renderFileInfo,
       renderTreeNodes:this.renderTreeNodes,
       handleOnModelSelect:this.handleOnModelSelect,
+      getRepeatName:this.getRepeatName,
     };
 
     const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
@@ -1067,7 +1095,7 @@ class CertificateUploadDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="证稿名称">
               {getFieldDecorator('recordname', {
-                rules: [{ required: true, message: '请输入证稿名称' }],
+                rules: [{required: true,validator:this.getRepeatName,}],
               })(
                 <Input style={{ width: '100%' }} placeholder="请输入证稿名称,不超过10个字符" maxLength={10} />
               )}

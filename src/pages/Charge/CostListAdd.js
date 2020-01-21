@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import moment from 'moment';
+import { formatMessage } from 'umi-plugin-react/locale';
 import {
   Row,
   Col,
@@ -24,7 +25,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,costList,paycompany} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,costList,paycompany,getRepeatPayListNo} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -72,7 +73,7 @@ const AddListFrom = Form.create()(props =>  {
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="清单号：">
           {form.getFieldDecorator('paylistno', {
             initialValue:getDate(),
-            rules: [{ required: true,message: '请输入清单号'}],
+            rules: [{required: true,validator:getRepeatPayListNo,}],
           })(<Input placeholder="请输入清单号" />)}
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="接收人：">
@@ -490,6 +491,33 @@ class CostListAdd extends PureComponent {
   };
 
 
+  // 成本清单编号查重
+  getRepeatPayListNo = (rule, value, callback) => {
+    // 样品编号不存在
+    if(value===undefined || value===null || value===""){
+      callback(formatMessage({ id: 'validation.paylistno.noexist' }));
+    }
+    const { dispatch } = this.props;
+    let formData = new FormData();
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    formData.append("certcode",user.certCode);
+    formData.append("paylistno",value);
+    dispatch({
+      type: 'charge/getRepeatPayListNo',
+      payload:formData,
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.paylistno.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.paylistno.error' }));
+        }
+      }
+    });
+  };
+
+
 
   render(){
     const {
@@ -502,6 +530,7 @@ class CostListAdd extends PureComponent {
     const parentMethods = {
       handleAddListVisible:this.handleAddListVisible,
       handleFormAddList:this.handleFormAddList,
+      getRepeatPayListNo:this.getRepeatPayListNo,
     };
 
     const { getFieldDecorator, getFieldValue } = this.props.form;
@@ -586,7 +615,7 @@ class CostListAdd extends PureComponent {
             <Form onSubmit={this.handleSubmit}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
-              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} costList={costList} total={total} paycompany={paycompany} />
+              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} costList={costList} total={total} paycompany={paycompany}  />
             </Form>
             <Table
               style={{marginTop:5}}
