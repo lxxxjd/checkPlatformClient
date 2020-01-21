@@ -351,6 +351,7 @@ class ApplicationForEntrustment extends PureComponent {
       }
     });
   };
+
   cargoSearch = value => {
     const {dispatch} = this.props;
     // const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
@@ -547,15 +548,16 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('applicant', {
                     rules: [{required: true, message: '请输入申请人'}],
                   })(
-                    <Select
-                      showSearch
-                      placeholder="请选择申请人"
-                      filterOption={false}
-                      onSearch={this.handleApplicantSearch}
+
+                    <AutoComplete
+                      className="global-search"
+                      dataSource={applicantOptions}
                       onChange={this.onAppliantChange}
+                      onSearch={this.handleApplicantSearch}
+                      placeholder="请输入申请人"
                     >
-                      {applicantOptions}
-                    </Select>
+                      <Input />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>
@@ -805,8 +807,7 @@ class ApplicationForEntrustment extends PureComponent {
                       onSearch={this.cargoSearch}
                       placeholder="请输入货物名称"
                     >
-                      <Input
-                      />
+                      <Input />
                     </AutoComplete>
                   )}
                 </Form.Item>
