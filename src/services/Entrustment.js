@@ -142,3 +142,9 @@ export async function cancelReportItem(params) {
 export async function getRepeatCustomsNo(params) {
   return request(`/api/report/getRepeatCustomsNo?customsNo=${params.customsNo}`);
 }
+
+
+// 工商接口
+export async function getBusiness(params) {
+  return request(`/api/business/getBusiness?name=${params.name}`);
+}

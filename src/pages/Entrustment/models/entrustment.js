@@ -1,7 +1,7 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
         getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,
-  getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo} from '@/services/Entrustment';
+  getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo,getBusiness} from '@/services/Entrustment';
 
 
 export default {
@@ -29,6 +29,13 @@ export default {
     // 报关号查重
     *getRepeatCustomsNo({ payload , callback}, { call, put }) {
       const response = yield call(getRepeatCustomsNo, payload);
+      if (callback) callback(response.data);
+    },
+
+
+    // 工商接口
+    *getBusiness({ payload , callback}, { call, put }) {
+      const response = yield call(getBusiness, payload);
       if (callback) callback(response.data);
     },
 

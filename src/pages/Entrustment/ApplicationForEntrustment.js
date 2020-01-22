@@ -314,26 +314,31 @@ class ApplicationForEntrustment extends PureComponent {
   };
 
   handleAgentSearch = value => {
+    // 工商接口
     const {dispatch} = this.props;
     dispatch({
-      type: 'entrustment/getClientName',
+      type: 'entrustment/getBusiness',
       payload: {
-        content: value
+        name: value
       },
       callback: (response) => {
+
         this.setState({agentName: response})
       }
     });
+
   };
 
   handleApplicantSearch = value => {
+    // 工商接口
     const {dispatch} = this.props;
     dispatch({
-      type: 'entrustment/getClientName',
+      type: 'entrustment/getBusiness',
       payload: {
-        content: value
+        name: value
       },
       callback: (response) => {
+
         this.setState({applicantName: response})
       }
     });
@@ -342,11 +347,12 @@ class ApplicationForEntrustment extends PureComponent {
   handlePayerSearch = value => {
     const {dispatch} = this.props;
     dispatch({
-      type: 'entrustment/getClientName',
+      type: 'entrustment/getBusiness',
       payload: {
-        content: value
+        name: value
       },
       callback: (response) => {
+
         this.setState({payerName: response})
       }
     });
@@ -372,7 +378,6 @@ class ApplicationForEntrustment extends PureComponent {
   };
 
   onAppliantChange = value => {
-    console.log(value);
     const {dispatch} = this.props;
     dispatch({
       type: 'entrustment/getContacts',
@@ -615,15 +620,16 @@ class ApplicationForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agent', {})(
-                    <Select
-                      showSearch
-                      placeholder="请选择代理人"
-                      filterOption={false}
-                      onSearch={this.handleAgentSearch}
-                      onChange={this.onAgentChange}
+
+                    <AutoComplete
+                      className="global-search"
+                      dataSource={agentOptions}
+                      onChange={this.handleAgentSearch}
+                      onSearch={this.onAgentChange}
+                      placeholder="请输入代理人"
                     >
-                      {agentOptions}
-                    </Select>
+                      <Input />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>
@@ -686,13 +692,15 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('payer', {
                     rules: [{required: true, message: '请输入付款人'}],
                   })(
-                    <Select
-                      showSearch
-                      placeholder="请选择付款人"
-                      filterOption={false}
-                      onSearch={this.handlePayerSearch}>
-                      {payerOptions}
-                    </Select>
+
+                    <AutoComplete
+                      className="global-search"
+                      dataSource={payerOptions}
+                      onSearch={this.handlePayerSearch}
+                      placeholder="请输入付款人"
+                    >
+                      <Input />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>
@@ -718,7 +726,7 @@ class ApplicationForEntrustment extends PureComponent {
                       message: '请输入检验费'
                     }],
                   })
-                  (<Input style={{width: '100%'}} placeholder="请输入"/>)
+                  (<Input style={{width: '100%'}} placeholder="请输入" />)
                   }
                 </Form.Item>
               </Col>
@@ -778,7 +786,7 @@ class ApplicationForEntrustment extends PureComponent {
                   {getFieldDecorator('customsName', {
                     //rules:
                   })(
-                    <Cascader options={customsOption} disabled={!isCustoms} placeholder="请选择海关部门"/>
+                    <Cascader options={customsOption} disabled={!isCustoms} placeholder="请选择海关部门" />
                   )}
                 </Form.Item>
               </Col>
@@ -821,7 +829,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('chineselocalname', {
                     rules: [],
-                  })(<Input placeholder="请输入中文俗名"/>)}
+                  })(<Input placeholder="请输入中文俗名" />)}
                 </Form.Item>
               </Col>
               <Col span={8}>
