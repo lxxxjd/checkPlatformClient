@@ -61,7 +61,7 @@ class IncomeDistributionQuery extends PureComponent {
     {
       title: '到账日期',
       dataIndex: 'paydate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+      render: val => this.isValidDate(val),
     },
     {
       title: '状态',
@@ -82,6 +82,13 @@ class IncomeDistributionQuery extends PureComponent {
   componentDidMount() {
     this.init();
   }
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
 
 
   init =()=>{

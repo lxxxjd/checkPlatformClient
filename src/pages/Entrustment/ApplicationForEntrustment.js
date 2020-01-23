@@ -13,7 +13,8 @@ import {
   Cascader,
   Radio,
   notification,
-  AutoComplete
+  AutoComplete,
+  message
 } from 'antd';
 
 import router from 'umi/router';
@@ -197,6 +198,7 @@ class ApplicationForEntrustment extends PureComponent {
   }
 
   validate = () => {
+    message.success("正在保存数据，请稍等几秒...");
     const {
       form: {validateFieldsAndScroll},
       dispatch,
@@ -210,7 +212,6 @@ class ApplicationForEntrustment extends PureComponent {
       if (values.customsName !== null && values.customsName !== undefined) {
         values.customsName = values.customsName[1];
       }
-      console.log(error);
       if (!error) {
         // submit the values
         dispatch({

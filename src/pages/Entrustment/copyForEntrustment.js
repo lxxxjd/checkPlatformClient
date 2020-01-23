@@ -15,7 +15,7 @@ import {
   Popover,
   Radio,
   notification,
-  AutoComplete
+  AutoComplete, message,
 } from 'antd';
 
 import router from 'umi/router';
@@ -324,6 +324,7 @@ class CopyForEntrustment extends PureComponent {
 
 
   validate = () => {
+    message.success("正在保存数据，请稍等几秒...");
     const {
       form: {validateFieldsAndScroll},
       dispatch,
@@ -556,6 +557,11 @@ class CopyForEntrustment extends PureComponent {
     });
   };
 
+
+  back = () => {
+    this.props.history.goBack();
+  };
+
   render() {
     const {
       form: {getFieldDecorator},
@@ -580,6 +586,9 @@ class CopyForEntrustment extends PureComponent {
           <Row gutter={16}>
             <Col span={2}>
               <Button type="primary" onClick={this.validate}>提交</Button>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={this.back}>返回</Button>
             </Col>
             <Col span={22}>
             </Col>

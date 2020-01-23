@@ -16,7 +16,8 @@ import {
   Radio,
   Typography,
   notification,
-  AutoComplete
+  AutoComplete,
+  message
 } from 'antd';
 
 import router from 'umi/router';
@@ -326,6 +327,7 @@ class ModifyForEntrustment extends PureComponent {
   };
 
   validate = () => {
+    message.success("正在保存数据，请稍等几秒...");
     const {
       form: {validateFieldsAndScroll},
       dispatch,
@@ -562,6 +564,10 @@ class ModifyForEntrustment extends PureComponent {
     });
   };
 
+  back = () => {
+    this.props.history.goBack();
+  };
+
   render() {
     const {
       form: {getFieldDecorator},
@@ -578,7 +584,7 @@ class ModifyForEntrustment extends PureComponent {
     const departmentOptions = departments.map(d => <Option key={d.branchname} value={d.branchname}>{d.branchname}</Option>);
     const applicantContactsOptions = applicantContacts.map(d => <Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
     const agentContactsOptions = agentContacts.map(d =><Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
-    //申请人选项
+    // 申请人选项
     return (
       <PageHeaderWrapper
       >
@@ -587,8 +593,10 @@ class ModifyForEntrustment extends PureComponent {
             <Col span={2}>
               <Button type="primary" onClick={this.validate}>提交</Button>
             </Col>
-            <Col span={22}>
+            <Col span={2}>
+              <Button type="primary" onClick={this.back}>返回</Button>
             </Col>
+            <Col span={20} />
           </Row>
         </Card>
         <Card title="业务信息" className={styles.card} bordered={false}>
@@ -651,9 +659,6 @@ class ModifyForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('customsNo', {
                     rules: [
-                      {
-                        validator: this.getRepeatCustomsNo,
-                      },
                     ],
                   })(<Input placeholder="报关号" />)}
                 </Form.Item>
