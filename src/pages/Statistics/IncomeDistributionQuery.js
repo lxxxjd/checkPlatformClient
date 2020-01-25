@@ -52,7 +52,7 @@ class IncomeDistributionQuery extends PureComponent {
     {
       title: '开票日期',
       dataIndex: 'invoiceDate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+      render: val => this.isValidDate(val),
     },
     {
       title: '发票号码',

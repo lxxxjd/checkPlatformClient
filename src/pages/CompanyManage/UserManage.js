@@ -26,7 +26,7 @@ const { Option } = Select;
 
 // 修改的Form
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo } = props;
+  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo,departmentOptions } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -111,10 +111,14 @@ const CreateForm = Form.create()(props => {
           rules: [
             {
               required: true,
-              message: "请输入部门",
+              message: "请选择部门",
             },
           ],
-        })(<Input placeholder="请输入部门" />)}
+        })(
+          <Select placeholder="请选择部门" style={{ width: '100%' }}>
+            {departmentOptions}
+          </Select>
+        )}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色" colon={false}>
@@ -337,10 +341,14 @@ const AddForm = Form.create()(props => {
           rules: [
             {
               required: true,
-              message: "请输入请输入部门",
+              message: "请选择部门",
             },
           ],
-        })(<Input placeholder="请输入部门" />)}
+        })(
+          <Select placeholder="请选择部门" style={{ width: '100%' }}>
+            {departmentOptions}
+          </Select>
+        )}
       </FormItem>
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色" colon={false}>
@@ -493,6 +501,7 @@ class UserManage extends PureComponent {
     visible:false,
     previewVisible:false,
     signUrl:'',
+    departments:[],
   };
 
   columns = [
@@ -525,6 +534,28 @@ class UserManage extends PureComponent {
     {
       title: '权限角色',
       dataIndex: 'role',
+      render: (text, record) => {
+        let  contentStr = [];
+        if(text===undefined || text ===null ||text ===""){
+          return null;
+        }
+        contentStr = text.split(" ");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j = 0 ; j < contentStr.length ; j ++){
+          if(j===0){
+            result=contentStr[j];
+          }else if(j%3===0){
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }else{
+            result=<span>{result}&nbsp;{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
     },
 
     {
@@ -594,6 +625,18 @@ class UserManage extends PureComponent {
         }
       }
     });
+
+    dispatch({
+      type: 'company/getDepartmentList',
+      payload: params,
+      callback: (response) => {
+        if (response){
+          this.state.departments = response.data;
+        }
+      }
+    });
+
+
   };
 
   handleFormReset = () => {
@@ -857,7 +900,7 @@ class UserManage extends PureComponent {
       dispatch,
     } = this.props;
 
-    const {  modalVisible,modalInfo,addModalVisible,dataSource,fileList, previewVisible, signUrl} = this.state;
+    const {  modalVisible,modalInfo,addModalVisible,dataSource,fileList, previewVisible, signUrl,departments} = this.state;
     const parentMethods = {
       handleEdit: this.handleEdit,
       handleAdd:this.handleAdd,
@@ -866,14 +909,15 @@ class UserManage extends PureComponent {
       handleChange : this.handleChange,
       handleCancel : this.handleCancel,
     };
+    const departmentOptions = departments.map(d => <Option key={d.branchname} value={d.branchname}>{d.branchname}</Option>);
 
 
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
-            <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} />
-            <AddForm {...parentMethods} addModalVisible={addModalVisible} dispatch={dispatch} />
+            <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} departmentOptions={departmentOptions} />
+            <AddForm {...parentMethods} addModalVisible={addModalVisible} dispatch={dispatch} departmentOptions={departmentOptions} />
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"
