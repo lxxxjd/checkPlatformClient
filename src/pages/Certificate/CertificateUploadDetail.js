@@ -144,7 +144,6 @@ const CreateUploadForm = Form.create()(props => {
 
       <Form.Item label="文件来源">
         {form.getFieldDecorator('type', {
-          initialValue:"platform",
           rules: [{ required: true, message: '请选择文件来源' }],
         })(
           <Select style={{ width: '100%' }} placeholder="请选择文件来源" onSelect={handleOnSelect} onChange={handleChange}>
@@ -598,6 +597,7 @@ class CertificateUploadDetail extends PureComponent {
         formData.append('signer', user.userName);
         formData.append('reportno', reportno);
         formData.append('name', values.recordname);
+        formData.append('certcode',user.certCode );
         dispatch({
           type: 'certificate/uploadCertFile',
           payload : formData,
@@ -752,6 +752,7 @@ class CertificateUploadDetail extends PureComponent {
     params.append('creator', user.nameC);
     params.append('modifier', user.nameC);
     params.append('fileName', fields.fileName);
+    params.append('certcode',user.certCode );
 
     dispatch({
       type: 'certificate/downloadQualityTemp',

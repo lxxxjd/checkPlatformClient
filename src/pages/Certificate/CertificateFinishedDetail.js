@@ -217,6 +217,7 @@ class CertificateFinishedDetail extends PureComponent {
         formData.append('author', values.author);
         formData.append('name', values.recordname);
         formData.append('publisher', values.publisher);
+        formData.append('certcode', user.certCode);
         dispatch({
           type: 'certificate/uploadCertFilePdf',
           payload : formData,
