@@ -517,10 +517,7 @@ class UserManage extends PureComponent {
       title: '姓名',
       dataIndex: 'nameC',
     },
-    {
-      title: '地址',
-      dataIndex: 'place',
-    },
+
 
     {
       title: '电话',
@@ -557,7 +554,10 @@ class UserManage extends PureComponent {
         return <div>{result}</div>;
       },
     },
-
+    {
+      title: '是否授权签字人',
+      dataIndex: 'isauthorize',
+    },
     {
       title: '操作',
       render: (text, record) => (
