@@ -15,6 +15,7 @@ class DetailForEnturstment extends Component {
     visible: false ,
     showVisible:false,
     url:"",
+    report:{},
     cnasInfo: {
       checkcode: '',
       checkname: '',
@@ -65,6 +66,7 @@ class DetailForEnturstment extends Component {
       payload: reportnNo,
       callback:response=>{
         const report = response;
+        this.setState({report: response});
         if(report.cnasCode !==undefined && report.cnasCode !==null  ){
           if(report.iscnas === "1"){
             dispatch({
@@ -151,14 +153,13 @@ class DetailForEnturstment extends Component {
   showCancel = () =>{
     this.setState({showVisible:false});
   }
+
   render() {
     const {
-      entrustment,
       testRecordEntrustment:{recordData},
       loading
     } = this.props;
-    const { report  } = entrustment;
-    const { showVisible ,url, cnasInfo} = this.state;
+    const { showVisible ,url, cnasInfo,report} = this.state;
     return (
       <PageHeaderWrapper loading={loading}>
         <Card bordered={false}>

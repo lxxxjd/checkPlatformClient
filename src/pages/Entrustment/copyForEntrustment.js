@@ -144,8 +144,9 @@ class CopyForEntrustment extends PureComponent {
           type: 'entrustment/getReport',
           payload: reportno,
           callback: (response) => {
+            const now = moment().format("YYYY-MM-DD HH:mm:ss");
             form.setFieldsValue({
-              'reportdate': moment(response.reportdate, "YYYY-MM-DD"),
+              'reportdate': moment(now, "YYYY-MM-DD"),
               'tradeway': response.tradeway,
               'payer': response.payer,
               'shipname': response.shipname,
