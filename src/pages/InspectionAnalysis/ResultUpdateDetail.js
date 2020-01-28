@@ -77,7 +77,7 @@ const SaveListFrom = Form.create()(props =>  {
 
 // 提交审核
 const UpdateForm = Form.create()(props =>  {
-  const { form, visible, handleVisible,handleOk} = props;
+  const { form, visible, handleVisible,handleOk,result,testDetail} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -110,6 +110,7 @@ const UpdateForm = Form.create()(props =>  {
         <Form.Item label="结果">
           {form.getFieldDecorator('result', {
             rules: [{ required: true, message: '请输入结果' }],
+            initialValue:testDetail.testresult
           })(
             <Input placeholder="请输入结果" />
           )}
@@ -220,7 +221,7 @@ class ResultUpdateDetail extends PureComponent {
     formValues: {},
     visible:false,
     editingKey: '' ,
-    testDetail:null,
+    testDetail:{},
 
     dataSource: [],
     modalSaveListVisible:false,
@@ -257,7 +258,7 @@ class ResultUpdateDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>录入</a>
+          <a onClick={() => this.modifyItem(text, record)}>修改</a>
         </Fragment>
       ),
     },
@@ -411,7 +412,7 @@ class ResultUpdateDetail extends PureComponent {
     const {
       loading,
     } = this.props;
-    const {visible,dataSource,modalSaveListVisible,reviewUsers} = this.state;
+    const {visible,dataSource,modalSaveListVisible,reviewUsers,testDetail} = this.state;
     const reviewUsersOptions = reviewUsers.map(d => <Option value={d.userName}>{d.nameC}</Option>);
     // 下载模板 模态框方法
     const parentMethods = {
@@ -467,12 +468,13 @@ class ResultUpdateDetail extends PureComponent {
               </Button>
             </Col>
           </Row>
-          <SaveListFrom {...parentMethods} modalSaveListVisible={modalSaveListVisible} reviewUsersOptions={reviewUsersOptions}  />
-          <UpdateForm {...parentMethods} visible={visible} />
+          <SaveListFrom {...parentMethods}  modalSaveListVisible={modalSaveListVisible} reviewUsersOptions={reviewUsersOptions}  />
+          <UpdateForm {...parentMethods} visible={visible} testDetail = {testDetail}/>
           <div className={styles.tableList}>
             <Table
+              size="middle"
               components={components}
-              bordered
+              //bordered
               dataSource={dataSource}
               columns={columns}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

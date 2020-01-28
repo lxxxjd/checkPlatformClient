@@ -80,7 +80,7 @@ class SubEntrustment extends PureComponent {
       render: (text, record) => (
         <Fragment>
           {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.detailItem(text, record)}>查看&nbsp;&nbsp;</a>]
-            :[<a onClick={() => this.detailItem(text, record)}>编辑&nbsp;&nbsp;</a>]}
+            :[<a onClick={() => this.detailItem(text, record)}>转委托&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),

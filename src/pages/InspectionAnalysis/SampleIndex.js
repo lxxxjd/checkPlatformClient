@@ -69,7 +69,7 @@ class SampleIndex extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
+          <a onClick={() => this.mobileItem(text, record)}>指标</a>
           &nbsp;&nbsp;
           <a onClick={() => this.detailItem(text, record)}>查看</a>
           &nbsp;&nbsp;

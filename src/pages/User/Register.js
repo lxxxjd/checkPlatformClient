@@ -353,8 +353,8 @@ class Register extends Component {
                     message: formatMessage({ id: 'validation.phone-number.wrong-format' }),
                   },
                   {
-                    validator: this.getRepeatTel,
-                  },
+                        validator: this.getRepeatTel,
+                      },
                 ],
               })(
                 <Input

@@ -60,7 +60,16 @@ class SampleRegister extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '委托状态',
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: (text, record) => {
+        if(text === null){
+          return;
+        }
+        render: text => <span>{moment(text).format('YYYY-MM-DD')}</span>
+      }    },
+    {
+      title: '状态',
       dataIndex: 'overallstate',
     },
     {
@@ -94,7 +103,7 @@ class SampleRegister extends PureComponent {
       render: (text, record) => (
         <Fragment>
           {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.toRegisterDetail(text, record)}>查看&nbsp;&nbsp;</a>]
-            :[<a onClick={() => this.toRegisterDetail(text, record)}>编辑&nbsp;&nbsp;</a>]}
+            :[<a onClick={() => this.toRegisterDetail(text, record)}>样品登记&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),

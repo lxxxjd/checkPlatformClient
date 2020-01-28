@@ -67,14 +67,29 @@ class SampleModify extends PureComponent {
     { title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.modifyItem(text, record)}>修改</a>
         </Fragment>
       ),
     },
   ];
-
+  columns2 = [
+    {
+      title: '指标名称',
+      dataIndex: 'itemC',
+    },
+    {
+      title: '英文名称',
+      dataIndex: 'itemE',
+    },
+    {
+      title: '检测标准',
+      dataIndex: 'teststandard',
+    },
+    {
+      title: '单位',
+      dataIndex: 'unit',
+    },
+  ];
   modifyItem = text => {
     const { dispatch ,form} = this.props;
     const cargoname = sessionStorage.getItem('cargoname');
@@ -230,7 +245,7 @@ class SampleModify extends PureComponent {
     },
     {
       title: '检测标准',
-      dataIndex: 'teststandard',
+      dataIndex: 'standard',
     },
     {
       title: '单位',
@@ -440,6 +455,8 @@ class SampleModify extends PureComponent {
             visible={addMany}
             onOk={this.addMany}
             onCancel={this.handleCancel}
+            width={800}
+            okText="添加"
           >
             <Table
               size='middle'
@@ -447,7 +464,7 @@ class SampleModify extends PureComponent {
               loading={loading}
               dataSource={items}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
-              columns={this.columns}
+              columns={this.columns3}
               rowSelection={rowSelection}
             />
           </Modal>
@@ -456,6 +473,8 @@ class SampleModify extends PureComponent {
             visible={onDelete}
             onOk={this.delete}
             onCancel={this.handleCancel}
+            width={800}
+            okText="删除"
           >
             <Table
               size='middle'
@@ -463,7 +482,7 @@ class SampleModify extends PureComponent {
               loading={loading}
               dataSource={detail}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
-              columns={this.columns}
+              columns={this.columns2}
               rowSelection={rowDeteleSelection}
             />
           </Modal>

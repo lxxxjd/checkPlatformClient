@@ -48,12 +48,22 @@ class ResultDetail extends PureComponent {
 
   columns = [
     {
-      title: '申请项目',
+      title: '检验项目',
       dataIndex: 'inspway',
     },
     {
-      title: '重量',
-      dataIndex: 'weight',
+      title: '开始日期',
+      dataIndex: 'begindate',
+      render: val => <span>{
+         moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '结束日期',
+      dataIndex: 'finishdate',
+      render: val => <span>{
+         moment(val).format('YYYY-MM-DD')
+      }</span>
     },
     {
       title: '人员',
@@ -78,6 +88,10 @@ class ResultDetail extends PureComponent {
         }
         return <div>{result}</div>;
       },
+    },
+    {
+      title: '重量',
+      dataIndex: 'weight',
     },
     {
       title: '仪器',
@@ -126,20 +140,6 @@ class ResultDetail extends PureComponent {
         }
         return <div>{result}</div>;
       },
-    },
-    {
-      title: '开始日期',
-      dataIndex: 'begindate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
-    },
-    {
-      title: '结束日期',
-      dataIndex: 'finishdate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
     },
     {
       title: '结果',
@@ -631,7 +631,7 @@ class ResultDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="仪器">
               {getFieldDecorator('instrument', {
-                rules: [{ required: true, message: '请选择仪器' }],
+                //rules: [{ required: true, message: '请选择仪器' }],
               })(
                   <Transfer
                     listStyle={{
@@ -662,7 +662,7 @@ class ResultDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="开始日期">
               {getFieldDecorator('begindate', {
-                rules: [{ required: true, message: '请选择开始日期' }],
+                //rules: [{ required: true, message: '请选择开始日期' }],
               })(
                   <DatePicker
                     placeholder="开始日期"
@@ -673,7 +673,7 @@ class ResultDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="结束日期">
               {getFieldDecorator('finishdate', {
-                rules: [{ required: true, message: '请选择结束日期' }],
+                //rules: [{ required: true, message: '请选择结束日期' }],
               })(
                   <DatePicker
                     placeholder="结束日期"
@@ -684,7 +684,7 @@ class ResultDetail extends PureComponent {
             </Form.Item>
             <Form.Item label="结果">
               {getFieldDecorator('result', {
-                rules: [{ required: true, message: '请输入结果' }],
+                //rules: [{ required: true, message: '请输入结果' }],
               })(
                   <Input />
                 )}

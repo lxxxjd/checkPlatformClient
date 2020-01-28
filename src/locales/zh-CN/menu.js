@@ -16,7 +16,7 @@ export default {
   'menu.Entrustment.CancelForEntrustment':'撤销委托',
   'menu.Entrustment.ModifyForEntrustment':'修改委托',
   'menu.Entrustment.CopyForEntrustmentList':'复制委托',
-  'menu.Entrustment.AcceptList':'委托受理',
+  'menu.Entrustment.AcceptList':'网上委托',
   'menu.Entrustment.Accept':'委托',
   'menu.Entrustment.DetailForUnAccept':'受理详情',
   'menu.Entrustment.CopyForEntrustment':'复制委托详情',

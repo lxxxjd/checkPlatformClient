@@ -50,40 +50,54 @@ class CertificateUpload extends PureComponent {
       dataIndex: 'inspway',
     },
     {
-      title: '证书名称',
-      dataIndex: 'certnames',
+      title: '状态日期',
+      dataIndex: 'overalltime',
       render: (text, record) => {
         if(text === null){
           return;
         }
-        var  contentStr = [];
-        contentStr = text.split("|");
-        var result = null;
-        const br = <br></br>;
-        var pattern = /\.{1}[a-z]{1,}$/;
-        for( var  j=0 ; j < contentStr.length ; j++){
-          if(j===0){
-            if (pattern.exec(contentStr[j]) !== null) {
-              result=contentStr[j].slice(0, pattern.exec(contentStr[j]).index);
-            } else {
-              result=contentStr[j];
-            }
-          }else{
-            if (pattern.exec(contentStr[j]) !== null) {
-              result=<span>{result}{br}{contentStr[j].slice(0, pattern.exec(contentStr[j]).index)}</span>;
-            } else {
-              result=<span>{result}{br}{contentStr[j]}</span>;
-            }
-          }
-        }
-        return <div>{result}</div>;
-      },
+        render: text => <span>{moment(text).format('YYYY-MM-DD')}</span>
+      }
     },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    // {
+    //   title: '证书名称',
+    //   dataIndex: 'certnames',
+    //   render: (text, record) => {
+    //     if(text === null){
+    //       return;
+    //     }
+    //     var  contentStr = [];
+    //     contentStr = text.split("|");
+    //     var result = null;
+    //     const br = <br></br>;
+    //     var pattern = /\.{1}[a-z]{1,}$/;
+    //     for( var  j=0 ; j < contentStr.length ; j++){
+    //       if(j===0){
+    //         if (pattern.exec(contentStr[j]) !== null) {
+    //           result=contentStr[j].slice(0, pattern.exec(contentStr[j]).index);
+    //         } else {
+    //           result=contentStr[j];
+    //         }
+    //       }else{
+    //         if (pattern.exec(contentStr[j]) !== null) {
+    //           result=<span>{result}{br}{contentStr[j].slice(0, pattern.exec(contentStr[j]).index)}</span>;
+    //         } else {
+    //           result=<span>{result}{br}{contentStr[j]}</span>;
+    //         }
+    //       }
+    //     }
+    //     return <div>{result}</div>;
+    //   },
+    // },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
+          <a onClick={() => this.modifyItem(text, record)}>拟制</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

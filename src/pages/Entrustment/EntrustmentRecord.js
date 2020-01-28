@@ -82,7 +82,7 @@ class EntrustmentRecord extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
+          <a onClick={() => this.previewItem(text, record)}>文件详情</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;
@@ -256,6 +256,9 @@ class EntrustmentRecord extends PureComponent {
       });
       return;
     }
+    const {form} = this.props;
+    var pattern = /\.{1}[a-z]{1,}$/;
+    form.setFieldsValue({['recordname']: file.name.slice(0, pattern.exec(file.name).index)});
     this.setState({fileList: fileList});
     console.log(fileList)
   };

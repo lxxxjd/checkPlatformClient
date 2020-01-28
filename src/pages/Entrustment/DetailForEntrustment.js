@@ -197,7 +197,7 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="付款人">{report.payer}</Descriptions.Item>
             <Descriptions.Item label="业务来源">{report.businesssource}</Descriptions.Item>
             <Descriptions.Item label="贸易方式">{report.tradeway}</Descriptions.Item>
-            <Descriptions.Item label="证书要求" >{report.certstyle}</Descriptions.Item>
+            <Descriptions.Item label="证书要求" >{report.certstyle !== null?["需要/"+report.certstyle]:[]}</Descriptions.Item>
             <Descriptions.Item label="自编号">{report.reportno20}</Descriptions.Item>
             <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
             <Descriptions.Item label="执行部门">{report.section}</Descriptions.Item>

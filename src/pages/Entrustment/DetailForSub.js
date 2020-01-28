@@ -44,7 +44,7 @@ class DetailForSub extends PureComponent {
 
   columns = [
     {
-      title: '转委托公司',
+      title: '受委托公司',
       dataIndex: 'testman',
     },
     {
@@ -81,7 +81,7 @@ class DetailForSub extends PureComponent {
 
   columns2 = [
     {
-      title: '转委托公司',
+      title: '受委托公司',
       dataIndex: 'testman',
     },
     {
@@ -315,7 +315,7 @@ class DetailForSub extends PureComponent {
           onCancel={this.handleCancel}
         >
           <Form>
-            <Form.Item label="转委托公司">
+            <Form.Item label="受委托公司">
               {getFieldDecorator('testman', {
                 rules: [{ required: true, message: '请选择转委托公司' }],
               })(<Select

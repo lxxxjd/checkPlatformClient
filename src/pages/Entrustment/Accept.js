@@ -921,7 +921,7 @@ class Accept extends PureComponent {
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('quantityD', {
+                  {getFieldDecorator('quantityd', {
                     rules: [{
                       whitespace: true,
                       type: 'number',

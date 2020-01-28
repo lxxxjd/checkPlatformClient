@@ -68,7 +68,7 @@ class CustomerService extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toCustomerDetail(text, record)}>编辑</a>
+          <a onClick={() => this.toCustomerDetail(text, record)}>客服人员</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

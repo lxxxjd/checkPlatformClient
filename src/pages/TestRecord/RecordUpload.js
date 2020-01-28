@@ -50,11 +50,21 @@ class RecordUpload extends PureComponent {
       dataIndex: 'inspway',
     },
     {
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: (text, record) => {
+        if(text === null){
+          return;
+        }
+        render: text => <span>{moment(text).format('YYYY-MM-DD')}</span>
+      }    
+    },
+    {
       title: '状态',
       dataIndex: 'overallstate',
     },
     {
-      title: '文件名称',
+      title: '记录名称',
       dataIndex: 'recordname',
       render: (text, record) => {
         if(text === null || text === undefined){
@@ -91,7 +101,7 @@ class RecordUpload extends PureComponent {
       render: (text, record) => (
         <Fragment>
           {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
-            :[<a onClick={() => this.modifyItem(text, record)}>编辑&nbsp;&nbsp;</a>]}
+            :[<a onClick={() => this.modifyItem(text, record)}>上传记录&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),

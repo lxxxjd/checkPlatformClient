@@ -592,7 +592,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('applicanttel', {})(<Input style={{width: '100%'}} placeholder="联系方式"/>)}
+                  {getFieldDecorator('applicanttel', {})(<Input style={{width: '100%'}} placeholder="联系方式" disabled={true}/>)}
                 </Form.Item>
               </Col>
               <Col span={6}>
@@ -659,7 +659,7 @@ class ApplicationForEntrustment extends PureComponent {
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('agenttel', {})(<Input style={{width: '100%'}} placeholder="联系方式"/>)}
+                  {getFieldDecorator('agenttel', {})(<Input style={{width: '100%'}} placeholder="联系方式" disabled={true}/>)}
                 </Form.Item>
               </Col>
               <Col span={6}>

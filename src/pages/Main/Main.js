@@ -51,13 +51,13 @@ class Main extends PureComponent {
       title: '委托编号',
       dataIndex: 'reportno',
     },
-    {
-      title: '检验日期',
-      dataIndex: 'inspdate',
-      render: val => <span>{
-        moment(val).format('YYYY-MM-DD')
-      }</span>
-    },
+    // {
+    //   title: '检验日期',
+    //   dataIndex: 'inspdate',
+    //   render: val => <span>{
+    //     moment(val).format('YYYY-MM-DD')
+    //   }</span>
+    // },
     {
       title: '船名标识',
       dataIndex: 'shipname',

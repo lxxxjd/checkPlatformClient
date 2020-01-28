@@ -169,7 +169,7 @@ class DetailForUnAccept extends Component {
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="检查对象" style={{ marginBottom: 32 }} bordered>
             <Descriptions.Item label="检验机构">{preMainInfo.certcode}</Descriptions.Item>
-            <Descriptions.Item label="检查品名">{preMainInfo.chineselocalname}</Descriptions.Item>
+            <Descriptions.Item label="俗名">{preMainInfo.chineselocalname}</Descriptions.Item>
             <Descriptions.Item label="申报数量和单位">{((preMainInfo.quantityd === undefined || preMainInfo.quantityd === null ) ? "":preMainInfo.quantityd  )+preMainInfo.unit }</Descriptions.Item>
             <Descriptions.Item label="到达地点">{preMainInfo.inspplace1}</Descriptions.Item>
             <Descriptions.Item label="详细地址">{preMainInfo.inspplace2}</Descriptions.Item>

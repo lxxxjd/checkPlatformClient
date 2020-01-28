@@ -58,6 +58,11 @@ export default [
         authority: ["操作经理","admin"],
         routes: [
           {
+            path: '/Entrustment/AcceptList',
+            name: 'AcceptList',
+            component: './Entrustment/AcceptList',
+          },
+          {
             path: "/Entrustment/ApplicationForEntrustment",
             name: "ApplicationForEntrustment",
             component: "./Entrustment/ApplicationForEntrustment"
@@ -104,11 +109,6 @@ export default [
             path: '/Entrustment/EntrustmentRelevance',
             name: 'EntrustmentRelevance',
             component: './Entrustment/EntrustmentRelevance',
-          },
-          {
-            path: '/Entrustment/AcceptList',
-            name: 'AcceptList',
-            component: './Entrustment/AcceptList',
           },
           {
             path: '/Entrustment/DetailForSub',
