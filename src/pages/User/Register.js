@@ -75,9 +75,31 @@ class Register extends Component {
         clearInterval(this.interval);
       }
     }, 1000);
-    Modal.info({
-      title: formatMessage({ id: 'app.login.verification-code-warning' }),
-    });
+    const { form,dispatch} = this.props;
+    const tel = form.getFieldValue("mobile");
+    // 判断电话是否未空
+    if(tel===undefined){
+      message.success("电话号码不能为空");
+    }else{
+      // 存在电话号码
+      dispatch({
+        type: 'register/sendVerify',
+        payload:{tel},
+        callback: (response) => {
+          if(response){
+            // 请求服务成功
+            if(response === "success"){
+                message.success("发送成功");
+            }else{
+              // 失败
+              Modal.info({
+                title: formatMessage({ id: 'app.login.verification-code-warning.noExist' }),
+              });
+            }
+          }
+        }
+      });
+    }
   };
 
   getPasswordStatus = () => {
@@ -97,18 +119,75 @@ class Register extends Component {
     const { form, dispatch } = this.props;
     form.validateFields({ force: true }, (err, values) => {
       if (!err) {
-        const { prefix } = this.state;
+        // 1. 验证验证码
+        const tel = values.mobile;
+        const verifyCode = values.captcha;
+        const params={
+          tel,
+          verifyCode
+        }
         dispatch({
-          type: 'register/submit',
-          payload: {
-            ...values,
-            prefix,
-          },
+          type: 'register/verifyTel',
+          payload:params,
+          callback: (response) => {
+            if(response){
+              // 请求服务成功
+              if(response === "success"){
+                // 注册逻辑
+                dispatch({
+                  type: 'register/addUser',
+                  payload:{
+                    ...values,
+                  },
+                  callback: (response2) => {
+                    if(response2){
+                      // 请求服务成功
+                      if(response2 === "success"){
+                        message.success("注册成功");
+                        router.push({
+                          pathname:'/Applicant/DetailForAccept',
+                        });
+                      }else if(response2 === "手机号未验证"){
+                        message.success("手机号未验证");
+                      } else if(response2 === "公司重复注册"){
+                        message.success("公司重复注册");
+                      } else{
+                        // 失败
+                        message.success("注册失败");
+                      }
+                    }else{
+                      message.success("注册失败");
+                    }
+                  }
+                });
+              }else{
+                message.success("验证码错误");
+              }
+            }else{
+              message.success("验证码失败");
+            }
+            // 注册逻辑
+          }
         });
       }
     });
   };
-
+  getRepeatTel = (rule, value, callback) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'register/getRepeatTel',
+      payload:{tel:value},
+      callback: (response) => {
+        if (response===undefined || response === null) {
+          callback("号码已注册");
+        } else if(response === "号码已注册"){
+          callback("号码已注册");
+        }else{
+          callback();
+        }
+      }
+    });
+  };
   handleConfirmBlur = e => {
     const { value } = e.target;
     const { confirmDirty } = this.state;
@@ -272,6 +351,9 @@ class Register extends Component {
                   {
                     pattern: /^\d{11}$/,
                     message: formatMessage({ id: 'validation.phone-number.wrong-format' }),
+                  },
+                  {
+                    validator: this.getRepeatTel,
                   },
                 ],
               })(
