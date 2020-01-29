@@ -57,7 +57,8 @@ class ResultRegistration extends PureComponent {
           return;
         }
         render: text => <span>{moment(text).format('YYYY-MM-DD')}</span>
-      }       },
+      }       
+    },
     {
       title: '状态',
       dataIndex: 'overallstate',
