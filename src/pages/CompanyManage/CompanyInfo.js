@@ -53,6 +53,7 @@ class CompanyInfo extends PureComponent {
 						'account':response.data.account,
 						'bank' : response.data.bank,
 						'belongto': response.data.belongto,
+						'cocode':response.data.cocode,
 					});
 				}
 			}
@@ -85,6 +86,7 @@ class CompanyInfo extends PureComponent {
 	        company.account = form.getFieldValue('account');
 	        company.bank = form.getFieldValue('bank');
 	        company.belongto = form.getFieldValue('belongto');
+	       	company.cocode = form.getFieldValue('cocode');
 	        dispatch({
 	          type: 'company/updateCompany',
 	          payload: {
@@ -136,7 +138,7 @@ class CompanyInfo extends PureComponent {
 			            rules: [
 			              {
 			                required: true,
-			                message: '请输入英文名',
+			                message: '请输入地址',
 			              },
 			            ],
 			          })(<Input />)}
@@ -146,7 +148,17 @@ class CompanyInfo extends PureComponent {
 			            rules: [
 			              {
 			                required: true,
-			                message: '请输入英文名',
+			                message: '请输入银行账户',
+			              },
+			            ],
+			          })(<Input />)}
+			        </Form.Item>
+			        <Form.Item label="社会统一信用代码">
+			          {getFieldDecorator('cocode', {
+			            rules: [
+			              {
+			                required: true,
+			                message: '请输入社会统一信用代码',
 			              },
 			            ],
 			          })(<Input />)}
@@ -156,7 +168,7 @@ class CompanyInfo extends PureComponent {
 			            rules: [
 			              {
 			                required: true,
-			                message: '请输入英文名',
+			                message: '请输入开户行',
 			              },
 			            ],
 			          })(<Input />)}

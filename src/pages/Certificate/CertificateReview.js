@@ -45,9 +45,23 @@ class CertificateReview extends PureComponent {
       title: '检查品名',
       dataIndex: 'cargoname',
     },
+    // {
+    //   title: '申请项目',
+    //   dataIndex: 'inspway',
+    // },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: (text, record) => {
+        if(text === null){
+          return;
+        }
+        render: text => <span>{moment(text).format('YYYY-MM-DD')}</span>
+      }
+    },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
     },
     {
       title: '证书名称',
@@ -83,7 +97,7 @@ class CertificateReview extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
+          <a onClick={() => this.modifyItem(text, record)}>复核</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>

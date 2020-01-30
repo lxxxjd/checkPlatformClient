@@ -142,9 +142,11 @@ const CreateForm = Form.create()(props => {
             <Option value="检验人员">检验人员</Option>
             <Option value="检测人员">检测人员</Option>
             <Option value="财务人员">财务人员</Option>
+            <Option value="管理员">管理员</Option>
+            <Option value="授权签字人">授权签字人</Option>
           </Select>)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="生日" colon={false}>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="出生日期" colon={false}>
         {form.getFieldDecorator('birthday', {
           initialValue: moment(modalInfo.birthday,"YYYY-MM-DD"),
         })(
@@ -226,7 +228,16 @@ const CreateForm = Form.create()(props => {
         {form.getFieldDecorator('workduty', {
           initialValue: modalInfo.workduty,
         })(
-            <Input  placeholder="请输入职务"/>
+          <Select style={{width:300}} placeholder="选择职责">
+            <Option value="总经理">总经理</Option>
+            <Option value="副总经理">副总经理</Option>
+            <Option value="总监">总监</Option>
+            <Option value="经理">经理</Option>
+            <Option value="副经理">副经理</Option>
+            <Option value="产品经理">产品经理</Option>
+            <Option value="主管">主管</Option>
+            <Option value="员工">员工</Option>
+          </Select>
           )}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="入岗日期" colon={false}>
@@ -299,6 +310,7 @@ const AddForm = Form.create()(props => {
               message: "请输入请输入密码",
             },
           ],
+          initialValue:'smlq123'
         })(<Input placeholder="请输入密码" />)}
       </FormItem>
 
@@ -371,6 +383,8 @@ const AddForm = Form.create()(props => {
             <Option value="检验人员">检验人员</Option>
             <Option value="检测人员">检测人员</Option>
             <Option value="财务人员">财务人员</Option>
+            <Option value="管理员">管理员</Option>
+            <Option value="授权签字人">授权签字人</Option>
 
           </Select>)}
       </FormItem>
@@ -455,7 +469,16 @@ const AddForm = Form.create()(props => {
             },
           ],
         })(
-            <Input  placeholder="请输入职务"/>
+          <Select style={{width:300}} placeholder="选择职责">
+            <Option value="总经理">总经理</Option>
+            <Option value="副总经理">副总经理</Option>
+            <Option value="总监">总监</Option>
+            <Option value="经理">经理</Option>
+            <Option value="副经理">副经理</Option>
+            <Option value="产品经理">产品经理</Option>
+            <Option value="主管">主管</Option>
+            <Option value="员工">员工</Option>
+          </Select>
           )}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="入岗日期" colon={false}>
@@ -514,6 +537,10 @@ class UserManage extends PureComponent {
       dataIndex: 'password',
     },
     {
+      title: '部门',
+      dataIndex: 'section',
+    },
+    {
       title: '姓名',
       dataIndex: 'nameC',
     },
@@ -522,10 +549,6 @@ class UserManage extends PureComponent {
     {
       title: '电话',
       dataIndex: 'tel',
-    },
-    {
-      title: '部门',
-      dataIndex: 'section',
     },
 
     {

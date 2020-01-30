@@ -268,7 +268,7 @@ class CompanyUpload extends PureComponent {
         <Card  size="small">
           <Row>
             <Col span={24}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传盖章图片</Button>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传公司业务用章</Button>
             </Col>
           </Row>
           <img src={signUrl} width="100" height="100"/>
@@ -277,7 +277,7 @@ class CompanyUpload extends PureComponent {
         <Card  size="small">
           <Row>
             <Col span={24}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传抬头图片</Button>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传公司证书标识</Button>
             </Col>
           </Row>
           <img src={headUrl} width="100" height="100"/>

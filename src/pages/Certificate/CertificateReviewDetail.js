@@ -174,13 +174,14 @@ class CertificateUploadDetail extends PureComponent {
       }
     },
     {
-      title: '上传日期',
+      title: '复核日期',
       dataIndex: 'recorddate',
       render: val => <span>{
          moment(val).format('YYYY-MM-DD')
       }
       </span>
     },
+    
     {
       title: '状态',
       dataIndex: 'status',
