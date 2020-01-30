@@ -156,9 +156,9 @@ class DetailForUnAccept extends Component {
             <Descriptions.Item label="委托编号">{preMainInfo.preMainInfono}</Descriptions.Item>
             <Descriptions.Item label="查询密码">{preMainInfo.randomcode}</Descriptions.Item>
             <Descriptions.Item label="委托日期">{moment(preMainInfo.preMainInfodate).format('YYYY-MM-DD')}</Descriptions.Item>
-            <Descriptions.Item label="申请人">{preMainInfo.preMainInfo}</Descriptions.Item>
-            <Descriptions.Item label="联系人">{preMainInfo.preMainInfoname}</Descriptions.Item>
-            <Descriptions.Item label="联系电话">{preMainInfo.preMainInfotel}</Descriptions.Item>
+            <Descriptions.Item label="申请人">{preMainInfo.applicant}</Descriptions.Item>
+            <Descriptions.Item label="联系人">{preMainInfo.applicantname}</Descriptions.Item>
+            <Descriptions.Item label="联系电话">{preMainInfo.applicanttel}</Descriptions.Item>
             <Descriptions.Item label="代理人">{preMainInfo.agent}</Descriptions.Item>
             <Descriptions.Item label="联系人">{preMainInfo.agentname}</Descriptions.Item>
             <Descriptions.Item label="联系电话">{preMainInfo.agenttel}</Descriptions.Item>

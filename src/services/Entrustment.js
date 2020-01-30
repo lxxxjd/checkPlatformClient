@@ -52,6 +52,14 @@ export async function updateReport(params) {
   });
 }
 
+export async function addConfigorAuthority(params) {
+  return request(`/api/ConfigorAuthority/addConfigorAuthority`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
 
 export async function getDepartmentList(params) {
   return request(`/api/department/get_departmentList`,{

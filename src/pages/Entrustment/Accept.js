@@ -118,6 +118,7 @@ class Accept extends PureComponent {
     isCustoms:false,
     customsOption:[],
     cargoname:"",
+    consigoruser:"",
   };
 
 
@@ -167,6 +168,7 @@ class Accept extends PureComponent {
           'agenttel': response.data.agenttel,
           'chineselocalname': response.data.chineselocalname,
         });
+        this.setState({consigoruser:response.data.consigoruser});
         form.setFieldsValue({'inspway': response.data.inspway.split(" ")});
       }
     });
@@ -270,7 +272,7 @@ class Accept extends PureComponent {
       form: {validateFieldsAndScroll},
       dispatch,
     } = this.props;
-    const { cnasInfo } = this.state;
+    const { cnasInfo ,consigoruser} = this.state;
     const prereportno = sessionStorage.getItem("prereportno");
     validateFieldsAndScroll((error, values) => {
       const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -299,6 +301,24 @@ class Accept extends PureComponent {
                 payload: {
                   reportno:response.data.reportno,
                   prereportno,
+                },
+                callback:response =>{
+                  if(response.code === 200){
+                    notification.open({
+                      message: '受理成功',
+                    });
+                    router.push({
+                      pathname:'/Entrustment/AcceptList',
+                    });
+                  }
+                }
+              });
+              dispatch({
+                type: 'entrustment/addConfigorAuthority',
+                payload: {
+                  reportno:response.data.reportno,
+                  consigoruser,
+                  source:"已受理",
                 },
                 callback:response =>{
                   if(response.code === 200){

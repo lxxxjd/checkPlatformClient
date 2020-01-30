@@ -1,7 +1,7 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
         getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,
-  getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo,getBusiness} from '@/services/Entrustment';
+  getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo,getBusiness, addConfigorAuthority} from '@/services/Entrustment';
 
 
 export default {
@@ -31,7 +31,12 @@ export default {
       const response = yield call(getRepeatCustomsNo, payload);
       if (callback) callback(response.data);
     },
-
+    
+    // 受理
+    *addConfigorAuthority({ payload , callback}, { call, put }) {
+      const response = yield call(addConfigorAuthority, payload);
+      if (callback) callback(response);
+    },
 
     // 工商接口
     *getBusiness({ payload , callback}, { call, put }) {
