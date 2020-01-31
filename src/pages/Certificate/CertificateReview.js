@@ -45,6 +45,10 @@ class CertificateReview extends PureComponent {
       title: '检查品名',
       dataIndex: 'cargoname',
     },
+    // {
+    //   title: '申请项目',
+    //   dataIndex: 'inspway',
+    // },
     {
       title: '状态日期',
       dataIndex: 'overalltime',
@@ -54,6 +58,7 @@ class CertificateReview extends PureComponent {
       title: '状态',
       dataIndex: 'overallstate',
     },
+
     // {
     //   title: '申请项目',
     //   dataIndex: 'inspway',

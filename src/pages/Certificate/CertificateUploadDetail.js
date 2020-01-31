@@ -244,9 +244,9 @@ class CertificateUploadDetail extends PureComponent {
     checkResult:[], // 申请项目
     sampleRegister:[],
 
-
-
-
+    deleteName:'',
+    deleteVisible:false,
+    deleteKeyno:null,
     sampleColumnsLink: [ // 分析检测表格头
       {
         title: '委托编号',
@@ -315,7 +315,7 @@ class CertificateUploadDetail extends PureComponent {
           {text.status==="待拟制"?[<a onClick={() => this.editCerticate(text, record)}>编辑&nbsp;&nbsp;</a>]:[]}
           {text.status==="待拟制"?[<a onClick={() => this.signItem(text, record)}>提交&nbsp;&nbsp;</a>]:[]}
           {text.status==="已拟制"?[<a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>]:[]}
-          {text.status==="待拟制"?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
+          {text.status==="待拟制"?[<a onClick={() => this.showDelete(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
@@ -611,6 +611,12 @@ class CertificateUploadDetail extends PureComponent {
 
   };
 
+  showDelete = text =>{
+    this.setState({deleteVisible:true});
+    this.setState({deleteName:text.name});
+    this.setState({deleteKeyno:text.keyno});
+  };
+
   deleteItem = text => {
     Modal.confirm({
       title: '删除证稿',
@@ -644,6 +650,7 @@ class CertificateUploadDetail extends PureComponent {
         });
       },
     });
+    this.setState({ deleteVisible: false });
   };
 
   handleOk = () =>{
@@ -708,6 +715,7 @@ class CertificateUploadDetail extends PureComponent {
     } = this.props;
     form.resetFields();
     this.setState({ visible: false });
+    this.setState({ deleteVisible: false });
   };
 
 
@@ -1189,7 +1197,14 @@ class CertificateUploadDetail extends PureComponent {
             </Modal>
           </Form>
         </Modal>
-
+        <Modal
+          title="确认删除"
+          visible={deleteVisible}
+          onOk={this.deleteItem}
+          onCancel={this.handleCancel}
+        >
+        {deleteName}
+        </Modal>
         <CreateUploadForm {...parentMethods} downloadVisible={downloadVisible} typeOptions={typeOptions} modelPlatformType={modelPlatformType} checkResultOptions={checkResultOptions} sampleRegisterOptions={sampleRegisterOptions} />
 
         <CertForm {...parentMethods} showVisible={showVisible} option={option} treeData={treeData} value={value} approverusersOptions={approverusersOptions} text={text} />
