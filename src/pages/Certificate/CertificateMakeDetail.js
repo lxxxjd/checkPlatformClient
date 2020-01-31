@@ -210,7 +210,7 @@ class CertificateMakeDetail extends PureComponent {
           {text.status==="已复核"?[<a onClick={() => this.makeItem(text, record)}>缮制&nbsp;&nbsp;</a>]:[]}
           {text.status==="已缮制"?[<a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>]:[]}
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[<div style={{color:'grey'}}>查看</div>]}
-
+          {(text.status==="已作废")?[<a onClick={() => this.ViewAbandomItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
@@ -310,6 +310,19 @@ class CertificateMakeDetail extends PureComponent {
     });
   };
 
+  viewAbandomItem =text =>{
+    Modal.info({
+      title: '作废原因',
+      okText:"知道了",
+      content: (
+        <div>
+          <p>{text.abandonreason}</p>
+        </div>
+      ),
+      onOk() {},
+    });
+  };
+
   getStatusDate =text=> {
     let value = undefined;
     if(text.status ==="待拟制"){
@@ -326,6 +339,8 @@ class CertificateMakeDetail extends PureComponent {
       value = text.publishdate;
     } else if (text.status === "已作废"){
       value = text.abandondate;
+    }else if(text.status === "申请作废" ){
+      value = text.applydate;
     }
     if(value ===undefined){
       return [];

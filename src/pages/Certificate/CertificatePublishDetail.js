@@ -44,7 +44,7 @@ class CertificatePublishDetail extends PureComponent {
 
   columns = [
     {
-      title: '证稿名',
+      title: '证书证稿',
       dataIndex: 'name',
       render: val => {
         // 取文件名
@@ -56,13 +56,21 @@ class CertificatePublishDetail extends PureComponent {
 
       }
     },
+
     {
-      title: '上传日期',
-      dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }
-      </span>
+      title: '授权签字人',
+      dataIndex: 'authorNameC',
+    },
+
+    {
+      title: '授权签字日期',
+      dataIndex: 'authordate',
+      render: val => this.isValidDate(val)
+    },
+
+    {
+      title: '状态日期',
+      render: (text, record) => this.getStatusDate(text)
     },
     {
       title: '状态',
@@ -73,6 +81,7 @@ class CertificatePublishDetail extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>
+          {(text.status==="已作废")?[<a onClick={() => this.ViewAbandomItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
@@ -105,6 +114,41 @@ class CertificatePublishDetail extends PureComponent {
     });
 
   }
+
+  // 查看状态日期
+  getStatusDate =text=> {
+    let value = undefined;
+    if(text.status ==="待拟制"){
+      value = text.uploaddate;
+    }else if (text.status === "已拟制") {
+      value = text.signdate;
+    }else if(text.status === "已复核"){
+      value = text.reviewdate;
+    }else if(text.status === "已缮制"){
+      value = text.makedate;
+    }else if(text.status === "已签署"){
+      value = text.authordate;
+    }else if (text.status === "已发布"){
+      value = text.publishdate;
+    } else if (text.status === "已作废"){
+      value = text.abandondate;
+    }else if(text.status === "申请作废" ){
+      value = text.applydate;
+    }else if(text.status === "申请作废" ){
+      value = text.applydate;
+    }
+    if(value ===undefined){
+      return [];
+    }
+    return <span>{moment(value).format('YYYY-MM-DD')}</span>;
+  };
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
 
 
   ViewItem = text =>{

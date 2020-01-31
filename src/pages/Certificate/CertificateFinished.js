@@ -125,6 +125,7 @@ class CertificateFinished extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('overallstate_CertificateFinishedDetail',text.overallstate);
     router.push({
       pathname:'/Certificate/CertificateFinishedDetail',
     });

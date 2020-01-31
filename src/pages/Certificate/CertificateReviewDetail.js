@@ -208,6 +208,7 @@ class CertificateUploadDetail extends PureComponent {
           {text.status==="已拟制"?[<a onClick={() => this.reivewItem(text, record)}>复核&nbsp;&nbsp;</a>]:[]}
           {text.status==="已复核"?[<a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>]:[]}
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[<div style={{color:'grey'}}>查看</div>]}
+          {(text.status==="已作废")?[<a onClick={() => this.ViewAbandomItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
@@ -302,6 +303,8 @@ class CertificateUploadDetail extends PureComponent {
       value = text.publishdate;
     } else if (text.status === "已作废"){
       value = text.abandondate;
+    }else if(text.status === "申请作废" ){
+      value = text.applydate;
     }
     if(value ===undefined){
       return [];
@@ -615,6 +618,19 @@ class CertificateUploadDetail extends PureComponent {
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
+  };
+
+  viewAbandomItem =text =>{
+    Modal.info({
+      title: '作废原因',
+      okText:"知道了",
+      content: (
+        <div>
+          <p>{text.abandonreason}</p>
+        </div>
+      ),
+      onOk() {},
+    });
   };
 
   renderReportForm() {

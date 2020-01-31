@@ -46,6 +46,7 @@ class CertificateFinishedDetail extends PureComponent {
     fileList: [],
 
     authorusers:[],
+    overallstate:undefined,
   };
 
   columns = [
@@ -86,6 +87,7 @@ class CertificateFinishedDetail extends PureComponent {
         <Fragment>
           {(text.status==="已签署"&& text.pdfeditorpath===null)?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>
+          {(text.status==="已作废")?[<a onClick={() => this.ViewAbandomItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
@@ -93,6 +95,8 @@ class CertificateFinishedDetail extends PureComponent {
 
 
   componentDidMount() {
+    const state = sessionStorage.getItem("overallstate_CertificateFinishedDetail");
+    this.state.overallstate = state;
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
@@ -137,6 +141,10 @@ class CertificateFinishedDetail extends PureComponent {
       value = text.publishdate;
     } else if (text.status === "已作废"){
       value = text.abandondate;
+    }else if(text.status === "申请作废" ){
+      value = text.applydate;
+    }else if(text.status === "申请作废" ){
+      value = text.applydate;
     }
     if(value ===undefined){
       return [];
@@ -151,6 +159,18 @@ class CertificateFinishedDetail extends PureComponent {
     return [];
   };
 
+  viewAbandomItem =text =>{
+    Modal.info({
+      title: '作废原因',
+      okText:"知道了",
+      content: (
+        <div>
+          <p>{text.abandonreason}</p>
+        </div>
+      ),
+      onOk() {},
+    });
+  };
 
   ViewItem = text =>{
     const { dispatch } = this.props;
@@ -442,7 +462,7 @@ class CertificateFinishedDetail extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
+              {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?[]:[<Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>]}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
