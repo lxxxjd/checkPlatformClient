@@ -335,7 +335,6 @@ class ListFictionAdd extends PureComponent {
       const keys = form.getFieldValue('keys');
       for(let key in keys){
         let k = keys[key];
-        console.log(k);
         const kind = form.getFieldValue(`kinds${k}`);
         const condition = form.getFieldValue(`conditions${k}`);
         const value = form.getFieldValue(`values${k}`);

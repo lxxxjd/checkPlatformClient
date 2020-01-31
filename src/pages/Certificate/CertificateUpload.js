@@ -45,54 +45,49 @@ class CertificateUpload extends PureComponent {
       title: '检查品名',
       dataIndex: 'cargoname',
     },
-    {
-      title: '申请项目',
-      dataIndex: 'inspway',
-    },
+    // {
+    //   title: '申请项目',
+    //   dataIndex: 'inspway',
+    // },
     {
       title: '状态日期',
       dataIndex: 'overalltime',
-      render: (text, record) => {
-        if(text === null){
-          return;
-        }
-        render: text => <span>{moment(text).format('YYYY-MM-DD')}</span>
-      }
+      render: val => this.isValidDate(val)
     },
     {
       title: '状态',
       dataIndex: 'overallstate',
     },
-    // {
-    //   title: '证书名称',
-    //   dataIndex: 'certnames',
-    //   render: (text, record) => {
-    //     if(text === null){
-    //       return;
-    //     }
-    //     var  contentStr = [];
-    //     contentStr = text.split("|");
-    //     var result = null;
-    //     const br = <br></br>;
-    //     var pattern = /\.{1}[a-z]{1,}$/;
-    //     for( var  j=0 ; j < contentStr.length ; j++){
-    //       if(j===0){
-    //         if (pattern.exec(contentStr[j]) !== null) {
-    //           result=contentStr[j].slice(0, pattern.exec(contentStr[j]).index);
-    //         } else {
-    //           result=contentStr[j];
-    //         }
-    //       }else{
-    //         if (pattern.exec(contentStr[j]) !== null) {
-    //           result=<span>{result}{br}{contentStr[j].slice(0, pattern.exec(contentStr[j]).index)}</span>;
-    //         } else {
-    //           result=<span>{result}{br}{contentStr[j]}</span>;
-    //         }
-    //       }
-    //     }
-    //     return <div>{result}</div>;
-    //   },
-    // },
+    {
+      title: '证稿证书',
+      dataIndex: 'certnames',
+      render: (text, record) => {
+        if(text === null){
+          return;
+        }
+        var  contentStr = [];
+        contentStr = text.split("|");
+        var result = null;
+        const br = <br></br>;
+        var pattern = /\.{1}[a-z]{1,}$/;
+        for( var  j=0 ; j < contentStr.length ; j++){
+          if(j===0){
+            if (pattern.exec(contentStr[j]) !== null) {
+              result=contentStr[j].slice(0, pattern.exec(contentStr[j]).index);
+            } else {
+              result=contentStr[j];
+            }
+          }else{
+            if (pattern.exec(contentStr[j]) !== null) {
+              result=<span>{result}{br}{contentStr[j].slice(0, pattern.exec(contentStr[j]).index)}</span>;
+            } else {
+              result=<span>{result}{br}{contentStr[j]}</span>;
+            }
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
     {
       title: '操作',
       render: (text, record) => (
@@ -114,6 +109,13 @@ class CertificateUpload extends PureComponent {
         certCode:user.certCode
       }
     });
+  }
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
   }
 
   previewItem = text => {

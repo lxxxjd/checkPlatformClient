@@ -46,11 +46,20 @@ class CertificateSeal extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: val => this.isValidDate(val)
     },
     {
-      title: '证书名称',
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    // {
+    //   title: '申请项目',
+    //   dataIndex: 'inspway',
+    // },
+    {
+      title: '证稿证书',
       dataIndex: 'certnames',
       render: (text, record) => {
         if(text === null){
@@ -83,7 +92,7 @@ class CertificateSeal extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
+          <a onClick={() => this.modifyItem(text, record)}>授权签字</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -101,6 +110,14 @@ class CertificateSeal extends PureComponent {
       }
     });
   }
+
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);

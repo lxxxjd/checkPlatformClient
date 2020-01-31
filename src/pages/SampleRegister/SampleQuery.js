@@ -195,7 +195,6 @@ class SampleQuery extends PureComponent {
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
       if (err){
-        console.log(err);
         return;
       }
       const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -211,7 +210,6 @@ class SampleQuery extends PureComponent {
       const keys = form.getFieldValue('keys');
       for(let key in keys){
         let k = keys[key];
-        console.log(k);
         const kind = form.getFieldValue(`kinds${k}`);
         const condition = form.getFieldValue(`conditions${k}`);
         const value = form.getFieldValue(`values${k}`);
