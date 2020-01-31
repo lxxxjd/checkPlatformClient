@@ -87,7 +87,7 @@ class CertificateFinishedDetail extends PureComponent {
         <Fragment>
           {(text.status==="已签署"&& text.pdfeditorpath===null)?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>
-          {(text.status==="已作废")?[<a onClick={() => this.ViewAbandomItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
+          {(text.status==="已作废")?[<a onClick={() => this.viewAbandonItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
@@ -159,7 +159,7 @@ class CertificateFinishedDetail extends PureComponent {
     return [];
   };
 
-  viewAbandomItem =text =>{
+  viewAbandonItem =text =>{
     Modal.info({
       title: '作废原因',
       okText:"知道了",

@@ -313,7 +313,7 @@ class CertificateUploadDetail extends PureComponent {
           {text.status==="已拟制"?[<a onClick={() => this.undoCert(text, record)}>退回&nbsp;&nbsp;</a>]:[]}
           {text.status==="待拟制"?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
           {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
-          {(text.status==="已作废")?[<a onClick={() => this.ViewAbandomItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
+          {(text.status==="已作废")?[<a onClick={() => this.viewAbandonItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
@@ -391,7 +391,7 @@ class CertificateUploadDetail extends PureComponent {
   }
 
 
-  ViewAbandomItem =text =>{
+  viewAbandonItem =text =>{
     Modal.info({
       title: '作废原因',
       okText:"知道了",
