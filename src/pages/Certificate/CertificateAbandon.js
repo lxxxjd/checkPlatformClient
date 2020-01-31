@@ -207,16 +207,16 @@ class CertificateAbandon extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: val => this.isValidDate(val)
     },
-
     {
       title: '状态',
       dataIndex: 'overallstate',
     },
     {
-      title: '证书名称',
+      title: '证书证稿',
       dataIndex: 'certnames',
       render: (text, record) => {
         if(text === null){
@@ -275,6 +275,13 @@ class CertificateAbandon extends PureComponent {
         certCode:user.certCode
       }
     });
+  };
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
   };
 
   // 判断是否存在已阅人，是否可以需要申请作废

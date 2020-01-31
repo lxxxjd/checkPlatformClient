@@ -123,6 +123,7 @@ class InspectionArrangement extends PureComponent {
 
   mobileItem = text => {
     localStorage.setItem('taskInspmanDetail',JSON.stringify(text));
+    sessionStorage.setItem('overallstate_InspmanDetail',text.overallstate);
     router.push({
       pathname:'/InspectionAnalysis/InspmanDetail',
     });

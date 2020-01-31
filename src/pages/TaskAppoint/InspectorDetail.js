@@ -285,8 +285,7 @@ class InspectorDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleEdit(true,text)}>编辑</a>
-          &nbsp;&nbsp;
+          {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?[]:[<a onClick={() => this.handleEdit(true,text)}>编辑&nbsp;&nbsp;</a>]}
           <a onClick={() => this.handleReview(true,text)}>查看</a>
         </Fragment>
       ),
@@ -296,6 +295,7 @@ class InspectorDetail extends PureComponent {
   // eslint-disable-next-line react/sort-comp
   componentDidMount() {
     this.init();
+    this.setState({overallstate:sessionStorage.getItem('overallstate_InspectorDetail')});
   }
 
 
@@ -563,7 +563,7 @@ class InspectorDetail extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.save}>保存</Button>
+              {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?[]:<Button style={{ marginLeft: 8 }} type="primary" onClick={this.save}>保存</Button>}
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} onClick={this.back}><Icon type="left" />
               返回
               </Button>

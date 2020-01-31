@@ -64,6 +64,15 @@ class Inspector extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: val => this.isValidDate(val)
+    },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
       title: '检验人员',
       dataIndex: 'inspman',
     },
@@ -90,7 +99,15 @@ class Inspector extends PureComponent {
       type: 'task/fetchInspect',
       payload: params,
     });
-  }
+  };
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
+
 
 
 
@@ -136,6 +153,7 @@ class Inspector extends PureComponent {
 
   toInspectDetail = text => {
     localStorage.setItem('reportinfoAndInspect',JSON.stringify(text));
+    sessionStorage.setItem('overallstate_InspectorDetail',text.overallstate);
     router.push({
       pathname:'/TaskAppoint/InspectorDetail',
     });

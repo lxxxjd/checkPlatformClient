@@ -44,14 +44,13 @@ class CertificateFinishedDetail extends PureComponent {
     previewVisible: false,
     previewImage: '',
     fileList: [],
-    approverusers:[],
 
     authorusers:[],
   };
 
   columns = [
     {
-      title: '证稿名',
+      title: '证书证稿',
       dataIndex: 'name',
       render: val => {
         // 取文件名
@@ -64,12 +63,18 @@ class CertificateFinishedDetail extends PureComponent {
       }
     },
     {
-      title: '上传日期',
-      dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }
-      </span>
+      title: '授权签字日期',
+      dataIndex: 'authordate',
+      render: val => this.isValidDate(val)
+    },
+    {
+      title: '授权签字人',
+      dataIndex: 'authorNameC',
+    },
+
+    {
+      title: '状态日期',
+      render: (text, record) => this.getStatusDate(text)
     },
     {
       title: '状态',
@@ -113,23 +118,38 @@ class CertificateFinishedDetail extends PureComponent {
         }
       }
     });
-
-    dispatch({
-      type: 'user/getMan',
-      payload:{
-        certcode:user.certCode,
-        func:"证书发布" ,
-      },
-      callback: (response) => {
-        if(response){
-          this.setState({approverusers:response});
-        }else{
-          message.error("未配置发布人用户角色");
-        }
-      }
-    });
-
   }
+
+  // 查看状态日期
+  getStatusDate =text=> {
+    let value = undefined;
+    if(text.status ==="待拟制"){
+      value = text.uploaddate;
+    }else if (text.status === "已拟制") {
+      value = text.signdate;
+    }else if(text.status === "已复核"){
+      value = text.reviewdate;
+    }else if(text.status === "已缮制"){
+      value = text.makedate;
+    }else if(text.status === "已签署"){
+      value = text.authordate;
+    }else if (text.status === "已发布"){
+      value = text.publishdate;
+    } else if (text.status === "已作废"){
+      value = text.abandondate;
+    }
+    if(value ===undefined){
+      return [];
+    }
+    return <span>{moment(value).format('YYYY-MM-DD')}</span>;
+  };
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
 
 
   ViewItem = text =>{
@@ -216,7 +236,6 @@ class CertificateFinishedDetail extends PureComponent {
         formData.append('reportno', reportno);
         formData.append('author', values.author);
         formData.append('name', values.recordname);
-        formData.append('publisher', values.publisher);
         formData.append('certcode', user.certCode);
         dispatch({
           type: 'certificate/uploadCertFilePdf',
@@ -298,6 +317,15 @@ class CertificateFinishedDetail extends PureComponent {
       });
       return;
     }
+    let val = file.name;
+    const pattern = /\.{1}[a-z]{1,}$/;
+    if (pattern.exec(val) !== null) {
+      val = val.slice(0, pattern.exec(val).index)
+    }
+    const {
+      form
+    } = this.props;
+    form.setFieldsValue({['recordname']: val});
     this.setState({ fileList});
   };
 
@@ -353,8 +381,7 @@ class CertificateFinishedDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,approverusers,authorusers} = this.state
-    const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
+    const {fileList,visible,previewVisible,previewImage,authorusers} = this.state
     const authorusersOptions = authorusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
@@ -403,16 +430,6 @@ class CertificateFinishedDetail extends PureComponent {
               })(
                 <Select style={{width:'100%'}} placeholder="请选择授权签字人">
                   {authorusersOptions}
-                </Select>
-              )}
-            </Form.Item>
-
-            <Form.Item label="证书发布人">
-              {getFieldDecorator('publisher', {
-                rules: [{ required: true, message: '请选择授证书发布人' }],
-              })(
-                <Select style={{width:'100%'}} placeholder="请选择授证书发布人">
-                  {approverusersOptions}
                 </Select>
               )}
             </Form.Item>

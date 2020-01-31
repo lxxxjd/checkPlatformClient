@@ -46,11 +46,16 @@ class CertificateFinished extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: val => this.isValidDate(val)
     },
     {
-      title: '证书名称',
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
+      title: '证书证稿',
       dataIndex: 'certnames',
       render: (text, record) => {
         if(text === null){
@@ -83,7 +88,7 @@ class CertificateFinished extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>编辑</a>
+          <a onClick={() => this.modifyItem(text, record)}>上传证书</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -102,6 +107,13 @@ class CertificateFinished extends PureComponent {
     });
   }
 
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
+
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
@@ -117,6 +129,7 @@ class CertificateFinished extends PureComponent {
       pathname:'/Certificate/CertificateFinishedDetail',
     });
   };
+
 
   handleSearch = e => {
     e.preventDefault();

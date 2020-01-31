@@ -61,6 +61,15 @@ class CustomerService extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: val => this.isValidDate(val)
+    },
+    {
+      title: '状态',
+      dataIndex: 'overallstate',
+    },
+    {
       title: '客服人员',
       dataIndex: 'inspman',
     },
@@ -88,6 +97,13 @@ class CustomerService extends PureComponent {
       payload: params,
     });
   }
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch,form } = this.props;
@@ -133,6 +149,7 @@ class CustomerService extends PureComponent {
 
   toCustomerDetail = text => {
     localStorage.setItem('reportinfo',JSON.stringify(text));
+    sessionStorage.setItem('overallstate_CustomerServiceDetail',text.overallstate);
     router.push({
       pathname:'/TaskAppoint/CustomerServiceDetail',
     });

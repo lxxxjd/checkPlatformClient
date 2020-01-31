@@ -37,7 +37,7 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const CertForm = Form.create()(props => {
 
-  const { form,option,showVisible,showCancel,text,value,onSelect,treeData,sealCertFile,renderFileInfo,renderTreeNodes,approverusersOptions} = props;
+  const { form,option,showVisible,showCancel,text,value,onSelect,treeData,sealCertFile,renderFileInfo,renderTreeNodes} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -60,14 +60,6 @@ const CertForm = Form.create()(props => {
       footer={[
 
         <div>
-          {/*<span>审核人：</span>*/}
-          {/*{form.getFieldDecorator('approver', {*/}
-          {/*  rules: [{  required: true, message: '选择发布人' }],*/}
-          {/*})(*/}
-          {/*  <Select style={{width:150,marginRight:10,marginLeft:10}} placeholder="选择发布人">*/}
-          {/*    {approverusersOptions}*/}
-          {/*  </Select>*/}
-          {/*)}*/}
           <Button key="cancel" type="primary" onClick={showCancel}> 取消</Button>
           {option === "授权签字"?[<Button key="submit2" type="primary" onClick={okHandle}>授权签字</Button>]:null}
         </div>
@@ -118,7 +110,6 @@ class CertificateSealDetail extends PureComponent {
 
     showVisible: false,
     text: {}, // 当前信息
-    approverusers:[],
 
     urls: "", // 切换pdf的url
     value: '', // 切换tab拟制页面
@@ -394,21 +385,6 @@ class CertificateSealDetail extends PureComponent {
     const { dispatch } = this.props;
 
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    dispatch({
-      type: 'user/getMan',
-      payload:{
-        certcode:user.certCode,
-        func:"证书发布" ,
-      },
-      callback: (response) => {
-        if(response){
-          this.setState({approverusers:response});
-        }else{
-          message.error("未配置审核人用户角色");
-        }
-      }
-    });
-
     const params ={
       osspath:text.titlepdfpath
     };
@@ -673,7 +649,7 @@ class CertificateSealDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {showVisible,Certurls,value,option,treeData,approverusers,text} = this.state
+    const {showVisible,Certurls,value,option,treeData,text} = this.state
 
     // 下载模板 模态框方法
     const parentMethods = {
@@ -685,7 +661,6 @@ class CertificateSealDetail extends PureComponent {
       renderTreeNodes:this.renderTreeNodes,
     };
 
-    const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
 
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
@@ -699,7 +674,7 @@ class CertificateSealDetail extends PureComponent {
 
     return (
       <PageHeaderWrapper text={reprotText}>
-        <CertForm {...parentMethods} showVisible={showVisible} text={text} option={option} Certurls={Certurls} treeData={treeData} value={value} approverusersOptions={approverusersOptions}/>
+        <CertForm {...parentMethods} showVisible={showVisible} text={text} option={option} Certurls={Certurls} treeData={treeData} value={value} />
         <Card bordered={false} size="small">
           <Row>
             <Col span={22} />

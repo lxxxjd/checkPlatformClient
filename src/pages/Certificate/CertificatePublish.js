@@ -47,8 +47,9 @@ class CertificatePublish extends PureComponent {
       dataIndex: 'cargoname',
     },
     {
-      title: '申请项目',
-      dataIndex: 'inspway',
+      title: '状态日期',
+      dataIndex: 'overalltime',
+      render: val => this.isValidDate(val)
     },
     {
       title: '状态',
@@ -113,12 +114,21 @@ class CertificatePublish extends PureComponent {
     });
   };
 
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
+
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
     });
   };
+
+
 
   publishItem =(text) =>{
     const { dispatch } = this.props;
