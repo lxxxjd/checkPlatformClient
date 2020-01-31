@@ -80,7 +80,7 @@ class CertificateAbandonDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看</a>]:[<p style={{color:'grey'}}>查看&nbsp;&nbsp;</p>]}
+          {(text.status!=="待拟制")?[<a onClick={() => this.ViewItem(text, record)}>查看&nbsp;&nbsp;</a>]:[<p style={{color:'grey'}}>查看&nbsp;&nbsp;</p>]}
           {(text.status==="已作废")?[<a onClick={() => this.viewAbandonItem(text, record)}>作废原因&nbsp;&nbsp;</a>]:[]}
         </Fragment>
       ),
