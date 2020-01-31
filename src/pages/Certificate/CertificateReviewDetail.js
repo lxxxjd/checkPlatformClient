@@ -195,7 +195,6 @@ class CertificateUploadDetail extends PureComponent {
     {
       title: '状态日期',
       render: (text, record) => this.getStatusDate(text),
-      dataIndex: 'recorddate',
     },
 
     {
