@@ -68,7 +68,7 @@ class HomePage extends Component {
         <GlobalFooter
           copyright={
             <Fragment className={styles.content}>
-              Copyright <Icon type="copyright" /> 检验机构业务管理系统
+              Copyright <Icon type="copyright" /> 水木梁清
             </Fragment>
           }
         />
@@ -78,8 +78,14 @@ class HomePage extends Component {
     return (
       <div>
         <Row>
-          <Col span={7}>
+          <Col span={3}>
             <img alt="404" src={testImg} style={{height:130,padding:20}} />
+          </Col>
+          <Col span={4}>
+            <div style={{marginTop:25}}>
+              <h3> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;水木梁清</h3>
+              <h3> 大宗商品公共服务平台</h3>
+            </div>
           </Col>
           <Col span={5}>
             <Search
@@ -93,7 +99,7 @@ class HomePage extends Component {
               <Button style={{marginLeft:10}} onClick={this.toConsignor}>委托人</Button>
               <Button style={{marginLeft:10}} onClick={this.toCompany}>检验机构</Button>
               <Button style={{marginLeft:10}} onClick={this.toCustoms}>海关</Button>
-              {/*<Button style={{marginLeft:10}} onClick={this.toCNAS}>CNAS</Button>*/}
+              <Button style={{marginLeft:10}} onClick={this.toCNAS}>CNAS</Button>
               <Button style={{marginLeft:10}} onClick={this.toMain}>平台管理</Button>
               <Button style={{marginLeft:10}} onClick={this.toTry}>试用</Button>
             </div>
@@ -103,11 +109,11 @@ class HomePage extends Component {
           </Col>
         </Row>
         <Row>
-          <Col span={12}>
-            <img alt="404" src={home1} style={{width:'100%',paddingRight:10}} />
+          <Col span={14}>
+            <img alt="404" src={home1} style={{width:'100%',height:document.body.clientHeight*0.9,paddingRight:10}} />
           </Col>
-          <Col span={12}>
-            <img alt="404" src={home2} style={{width:'100%',paddingLeft:10}} />
+          <Col span={10}>
+            <img alt="404" src={home2} style={{width:'100%',height:document.body.clientHeight*0.9,paddingLeft:10}} />
           </Col>
         </Row>
         <Row>
