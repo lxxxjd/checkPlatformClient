@@ -78,24 +78,24 @@ class HomePage extends Component {
     return (
       <div>
         <Row>
-          <Col span={10}>
+          <Col span={7}>
             <img alt="404" src={testImg} style={{height:130,padding:20}} />
           </Col>
-          <Col span={4}>
+          <Col span={5}>
             <Search
               placeholder="搜索你想要的..."
               onSearch={value => console.log(value)}
               style={{ width: 200,marginTop:30 }}
             />
           </Col>
-          <Col span={10}>
+          <Col span={12}>
             <div style={{marginTop:30}}>
               <Button style={{marginLeft:10}} onClick={this.toConsignor}>委托人</Button>
               <Button style={{marginLeft:10}} onClick={this.toCompany}>检验机构</Button>
               <Button style={{marginLeft:10}} onClick={this.toCustoms}>海关</Button>
-              <Button style={{marginLeft:10}} onClick={this.toCNAS}>CNAS</Button>
+              {/*<Button style={{marginLeft:10}} onClick={this.toCNAS}>CNAS</Button>*/}
               <Button style={{marginLeft:10}} onClick={this.toMain}>平台管理</Button>
-              <Button style={{marginLeft:10}} onClick={this.toTry}>申请试用</Button>
+              <Button style={{marginLeft:10}} onClick={this.toTry}>试用</Button>
             </div>
             <div style={{marginLeft:60,marginTop:10}}>
               <h3>平台服务投诉电话：0512-671261239</h3>
