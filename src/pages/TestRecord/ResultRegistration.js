@@ -52,12 +52,7 @@ class ResultRegistration extends PureComponent {
     {
       title: '状态日期',
       dataIndex: 'overalltime',
-      render: (text, record) => {
-        if(text === null){
-          return;
-        }
-        render: text => <span>{moment(text).format('YYYY-MM-DD')}</span>
-      }       
+      render: val => this.isValidDate(val)
     },
     {
       title: '状态',
@@ -85,6 +80,13 @@ class ResultRegistration extends PureComponent {
         certCode:user.certCode
       }
     });
+  }
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
   }
 
   previewItem = text => {
