@@ -75,7 +75,7 @@ const AddForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="检验项目修改"
+      title="检验项目新增"
       style={{ top: 100 }}
       visible={addModalVisible}
       onOk={okHandle}

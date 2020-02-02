@@ -447,6 +447,7 @@ class Accept extends PureComponent {
       }
     });
   };
+
   cargoSearch = value => {
     const {dispatch} = this.props;
    // const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
