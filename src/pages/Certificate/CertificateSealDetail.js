@@ -78,7 +78,7 @@ const CertForm = Form.create()(props => {
             </Row>
           </div>
         </Content>
-        <Sider theme='light' width={310} style={{paddingLeft:60}}>
+        <Sider theme='light' width={340} style={{paddingLeft:60}}>
           <div>缮制人：{text.makeNameC}</div>
           <Tree showLine defaultSelectedKeys={[value]} defaultExpandAll onSelect={onSelect}>{renderTreeNodes(treeData)}</Tree>
         </Sider>
