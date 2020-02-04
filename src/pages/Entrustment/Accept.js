@@ -16,6 +16,8 @@ import {
   Radio,
   notification,
   AutoComplete,
+  message,
+  Modal,
 } from 'antd';
 import router from 'umi/router';
 import {connect} from 'dva';
@@ -268,80 +270,83 @@ class Accept extends PureComponent {
 
 
   validate = () => {
-    const {
-      form: {validateFieldsAndScroll},
-      dispatch,
-    } = this.props;
-    const { cnasInfo ,consigoruser} = this.state;
-    const prereportno = sessionStorage.getItem("prereportno");
-    validateFieldsAndScroll((error, values) => {
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      if(values.inspplace1 !== null && values.inspplace1 !== undefined){
-         values.inspplace1 = values.inspplace1[2];
-      }
-      if(values.customsName !== null && values.customsName !== undefined){
-        values.customsName = values.customsName[1];
-      }
-      console.log(error);
-      if (!error) {
-        // submit the values
-        dispatch({
-          type: 'entrustment/addReport',
-          payload: {
-            ...values,
-            username: user.nameC,
-            certcode: user.certCode,
-            reportplace: user.place,
-            cnasCode: cnasInfo.checkcode
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              dispatch({
-                type: 'preMainInfo/copyPremaininfoToMaininfo',
-                payload: {
-                  reportno:response.data.reportno,
-                  prereportno,
-                },
-                callback:response =>{
-                  if(response.code === 200){
-                    notification.open({
-                      message: '受理成功',
-                    });
-                    router.push({
-                      pathname:'/Entrustment/AcceptList',
-                    });
-                  }
+    Modal.confirm({
+      title: '确定受理此委托吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        message.success("正在保存数据...")
+        const {
+          form: {validateFieldsAndScroll},
+          dispatch,
+        } = this.props;
+        const { cnasInfo ,consigoruser} = this.state;
+        const prereportno = sessionStorage.getItem("prereportno");
+        validateFieldsAndScroll((error, values) => {
+          const user = JSON.parse(localStorage.getItem("userinfo"));
+          if(values.inspplace1 !== null && values.inspplace1 !== undefined){
+            values.inspplace1 = values.inspplace1[2];
+          }
+          if(values.customsName !== null && values.customsName !== undefined){
+            values.customsName = values.customsName[1];
+          }
+          if (!error) {
+            dispatch({
+              type: 'entrustment/addReport',
+              payload: {
+                ...values,
+                username: user.nameC,
+                certcode: user.certCode,
+                reportplace: user.place,
+                cnasCode: cnasInfo.checkcode
+              },
+              callback: (response) => {
+                if (response.code === 200) {
+                  dispatch({
+                    type: 'preMainInfo/copyPremaininfoToMaininfo',
+                    payload: {
+                      reportno:response.data.reportno,
+                      prereportno,
+                    },
+                    callback:response =>{
+                      if(response.code === 200){
+                        notification.open({
+                          message: '受理成功',
+                        });
+                        router.push({
+                          pathname:'/Entrustment/AcceptList',
+                        });
+                      }
+                    }
+                  });
+                  dispatch({
+                    type: 'entrustment/addConfigorAuthority',
+                    payload: {
+                      reportno:response.data.reportno,
+                      consigoruser,
+                      source:"已受理",
+                    },
+                    callback:response =>{
+                      if(response.code === 200){
+                        router.push({
+                          pathname:'/Entrustment/AcceptList',
+                        });
+                      }
+                    }
+                  });
+                } else {
+                  notification.open({
+                    message: '添加失败',
+                    description: response.data,
+                  });
                 }
-              });
-              dispatch({
-                type: 'entrustment/addConfigorAuthority',
-                payload: {
-                  reportno:response.data.reportno,
-                  consigoruser,
-                  source:"已受理",
-                },
-                callback:response =>{
-                  if(response.code === 200){
-                    notification.open({
-                      message: '受理成功',
-                    });
-                    router.push({
-                      pathname:'/Entrustment/AcceptList',
-                    });
-                  }
-                }
-              });
-            } else {
-              notification.open({
-                message: '添加失败',
-                description: response.data,
-              });
-            }
+              }
+            });
+          }
+          else{
+            console.log(error);
           }
         });
-      }
-      else{
-        console.log(error);
       }
     });
   };

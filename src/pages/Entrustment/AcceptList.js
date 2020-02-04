@@ -54,8 +54,8 @@ class AcceptList extends PureComponent {
       dataIndex: 'shipname',
     },
     {
-      title: '检查品名',
-      dataIndex: 'cargoname',
+      title: '货名',
+      dataIndex: 'chineselocalname',
     },
     {
       title: '状态',
