@@ -17,7 +17,7 @@ import {
   Typography,
   notification,
   AutoComplete,
-  message
+  message, Modal,
 } from 'antd';
 
 import router from 'umi/router';
@@ -134,19 +134,29 @@ class ModifyForEntrustment extends PureComponent {
       callback: (response) => {
         this.setState({allReporterName: response})
       }
-    })
+    });
     dispatch({
       type: 'entrustment/getCargos',
       payload: {
         certCode: user.certCode,
       },
-      callback: (response) => {
-        this.setState({cargos: response});
+      callback: (response2) => {
+        this.setState({cargos: response2});
         dispatch({
           type: 'entrustment/getReport',
           payload: reportno,
           callback: (response) => {
-            this.setState({reportno: response.reportno})
+            this.setState({reportno: response.reportno});
+
+            if(response.inspplace1!==undefined && response.inspplace1!==null){
+              const placecodes=[];
+              placecodes.push(`${response.inspplace1.substring(0,2)}0000`);
+              placecodes.push(`${response.inspplace1.substring(0,4)}00`);
+              placecodes.push(response.inspplace1);
+              form.setFieldsValue({
+                'inspplace1':placecodes
+              });
+            }
             form.setFieldsValue({
               'reportdate': moment(response.reportdate, "YYYY-MM-DD"),
               'tradeway': response.tradeway,
@@ -157,7 +167,6 @@ class ModifyForEntrustment extends PureComponent {
               'agent': response.agent,
               'applicant': response.applicant,
               'inspwaymemo1': response.inspwaymemo1,
-              //'inspplace1':response.inspplace1,
               'inspplace2': response.inspplace2,
               'reportno20': response.reportno20,
               'inspdate': moment(response.inspdate, "YYYY-MM-DD"),
@@ -172,14 +181,13 @@ class ModifyForEntrustment extends PureComponent {
               'agenttel': response.agenttel,
               'businesssource': response.businesssource,
               'chineselocalname': response.chineselocalname,
-              //'iscnas': response.incnas,
               'fromto':response.fromto
             });
             if(response.iscostoms === "1"){
               this.setState({isCustoms:true});
               form.setFieldsValue({
                 'iscostoms': 1,
-                // 'customsName': response.customsName,
+                'customsName': this.getCustomsArr(response.customsName),
               });
             }
             if(response.iscnas === '1'){
@@ -234,6 +242,7 @@ class ModifyForEntrustment extends PureComponent {
         });
       }
     });
+
     dispatch({
       type: 'entrustment/getBusinessSort',
       payload: {},
@@ -278,10 +287,31 @@ class ModifyForEntrustment extends PureComponent {
       payload: {
       },
       callback: (response) => {
+        console.log(response.data);
         this.setState({customsOption: response.data})
       }
     });
   }
+
+  getCustomsArr =(val)=>{
+    const res =[];
+    const {state} = this;
+    for(let i=0;state.customsOption.length!==undefined&&i<state.customsOption.length;i++){
+        const item = state.customsOption[i];
+        if(state.customsOption[i].children!==undefined && state.customsOption[i].children!==null
+          && state.customsOption[i].children.length !==undefined){
+          for(let j =0;j<state.customsOption[i].children.length;j++){
+            const subitem = state.customsOption[i].children[j];
+            if(subitem.value ===val){
+              res.push(item.value);
+              res.push(subitem.value);
+              return res;
+            }
+          }
+        }
+    }
+    return res;
+  };
 
   getErrorInfo = () => {
     const {
@@ -319,7 +349,7 @@ class ModifyForEntrustment extends PureComponent {
           trigger="click"
           getPopupContainer={trigger => trigger.parentNode}
         >
-          <Icon type="exclamation-circle"/>
+          <Icon type="exclamation-circle" />
         </Popover>
         {errorCount}
       </span>
@@ -327,45 +357,52 @@ class ModifyForEntrustment extends PureComponent {
   };
 
   validate = () => {
-    message.success("正在保存数据，请稍等几秒...");
-    const {
-      form: {validateFieldsAndScroll},
-      dispatch,
-    } = this.props;
-    const { cnasInfo } = this.state;
-    validateFieldsAndScroll((error, values) => {
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const reportno = sessionStorage.getItem('reportno');
-      if(values.inspplace1 !== null && values.inspplace1 !== undefined){
-         values.inspplace1 = values.inspplace1[2];
-      }
-      if(values.customsName !== null && values.customsName !== undefined){
-        values.customsName = values.customsName[1];
-      }
-      if (!error) {
-        // submit the values
-        dispatch({
-          type: 'entrustment/updateReport',
-          payload: {
-            ...values,
-            username: user.nameC,
-            certcode: user.certCode,
-            reportplace: user.place,
-            reportno,
-            cnasCode: cnasInfo.checkcode
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              notification.open({
-                message: '修改成功',
-              });
-              this.componentDidMount();
-            } else {
-              notification.open({
-                message: '修改失败',
-                description: response.data,
-              });
-            }
+    Modal.confirm({
+      title: '确定修改此委托吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        message.success("正在保存数据，请稍等几秒...");
+        const {
+          form: {validateFieldsAndScroll},
+          dispatch,
+        } = this.props;
+        const { cnasInfo } = this.state;
+        validateFieldsAndScroll((error, values) => {
+          const user = JSON.parse(localStorage.getItem("userinfo"));
+          const reportno = sessionStorage.getItem('reportno');
+          if(values.inspplace1 !== null && values.inspplace1 !== undefined){
+            values.inspplace1 = values.inspplace1[2];
+          }
+          if(values.customsName !== null && values.customsName !== undefined){
+            values.customsName = values.customsName[1];
+          }
+          if (!error) {
+            // submit the values
+            dispatch({
+              type: 'entrustment/updateReport',
+              payload: {
+                ...values,
+                username: user.nameC,
+                certcode: user.certCode,
+                reportplace: user.place,
+                reportno,
+                cnasCode: cnasInfo.checkcode
+              },
+              callback: (response) => {
+                if (response.code === 200) {
+                  notification.open({
+                    message: '修改成功',
+                  });
+                  this.componentDidMount();
+                } else {
+                  notification.open({
+                    message: '修改失败',
+                    description: response.data,
+                  });
+                }
+              }
+            });
           }
         });
       }
@@ -863,7 +900,7 @@ class ModifyForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('certstyle', {
                     rules: [],
-                  })(<Cascader options={options} placeholder="请选择证书要求"/>)}
+                  })(<Cascader options={options} placeholder="请选择证书要求" />)}
                 </Form.Item>
               </Col>
 

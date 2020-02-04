@@ -28,6 +28,7 @@ import moment from 'moment'
 import { SiderTheme } from 'antd/lib/layout/Sider';
 import styles from './Certificate.less';
 import Label from 'bizcharts/src/components/Label';
+import areaOptions from '../Entrustment/areaOptions';
 
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
@@ -65,7 +66,7 @@ const CertForm = Form.create()(props => {
         </div>
       ]}
       style={{ top: 10 }}
-      width={document.body.clientWidth*0.9}
+      width={document.body.clientWidth*0.95}
       height={document.body.clientHeight*0.6}
     >
       <Layout>
@@ -78,7 +79,7 @@ const CertForm = Form.create()(props => {
             </Row>
           </div>
         </Content>
-        <Sider theme='light' width={340} style={{paddingLeft:60}}>
+        <Sider theme='light' width={380} style={{paddingLeft:60}}>
           <div>缮制人：{text.makeNameC}</div>
           <Tree showLine defaultSelectedKeys={[value]} defaultExpandAll onSelect={onSelect}>{renderTreeNodes(treeData)}</Tree>
         </Sider>
@@ -533,10 +534,23 @@ class CertificateSealDetail extends PureComponent {
     return [];
   };
 
+  getPlaceFromCode =(val)=>{
+    const onelevel = `${val.substring(0,2)}0000`;
+    const twolevel = `${val.substring(0,4)}00`;
+    const threelevel = val;
+    const oneitem = areaOptions.find(item => item.value === onelevel );
+    if(oneitem===undefined){
+      return <span>{threelevel}</span>;
+    }
+    const twoitem = oneitem.children.find(item => item.value === twolevel );
+    const threeitem = twoitem.children.find(item => item.value === threelevel );
+    return <span>{oneitem.label }/{  twoitem.label}/{   threeitem.label}</span>;
+  };
+
   renderReportForm() {
     const {reportDetail} = this.state;
     return (
-      <div style={{width:'100%',height:document.body.clientHeight*0.8,backgroundColor:'white',padding:10}}>
+      <div style={{width:'100%',height:document.body.clientHeight*1.2,backgroundColor:'white',padding:10}}>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="业务信息" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
           <Descriptions.Item label="委托编号">{reportDetail.reportno}</Descriptions.Item>
           <Descriptions.Item label="委托日期">{moment(reportDetail.reportdate).format('YYYY-MM-DD')}</Descriptions.Item>
@@ -561,7 +575,7 @@ class CertificateSealDetail extends PureComponent {
           <Descriptions.Item label="申报数量和单位">{reportDetail.quantityd+reportDetail.unit}</Descriptions.Item>
           <Descriptions.Item label="检验时间">{moment(reportDetail.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
           <Descriptions.Item label="检查港口">{reportDetail.inspplace2}</Descriptions.Item>
-          <Descriptions.Item label="到达地点">{reportDetail.inspplace1}</Descriptions.Item>
+          <Descriptions.Item label="到达地点">{(reportDetail.inspplace1===undefined||reportDetail.inspplace1===null)?"":this.getPlaceFromCode(reportDetail.inspplace1)}</Descriptions.Item>
         </Descriptions>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="检查项目" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
           <Descriptions.Item label="申请项目">{reportDetail.inspway}</Descriptions.Item>
@@ -574,7 +588,7 @@ class CertificateSealDetail extends PureComponent {
   renderCheckForm() {
     const {checkData} = this.state;
     return (
-      <div style={{width:'100%',height:document.body.clientHeight*0.8,backgroundColor:'white',padding:10}}>
+      <div style={{width:'100%',height:document.body.clientHeight*1.2,backgroundColor:'white',padding:10}}>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="现场检查" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
           <Descriptions.Item label="检查项目">{checkData.inspway}</Descriptions.Item>
           <Descriptions.Item label="开始日期">{moment(checkData.begindate).format('YYYY-MM-DD')}</Descriptions.Item>
@@ -593,8 +607,8 @@ class CertificateSealDetail extends PureComponent {
   renderLinkFileForm (){
     const  {urls}  = this.state;
     return (
-      <div style={{width:'100%',height:document.body.clientHeight*0.8,backgroundColor:'white',padding:10}}>
-        <embed runat="server" src={urls} style={{width:'100%', height:document.body.clientHeight*0.78}} type="application/pdf" />
+      <div style={{width:'100%',height:document.body.clientHeight*1.2,backgroundColor:'white',padding:10}}>
+        <embed runat="server" src={urls} style={{width:'100%', height:document.body.clientHeight*1.2}} type="application/pdf" />
       </div>
     );
   }
@@ -606,7 +620,7 @@ class CertificateSealDetail extends PureComponent {
     const {renderFormData,renderFormColumns} = this.state;
     const {loading} = this.props;
     return (
-      <div style={{width:'100%',height:document.body.clientHeight*0.8,backgroundColor:'white',padding:10}}>
+      <div style={{width:'100%',height:document.body.clientHeight*1.2,backgroundColor:'white',padding:10}}>
         <Table
           size="middle"
           dataSource={renderFormData}

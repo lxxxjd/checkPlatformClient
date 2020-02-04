@@ -151,6 +151,10 @@ class Accept extends PureComponent {
         prereportno,
       },
       callback: (response) => {
+        const placecodes=[];
+        placecodes.push(`${response.data.inspplace1.substring(0,2)}0000`);
+        placecodes.push(`${response.data.inspplace1.substring(0,4)}00`);
+        placecodes.push(response.data.inspplace1);
         form.setFieldsValue({
           'reportdate': moment(response.data.reportdate, "YYYY-MM-DD"),
           'tradeway': response.data.tradeway,
@@ -160,8 +164,9 @@ class Accept extends PureComponent {
           'agent': response.data.agent,
           'applicant': response.data.applicant,
           'inspwaymemo1': response.data.inspwaymemo1,
-          //'inspplace1':response.data.inspplace1,
+          'inspplace1':placecodes,
           'inspdate': moment(response.data.inspdate, "YYYY-MM-DD"),
+          'inspplace2':response.data.inspplace2,
           'price': response.data.price,
           'unit': response.data.unit,
           'applicantname': response.data.applicantname,
@@ -539,6 +544,10 @@ class Accept extends PureComponent {
     });
   };
 
+  back = () =>{
+    this.props.history.goBack();
+  };
+
   render() {
     const {
       form: {getFieldDecorator},
@@ -557,12 +566,14 @@ class Accept extends PureComponent {
     const agentContactsOptions = agentContacts.map(d =><Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
     //申请人选项
     return (
-      <PageHeaderWrapper
-      >
+      <PageHeaderWrapper>
         <Card bordered={false}>
           <Row gutter={16}>
             <Col span={2}>
               <Button type="primary" onClick={this.validate}>提交</Button>
+            </Col>
+            <Col span={2}>
+              <Button type="primary" onClick={this.back}>返回</Button>
             </Col>
             <Col span={22}>
             </Col>
