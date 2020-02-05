@@ -124,6 +124,7 @@ class ModifyForEntrustment extends PureComponent {
 
 
   componentDidMount() {
+    console.log(document.body.clientWidth);
     const {form, dispatch, entrustment} = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const now = moment().format("YYYY-MM-DD HH:mm:ss");
