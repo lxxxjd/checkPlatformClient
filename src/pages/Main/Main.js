@@ -119,8 +119,6 @@ class Main extends PureComponent {
   ];
 
   componentDidMount() {
-    console.log(document.body.clientWidth);
-    console.log(document.body.clientHeight);
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     dispatch({

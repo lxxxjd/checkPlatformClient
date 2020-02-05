@@ -223,7 +223,6 @@ class ArchivesAdd extends PureComponent {
     const keys = form.getFieldValue('keys');
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
       }
     });
     form.setFieldsValue({

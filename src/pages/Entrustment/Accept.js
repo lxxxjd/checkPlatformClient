@@ -215,7 +215,6 @@ class Accept extends PureComponent {
         certCode: user.certCode,
       },
       callback: (response) => {
-        console.log(response);
         this.setState({departments: response.data})
       }
     });
@@ -224,7 +223,6 @@ class Accept extends PureComponent {
       payload: {
       },
       callback: (response) => {
-        console.log(response);
         this.setState({customsOption: response.data})
       }
     });
@@ -478,7 +476,6 @@ class Accept extends PureComponent {
   };
 
   onAppliantChange = value => {
-    console.log(value);
     const {dispatch} = this.props;
     dispatch({
       type: 'entrustment/getContacts',

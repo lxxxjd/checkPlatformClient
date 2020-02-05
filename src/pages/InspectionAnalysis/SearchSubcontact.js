@@ -22,7 +22,6 @@ class SearchSubcontact  extends PureComponent {
 	handleSearch = e => {
 	    e.preventDefault();
 	    const { dispatch, form } = this.props;
-	    console.log(this.props);
 	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
 	    form.validateFields((err, fieldsValue) => {
 	      console.log(err);

@@ -149,7 +149,6 @@ class EntrustmentRelevance extends PureComponent {
     const { dispatch, form } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const values = {
         ...fieldsValue,

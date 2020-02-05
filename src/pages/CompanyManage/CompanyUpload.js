@@ -97,7 +97,6 @@ class CompanyUpload extends PureComponent {
     } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const {uploadType} = this.state;
-    console.log(uploadType);
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         let formData = new FormData();
@@ -205,7 +204,6 @@ class CompanyUpload extends PureComponent {
       return;
     }
     this.setState({ fileList:fileList});
-    console.log(fileList)
   };
 
   handleBeforeUpload = file => {

@@ -172,7 +172,6 @@ class ResultRecord extends PureComponent {
         formData.append('reportno', reportno);
         formData.append('source', '测试报告');
         formData.append('fileName', values.recordname);
-        console.log(formData.get('files'));
         dispatch({
           type: 'testRecord/uploadFile',
           payload : formData,

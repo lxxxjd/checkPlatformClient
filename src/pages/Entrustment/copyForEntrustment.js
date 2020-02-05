@@ -369,7 +369,6 @@ class CopyForEntrustment extends PureComponent {
         });
       }
       else{
-        console.log(error);
       }
     });
   };

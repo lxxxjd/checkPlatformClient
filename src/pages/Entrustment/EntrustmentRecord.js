@@ -174,7 +174,6 @@ class EntrustmentRecord extends PureComponent {
         formData.append('source', '委托');
         formData.append('fileName', values.recordname);
         formData.append('creator', user.nameC);
-        console.log(formData.get('files'));
         dispatch({
           type: 'testRecordEntrustment/uploadFile',
           payload: formData,
@@ -192,7 +191,6 @@ class EntrustmentRecord extends PureComponent {
         this.setState({visible: false});
         form.resetFields();
       }
-      console.log(error);
     });
   };
 
@@ -260,7 +258,6 @@ class EntrustmentRecord extends PureComponent {
     var pattern = /\.{1}[a-z]{1,}$/;
     form.setFieldsValue({['recordname']: file.name.slice(0, pattern.exec(file.name).index)});
     this.setState({fileList: fileList});
-    console.log(fileList)
   };
 
   handleBeforeUpload = file => {
@@ -301,7 +298,6 @@ class EntrustmentRecord extends PureComponent {
         }
       }
     });
-    console.log(params);
     this.setState({
       downloadVisible: false,
     });

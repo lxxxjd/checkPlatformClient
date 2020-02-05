@@ -383,7 +383,6 @@ class ModifyForEntrustment extends PureComponent {
           //     values.certstyle = values.certstyle[0];
           //   }
           // }
-          console.log(values);
           if (!error) {
             // submit the values
             dispatch({

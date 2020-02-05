@@ -300,7 +300,6 @@ class Invoice extends PureComponent {
           type: 'charge/getInvoiceTitleList',
           payload:values,
           callback: (response) => {
-            console.log(response);
             if(response) {
               this.setState({
                 invoiceTitles: response,

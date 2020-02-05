@@ -689,7 +689,6 @@ class Intrusment extends PureComponent {
       callback: (response) => {
         if (response){
           this.state.userListData = response.data;
-          console.log(response);
         }
       }
     });
@@ -700,7 +699,6 @@ class Intrusment extends PureComponent {
       callback: (response) => {
         if (response){
           this.state.departListResult = response.data;
-          console.log(response);
         }
       }
     });

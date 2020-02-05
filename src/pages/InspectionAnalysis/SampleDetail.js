@@ -95,7 +95,6 @@ class SampleDetail extends PureComponent {
     const sampleno = sessionStorage.getItem('sampleno');
     const cargonameC = sessionStorage.getItem('cargoname');
 
-    console.log(cargonameC);
     dispatch({
       type: 'inspectionAnalysis/getItemNames',
       payload:{

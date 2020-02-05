@@ -177,7 +177,6 @@ class ArchivesDestory extends PureComponent {
   };
 
   modifyItem = text => {
-    console.log(text.archiveplace);
     if(text.archiveplace !==undefined && text.archiveplace !==null && text.archiveplace !==""){
       this.setState({
         modalInfo:text,

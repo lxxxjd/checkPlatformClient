@@ -254,7 +254,6 @@ class ManRecord extends PureComponent {
       return;
     }
     this.setState({fileList: fileList});
-    console.log(fileList)
   };
 
   handleBeforeUpload = file => {

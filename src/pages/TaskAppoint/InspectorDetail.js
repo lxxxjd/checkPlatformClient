@@ -103,7 +103,6 @@ const CreateForm = Form.create()(props => {
 
   const onChange =(checkedValue)=>{
     form.setFieldsValue({'inspway': checkedValue});
-    console.log(checkedValue);
   }
 
 

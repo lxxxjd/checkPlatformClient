@@ -253,7 +253,6 @@ class UploadDetail extends PureComponent {
         formData.append('source', '检查记录');
         formData.append('fileName', values.recordname);
         formData.append('creator', user.nameC);
-        console.log(formData.get('files'));
         dispatch({
           type: 'mTestRecord/uploadFile',
           payload : formData,
@@ -336,7 +335,6 @@ class UploadDetail extends PureComponent {
       return;
     }
     this.setState({ fileList:fileList});
-    console.log(fileList)
   };
 
   handleBeforeUpload = file => {

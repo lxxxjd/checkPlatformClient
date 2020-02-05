@@ -183,7 +183,6 @@ class ApplicationForEntrustment extends PureComponent {
         certCode: user.certCode,
       },
       callback: (response) => {
-        console.log(response);
         this.setState({departments: response.data})
       }
     });
@@ -191,7 +190,6 @@ class ApplicationForEntrustment extends PureComponent {
       type: 'entrustment/getCustomInfos',
       payload: {},
       callback: (response) => {
-        console.log(response);
         this.setState({customsOption: response.data})
       }
     });
