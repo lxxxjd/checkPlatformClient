@@ -144,6 +144,12 @@ class CopyForEntrustment extends PureComponent {
           type: 'entrustment/getReport',
           payload: reportno,
           callback: (response) => {
+            const placecodes=[];
+            if(response.inspplace1!==undefined && response.inspplace1!==null){
+              placecodes.push(`${response.inspplace1.substring(0,2)}0000`);
+              placecodes.push(`${response.inspplace1.substring(0,4)}00`);
+              placecodes.push(response.inspplace1);
+            }
             const now = moment().format("YYYY-MM-DD HH:mm:ss");
             form.setFieldsValue({
               'reportdate': moment(now, "YYYY-MM-DD"),
@@ -156,7 +162,7 @@ class CopyForEntrustment extends PureComponent {
               'applicant': response.applicant,
               'inspwaymemo1': response.inspwaymemo1,
               'customsNo':response.customsNo,
-              //'inspplace1':response.inspplace1,
+              'inspplace1':placecodes,
               'inspplace2': response.inspplace2,
               'inspplace3': response.inspplace3,
               'inspdate': moment(response.inspdate, "YYYY-MM-DD"),
@@ -171,12 +177,13 @@ class CopyForEntrustment extends PureComponent {
               'businesssource': response.businesssource,
               'chineselocalname': response.chineselocalname,
               'iscnas': response.incnas,
+              'fromto':response.fromto
             });
             if(response.iscostoms === "1"){
               this.setState({isCustoms:true});
               form.setFieldsValue({
                 'iscostoms': 1,
-                // 'customsName': response.customsName,
+                'customsName': this.getCustomsArr(response.customsName),
               });
             }
             if(response.iscnas === '1'){
@@ -279,6 +286,26 @@ class CopyForEntrustment extends PureComponent {
       }
     });
   }
+
+  getCustomsArr =(val)=>{
+    const res =[];
+    const {state} = this;
+    for(let i=0;state.customsOption.length!==undefined&&i<state.customsOption.length;i++){
+      const item = state.customsOption[i];
+      if(state.customsOption[i].children!==undefined && state.customsOption[i].children!==null
+        && state.customsOption[i].children.length !==undefined){
+        for(let j =0;j<state.customsOption[i].children.length;j++){
+          const subitem = state.customsOption[i].children[j];
+          if(subitem.value ===val){
+            res.push(item.value);
+            res.push(subitem.value);
+            return res;
+          }
+        }
+      }
+    }
+    return res;
+  };
 
   getErrorInfo = () => {
     const {
