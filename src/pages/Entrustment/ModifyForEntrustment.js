@@ -287,7 +287,6 @@ class ModifyForEntrustment extends PureComponent {
       payload: {
       },
       callback: (response) => {
-        console.log(response.data);
         this.setState({customsOption: response.data})
       }
     });
@@ -384,6 +383,7 @@ class ModifyForEntrustment extends PureComponent {
           //     values.certstyle = values.certstyle[0];
           //   }
           // }
+          console.log(values);
           if (!error) {
             // submit the values
             dispatch({
