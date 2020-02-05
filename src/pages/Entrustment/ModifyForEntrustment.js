@@ -231,12 +231,12 @@ class ModifyForEntrustment extends PureComponent {
               form.setFieldsValue({'cnasProject': response.cnasProject.split(" ")});
             }
             form.setFieldsValue({'inspway': response.inspway.split(" ")});
-            if (response.certstyle != null) {
-              const result = ['need'];
-              result.push(response.certstyle);
-              form.setFieldsValue({'certstyle': result});
-            } else {
-              form.setFieldsValue({'certstyle': ['noNeed']});
+            if (response.certstyle !== null && response.certstyle!=="") {
+              if(response.certstyle==="不需要" ){
+                form.setFieldsValue({'certstyle': ['不需要']});
+              }else{
+                form.setFieldsValue({'certstyle': ['need',response.certstyle]});
+              }
             }
           }
         });
@@ -287,6 +287,7 @@ class ModifyForEntrustment extends PureComponent {
       payload: {
       },
       callback: (response) => {
+        console.log(response.data);
         this.setState({customsOption: response.data})
       }
     });
@@ -383,7 +384,6 @@ class ModifyForEntrustment extends PureComponent {
           //     values.certstyle = values.certstyle[0];
           //   }
           // }
-          console.log(values);
           if (!error) {
             // submit the values
             dispatch({

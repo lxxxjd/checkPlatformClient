@@ -220,12 +220,12 @@ class CopyForEntrustment extends PureComponent {
               form.setFieldsValue({'cnasProject': response.cnasProject.split(" ")});
             }
             form.setFieldsValue({'inspway': response.inspway.split(" ")});
-            if (response.certstyle != null) {
-              const result = ['need'];
-              result.push(response.certstyle);
-              form.setFieldsValue({'certstyle': result});
-            } else {
-              form.setFieldsValue({'certstyle': ['noNeed']});
+           if (response.certstyle !== null && response.certstyle!=="") {
+              if(response.certstyle==="不需要" ){
+                form.setFieldsValue({'certstyle': ['不需要']});
+              }else{
+                form.setFieldsValue({'certstyle': ['need',response.certstyle]});
+              }
             }
           }
         });
