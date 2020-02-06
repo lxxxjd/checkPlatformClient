@@ -73,7 +73,7 @@ const ReviewFrom = (props => {
       <Descriptions bordered>
         <Descriptions.Item label="客服姓名">{modalInfo.inspman}</Descriptions.Item>
         <Descriptions.Item label="联系方式">{modalInfo.tel}</Descriptions.Item>
-        <Descriptions.Item label="住址">{modalInfo.place}</Descriptions.Item>
+        <Descriptions.Item label="部门">{modalInfo.section}</Descriptions.Item>
         <Descriptions.Item label="岗位">{modalInfo.position}</Descriptions.Item>
         <Descriptions.Item label="工作任务">{modalInfo.inspway}</Descriptions.Item>
         <Descriptions.Item label="工时">{modalInfo.manhour}</Descriptions.Item>
@@ -258,8 +258,8 @@ class InspectorDetail extends PureComponent {
       dataIndex: 'tel',
     },
     {
-      title: '住址',
-      dataIndex: 'place',
+      title: '部门',
+      dataIndex: 'section',
     },
     {
       title: '岗位',

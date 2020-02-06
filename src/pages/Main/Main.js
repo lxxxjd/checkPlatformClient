@@ -13,7 +13,7 @@ import {
   Table,
   notification,
   Modal,
-  Typography
+  Typography, message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './style.less';
@@ -70,13 +70,16 @@ class Main extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.resultItem(text, record)}>检查结果</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.recordItem(text, record)}>检查记录</a>
+          {text.overallstate==="检查中" || text.overallstate==="检查完毕"?[<a onClick={() => this.resultItem(text, record)}>检查结果&nbsp;</a>]:[]}
+          {text.overallstate==="检查中"|| text.overallstate==="检查完毕"?[<a onClick={() => this.recordItem(text, record)}>检查记录&nbsp;</a>]:[]}
+          {text.overallstate==="测试中"?[<a onClick={() => this.InspectionArrangementItem(text, record)}>检测安排 &nbsp;</a>]:[]}
+          {text.overallstate==="测试中"|| text.overallstate==="测试完毕"?[<a onClick={() => this.ResultUpdateMobileItem(text, record)}>结果录入&nbsp;</a>]:[]}
+          {text.overallstate==="测试中"|| text.overallstate==="测试完毕"|| text.overallstate==="拟制中"|| text.overallstate==="拟证完毕"?[<a onClick={() => this.CertModifyItem(text, record)}>证书拟制&nbsp;</a>]:[]}
         </Fragment>
       ),
     },
   ];
+
   columns2 = [
     {
       title: '付款人',
@@ -103,7 +106,16 @@ class Main extends PureComponent {
       dataIndex: 'cost_5',
     },
   ];
+
   columns1 = [
+    {
+      title: '委托编号/清单编号',
+      dataIndex: 'sourceId2',
+    },
+    {
+      title: '船名标识',
+      dataIndex: 'shipname',
+    },
     {
       title: '审批内容',
       dataIndex: 'source',
@@ -226,7 +238,18 @@ class Main extends PureComponent {
       }
     });
   }
+
   approveItem = text => {
+    /*
+      检测结果待复核
+      证书待拟制
+      证书待复核
+      证书待缮制
+      证书待授权
+      证书待发布
+      清单待审核
+      成本待审核
+     */
     sessionStorage.setItem('reportno',text.sourceId2);
     sessionStorage.setItem('shipname',"");
     sessionStorage.setItem('applicant',"");
@@ -250,8 +273,50 @@ class Main extends PureComponent {
       router.push({
         pathname:'/Certificate/CertificatePublishDetail',
       });
+    }else if(text.source.trim() === "清单待审核"){
+      const{dispatch} = this.props;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      dispatch({
+        type: 'main/getListBylistno',
+        payload: {
+          certcode:user.certCode,
+          listno:text.sourceId2,
+        },
+        callback: (response) => {
+          if (response) {
+            localStorage.setItem('listListFictionReview',JSON.stringify(response));
+            router.push({
+              pathname:'/Charge/ListFictionReview',
+            });
+          }
+        }
+      });
+    }else if(text.source.trim() === "成本待审核"){
+      const{dispatch} = this.props;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      dispatch({
+        type: 'main/getCostListByPayListNo',
+        payload: {
+          certcode:user.certCode,
+          paylistno:text.sourceId2,
+        },
+        callback: (response) => {
+          if (response) {
+            sessionStorage.setItem('CostListDetailReviewPass_costlist',JSON.stringify(response));
+            router.push({
+              pathname:'/Charge/CostListDetailReviewPass',
+            });
+          }
+        }
+      });
+    }else if(text.source.trim() === "检测结果待复核"){
+      sessionStorage.setItem('result_review_pass_or_return',"pass");
+      router.push({
+        pathname:'/InspectionAnalysis/ResultDetailReview',
+      });
     }
   };
+
   resultItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
@@ -267,6 +332,32 @@ class Main extends PureComponent {
     sessionStorage.setItem('applicant',"");
     router.push({
       pathname:'/TestRecord/UploadDetail',
+    });
+  };
+
+  InspectionArrangementItem = text =>{
+    localStorage.setItem('taskInspmanDetail',JSON.stringify(text));
+    sessionStorage.setItem('overallstate_InspmanDetail',text.overallstate);
+    router.push({
+      pathname:'/InspectionAnalysis/InspmanDetail',
+    });
+  };
+
+  ResultUpdateMobileItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('sampleno',text.sampleno);
+    router.push({
+      pathname:'/InspectionAnalysis/ResultUpdateDetail',
+    });
+  };
+
+  CertModifyItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',text.applicant);
+    router.push({
+      pathname:'/Certificate/CertificateUploadDetail',
     });
   };
 
@@ -372,7 +463,7 @@ class Main extends PureComponent {
           </Card>
           <br/>
           <Row gutter={16}>
-            <Col span={12}>
+            <Col span={13}>
               <Card title="我的任务" size='small' bordered={false}>
                 <Table
                   size="middle"
@@ -384,12 +475,12 @@ class Main extends PureComponent {
                 />
               </Card>
             </Col>
-            <Col span={12}>
+            <Col span={11}>
               <Card title="我的审批" size='small' bordered={false}>
                 <Table
                   size="middle"
                   loading={loading}
-                  rowKey='source'
+                  rowKey='keyno'
                   dataSource={perApprove}
                   columns={this.columns1}
                   pagination={{showQuickJumper:true,showSizeChanger:true}}

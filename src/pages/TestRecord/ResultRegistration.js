@@ -87,7 +87,7 @@ class ResultRegistration extends PureComponent {
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  }
+  };
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);

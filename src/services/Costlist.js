@@ -62,3 +62,9 @@ export async function selectCostListTotalByConditions(params) {
   });
 }
 
+// 主键查询list
+export async function getCostListByPayListNo(params) {
+  return request(`/api/costlist/getCostListByPayListNo?certcode=${params.certcode}&paylistno=${params.paylistno}`);
+}
+
+

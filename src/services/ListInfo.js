@@ -22,3 +22,8 @@ export async function selectListInfoTotalByConditions(params){
   });
 }
 
+// 主键查询list
+export async function getListBylistno(params) {
+  return request(`/api/list/getListBylistno?certcode=${params.certcode}&listno=${params.listno}`);
+}
+
