@@ -114,6 +114,10 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
         {form.getFieldDecorator('inspway', {
           initialValue: modalInfo.inspway,
+          rules: [{
+            required: true,
+            message: '请选择工作任务'
+          }],
         })(
           <Select placeholder="请选择工作任务" style={{ width: 295 }}>
             <Option value="检测">检测</Option>
@@ -223,7 +227,11 @@ class InspmanDetail extends PureComponent {
     modalVisible: false,
     modalReviewVisible:false,
     modalInfo :{},
-    taskData:[],
+    taskData:[], // 真实提交数据
+    overallstate:"",
+
+    // 展示表格，用于筛选
+    dataSource:[],
 
 };
 
@@ -303,6 +311,10 @@ class InspmanDetail extends PureComponent {
       itemtask.taskman =user.nameC;
       itemtask.sampleno =reportinfo.sampleno;
       params.push(itemtask);
+      if(itemtask.inspway ===undefined || itemtask.inspway=== null){
+        message.error("存在未分配工作任务的人员，请编辑后保存");
+        return;
+      }
     }
 
     let formData = new FormData();
@@ -341,6 +353,7 @@ class InspmanDetail extends PureComponent {
       callback: (response) => {
         if (response){
           this.state.taskData =  response.list;
+          this.state.dataSource = this.state.taskData;
 
           // 添加到selectkey
           const data = response.list;
@@ -385,18 +398,7 @@ class InspmanDetail extends PureComponent {
         payload: params,
         callback: (response) => {
           if (response){
-            this.state.taskData = response.list;
-
-            // 添加到selectkey
-            const data = response.list;
-            const { state } = this;
-            state.selectedRowKeys = [];
-            // eslint-disable-next-line no-plusplus
-            for (let i = 0; i < data.length; i++) {
-              if (data[i].state === 1) {
-                state.selectedRowKeys.push(data[i].inspman);
-              }
-            }
+            this.state.dataSource = response.list;
           }
         }
       });
@@ -454,19 +456,21 @@ class InspmanDetail extends PureComponent {
     params.reportno = reportinfo.reportno;
     params.sampleno = reportinfo.sampleno;
 
-    dispatch({
-      type: 'task/updateInspmans',
-      payload: params,
-      callback: (response) => {
-        if (response) {
-          message.success("保存成功");
-          this.init();
-        }else{
-          message.success("保存失败");
-        }
+    // 页面数据和提交数据，修改
+    const {taskData,dataSource} = this.state
+    for(let i=0;i<taskData.length;i++){
+      if(taskData[i].inspman === params.inspman){
+        taskData[i] = params;
+        break;
       }
-    });
-  }
+    }
+    for(let i=0;i<dataSource.length;i++){
+      if(dataSource[i].inspman === params.inspman){
+        dataSource[i] = params;
+        break;
+      }
+    }
+  };
 
 
 
@@ -543,7 +547,7 @@ class InspmanDetail extends PureComponent {
     };
 
 
-    const {  modalVisible,modalInfo ,handleModalReviewVisible,modalReviewVisible} = this.state;
+    const {  modalVisible,modalInfo ,handleModalReviewVisible,modalReviewVisible,dataSource} = this.state;
 
     const parentMethods = {
       handleAdd: this.handleAdd,
@@ -570,7 +574,7 @@ class InspmanDetail extends PureComponent {
                 size="middle"
                 rowKey="inspman"
                 loading={loading}
-                dataSource={taskInspman.list}
+                dataSource={dataSource}
                 pagination={{showQuickJumper:true,showSizeChanger:true}}
                 columns={this.columns}
                 rowSelection={rowSelection}

@@ -59,7 +59,7 @@ const ReviewFrom = (props => {
   return (
     <Modal
       destroyOnClose
-      title="查看客服"
+      title="查看检验人员"
       visible={modalReviewVisible}
       style={{ top: 100 }}
       width={800}
@@ -103,7 +103,7 @@ const CreateForm = Form.create()(props => {
 
   const onChange =(checkedValue)=>{
     form.setFieldsValue({'inspway': checkedValue});
-  }
+  };
 
 
   return (
@@ -136,6 +136,10 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
         {form.getFieldDecorator('inspway', {
           initialValue: modalInfo.inspway,
+          rules: [{
+            required: true,
+            message: '请选择工作任务'
+          }],
         })(<CheckboxGroup options={checkProject} onChange={onChange} />)}
       </FormItem>
 
@@ -240,6 +244,8 @@ class InspectorDetail extends PureComponent {
     modalInfo :{},
     checkProject:[],
     taskData:[],
+
+    dataSource:[],
   };
 
   columns = [
@@ -298,6 +304,7 @@ class InspectorDetail extends PureComponent {
   }
 
 
+
   back = () => {
     this.props.history.goBack();
   };
@@ -314,6 +321,10 @@ class InspectorDetail extends PureComponent {
       itemtask.reportno = reportinfo.reportno;
       itemtask.taskman =user.nameC;
       params.push(itemtask);
+      if(itemtask.inspway ===undefined || itemtask.inspway=== null){
+        message.error("存在未分配工作任务的人员，请编辑后保存");
+        return;
+      }
     }
 
     let formData = new FormData();
@@ -363,7 +374,7 @@ class InspectorDetail extends PureComponent {
       callback: (response) => {
         if (response){
           this.state.taskData =  response.list;
-
+          this.state.dataSource = this.state.taskData;
           // 添加到selectkey
           const data = response.list;
           this.state.selectedRowKeys = [];
@@ -412,20 +423,8 @@ class InspectorDetail extends PureComponent {
         type: 'task/getInspects',
         payload: params,
         callback: (response) => {
-          if (response){
-
-            this.state.taskData =  response.list;
-
-            // 添加到selectkey
-            // 添加到selectkey
-            const data = response.list;
-            this.state.selectedRowKeys = [];
-            // eslint-disable-next-line no-plusplus
-            for (let i = 0; i < data.length; i++) {
-              if (data[i].state === 1) {
-                this.state.selectedRowKeys.push(data[i].inspman);
-              }
-            }
+          if (response) {
+            this.state.dataSource = response.list;
           }
         }
       });
@@ -435,12 +434,18 @@ class InspectorDetail extends PureComponent {
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
-  }
+  };
 
   handleEdit = (flag,text) => {
     this.handleModalVisible(flag);
-    this.state.modalInfo = text;
-  }
+    const values ={
+      ...text
+    };
+    if(values.inspway !==undefined && values.inspway!==null && values.inspway!==""){
+      values.inspway = text.inspway.split(" ");
+    }
+    this.state.modalInfo = values;
+  };
 
 
   handleReview = (flag,text) => {
@@ -467,25 +472,12 @@ class InspectorDetail extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-    //设置参数
-    const {dispatch}  = this.props;
+    // 设置参数
     let params = modalInfo;
-    if(fields.inspway !==null && fields.inspway !== undefined){
-      const len = fields.inspway.length;
-      if(len !==0){
-        let inspway ="";
-        // eslint-disable-next-line no-plusplus
-        for (let i=0; i<len;i++ ){
-          if(i !== len-1){
-            inspway += `${fields.inspway[i]} `;
-          }else{
-            inspway += `${fields.inspway[i]}`
-          }
-        }
-        params.inspway = inspway;
-      }
+    if( fields.inspway !== undefined &&  fields.inspway !==null && fields.inspway.length !== 0) {
+      const inspway = fields.inspway.join(' ');
+      params.inspway = inspway;
     }
-
     params.position = fields.position;
     params.tel = fields.tel;
     params.manhour = fields.manhour;
@@ -497,30 +489,20 @@ class InspectorDetail extends PureComponent {
     const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
     params.taskman = user.nameC;
     params.reportno = reportinfo.reportno;
-
-    if(!(params.position ==null &&
-      params.tel  ==null &&
-      params.manhour ==null&&
-      params.labourfee ==null&&
-      params.lunchfee ==null&&
-      params.trafficfee ==null &&
-      params.otherfee ==null &&  params.inspway==null )){
-      dispatch({
-        type: 'task/updateInspect',
-        payload: params,
-        callback: (response) => {
-          if (response) {
-            message.success("保存成功");
-            this.init();
-          }else{
-            message.success("保存失败");
-          }
-        }
-      });
-    }else{
-      message.success("未编辑选项！");
+    const {taskData,dataSource} = this.state
+    for(let i=0;i<taskData.length;i++){
+      if(taskData[i].inspman === params.inspman){
+        taskData[i] = params;
+        break;
+      }
     }
-  }
+    for(let i=0;i<dataSource.length;i++){
+      if(dataSource[i].inspman === params.inspman){
+        dataSource[i] = params;
+        break;
+      }
+    }
+  };
 
 
 
@@ -578,11 +560,10 @@ class InspectorDetail extends PureComponent {
 
   render() {
     const {
-      task: {taskInspects},
       loading,
     } = this.props;
 
-    const {selectedRowKeys} = this.state;
+    const {selectedRowKeys,taskData,dataSource} = this.state;
 
     const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"));
     const Info = ({ title, value, bordered }) => (
@@ -621,7 +602,7 @@ class InspectorDetail extends PureComponent {
                 size="middle"
                 rowKey="inspman"
                 loading={loading}
-                dataSource={taskInspects.list}
+                dataSource={dataSource}
                 pagination={{showQuickJumper:true,showSizeChanger:true}}
                 columns={this.columns}
                 rowSelection={rowSelection}

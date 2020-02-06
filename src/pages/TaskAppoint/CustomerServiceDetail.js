@@ -114,6 +114,10 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="任务">
         {form.getFieldDecorator('inspway', {
           initialValue: modalInfo.inspway,
+          rules: [{
+            required: true,
+            message: '请选择工作任务'
+          }],
         })(
           <Select placeholder="请选择工作任务" style={{ width: 295 }}>
             <Option value="客服">客服</Option>
@@ -223,8 +227,11 @@ class CustomerServiceDetail extends PureComponent {
     modalVisible: false,
     modalReviewVisible:false,
     modalInfo :{},
-    taskData:[],
+    taskData:[], // 真实提交数据
     overallstate:"",
+
+    // 展示表格，用于筛选
+    dataSource:[],
   };
 
 
@@ -303,6 +310,10 @@ class CustomerServiceDetail extends PureComponent {
       itemtask.reportno = reportinfo.reportno;
       itemtask.taskman =user.nameC;
       params.push(itemtask);
+      if(itemtask.inspway ===undefined || itemtask.inspway=== null){
+        message.error("存在未分配工作任务的人员，请编辑后保存");
+        return;
+      }
     }
 
     let formData = new FormData();
@@ -341,7 +352,7 @@ class CustomerServiceDetail extends PureComponent {
       callback: (response) => {
         if (response) {
           this.state.taskData = response.list;
-
+          this.state.dataSource = this.state.taskData;
           // 添加到selectkey
           const data = response.list;
           const { state } = this;
@@ -384,19 +395,7 @@ class CustomerServiceDetail extends PureComponent {
         payload: params,
         callback: (response) => {
           if (response){
-            this.state.taskData =  response.list;
-
-            // 添加到selectkey
-            const data = response.list;
-            const { state } = this;
-            state.selectedRowKeys = [];
-            // eslint-disable-next-line no-plusplus
-            for (let i = 0; i < data.length; i++) {
-              if (data[i].state === 1) {
-                state.selectedRowKeys.push(data[i].inspman);
-              }
-            }
-
+            this.state.dataSource = response.list;
           }
         }
       });
@@ -437,8 +436,7 @@ class CustomerServiceDetail extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-    //设置参数
-    const {dispatch}  = this.props;
+    // 设置参数
     let params = modalInfo;
     params.inspway = fields.inspway;
     params.position = fields.position;
@@ -453,19 +451,21 @@ class CustomerServiceDetail extends PureComponent {
     params.taskman = user.nameC;
     params.reportno = reportinfo.reportno;
 
-    dispatch({
-      type: 'task/updateTask',
-      payload: params,
-      callback: (response) => {
-        if (response) {
-          message.success("保存成功");
-          this.init();
-        }else{
-          message.success("保存失败");
-        }
+    const {taskData,dataSource} = this.state
+    for(let i=0;i<taskData.length;i++){
+      if(taskData[i].inspman === params.inspman){
+        taskData[i] = params;
+        break;
       }
-    });
-  }
+    }
+    for(let i=0;i<dataSource.length;i++){
+      if(dataSource[i].inspman === params.inspman){
+        dataSource[i] = params;
+        break;
+      }
+    }
+
+  };
 
 
 
@@ -521,7 +521,6 @@ class CustomerServiceDetail extends PureComponent {
 
   render() {
     const {
-      task: {taskCustomers},
       loading,
     } = this.props;
 
@@ -542,7 +541,7 @@ class CustomerServiceDetail extends PureComponent {
     };
 
 
-    const {  modalVisible,modalInfo ,handleModalReviewVisible,modalReviewVisible} = this.state;
+    const {  modalVisible,modalInfo ,handleModalReviewVisible,modalReviewVisible,dataSource} = this.state;
 
     const parentMethods = {
       handleAdd: this.handleAdd,
@@ -569,7 +568,7 @@ class CustomerServiceDetail extends PureComponent {
                 size="middle"
                 rowKey="inspman"
                 loading={loading}
-                dataSource={taskCustomers.list}
+                dataSource={dataSource}
                 pagination={{showQuickJumper:true,showSizeChanger:true}}
                 columns={this.columns}
                 rowSelection={rowSelection}

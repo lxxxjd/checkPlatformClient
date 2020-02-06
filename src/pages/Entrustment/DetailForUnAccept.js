@@ -192,8 +192,8 @@ class DetailForUnAccept extends Component {
             <Descriptions.Item label="预报日期">{moment(preMainInfo.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
           </Descriptions>
           <Descriptions size="large" title="申请项目" style={{ marginBottom: 32 }} bordered>
-            <Descriptions.Item label="申请项目" span={3}>{preMainInfo.inspway}</Descriptions.Item>
-            <Descriptions.Item label="检验备注" span={3}>{preMainInfo.inspwaymemo1}</Descriptions.Item>
+            <Descriptions.Item label="申请项目">{preMainInfo.inspway}</Descriptions.Item>
+            <Descriptions.Item label="检验备注">{preMainInfo.inspwaymemo1}</Descriptions.Item>
           </Descriptions>
         </Card>
         <Card bordered={false}  title="附件">
