@@ -148,7 +148,6 @@ class ModifyForEntrustment extends PureComponent {
           payload: reportno,
           callback: (response) => {
             this.setState({reportno: response.reportno});
-
             if(response.inspplace1!==undefined && response.inspplace1!==null){
               const placecodes=[];
               placecodes.push(`${response.inspplace1.substring(0,2)}0000`);

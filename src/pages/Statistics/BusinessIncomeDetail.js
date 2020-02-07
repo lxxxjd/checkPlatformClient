@@ -25,7 +25,7 @@ class BusinessIncomeDetail extends Component {
     testRecord:[],
     certFile:[],
     testInfo:[],
-    pricemaking:{}, 
+    pricemaking:{},
     sample:[],
     visible:false,
     detail:[],
@@ -422,7 +422,7 @@ class BusinessIncomeDetail extends Component {
         if(response.code === 200){
           this.setState({sample:response.data});
         }
-      }    
+      }
     });
     dispatch({
       type: 'businessIncomeDetail/getAllSampleAndTestCompany',
@@ -435,7 +435,7 @@ class BusinessIncomeDetail extends Component {
         if(response.code === 200){
           this.setState({sampleCompany:response.data});
         }
-      }    
+      }
     });
   };
 
@@ -455,7 +455,7 @@ class BusinessIncomeDetail extends Component {
         if(response.code === 200){
           this.setState({detail:response.data});
         }
-      }   
+      }
     });
     this.setState({ visible : true });
   };
@@ -485,15 +485,15 @@ class BusinessIncomeDetail extends Component {
   const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     var path = "";
-    if (text.status === "已拟制") {   
+    if (text.status === "已拟制") { 
       path = text.pdfeditorpath; 
-    }else if(text.status === "已复核"){   
+    }else if(text.status === "已复核"){ 
       path = text.pdfpath; 
-    }else if(text.status === "已缮制"){   
+    }else if(text.status === "已缮制"){ 
       path = text.titlepdfpath; 
-    }else if(text.status === "已签署" || text.status === "已发布"){   
+    }else if(text.status === "已签署" || text.status === "已发布"){ 
       path = text.certpdfpath; 
-    }else if (text.status === "已作废"){   
+    }else if (text.status === "已作废"){ 
       path = text.abandonpdfpath;
     }
     dispatch({
@@ -559,7 +559,7 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="自编号">{report.reportno20}</Descriptions.Item>
             <Descriptions.Item label="业务分类">{report.businesssort}</Descriptions.Item>
             <Descriptions.Item label="执行部门">{report.section}</Descriptions.Item>
-            <Descriptions.Item label="海关部门">{report.costomsName}</Descriptions.Item>
+            <Descriptions.Item label="海关部门">{report.customsName}</Descriptions.Item>
 
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
