@@ -2,7 +2,7 @@ import {getCertReports,getCertFiles,uploadCertFile,deleteCertFile,getPdfByOssPat
   getSignature,signCertFile,reviewCertFile,sealCertFile,getSampleDetail,
   getCheckResult,getCheckResultForLink,getSampleDetailForLink,getRecordInfo,getPdfUrl,
   getMainInfo,convertWordToPdf,getAllUserListByCertCode,undoCert,
-  makeCertFile,downloadQualityTemp,uploadCertFilePdf,publishCert,applyAbandon,abandonCert,getAbandonApplyReason,getRepeatName} from '@/services/Certificate'
+  makeCertFile,downloadQualityTemp,downloadWeighTemp,uploadCertFilePdf,publishCert,applyAbandon,abandonCert,getAbandonApplyReason,getRepeatName} from '@/services/Certificate'
 
 import {getOssPdf,getModelSelectName} from '@/services/TestRecord'
 import { queryReport} from '@/services/Entrustment';
@@ -242,6 +242,10 @@ export default {
       if (callback) callback(response.data);
     },
 
+    *downloadWeighTemp({ payload,callback }, { call, put }) {
+      const response = yield call(downloadWeighTemp, payload);
+      if (callback) callback(response.data);
+    },
 
     *getCheckResultFetch({ payload,callback }, { call, put }) {
       const response = yield call(getCheckResult, payload);

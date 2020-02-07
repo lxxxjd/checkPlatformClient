@@ -236,6 +236,13 @@ export async function downloadQualityTemp(params) {
   });
 }
 
+export async function downloadWeighTemp(params) {
+  return request('/api/template/download_weigh_temp', {
+    method: 'POST',
+    data:params,
+  });
+}
+
 
 export async function applyAbandon(params) {
   return request('/api/cert_report/apply_abandon', {

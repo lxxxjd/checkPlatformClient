@@ -829,40 +829,54 @@ class CertificateUploadDetail extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const reportNo = sessionStorage.getItem('reportno');
     const { dispatch, } = this.props;
-    // const params = {
-    //   id:fields.id,
-    //   sampleno:fields.sampleno,
-    //   reportno:reportNo,
-    //   creator:user.nameC,
-    //   modifier:user.nameC,
-    //   fileName:fields.fileName,
-    // };
     let params = new FormData();
     params.append('id', fields.id);
-    params.append('sampleno', fields.sampleno);
     params.append('reportno', reportNo);
     params.append('creator', user.nameC);
+    params.append('signer', user.userName);
     params.append('modifier', user.nameC);
     params.append('fileName', fields.fileName);
     params.append('certcode',user.certCode );
 
-    dispatch({
-      type: 'certificate/downloadQualityTemp',
-      payload:params,
-      callback: (response) => {
-        if(response==="success"){
-          message.success("操作成功")
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-              reportno:reportNo,
-            },
-          });
-        }else if(response ===null||"null"){
-          message.success("检测结果不存在");
+    if(this.state.modelPlatformType==="重量证书.doc"){
+      params.append('inspway', fields.inspway);
+      dispatch({
+        type: 'certificate/downloadWeighTemp',
+        payload:params,
+        callback: (response) => {
+          if(response==="success"){
+            message.success("操作成功")
+            dispatch({
+              type: 'certificate/getCertFiles',
+              payload:{
+                reportno:reportNo,
+              },
+            });
+          }else if(response ===null||"null"){
+            message.error("检测结果不存在");
+          }
         }
-      }
-    });
+      });
+    }else if(this.state.modelPlatformType==="质量证书.doc"){
+      params.append('sampleno', fields.sampleno);
+      dispatch({
+        type: 'certificate/downloadQualityTemp',
+        payload:params,
+        callback: (response) => {
+          if(response==="success"){
+            message.success("操作成功")
+            dispatch({
+              type: 'certificate/getCertFiles',
+              payload:{
+                reportno:reportNo,
+              },
+            });
+          }else if(response ===null||"null"){
+            message.error("检测结果不存在");
+          }
+        }
+      });
+    }
     this.setState({
       downloadVisible: false,
     });
