@@ -109,7 +109,7 @@ export async function loadDetails(params) {
 }
 
 export async function getTestStandard(params) {
-  return request(`/api/TestStandard/getTestStandard?cargoname=${params.cargoname}&item=${params.item}&certcode=${params.certCode}`);
+  return request(`/api/TestStandard/getTestStandard?cargoname=${params.cargoname}&item=${params.item}`);
 }
 
 export async function getSamplesByFilter(params) {

@@ -96,7 +96,6 @@ class StandardList extends PureComponent {
     const item =  sessionStorage.getItem('item');
     const { dispatch } = this.props;
     const params = {
-      certcode:user.certCode,
       cargoname,
       item,
     };

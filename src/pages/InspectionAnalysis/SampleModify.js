@@ -99,7 +99,6 @@ class SampleModify extends PureComponent {
       payload:{
         cargoname,
         item:text.itemC,
-        certCode:user.certCode,
       },
     });
     form.setFieldsValue({['teststandard']: text.teststandard});

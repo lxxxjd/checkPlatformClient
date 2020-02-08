@@ -26,11 +26,11 @@ export async function updateCargo(params) {
 
 
 export async function getItemList(params) {
-  return request(`/api/testItem/getItemList?cargoname=${params.cargoname}&certCode=${params.certCode}`);
+  return request(`/api/testItem/getItemList?cargoname=${params.cargoname}`);
 }
 
 export async function getTestStandard(params) {
-  return request(`/api/TestStandard/getTestStandard?cargoname=${params.cargoname}&certcode=${params.certcode}&item=${params.item}`);
+  return request(`/api/TestStandard/getTestStandard?cargoname=${params.cargoname}&item=${params.item}`);
 }
 
 export async function deleteItem(params) {
@@ -38,7 +38,7 @@ export async function deleteItem(params) {
 }
 
 export async function searchItemList(params) {
-  return request(`/api/testItem/searchItemList?cargoname=${params.cargoname}&certCode=${params.certCode}&itemC=${params.itemC}`);
+  return request(`/api/testItem/searchItemList?cargoname=${params.cargoname}&itemC=${params.itemC}`);
 }
 
 export async function addItem(params) {

@@ -25,7 +25,6 @@ class SearchItem  extends PureComponent {
 		const user = JSON.parse(localStorage.getItem("userinfo"));
 		const cargoname =  sessionStorage.getItem('cargoname');
 	    const params = {
-	      certCode:user.certCode,
 	      cargoname,
 	    };
 	    dispatch({
@@ -44,7 +43,6 @@ class SearchItem  extends PureComponent {
 		  const values = {
 		    ...fieldsValue,
 		    cargoname,
-		    certCode:user.certCode,
 		  };
 		  dispatch({
 		    type: 'dict/searchItemList',
