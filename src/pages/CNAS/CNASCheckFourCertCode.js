@@ -238,7 +238,7 @@ class CNASCheckFourCertCode extends PureComponent {
               dataSource={dataSource}
               columns={this.columns}
               rowKey="keyno"
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
+              pagination={{showQuickJumper:true,showSizeChanger:true,pageSize: 3}}
             />
           </div>
         </Card>

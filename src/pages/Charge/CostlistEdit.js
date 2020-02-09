@@ -54,7 +54,7 @@ class CostlistEdit extends PureComponent {
     {
       title: '状态日期',
       dataIndex: 'statusDate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+      render: val => this.isValidDate(val),
     },
 
     {
@@ -96,6 +96,14 @@ class CostlistEdit extends PureComponent {
         }
       }
     });
+  };
+
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
   };
 
   handleFormReset = () => {

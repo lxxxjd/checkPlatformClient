@@ -52,7 +52,7 @@ class ExpenditureBurdenQuery extends PureComponent {
     {
       title: '支付日期',
       dataIndex: 'paydate',
-      render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
+      render: val => this.isValidDate(val),
     },
     {
       title: '状态',
@@ -99,6 +99,12 @@ class ExpenditureBurdenQuery extends PureComponent {
     });
   };
 
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  }
 
   previewItem = text => {
     sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));

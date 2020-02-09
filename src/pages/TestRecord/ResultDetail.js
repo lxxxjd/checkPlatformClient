@@ -103,18 +103,12 @@ class ResultDetail extends PureComponent {
     {
       title: '开始日期',
       dataIndex: 'begindate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }
-      </span>
+      render: val => this.isValidDate(val),
     },
     {
       title: '结束日期',
       dataIndex: 'finishdate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }
-      </span>
+      render: val => this.isValidDate(val),
     },
     {
       title: '人员',
@@ -171,6 +165,8 @@ class ResultDetail extends PureComponent {
     },
   ];
 
+
+
   columns2 = [
     {
       title: '申请项目',
@@ -207,19 +203,12 @@ class ResultDetail extends PureComponent {
     {
       title: '开始日期',
       dataIndex: 'begindate',
-      render: val => <span>{
-        moment(val).format('YYYY-MM-DD')
-      }
-      </span>
+      render: val => this.isValidDate(val),
     },
     {
       title: '结束日期',
       dataIndex: 'finishdate',
-      render: val =>
-        <span>{
-          moment(val).format('YYYY-MM-DD')
-        }
-        </span>
+      render: val => this.isValidDate(val),
     },
 
     { title: '结果', dataIndex: 'result',key:"desc",
@@ -314,6 +303,13 @@ class ResultDetail extends PureComponent {
       }
     });
   }
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
 
   handleReview = (flag,text) => {
     this.handleModalReviewVisible(flag);
@@ -572,6 +568,13 @@ class ResultDetail extends PureComponent {
         this.setState({people});
       }
     });
+  };
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
   };
 
   onChange = e =>{
