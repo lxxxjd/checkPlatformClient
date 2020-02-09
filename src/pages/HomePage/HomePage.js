@@ -26,7 +26,7 @@ const { Footer } = Layout;
 @Form.create()
 class HomePage extends Component {
   state = {
-    url:"http://www.xnjfbm.vip",
+    url:"http://www.smlq.vip",
   };
 
   componentWillUnmount() {

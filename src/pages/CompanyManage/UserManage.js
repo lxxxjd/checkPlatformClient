@@ -720,9 +720,13 @@ class UserManage extends PureComponent {
 
   modifyItem = text => {
     var temp = Object.assign({}, text);
-    const roles = temp.role.split(' ');
-    console.log(roles);
-    temp.role = roles;
+    if(temp.role!==undefined && temp.role!==null){
+      const roles = temp.role.split(' ');
+      temp.role = roles;
+    }else{
+      temp.role =[];
+    }
+
     this.setState({
       modalInfo:temp,
     });
