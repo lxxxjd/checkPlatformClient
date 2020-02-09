@@ -304,7 +304,7 @@ class Main extends PureComponent {
           if (response) {
             sessionStorage.setItem('CostListDetailReviewPass_costlist',JSON.stringify(response));
             router.push({
-              pathname:'/Charge/CostListDetailReviewPass',
+              pathname:'/CostManage/CostListDetailReviewPass',
             });
           }
         }

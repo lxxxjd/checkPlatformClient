@@ -101,7 +101,7 @@ class Cost extends PureComponent {
     sessionStorage.setItem('reportNoForCostEdit',text.reportno);
     sessionStorage.setItem('reportinfoCost',JSON.stringify(text));
     router.push({
-      pathname:'/Charge/CostEdit',
+      pathname:'/CostManage/CostEdit',
     });
   };
 

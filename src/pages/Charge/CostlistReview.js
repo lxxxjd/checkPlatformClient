@@ -116,14 +116,14 @@ class CostlistEdit extends PureComponent {
   goToCostlistDetailReviewPass = text => {
     sessionStorage.setItem('CostListDetailReviewPass_costlist',JSON.stringify(text));
     router.push({
-      pathname:'/Charge/CostListDetailReviewPass',
+      pathname:'/CostManage/CostListDetailReviewPass',
     });
   };
 
   goToCostlistDetailReviewBack = text => {
     sessionStorage.setItem('CostListDetailReviewBack_costlist',JSON.stringify(text));
     router.push({
-      pathname:'/Charge/CostListDetailReviewBack',
+      pathname:'/CostManage/CostListDetailReviewBack',
     });
   };
 
@@ -161,7 +161,7 @@ class CostlistEdit extends PureComponent {
   goToCostlistDetail = text => {
     sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
     router.push({
-      pathname:'/Charge/CostListDetail',
+      pathname:'/CostManage/CostListDetail',
     });
   };
 

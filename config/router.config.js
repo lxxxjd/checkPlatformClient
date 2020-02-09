@@ -377,156 +377,6 @@ export default [
       },
 
 
-      // Charge
-      {
-        path: '/Charge',
-        icon: 'profile',
-        name: 'Charge',
-        routes: [
-          {
-            path: '/Charge/FinalPrice',
-            name: 'FinalPrice',
-            component: './Charge/FinalPrice',
-          },
-          {
-            path: '/Charge/FinalPriceDetail',
-            name: 'FinalPriceDetail',
-            component: './Charge/FinalPriceDetail',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-          {
-            path: '/Charge/ListFiction',
-            name: 'ListFiction',
-            component: './Charge/ListFiction',
-          },
-          {
-            path: '/Charge/ListFictionAdd',
-            name: 'ListFictionAdd',
-            component: './Charge/ListFictionAdd',
-          },
-          {
-            path: '/Charge/ListReview',
-            name: 'ListReview',
-            component: './Charge/ListReview',
-          },
-
-          {
-            path: '/Charge/ListFile',
-            name: 'ListFile',
-            component: './Charge/ListFile',
-          },
-
-          {
-            path: '/Charge/ListFictionReview',
-            name: 'ListFictionReview',
-            component: './Charge/ListFictionReview',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-
-          {
-            path: '/Charge/ListFictionReviewBack',
-            name: 'ListFictionReviewBack',
-            component: './Charge/ListFictionReviewBack',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-
-          {
-            path: '/Charge/Invoice',
-            name: 'Invoice',
-            component: './Charge/Invoice',
-          },
-
-          {
-            path: '/Charge/ListPay',
-            name: 'ListPay',
-            component: './Charge/ListPay',
-          },
-
-          {
-            path: '/Charge/Cost',
-            name: 'Cost',
-            component: './Charge/Cost',
-          },
-
-
-          {
-            path: '/Charge/CostlistEdit',
-            name: 'CostlistEdit',
-            component: './Charge/CostlistEdit',
-          },
-
-          {
-            path: '/Charge/CostListAdd',
-            name: 'CostListAdd',
-            component: './Charge/CostListAdd',
-          },
-
-          {
-            path: '/Charge/CostlistReview',
-            name: 'CostlistReview',
-            component: './Charge/CostlistReview',
-          },
-
-          {
-            path: '/Charge/CostlistFile',
-            name: 'CostlistFile',
-            component: './Charge/CostlistFile',
-          },
-
-          {
-            path: '/Charge/CostlistPay',
-            name: 'CostlistPay',
-            component: './Charge/CostlistPay',
-          },
-
-
-
-          {
-            path: '/Charge/CostEdit',
-            name: 'CostEdit',
-            component: './Charge/CostEdit',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-
-
-          {
-            path: '/Charge/DetailList',
-            name: 'DetailList',
-            component: './Charge/DetailList',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-
-          {
-            path: '/Charge/CostListDetail',
-            name: 'CostListDetail',
-            component: './Charge/CostListDetail',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-
-          {
-            path: '/Charge/CostListDetailReviewPass',
-            name: 'CostListDetailReviewPass',
-            component: './Charge/CostListDetailReviewPass',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-
-
-          {
-            path: '/Charge/CostListDetailReviewBack',
-            name: 'CostListDetailReviewBack',
-            component: './Charge/CostListDetailReviewBack',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-          {
-            path: '/Charge/FinalPriceAdd',
-            name: 'FinalPriceAdd',
-            component: './Charge/FinalPriceAdd',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-
-
-        ],
-      },
 
       //Certificate
       {
@@ -624,6 +474,177 @@ export default [
 
         ],
       },
+
+      // Charge
+      {
+        path: '/Charge',
+        icon: 'profile',
+        name: 'Charge',
+        routes: [
+          {
+            path: '/Charge/FinalPrice',
+            name: 'FinalPrice',
+            component: './Charge/FinalPrice',
+          },
+          {
+            path: '/Charge/FinalPriceDetail',
+            name: 'FinalPriceDetail',
+            component: './Charge/FinalPriceDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: '/Charge/ListFiction',
+            name: 'ListFiction',
+            component: './Charge/ListFiction',
+          },
+          {
+            path: '/Charge/ListFictionAdd',
+            name: 'ListFictionAdd',
+            component: './Charge/ListFictionAdd',
+          },
+          {
+            path: '/Charge/ListReview',
+            name: 'ListReview',
+            component: './Charge/ListReview',
+          },
+
+          {
+            path: '/Charge/ListFile',
+            name: 'ListFile',
+            component: './Charge/ListFile',
+          },
+
+          {
+            path: '/Charge/ListFictionReview',
+            name: 'ListFictionReview',
+            component: './Charge/ListFictionReview',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Charge/ListFictionReviewBack',
+            name: 'ListFictionReviewBack',
+            component: './Charge/ListFictionReviewBack',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Charge/Invoice',
+            name: 'Invoice',
+            component: './Charge/Invoice',
+          },
+
+          {
+            path: '/Charge/ListPay',
+            name: 'ListPay',
+            component: './Charge/ListPay',
+          },
+
+          {
+            path: '/Charge/FinalPriceAdd',
+            name: 'FinalPriceAdd',
+            component: './Charge/FinalPriceAdd',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/Charge/DetailList',
+            name: 'DetailList',
+            component: './Charge/DetailList',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+        ],
+      },
+
+
+      // Charge
+      {
+        path: '/CostManage',
+        icon: 'profile',
+        name: 'CostManage',
+        routes: [
+          {
+            path: '/CostManage/Cost',
+            name: 'Cost',
+            component: './Charge/Cost',
+          },
+
+
+          {
+            path: '/CostManage/CostlistEdit',
+            name: 'CostlistEdit',
+            component: './Charge/CostlistEdit',
+          },
+
+          {
+            path: '/CostManage/CostListAdd',
+            name: 'CostListAdd',
+            component: './Charge/CostListAdd',
+          },
+
+          {
+            path: '/CostManage/CostlistReview',
+            name: 'CostlistReview',
+            component: './Charge/CostlistReview',
+          },
+
+          {
+            path: '/CostManage/CostlistFile',
+            name: 'CostlistFile',
+            component: './Charge/CostlistFile',
+          },
+
+          {
+            path: '/CostManage/CostlistPay',
+            name: 'CostlistPay',
+            component: './Charge/CostlistPay',
+          },
+
+
+
+          {
+            path: '/CostManage/CostEdit',
+            name: 'CostEdit',
+            component: './Charge/CostEdit',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+
+
+          {
+            path: '/CostManage/CostListDetail',
+            name: 'CostListDetail',
+            component: './Charge/CostListDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/CostManage/CostListDetailReviewPass',
+            name: 'CostListDetailReviewPass',
+            component: './Charge/CostListDetailReviewPass',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+
+          {
+            path: '/CostManage/CostListDetailReviewBack',
+            name: 'CostListDetailReviewBack',
+            component: './Charge/CostListDetailReviewBack',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            path: '/CostManage/FinalPriceAdd',
+            name: 'FinalPriceAdd',
+            component: './Charge/FinalPriceAdd',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+
+        ],
+      },
+
+
 
       //Archives
       {
@@ -871,6 +892,20 @@ export default [
             name: 'CNASCheckAuthor',
             component: './CNAS/CNASCheckAuthor',
             hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+        ],
+      },
+
+      //Dict
+      {
+        path: '/PersonInfo',
+        icon: 'profile',
+        name: 'PersonInfo',
+        routes: [
+          {
+            path: '/PersonInfo/Info',
+            name: 'Info',
+            component: './CompanyManage/Info',
           },
         ],
       },

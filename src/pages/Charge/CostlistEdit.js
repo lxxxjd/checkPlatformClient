@@ -145,7 +145,7 @@ class CostlistEdit extends PureComponent {
   goToCostlistDetail = text => {
     sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
     router.push({
-      pathname:'/Charge/CostListDetail',
+      pathname:'/CostManage/CostListDetail',
     });
   };
 
