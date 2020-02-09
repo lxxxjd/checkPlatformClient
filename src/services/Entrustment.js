@@ -2,40 +2,14 @@ import request from '@/utils/request';
 import { stringify } from 'qs';
 
 export async function submitApplication(params) {
-  if(params.certstyle !== null && params.certstyle !== undefined){
-    if(params.certstyle.length===1){
-      params.certstyle = params.certstyle[0];
-    }else if(params.certstyle.length===2){
-      params.certstyle = params.certstyle[1];
-    }
-  }
-  if(params.certstyle !== null && params.certstyle !== undefined){
-    const certstyle = params.certstyle.join('');
-    params.certstyle = certstyle;
-  }
-  if(params.cnasProject !== null && params.cnasProject !== undefined){
-    const cnasProject = params.cnasProject.join('');
-    params.cnasProject = cnasProject;
-  }
-  if(params.section !== null && params.section !== undefined){
-    const section = params.section.join(' ');
-    params.section = section;
-  }
-  const inspway = params.inspway.join(' ');
-  params.inspway = inspway;
-	return request('/api/report/add_report', {
-  	method: 'POST',
-  	data: {
-    	...params,
-    	method: 'post',
-  	},
-	});
-}
 
+  if (params.inspplace1 !== undefined && params.inspplace1 !== null ) {
+    params.inspplace1 = params.inspplace1[2];
+  }
+  if (params.customsName !== undefined && params.customsName !== null ) {
+    params.customsName = params.customsName[1];
+  }
 
-
-export async function updateReport(params) {
-  console.log(params);
   if(params.certstyle !== null && params.certstyle !== undefined){
     if(params.certstyle.length===1){
       params.certstyle = params.certstyle[0];
@@ -53,11 +27,48 @@ export async function updateReport(params) {
   }
   const inspway = params.inspway.join(' ');
   params.inspway = inspway;
+  console.log(params)
+
+  return request('/api/report/add_report', {
+  	method: 'POST',
+  	data: {
+    	...params,
+  	},
+	});
+}
+
+
+
+export async function updateReport(params) {
+  if (params.inspplace1 !== undefined && params.inspplace1 !== null ) {
+    params.inspplace1 = params.inspplace1[2];
+  }
+  if (params.customsName !== undefined && params.customsName !== null ) {
+    params.customsName = params.customsName[1];
+  }
+
+  if(params.certstyle !== null && params.certstyle !== undefined){
+    if(params.certstyle.length===1){
+      params.certstyle = params.certstyle[0];
+    }else if(params.certstyle.length===2){
+      params.certstyle = params.certstyle[1];
+    }
+  }
+  if(params.cnasProject !== null && params.cnasProject !== undefined){
+    const cnasProject = params.cnasProject.join(' ');
+    params.cnasProject = cnasProject;
+  }
+  if(params.section !== null && params.section !== undefined){
+    const section = params.section.join(' ');
+    params.section = section;
+  }
+  const inspway = params.inspway.join(' ');
+  params.inspway = inspway;
+
   return request('/api/report/update_report', {
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }
