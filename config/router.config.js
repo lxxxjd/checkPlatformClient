@@ -754,6 +754,7 @@ export default [
             path: '/CompanyManage/UserManage',
             name: 'UserManage',
             component: './CompanyManage/UserManage',
+            authority: ["总经理","管理员","admin"],
           },
 
           {

@@ -11,7 +11,7 @@ import {
   Input,
   Button,
   Select,
-  Table, message, Modal, DatePicker,
+  Table, message, Modal, DatePicker, Checkbox,
 } from 'antd/lib/index';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment/moment';
@@ -19,13 +19,14 @@ import styles from '../table.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const CheckboxGroup = Checkbox.Group;
 
 
 
 
 // 修改的Form
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo,fieldOptions,cargosortOptions} = props;
+  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo,fieldList,cargosortOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -88,7 +89,7 @@ const CreateForm = Form.create()(props => {
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检查领域">
         {form.getFieldDecorator('field', {
-          initialValue: modalInfo.field,
+          initialValue: (modalInfo.field===undefined || modalInfo.field===null)?[]:modalInfo.field.split(" "),
           rules: [
             {
               required: true,
@@ -96,10 +97,11 @@ const CreateForm = Form.create()(props => {
             },
           ],
         })(
-          <Select placeholder="请选择检查领域" style={{ width: '100%' }}>
-            {fieldOptions}
-          </Select>
+          <CheckboxGroup
+            options={fieldList}
+          />
         )}
+
       </FormItem>
     </Modal>
   );
@@ -107,7 +109,7 @@ const CreateForm = Form.create()(props => {
 
 
 const AddForm = Form.create()(props => {
-  const { addModalVisible, form, handleAdd, addHandleModalVisible,fieldOptions,cargosortOptions } = props;
+  const { addModalVisible, form, handleAdd, addHandleModalVisible,fieldList,cargosortOptions } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -175,9 +177,9 @@ const AddForm = Form.create()(props => {
             },
           ],
         })(
-          <Select placeholder="请选择检查领域" style={{ width: '100%' }}>
-            {fieldOptions}
-          </Select>
+          <CheckboxGroup
+            options={fieldList}
+          />
         )}
       </FormItem>
 
@@ -309,7 +311,13 @@ class SurveyStandard extends PureComponent {
       payload: params,
       callback: (response) => {
         if (response){
-          this.state.fieldList = response;
+          let res =[];
+          if(response!==undefined && response!=null){
+            for(let i=0;i<response.length;i++){
+              res.push(response[i].project);
+            }
+          }
+          this.state.fieldList = res;
         }
       }
     });
@@ -381,7 +389,7 @@ class SurveyStandard extends PureComponent {
     prams.standarde =  fields.standarde;
     prams.standardc =  fields.standardc;
     prams.cargosort =  fields.cargosort;
-    prams.field =  fields.field;
+    prams.field =  fields.field.join(" ");
     prams.certcode =  user.certCode;
     const values = {
       ...prams
@@ -410,6 +418,7 @@ class SurveyStandard extends PureComponent {
       ...fields,
       certcode:user.certCode,
     };
+    values.field = values.field.join(" ");
 
     this.setState({
       addModalVisible: false,
@@ -505,15 +514,15 @@ class SurveyStandard extends PureComponent {
       handleModalVisible: this.handleModalVisible,
       addHandleModalVisible:this.addHandleModalVisible,
     };
-    const fieldOptions = fieldList.map(d => <Option key={d.project} value={d.project}>{d.project}</Option>);
+
     const cargosortOptions = cargosortList.map(d => <Option key={d.sort1} value={d.sort1}>{d.sort1}</Option>);
 
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
-            <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} fieldOptions={fieldOptions} cargosortOptions={cargosortOptions} />
-            <AddForm {...parentMethods} addModalVisible={addModalVisible} dispatch={dispatch} fieldOptions={fieldOptions} cargosortOptions={cargosortOptions} />
+            <CreateForm {...parentMethods} modalVisible={modalVisible} modalInfo={modalInfo} dispatch={dispatch} fieldList={fieldList} cargosortOptions={cargosortOptions} />
+            <AddForm {...parentMethods} addModalVisible={addModalVisible} dispatch={dispatch} fieldList={fieldList} cargosortOptions={cargosortOptions} />
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"
