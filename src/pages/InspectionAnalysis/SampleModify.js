@@ -17,6 +17,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
+// eslint-disable-next-line import/extensions
 import Search from './SampleSearch.js'
 
 
@@ -24,12 +25,10 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 const SearchForm = Form.create()(Search);
-/* eslint react/no-multi-comp:0 */
 @connect(({ inspectionAnalysis, loading }) => ({
   inspectionAnalysis,
   loading: loading.models.inspectionAnalysis,
 }))
-
 @Form.create()
 class SampleModify extends PureComponent {
   state = {
@@ -67,7 +66,8 @@ class SampleModify extends PureComponent {
     { title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
+          <a onClick={() => this.modifyItem(text, record)}>修改标准 &nbsp;&nbsp;</a>
+          <a onClick={() => this.deleteOne(text, record)}>删除</a>
         </Fragment>
       ),
     },
@@ -132,7 +132,38 @@ class SampleModify extends PureComponent {
     });
     form.resetFields();
     this.setState({ modify: false });
-  }
+  };
+
+  deleteOne= text => {
+    Modal.confirm({
+      title: '确定删除此指标吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'inspectionAnalysis/deleteDetailItem',
+          payload:{
+            keyno:text.keyno,
+          },
+          callback:response => {
+            if(response.code === 200){
+              this.componentDidMount();
+              notification.open({
+                message: '删除成功',
+              });
+            }else{
+              notification.open({
+                message: '删除失败',
+                description:response.data,
+              });
+            }
+          }
+        });
+      }
+    });
+  };
+
   deleteItem = text => {
     const { dispatch } = this.props;
     var deleteRowKeys = [];
@@ -156,7 +187,7 @@ class SampleModify extends PureComponent {
         }
       }
     });
-  }
+  };
   columns1 = [
     {
       title: '委托日期',
@@ -244,13 +275,14 @@ class SampleModify extends PureComponent {
     },
     {
       title: '检测标准',
-      dataIndex: 'standard',
+      dataIndex: 'teststandard',
     },
     {
       title: '单位',
       dataIndex: 'unit',
     },
   ];
+
   componentDidMount () {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
@@ -307,6 +339,7 @@ class SampleModify extends PureComponent {
   onDeleteChange = (deleteRowKeys) => {
     this.setState({ deleteRowKeys });
   };
+
   delete = () => {
     const {deleteRowKeys} = this.state;
     const { dispatch } = this.props;
@@ -385,13 +418,16 @@ class SampleModify extends PureComponent {
   showLoad = ()=>{
     this.setState({onLoad:true}) ;
     const applicant = sessionStorage.getItem('applicant');
+    const cargoname = sessionStorage.getItem('cargoname');
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    console.log(cargoname);
     const { dispatch } = this.props;
     dispatch({
       type: 'inspectionAnalysis/getSamplesByFilter',
       payload:{
         kind: 'applicant',
         value: applicant ,
+        cargoname,
         certCode ,
       }
     });
@@ -492,7 +528,7 @@ class SampleModify extends PureComponent {
             onCancel={this.handleCancel}
             width={800}
           >
-            <div className={styles.tableListForm}><SearchForm></SearchForm></div>
+            <div className={styles.tableListForm}><SearchForm applicant={applicant} cargoname={cargoname} /></div>
             <Table
               size='middle'
               rowKey="keyno"

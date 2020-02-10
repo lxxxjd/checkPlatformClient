@@ -55,7 +55,7 @@ export default [
         path: "/Entrustment",
         icon: "file",
         name: "Entrustment",
-        authority: ["操作经理","admin"],
+        // authority: ["操作经理","admin"],
         routes: [
           {
             path: '/Entrustment/AcceptList',

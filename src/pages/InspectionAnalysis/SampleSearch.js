@@ -21,14 +21,15 @@ import styles from './Search.less';
 class SampleSearch  extends PureComponent {
 	handleSearch = e => {
 	    e.preventDefault();
-	    const { dispatch, form } = this.props;
+	    const { dispatch, form,cargoname } = this.props;
 	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
 	    form.validateFields((err, fieldsValue) => {
 	      console.log(err);
 	      if (err) return;
 	      const values = {
 	        ...fieldsValue,
-	        certCode:certCode,
+          cargoname,
+	        certCode,
 	      };
 	      dispatch({
       		type: 'inspectionAnalysis/getSamplesByFilter',
@@ -36,18 +37,19 @@ class SampleSearch  extends PureComponent {
 	      });
 	    });
   	};
+
   	handleFormReset = () => {
-	    const { form } = this.props;
+	    const { form,applicant,cargoname} = this.props;
 	    form.resetFields();
-	    this.setState({
-	      formValues: {},
-	    });
-	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+	    const user = JSON.parse(localStorage.getItem("userinfo"));
 	    const { dispatch } = this.props;
 	    dispatch({
       		type: 'inspectionAnalysis/getSamplesByFilter',
       		payload:{
-         		certCode : certCode,
+            kind: 'applicant',
+            value: applicant ,
+            cargoname,
+         		certCode : user.certCode,
      		}
 	    });
   	};
@@ -57,7 +59,7 @@ class SampleSearch  extends PureComponent {
 	      form: { getFieldDecorator },
 	    } = this.props;
 	    return (
-	      <Form onSubmit={this.handleSearch} layout="inline" >
+	      <Form onSubmit={this.handleSearch} layout="inline" style={{marginBottom:5}}>
 	        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
 	          <Col span={6}>
 	            <Form.Item
@@ -66,11 +68,12 @@ class SampleSearch  extends PureComponent {
 	              colon={false}
 	            >
 	              {getFieldDecorator('kind', {
+	                initialValue:"applicant",
 	                rules: [{  message: '搜索类型' }],
 	              })(
 	                <Select placeholder="搜索类型">
 	                 <Option value="applicant">委托人</Option>
-	                  <Option value="cargoname">检查品名</Option>
+	                  <Option value="shipname">船名</Option>
 	                  <Option value="sampleno">样品编号</Option>
 	                  <Option value="samplename">样品名称</Option>
 	                </Select>

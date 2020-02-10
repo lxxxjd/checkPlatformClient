@@ -74,7 +74,7 @@ class Main extends PureComponent {
           {text.overallstate==="检查中"|| text.overallstate==="检查完毕"?[<a onClick={() => this.recordItem(text, record)}>检查记录&nbsp;</a>]:[]}
           {text.overallstate==="测试中"?[<a onClick={() => this.InspectionArrangementItem(text, record)}>检测安排 &nbsp;</a>]:[]}
           {text.overallstate==="测试中"|| text.overallstate==="测试完毕"?[<a onClick={() => this.ResultUpdateMobileItem(text, record)}>结果录入&nbsp;</a>]:[]}
-          {text.overallstate==="测试中"|| text.overallstate==="测试完毕"|| text.overallstate==="拟制中"|| text.overallstate==="拟证完毕"?[<a onClick={() => this.CertModifyItem(text, record)}>证书拟制&nbsp;</a>]:[]}
+          {text.overallstate==="测试中"|| text.overallstate==="测试完毕"|| text.overallstate==="拟证中"|| text.overallstate==="拟证完毕"?[<a onClick={() => this.CertModifyItem(text, record)}>证书拟制&nbsp;</a>]:[]}
         </Fragment>
       ),
     },

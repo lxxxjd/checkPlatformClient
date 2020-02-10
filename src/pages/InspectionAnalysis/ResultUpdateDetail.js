@@ -17,6 +17,7 @@ import {
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
 import style from './ResultUpdate.less';
+import { bool } from 'prop-types';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -357,12 +358,12 @@ class ResultUpdateDetail extends PureComponent {
       callback: (response) => {
         if(response){
           this.setState({reviewUsers:response});
+          this.handleModalSaveListVisible(true);
         }else{
-          message.error("未配置审核人用户角色");
+          message.error("未配置用户实验室主任角色");
         }
       }
     });
-    this.handleModalSaveListVisible(true);
   };
 
   handleSave = row => {
@@ -377,13 +378,32 @@ class ResultUpdateDetail extends PureComponent {
   };
 
   saveAll =(reviewer)=>{
-    const {dispatch} = this.props;
     const {dataSource} = this.state;
     const details = [];
+    let flag = 0; // 不存在0;
     for(let i =0 ;i<dataSource.length;i++){
       details.push(dataSource[i]);
+      if(dataSource[i].testresult===null || dataSource[i].testresult===undefined  || dataSource[i].testresult==="0"){
+        flag = 1;
+      }
     }
+    if(flag===1){
+      Modal.confirm({
+        title: '存在指标结果为0，确认提交？',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => {
+          this.saveAllList(reviewer,details);
+        },
+      });
+    }else{
+      this.saveAllList(reviewer,details);
+    }
+  };
+
+  saveAllList = (reviewer,details)=>{
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    const {dispatch} = this.props;
     const values ={
       details,
       reviewer,
@@ -468,8 +488,8 @@ class ResultUpdateDetail extends PureComponent {
               </Button>
             </Col>
           </Row>
-          <SaveListFrom {...parentMethods}  modalSaveListVisible={modalSaveListVisible} reviewUsersOptions={reviewUsersOptions}  />
-          <UpdateForm {...parentMethods} visible={visible} testDetail = {testDetail}/>
+          <SaveListFrom {...parentMethods} modalSaveListVisible={modalSaveListVisible} reviewUsersOptions={reviewUsersOptions}  />
+          <UpdateForm {...parentMethods} visible={visible} testDetail={testDetail} />
           <div className={styles.tableList}>
             <Table
               size="middle"

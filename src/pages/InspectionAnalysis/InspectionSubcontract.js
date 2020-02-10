@@ -83,8 +83,7 @@ class InspectionArrangement extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.testman!==undefined && text.testman!==null && text.testman!=="" && text.state==="已添加"?[<a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]
-            :[<span>分包&nbsp;&nbsp;</span>]}
+          <a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>
           <a onClick={() => this.detailItem(text, record)}>查看</a>    &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -179,6 +178,28 @@ class InspectionArrangement extends PureComponent {
   };
 
   show = text =>{
+    if(text.testman===null||text.testman===undefined){
+      if(text.state ==="已登记"){
+        Modal.confirm({
+          title: '未添加指标，确定继续分包？',
+          okText: '确认',
+          cancelText: '取消',
+          onOk: () => {
+            this.subcontract(text);
+          },
+        });
+      }else{
+        this.subcontract(text);
+      }
+    }else{
+      Modal.info({
+        okText: '确定',
+        title: "样品已分包，请查看后删除，可重新分包",
+      });
+    }
+  };
+
+  subcontract = (text)=>{
     const {
       form,
       dispatch,
@@ -239,6 +260,7 @@ class InspectionArrangement extends PureComponent {
             visible={visible}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
+            style={{ top: 10 }}
           >
             <Form>
               <Form.Item label="分包实验室">

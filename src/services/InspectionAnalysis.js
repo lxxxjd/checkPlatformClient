@@ -113,7 +113,7 @@ export async function getTestStandard(params) {
 }
 
 export async function getSamplesByFilter(params) {
-  return request(`/api/sampleRegister/getSamplesByFilter?kind=${params.kind}&value=${params.value}&certCode=${params.certCode}`);
+  return request(`/api/sampleRegister/getSamplesByFilter?kind=${params.kind}&value=${params.value}&certCode=${params.certCode}&cargoname=${params.cargoname}`);
 }
 
 
@@ -132,6 +132,14 @@ export async function deleteDetails(params) {
     data : params.deleteRowKeys,
   });
 }
+
+
+export async function deleteDetailItem(params) {
+  return request(`/api/testdetail/deleteDetailItem?keyno=${params.keyno}`);
+}
+
+
+
 export async function addDetails(params) {
   const sampleno = params.sampleno;
   delete params.sampleno;

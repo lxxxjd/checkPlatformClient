@@ -1,7 +1,7 @@
 import {getAllSample,getCompany,getItems,addDetail,getStandards,getItemNames,deleteDetails,addDetails,
   getAllDetails,addResult,assign,getTestBySampleNo,getAllSampleAndTestMan,getReport,getAllTaskInspman,
   deleteTestBySampleNo,updateTestInfo,getSamplesByFilter,loadDetails,getTestStandard,modifyDetail,
-  reviewSampleRegister,returnSampleRegister,getAllSampleAndTestCompany,
+  reviewSampleRegister,returnSampleRegister,getAllSampleAndTestCompany,deleteDetailItem,
 } from '@/services/InspectionAnalysis'
 import {saveResultList} from '@/services/TestRecord'
 
@@ -173,6 +173,12 @@ export default {
       const response = yield call(deleteDetails, payload);
       if (callback) callback(response);
     },
+
+    *deleteDetailItem({ payload,callback }, { call, put }) {
+      const response = yield call(deleteDetailItem, payload);
+      if (callback) callback(response);
+    },
+
     *addDetails({ payload,callback }, { call, put }) {
       const response = yield call(addDetails, payload);
       if (callback) callback(response);
