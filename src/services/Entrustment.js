@@ -129,16 +129,16 @@ export async function getAllClientName(params) {
   return request('/api/contact/getAllContacts');
 }
 
-export async function getAllBusinessSort() {
-  return request('/api/business_sort/get_sort');
+export async function getAllBusinessSort(params) {
+  return request(`/api/business_sort/get_sort?certCode=${params.certCode}`);
 }
 
-export async function getAllBusinessSource() {
-  return request('/api/business_source/get_source');
+export async function getAllBusinessSource(params) {
+  return request(`/api/business_source/get_source?certCode=${params.certCode}`);
 }
 
-export async function getTradeWay() {
-  return request('/api/trade_away/get_ways');
+export async function getTradeWay(params) {
+  return request(`/api/trade_away/get_ways?certCode=${params.certCode}`);
 }
 
 export async function getCheckProject(params) {

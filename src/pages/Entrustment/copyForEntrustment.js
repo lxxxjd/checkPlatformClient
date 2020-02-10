@@ -238,23 +238,31 @@ class CopyForEntrustment extends PureComponent {
         });
       }
     });
+
+
     dispatch({
       type: 'entrustment/getBusinessSort',
-      payload: {},
+      payload: {
+        certCode : user.certCode,
+      },
       callback: (response) => {
         this.setState({businessSort: response})
       }
     });
     dispatch({
       type: 'entrustment/getBusinessSource',
-      payload: {},
+      payload: {
+        certCode : user.certCode,
+      },
       callback: (response) => {
         this.setState({businessSource: response})
       }
     });
     dispatch({
       type: 'entrustment/getTradeWay',
-      payload: {},
+      payload: {
+        certCode : user.certCode,
+      },
       callback: (response) => {
         this.setState({tradeway: response})
       }
