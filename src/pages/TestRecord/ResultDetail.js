@@ -93,6 +93,8 @@ class ResultDetail extends PureComponent {
     modalReviewVisible:false,
     modalInfo:{},
 
+    modalType:"", // 表示新增或者修改
+
   };
 
   columns = [
@@ -157,7 +159,7 @@ class ResultDetail extends PureComponent {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.modifyItem(text, record)}>编辑</a>  &nbsp;&nbsp;
+            <a onClick={() => this.modifyItem(text, record)}>修改</a>  &nbsp;&nbsp;
             <a onClick={() => this.handleReview(true, text)}>查看</a>  &nbsp;&nbsp;
             <a onClick={() => this.deleteItem(text, record)}>删除</a>
           </Fragment>
@@ -253,31 +255,6 @@ class ResultDetail extends PureComponent {
       }
     });
     dispatch({
-      type: 'checkResult/getStandard',
-      payload:{
-        certCode:user.certCode,
-      },
-      callback : (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '获取失败',
-            description:response.data,
-          });
-        }else{
-          const standardsData = response.data;
-          var standards = [];
-          for (let i = 0 ;i < standardsData.length ; i ++ ) {
-              standards.push({
-                title: standardsData[i].standarde,
-                description:standardsData[i].standardc,
-                key: standardsData[i].standarde,
-              });
-          }
-        }
-        this.setState({standards});
-      }
-    });
-    dispatch({
       type: 'checkResult/getInstrument',
       payload:{
         certCode:user.certCode,
@@ -360,6 +337,11 @@ class ResultDetail extends PureComponent {
   };
 
   modifyItem = text => {
+
+    // 操作类型
+    this.setState({modalType:"修改"});
+
+
     const { form ,dispatch} = this.props;
     form.setFieldsValue({'inspway':text.inspway});
     form.setFieldsValue({'result':text.result});
@@ -407,6 +389,36 @@ class ResultDetail extends PureComponent {
         this.setState({people});
       }
     });
+
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'checkResult/getStandard',
+      payload:{
+        kind:"field",
+        value:text.inspway,
+        certCode:user.certCode,
+      },
+      callback : (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '获取失败',
+            description:response.data,
+          });
+        }else{
+          const standardsData = response.data;
+          var standards = [];
+          for (let i = 0 ;i < standardsData.length ; i ++ ) {
+            standards.push({
+              title: standardsData[i].standarde,
+              description:standardsData[i].standardc,
+              key: standardsData[i].standarde,
+            });
+          }
+        }
+        this.setState({standards});
+      }
+    });
+
     this.setState({visible:true});
     this.setState({keyno:text.keyno});
   };
@@ -518,6 +530,10 @@ class ResultDetail extends PureComponent {
   };
 
   show = () => {
+    // 操作类型
+    this.setState({standards:[]});
+    this.setState({modalType:"新增"});
+
     const {
       form,
       dispatch,
@@ -541,14 +557,14 @@ class ResultDetail extends PureComponent {
     this.setState({ visible: false });
   };
 
-  onInspwayChange = e => {
+  onInspwayChange = value => {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'checkResult/getTaskByReportNoAndInspway',
       payload:{
         reportno,
-        inspway : e,
+        inspway : value,
       },
       callback : (response) => {
         if(response.code === 400){
@@ -566,6 +582,35 @@ class ResultDetail extends PureComponent {
           }
         }
         this.setState({people});
+      }
+    });
+
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'checkResult/getStandard',
+      payload:{
+        kind:"field",
+        value,
+        certCode:user.certCode,
+      },
+      callback : (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '获取失败',
+            description:response.data,
+          });
+        }else{
+          const standardsData = response.data;
+          var standards = [];
+          for (let i = 0 ;i < standardsData.length ; i ++ ) {
+            standards.push({
+              title: standardsData[i].standarde,
+              description:standardsData[i].standardc,
+              key: standardsData[i].standarde,
+            });
+          }
+        }
+        this.setState({standards});
       }
     });
   };
@@ -623,7 +668,7 @@ class ResultDetail extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     const { targetStandards , selectedStandards , standards , instrument , targetInstrument ,
-      selectedInstrument ,people,targetPeople,selectedPeople,modalInfo,modalReviewVisible} = this.state;
+      selectedInstrument ,people,targetPeople,selectedPeople,modalInfo,modalReviewVisible,modalType} = this.state;
     const parentMethods = {
       handleModalReviewVisible:this.handleModalReviewVisible,
     };
@@ -651,26 +696,43 @@ class ResultDetail extends PureComponent {
           <Form>
             <Row>
               <Col span={12}>
-                <Form.Item
-                  label="申请项目："
-                  labelCol={{span: 4}}
-                  wrapperCol={{span: 20}}
-                  colon={false}
-                >
-                  {getFieldDecorator('inspway', {
-                    rules: [{ required: true, message: '请选择您要登记的检查项目' }],
-                  })(
-                    <Select
-                      showSearch
-                      placeholder="请选择您要登记的检查项目"
-                      filterOption={false}
-                      onChange={this.onInspwayChange}
-                      style={{width:'98%'}}
+                {
+                  modalType==="新增"?[
+                    <Form.Item
+                      label="申请项目："
+                      labelCol={{span: 4}}
+                      wrapperCol={{span: 20}}
+                      colon={false}
                     >
-                      {projectOptions}
-                    </Select>
-                  )}
-                </Form.Item>
+                      {getFieldDecorator('inspway', {
+                        rules: [{ required: true, message: '请选择您要登记的检查项目' }],
+                      })(
+                        <Select
+                          showSearch
+                          placeholder="请选择您要登记的检查项目"
+                          filterOption={false}
+                          onChange={this.onInspwayChange}
+                          style={{width:'98%'}}
+                        >
+                          {projectOptions}
+                        </Select>
+                      )}
+                    </Form.Item>
+                  ]:[
+                    <Form.Item
+                      label="申请项目："
+                      labelCol={{span: 4}}
+                      wrapperCol={{span: 20}}
+                      colon={false}
+                    >
+                      {getFieldDecorator('inspway', {
+                        rules: [{ required: true, message: '请选择您要登记的检查项目' }],
+                      })(
+                        <Input disabled style={{width:'98%'}} />
+                      )}
+                    </Form.Item>
+                  ]
+                }
               </Col>
               <Col span={12}>
                 <Form.Item

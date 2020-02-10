@@ -334,6 +334,15 @@ class UploadDetail extends PureComponent {
       });
       return;
     }
+    let val = file.name;
+    const pattern = /\.{1}[a-z]{1,}$/;
+    if (pattern.exec(val) !== null) {
+      val = val.slice(0, pattern.exec(val).index)
+    }
+    const {
+      form
+    } = this.props;
+    form.setFieldsValue({['recordname']: val});
     this.setState({ fileList:fileList});
   };
 
