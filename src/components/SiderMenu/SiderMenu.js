@@ -54,7 +54,7 @@ export default class SiderMenu extends PureComponent {
   };
 
   render() {
-    const { logo, collapsed, onCollapse, fixSiderbar, theme, isMobile,username } = this.props;
+    const { logo, collapsed, onCollapse, fixSiderbar, theme, isMobile,username,company } = this.props;
     const { openKeys } = this.state;
     const defaultProps = collapsed ? {} : { openKeys };
 
@@ -80,7 +80,15 @@ export default class SiderMenu extends PureComponent {
         <div className={styles.logo} id="logo">
           <Link to="/">
             <img src={logo} alt="logo" />
-            <h1>{username}，{title}</h1>
+            <h1>
+              {username}，欢迎您！
+            </h1>
+            {/* eslint-disable-next-line jsx-a11y/no-distracting-elements */}
+            <marquee direction="right">
+              <h2>
+                {company}
+              </h2>
+            </marquee>
           </Link>
         </div>
         <Suspense fallback={<PageLoading />}>

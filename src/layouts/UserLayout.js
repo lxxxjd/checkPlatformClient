@@ -2,13 +2,14 @@ import React, { Component, Fragment } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import { Icon } from 'antd';
+import { Col, Icon, Row } from 'antd';
 import GlobalFooter from '@/components/GlobalFooter';
 import DocumentTitle from 'react-document-title';
 import SelectLang from '@/components/SelectLang';
 import styles from './UserLayout.less';
 import logo from '../assets/logo.png';
 import getPageTitle from '@/utils/getPageTitle';
+import testImg from '../pages/HomePage/img/timg.png';
 
 const links = [
   // {
@@ -62,11 +63,14 @@ class UserLayout extends Component {
             <div className={styles.top}>
               <div className={styles.header}>
                 <Link to="/user/login">
-                  <img alt="logo" className={styles.logo} src={logo} />
                   <span className={styles.title}>检验机构业务管理系统</span>
                 </Link>
               </div>
-              <div className={styles.desc}></div>
+              <div style={{marginTop:10}}>
+                <img alt="404" src={logo} style={{height:27,paddingTop:2}} />
+                <span style={{verticalAlign:'middle',fontFamily:"楷体",fontSize:23,marginLeft:10,color:'black'}}>水木梁清</span>
+              </div>
+              <div className={styles.desc} />
             </div>
             {children}
           </div>

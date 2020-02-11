@@ -25,6 +25,11 @@ export async function sendVerify(params) {
   return request(`/api/verify/send_verify?tel=${params.tel}`);
 }
 
+export async function getCompany(params) {
+  return request(`/api/company/getCompany?certCode=${params.certCode}`);
+}
+
+
 // 验证验证码
 export async function verifyTel(params) {
   return request(`/api/verify/verify_tel?verifyCode=${params.verifyCode}&tel=${params.tel}`);

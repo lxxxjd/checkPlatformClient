@@ -59,6 +59,8 @@ class BasicLayout extends React.Component {
       type: 'menu/getMenuData',
       payload: { routes, path, authority },
     });
+
+
   }
 
   getContext() {
@@ -125,6 +127,7 @@ class BasicLayout extends React.Component {
             menuData={menuData}
             isMobile={isMobile}
             username={user.nameC}
+            company={user.companyname===undefined||user.companyname===null?"":user.companyname}
             {...this.props}
           />
         )}
