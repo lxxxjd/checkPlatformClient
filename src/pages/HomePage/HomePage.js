@@ -87,24 +87,18 @@ class HomePage extends Component {
     return (
       <div>
         <Row>
-          <Col span={5}>
+          <Col span={6}>
             <div style={{marginTop:25,marginLeft:25}}>
               <Row>
                 <Col span={2} />
                 <Col span={4}><img alt="404" src={testImg} style={{height:27,paddingLeft:0}} /></Col>
-                <Col span={9}><span style={{fontFamily:"楷体",marginBottom:5,fontSize:24,color:'black'}}>水木梁清</span></Col>
+                <Col span={15}><span style={{fontFamily:"楷体",marginBottom:5,fontSize:24,color:'black'}}>水木梁清</span></Col>
               </Row>
               <h2 style={{fontFamily:"楷体",color:'black'}}> 大宗商品公共服务平台</h2>
             </div>
           </Col>
-          <Col span={4}>
-            <Search
-              placeholder="搜索你想要的..."
-              onSearch={value => console.log(value)}
-              style={{ width: '100%',marginTop:34,paddingRight:10}}
-            />
-          </Col>
-          <Col span={15}>
+
+          <Col span={18}>
             <div style={{marginTop:30}}>
               <Button size='large' style={{marginLeft:10,fontFamily:"楷体",fontSize:"15",fontWeight:"14" }} onClick={this.toConsignor}>委托人</Button>
               <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toCompany}>检验机构</Button>
