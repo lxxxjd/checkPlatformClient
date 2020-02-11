@@ -129,6 +129,7 @@ class CertificateUpload extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('CertificateUploadDetail_overallstate',text.overallstate);
     router.push({
       pathname:'/Certificate/CertificateUploadDetail',
     });

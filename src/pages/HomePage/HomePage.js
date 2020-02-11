@@ -110,8 +110,8 @@ class HomePage extends Component {
               <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toCompany}>检验机构</Button>
               <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toCustoms}>委托业务海关监管</Button>
               <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toCNAS}>CNAS检验检测抽查</Button>
-              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toMain}>水木梁清平台管理</Button>
-              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toTry}>机构注册</Button>
+              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toMain}>平台管理</Button>
+              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toTry}>检验机构注册</Button>
             </div>
             <div style={{paddingLeft:200,marginTop:10}}>
               <h3 style={{fontFamily:"楷体"}}>平台服务投诉电话：15150568864，微信号:smlq518125</h3>

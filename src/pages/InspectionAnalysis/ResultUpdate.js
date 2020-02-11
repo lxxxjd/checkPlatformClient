@@ -77,9 +77,8 @@ class ResultUpdate extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.uploadItem(text, record)}>上传文件</a>
+          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[]:[<a onClick={() => this.mobileItem(text, record)}>编辑&nbsp;&nbsp;</a>]}
+          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[<a onClick={() => this.uploadItem(text, record)}>查看文件</a>]:[<a onClick={() => this.uploadItem(text, record)}>上传文件</a>]}
           &nbsp;&nbsp;
           <a onClick={() => this.detailItem(text, record)}>查看</a>
           &nbsp;&nbsp;
@@ -139,6 +138,7 @@ class ResultUpdate extends PureComponent {
     router.push({
       pathname:'/InspectionAnalysis/ResultRecord',
     });
+    sessionStorage.setItem('ResultRecord_overallstate',text.overallstate);
   };
 
   previewItem = text => {

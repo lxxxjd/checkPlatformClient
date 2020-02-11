@@ -224,6 +224,7 @@ function getBase64(file) {
 }))
 class CertificateUploadDetail extends PureComponent {
   state = {
+    overallstate:"",
     visible: false,
     downloadVisible: false,
     previewVisible: false,
@@ -324,6 +325,7 @@ class CertificateUploadDetail extends PureComponent {
 
 
   componentDidMount() {
+    this.setState({overallstate:sessionStorage.getItem('CertificateUploadDetail_overallstate')});
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
@@ -1159,7 +1161,7 @@ class CertificateUploadDetail extends PureComponent {
     } = this.props;
     // state 方法
     const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,showVisible,
-      value,option,treeData,approverusers,modelPlatformType,sampleRegister,checkResult,text} = this.state
+      value,option,treeData,approverusers,modelPlatformType,sampleRegister,checkResult,text,overallstate} = this.state
     const typeOptions = modelName.map(d => <Option key={d.name} value={d.id}>{d.name}</Option>);
     const checkResultOptions = checkResult.map(d => <Option key={d.inspway} value={d.inspway}>{d.inspway}</Option>);
     const sampleRegisterOptions = sampleRegister.map(d => <Option key={d.sampleno} value={d.sampleno}>{d.sampleno}{d.samplename}</Option>);
@@ -1239,8 +1241,8 @@ class CertificateUploadDetail extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
-              <Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>
+              {overallstate==="已发布"|| overallstate==="申请作废"?[]:[<Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>]}
+              {overallstate==="已发布"|| overallstate==="申请作废"?[]:[<Button style={{ marginBottom: 12, marginLeft:12 }} type="primary" onClick={this.showDownloadVisible}>下载模板</Button>]}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>

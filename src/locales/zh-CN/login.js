@@ -8,7 +8,7 @@ export default {
   'app.login.remember-me': '自动登录',
   'app.login.forgot-password': '忘记密码',
   'app.login.sign-in-with': '其他登录方式',
-  'app.login.signup': '注册账户',
+  'app.login.signup': '检验机构注册',
   'app.login.login': '登录',
   'app.register.register': '注册',
   'app.register.get-verification-code': '获取验证码',

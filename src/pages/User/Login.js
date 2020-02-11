@@ -67,6 +67,11 @@ class LoginPage extends Component {
     <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
   );
 
+  openRegister=()=>{
+    const url = `http://www.smlq.vip:83/user/register`;
+    window.open(url);
+  };
+
   render() {
     const { login, submitting } = this.props;
     const { type, autoLogin } = this.state;
@@ -162,9 +167,9 @@ class LoginPage extends Component {
             {/*<Icon type="alipay-circle" className={styles.icon} theme="outlined" />*/}
             {/*<Icon type="taobao-circle" className={styles.icon} theme="outlined" />*/}
             {/*<Icon type="weibo-circle" className={styles.icon} theme="outlined" />*/}
-            <Link className={styles.register} to="/user/register">
+            <a className={styles.register} onClick={this.openRegister}>
               <FormattedMessage id="app.login.signup" />
-            </Link>
+            </a>
           </div>
         </Login>
       </div>

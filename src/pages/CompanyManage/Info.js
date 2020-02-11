@@ -82,7 +82,7 @@ const OldPassWordForm = Form.create()(props => {
               message: "请输入原密码",
             },
           ],
-        })(<Input placeholder="请输入原密码" />)}
+        })(<Input placeholder="请输入原密码" type="password" />)}
       </Form.Item>
 
       <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="确认原密码">
@@ -96,7 +96,7 @@ const OldPassWordForm = Form.create()(props => {
               validator: checkConfirm,
             },
           ],
-        })(<Input placeholder="请再次输入原密码" />)}
+        })(<Input placeholder="请再次输入原密码" type="password" />)}
       </Form.Item>
     </Modal>
   );

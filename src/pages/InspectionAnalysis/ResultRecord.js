@@ -56,6 +56,7 @@ class ResultRecord extends PureComponent {
     modelName:[],
     url:null,
     showVisible:false,
+    overallstate:"",
   };
 
   columns = [
@@ -83,10 +84,39 @@ class ResultRecord extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.previewItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.previewItem(text, record)}>查看   &nbsp;&nbsp;</a>
+          <a onClick={() => this.deleteItem(text, record)}>删除 &nbsp;&nbsp;</a>
+        </Fragment>
+      ),
+    },
+  ];
+
+  columns2 = [
+    {
+      title: '记录名',
+      dataIndex: 'recordname',
+      render: val => {
+        //取文件名
+        var pattern = /\.{1}[a-z]{1,}$/;
+        if (pattern.exec(val) !== null) {
+          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
+        } else {
+          return <span>{val}</span>;
+        }
+      }
+    },
+    {
+      title: '上传日期',
+      dataIndex: 'recorddate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '操作',
+      render: (text, record) => (
+        <Fragment>
+          <a onClick={() => this.previewItem(text, record)}>查看   &nbsp;&nbsp;</a>
         </Fragment>
       ),
     },
@@ -94,6 +124,7 @@ class ResultRecord extends PureComponent {
 
 
   componentDidMount() {
+    this.setState({overallstate:sessionStorage.getItem('ResultRecord_overallstate')});
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
@@ -390,7 +421,7 @@ class ResultRecord extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible,overallstate} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
 
@@ -441,7 +472,7 @@ class ResultRecord extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>
+              {overallstate==="已发布"|| overallstate==="申请作废"?[]:[<Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>上传文件</Button>]}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>
@@ -454,7 +485,7 @@ class ResultRecord extends PureComponent {
               size="middle"
               loading={loading}
               dataSource={recordData}
-              columns={this.columns}
+              columns={overallstate ==="已发布"|| overallstate==="申请作废"?[this.columns2]:[this.columns]}
               rowKey="recordname"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
