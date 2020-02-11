@@ -58,7 +58,15 @@ class HomePage extends Component {
     window.open(`${this.state.url}:83/user/register`)
   };
 
+  openContactReadMe =()=>{
+    const contactUrl="https://checkplatform2.oss-cn-hangzhou.aliyuncs.com/template/platform/platform/readme/%E5%A7%94%E6%89%98%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.pdf";
+    window.open(contactUrl);
+  };
 
+  openCompanyReadMe =()=>{
+    const companyUrl="https://checkplatform2.oss-cn-hangzhou.aliyuncs.com/template/platform/platform/readme/%E6%A3%80%E9%AA%8C%E6%9C%BA%E6%9E%84%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.pdf";
+    window.open(companyUrl);
+  };
 
 
   render() {
@@ -75,6 +83,7 @@ class HomePage extends Component {
       </Footer>
     );
 
+
     return (
       <div>
         <Row>
@@ -82,10 +91,10 @@ class HomePage extends Component {
             <div style={{marginTop:25,marginLeft:25}}>
               <Row>
                 <Col span={2} />
-                <Col span={5}><img alt="404" src={testImg} style={{height:30}} /></Col>
-                <Col span={8}><h3 style={{fontFamily:"楷体",marginTop:3,paddingLeft:2}}>水木梁清</h3></Col>
+                <Col span={4}><img alt="404" src={testImg} style={{height:27,paddingLeft:0}} /></Col>
+                <Col span={9}><span style={{fontFamily:"楷体",marginBottom:5,fontSize:24,color:'black'}}>水木梁清</span></Col>
               </Row>
-              <h2 style={{fontFamily:"楷体"}}> 大宗商品公共服务平台</h2>
+              <h2 style={{fontFamily:"楷体",color:'black'}}> 大宗商品公共服务平台</h2>
             </div>
           </Col>
           <Col span={4}>
@@ -111,7 +120,11 @@ class HomePage extends Component {
         </Row>
         <Row style={{marginTop:20}}>
           <Col span={14}>
-            <img alt="404" src={home1} style={{width:'100%',height:document.body.clientHeight*0.9,paddingRight:10,paddingLeft:10}} />
+            <div style={{position:'relative'}}>
+              <img alt="404" src={home1} style={{width:'100%',height:document.body.clientHeight*0.9,paddingRight:10,paddingLeft:10}} />
+              <a style={{position:'absolute',left:document.body.clientHeight*0.8,top:30}} onClick={this.openContactReadMe}>委托人使用说明 </a>
+              <a style={{position:'absolute',left:document.body.clientHeight*0.8+120,top:30}} onClick={this.openCompanyReadMe}>检验机构使用说明 </a>
+            </div>
           </Col>
           <Col span={10}>
             <img alt="404" src={home2} style={{width:'100%',height:document.body.clientHeight*0.9,paddingLeft:10,paddingRight:10}} />
