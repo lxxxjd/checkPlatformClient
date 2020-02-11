@@ -123,7 +123,7 @@ class HomePage extends Component {
             <div style={{position:'relative'}}>
               <img alt="404" src={home1} style={{width:'100%',height:document.body.clientHeight*0.9,paddingRight:10,paddingLeft:10}} />
               <a style={{position:'absolute',left:document.body.clientHeight*0.8,top:30}} onClick={this.openContactReadMe}>委托人使用说明 </a>
-              <a style={{position:'absolute',left:document.body.clientHeight*0.8+120,top:30}} onClick={this.openCompanyReadMe}>检验机构使用说明 </a>
+              <a style={{position:'absolute',left:document.body.clientHeight*0.8,top:40}} onClick={this.openCompanyReadMe}>检验机构使用说明 </a>
             </div>
           </Col>
           <Col span={10}>
