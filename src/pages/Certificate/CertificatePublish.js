@@ -134,7 +134,7 @@ class CertificatePublish extends PureComponent {
     const { dispatch } = this.props;
     const {init} = this;
     confirm({
-      title:"确定要发布此委托记录吗？",
+      title:"您确实要发布该套证书？发布后，一经委托人确认，没有委托人同意，将无法修改。",
       okText:"确定",
       cancelText:"取消",
       onOk() {

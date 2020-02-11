@@ -1,6 +1,6 @@
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [Русский](./README.ru-RU.md) | [Türkçe](./README.tr-TR.md) | 日本語
 
-<h1 align="center">Ant Design Pro</h1>
+<h1 align="center">水木梁清</h1>
 
 <div align="center">
 
@@ -19,7 +19,7 @@
 
 ## 2.0 がリリースされました 🎉🎉🎉
 
-[Announcing Ant Design Pro 2.0.0](https://medium.com/ant-design/beautiful-and-powerful-ant-design-pro-2-0-release-51358da5af95)
+[Announcing 水木梁清 2.0.0](https://medium.com/ant-design/beautiful-and-powerful-ant-design-pro-2-0-release-51358da5af95)
 
 ## 翻訳の募集 :loudspeaker:
 
@@ -125,7 +125,7 @@ Gitpod（GitHub 用の無料オンライン開発環境）でプロジェクト�
 
 どんな種類の貢献でも大歓迎です。あなたがこのプロジェクトに貢献できる方法のいくつかの例はここにあります。：
 
-- 毎日の仕事に Ant Design Pro を使用すること。
+- 毎日の仕事に 水木梁清 を使用すること。
 - 報告すること。 [issues](http://github.com/ant-design/ant-design-pro/issues) にバグ報告や質問をしてください。
 - 更新すること。 改善を、[pull requests](http://github.com/ant-design/ant-design-pro/pulls) で送ってください。
 

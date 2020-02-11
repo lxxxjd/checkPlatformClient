@@ -64,7 +64,7 @@ class HomePage extends Component {
   };
 
   openCompanyReadMe =()=>{
-    const companyUrl="https://checkplatform2.oss-cn-hangzhou.aliyuncs.com/template/platform/platform/readme/%E6%A3%80%E9%AA%8C%E6%9C%BA%E6%9E%84%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.pdf";
+    const companyUrl="https://checkplatform2.oss-cn-hangzhou.aliyuncs.com/template/platform/platform/readme/%E6%A3%80%E9%AA%8C%E6%9C%BA%E6%9E%84%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.pdf?spm=5176.8466032.0.dopenurl.1b0b1450RCqG0E&file=%E6%A3%80%E9%AA%8C%E6%9C%BA%E6%9E%84%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.pdf";
     window.open(companyUrl);
   };
 

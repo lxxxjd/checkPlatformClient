@@ -1,6 +1,6 @@
 [English](./README.md) | [简体中文](./README.zh-CN.md) | [Русский](./README.ru-RU.md) | Türkçe | [日本語](./README.ja-JP.md)
 
-<h1 align="center">Ant Design Pro</h1>
+<h1 align="center">水木梁清</h1>
 
 <div align="center">
 
@@ -19,7 +19,7 @@ React ile kurumsal uygulamalar için taslak olarak geliştirilmiş kullanıma ha
 
 ## 2.0 Versiyonu Şimdi Yayında! 🎉🎉🎉
 
-[Announcing Ant Design Pro 2.0.0](https://medium.com/ant-design/beautiful-and-powerful-ant-design-pro-2-0-release-51358da5af95)
+[Announcing 水木梁清 2.0.0](https://medium.com/ant-design/beautiful-and-powerful-ant-design-pro-2-0-release-51358da5af95)
 
 ## Çeviri Desteği :loudspeaker:
 
@@ -119,6 +119,6 @@ Modern internet tarayıcıları ve IE11.
 
 Her türlü desteğinize açığız, bu projeye nasıl katkıda bulunabileceğinize dair bazı örnekler:
 
-- Günlük işinizde Ant Design Pro kullanın.
+- Günlük işinizde 水木梁清 kullanın.
 - Hataları bildirmek veya soru sormak için [issues](http://github.com/ant-design/ant-design-pro/issues) gönderin.
 - kodumuzu geliştirmek için [pull requests](http://github.com/ant-design/ant-design-pro/pulls) gönderin.
