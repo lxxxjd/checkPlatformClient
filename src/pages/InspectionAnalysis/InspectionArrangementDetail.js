@@ -54,7 +54,7 @@ class InspectionArrangementDetail extends PureComponent {
       dataIndex: 'inspman',
     },
     {
-      title: '联系方式',
+      title: '手机',
       dataIndex: 'tel',
     },
     {

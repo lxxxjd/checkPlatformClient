@@ -64,7 +64,7 @@ class HomePage extends Component {
   render() {
     const { form } = this.props;
     const FooterView = () => (
-      <Footer style={{ height:100,backgroundColor:'white'}}>
+      <Footer style={{ height:50,backgroundColor:'white'}}>
         <GlobalFooter
           copyright={
             <Fragment className={styles.content}>
@@ -78,42 +78,43 @@ class HomePage extends Component {
     return (
       <div>
         <Row>
-          <Col span={3}>
-            <img alt="404" src={testImg} style={{height:130,padding:20}} />
-          </Col>
-          <Col span={4}>
-            <div style={{marginTop:25}}>
-              <h3> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;水木梁清</h3>
-              <h3> 大宗商品公共服务平台</h3>
+          <Col span={5}>
+            <div style={{marginTop:25,marginLeft:25}}>
+              <Row>
+                <Col span={2} />
+                <Col span={5}><img alt="404" src={testImg} style={{height:30}} /></Col>
+                <Col span={8}><h3 style={{fontFamily:"楷体",marginTop:3,paddingLeft:2}}>水木梁清</h3></Col>
+              </Row>
+              <h2 style={{fontFamily:"楷体"}}> 大宗商品公共服务平台</h2>
             </div>
           </Col>
-          <Col span={5}>
+          <Col span={4}>
             <Search
               placeholder="搜索你想要的..."
               onSearch={value => console.log(value)}
-              style={{ width: 200,marginTop:30 }}
+              style={{ width: '100%',marginTop:34,paddingRight:10}}
             />
           </Col>
-          <Col span={12}>
+          <Col span={15}>
             <div style={{marginTop:30}}>
-              <Button style={{marginLeft:10}} onClick={this.toConsignor}>委托人</Button>
-              <Button style={{marginLeft:10}} onClick={this.toCompany}>检验机构</Button>
-              <Button style={{marginLeft:10}} onClick={this.toCustoms}>海关</Button>
-              <Button style={{marginLeft:10}} onClick={this.toCNAS}>CNAS</Button>
-              <Button style={{marginLeft:10}} onClick={this.toMain}>平台管理</Button>
-              <Button style={{marginLeft:10}} onClick={this.toTry}>试用</Button>
+              <Button size='large' style={{marginLeft:10,fontFamily:"楷体",fontSize:"15",fontWeight:"14" }} onClick={this.toConsignor}>委托人</Button>
+              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toCompany}>检验机构</Button>
+              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toCustoms}>委托业务海关监管</Button>
+              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toCNAS}>CNAS检验检测抽查</Button>
+              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toMain}>水木梁清平台管理</Button>
+              <Button size='large' style={{marginLeft:10,fontFamily:"楷体"}} onClick={this.toTry}>机构注册</Button>
             </div>
-            <div style={{marginLeft:60,marginTop:10}}>
-              <h3>平台服务投诉电话：0512-671261239</h3>
+            <div style={{paddingLeft:200,marginTop:10}}>
+              <h3 style={{fontFamily:"楷体"}}>平台服务投诉电话：15150568864，微信号:smlq518125</h3>
             </div>
           </Col>
         </Row>
-        <Row>
+        <Row style={{marginTop:20}}>
           <Col span={14}>
-            <img alt="404" src={home1} style={{width:'100%',height:document.body.clientHeight*0.9,paddingRight:10}} />
+            <img alt="404" src={home1} style={{width:'100%',height:document.body.clientHeight*0.9,paddingRight:10,paddingLeft:10}} />
           </Col>
           <Col span={10}>
-            <img alt="404" src={home2} style={{width:'100%',height:document.body.clientHeight*0.9,paddingLeft:10}} />
+            <img alt="404" src={home2} style={{width:'100%',height:document.body.clientHeight*0.9,paddingLeft:10,paddingRight:10}} />
           </Col>
         </Row>
         <Row>

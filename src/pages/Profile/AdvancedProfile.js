@@ -280,7 +280,7 @@ class AdvancedProfile extends Component {
             <Description term="用户姓名">付小小</Description>
             <Description term="会员卡号">32943898021309809423</Description>
             <Description term="身份证">3321944288191034921</Description>
-            <Description term="联系方式">18112345678</Description>
+            <Description term="手机">18112345678</Description>
             <Description term="联系地址">
               曲丽丽 18100000000 浙江省杭州市西湖区黄姑山路工专路交叉路口
             </Description>

@@ -406,12 +406,12 @@ class Info extends PureComponent {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item label="联系方式">
+            <Form.Item label="手机">
               {getFieldDecorator('tel', {
                 rules: [
                   {
                     required: true,
-                    message: '请输入联系方式',
+                    message: '请输入手机',
                   },
                 ],
               })(<Input />)}

@@ -56,11 +56,11 @@ const fieldLabels = {
   customsNo: '报关号',
   applicant: '申请人',
   applicantname: '联系人',
-  applicanttel: '联系方式',
+  applicanttel: '手机',
   businesssort: '业务分类',
   agent: '代理人',
   agentname: '联系人',
-  agenttel: '联系方式',
+  agenttel: '手机',
   payer: '付款人',
   price: '检验费',
   reportdate: '委托日期',
@@ -68,7 +68,7 @@ const fieldLabels = {
   businesssource: '业务来源',
   shipname: '标识/船名',
   fromto: '产地/装卸港',
-  insplinkway: '现场联系方式',
+  insplinkway: '现场手机',
   inspdate: '检验时间',
   cargoname: '检查品名',
   cargosort: '货物类别',
@@ -746,7 +746,7 @@ class CopyForEntrustment extends PureComponent {
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('applicanttel', {})(<Input style={{width: '100%'}} placeholder="联系方式"/>)}
+                  {getFieldDecorator('applicanttel', {})(<Input style={{width: '100%'}} placeholder="请输入手机"/>)}
                 </Form.Item>
               </Col>
               <Col span={6}>
@@ -812,7 +812,7 @@ class CopyForEntrustment extends PureComponent {
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('agenttel', {})(<Input style={{width: '100%'}} placeholder="联系方式"/>)}
+                  {getFieldDecorator('agenttel', {})(<Input style={{width: '100%'}} placeholder="请输入手机"/>)}
                 </Form.Item>
               </Col>
               <Col span={6}>

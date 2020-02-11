@@ -57,7 +57,7 @@ const ReviewFrom = (props => {
     >
       <Descriptions bordered>
         <Descriptions.Item label="客服姓名">{modalInfo.inspman}</Descriptions.Item>
-        <Descriptions.Item label="联系方式">{modalInfo.tel}</Descriptions.Item>
+        <Descriptions.Item label="手机">{modalInfo.tel}</Descriptions.Item>
         <Descriptions.Item label="部门">{modalInfo.section}</Descriptions.Item>
         <Descriptions.Item label="岗位">{modalInfo.position}</Descriptions.Item>
         <Descriptions.Item label="工作任务">{modalInfo.inspway}</Descriptions.Item>
@@ -244,7 +244,7 @@ class CustomerServiceDetail extends PureComponent {
       dataIndex: 'inspman',
     },
     {
-      title: '联系方式',
+      title: '手机',
       dataIndex: 'tel',
     },
     {
@@ -488,7 +488,7 @@ class CustomerServiceDetail extends PureComponent {
               })(
                 <Select placeholder="搜索类型">
                   <Option value="nameC">客服姓名</Option>
-                  <Option value="tel">联系方式</Option>
+                  <Option value="tel">手机</Option>
                 </Select>
               )}
             </Form.Item>
