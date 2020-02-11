@@ -379,7 +379,7 @@ const AddForm = Form.create()(props => {
             <Option value="财务副总">财务副总</Option>
             <Option value="操作经理">操作经理</Option>
             <Option value="实验室主任">实验室主任</Option>
-            <Option value="业务经理">实验室主任</Option>
+            <Option value="业务经理">业务经理</Option>
             <Option value="财务经理">财务经理</Option>
             <Option value="客服人员">客服人员</Option>
             <Option value="检验人员">检验人员</Option>
