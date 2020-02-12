@@ -963,7 +963,7 @@ class UserManage extends PureComponent {
             onCancel={this.handlePreviewCancel}
             footer={null}
           >
-            <img src={signUrl} width="100" height="100"/>
+            <img src={signUrl} width="150" />
           </Modal>
         </Card>
       </PageHeaderWrapper>

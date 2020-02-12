@@ -14,6 +14,8 @@ export async function deleteCargo(params) {
   return request(`/api/cargo/delete_cargo?keyno=${params.keyno}`);
 }
 
+
+
 export async function updateCargo(params) {
   return request('/api/cargo/update_cargo', {
     method: 'POST',
@@ -94,5 +96,4 @@ export async function addCargo(params) {
     },
   });
 }
-
 

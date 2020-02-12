@@ -48,8 +48,8 @@ class ManUpload extends PureComponent {
     previewVisible: false,
     previewImage: '',
     fileList: [],
-    headUrl:'',
-    signUrl:'',
+    headUrl:undefined,
+    signUrl:undefined,
     uploadType:'',
   };
 
@@ -63,28 +63,33 @@ class ManUpload extends PureComponent {
       },
       callback:(response)=>{
         if(response.code === 200){
-          dispatch({
-            type: 'company/getUrl',
-            payload:{
-               url : response.data.signurl,
-            },
-            callback:(response)=>{
-              if(response.code === 200){
-                this.setState({signUrl:response.data});
+          if( response.data.signurl!==null){
+            dispatch({
+              type: 'company/getUrl',
+              payload:{
+                url : response.data.signurl,
+              },
+              callback:(response)=>{
+                if(response.code === 200){
+                  this.setState({signUrl:response.data});
+                }
               }
-            }
-          });
-          dispatch({
-            type: 'company/getUrl',
-            payload:{
-               url : response.data.authorizeurl,
-            },
-            callback:(response)=>{
-              if(response.code === 200){
-                this.setState({headUrl:response.data});
+            });
+          }
+          if( response.data.authorizeurl!==null){
+            dispatch({
+              type: 'company/getUrl',
+              payload:{
+                url : response.data.authorizeurl,
+              },
+              callback:(response)=>{
+                if(response.code === 200){
+                  this.setState({headUrl:response.data});
+                }
               }
-            }
-          });
+            });
+          }
+
         }
       }
     });
@@ -97,7 +102,6 @@ class ManUpload extends PureComponent {
     } = this.props;
     const username = sessionStorage.getItem('username');
     const {uploadType} = this.state;
-    console.log(uploadType);
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         let formData = new FormData();
@@ -225,7 +229,6 @@ class ManUpload extends PureComponent {
       </div>
     );
     const {
-      certificate,
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -269,11 +272,14 @@ class ManUpload extends PureComponent {
         </Modal>
         <Card  size="small">
           <Row>
-            <Col span={24}>
+            <Col span={22}>
               <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传签名</Button>
             </Col>
+            <Col span={2}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.back}>返回</Button>
+            </Col>
           </Row>
-          <img src={signUrl} width="100" height="100"/>
+          {(signUrl===''||signUrl===null||signUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={signUrl} width="200" />]}
         </Card>
         <br/>
         <Card  size="small">
@@ -282,7 +288,7 @@ class ManUpload extends PureComponent {
               <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传授权图片</Button>
             </Col>
           </Row>
-          <img src={headUrl} width="100" height="100"/>
+          {(headUrl===''||headUrl===null||headUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={headUrl} width="200" />]}
         </Card>
       </PageHeaderWrapper>
     );

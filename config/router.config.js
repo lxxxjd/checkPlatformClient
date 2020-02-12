@@ -738,6 +738,14 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
+          {
+            path: '/DictMaintain/InvoiceTitleUpload',
+            name: 'InvoiceTitleUpload',
+            component: './DictMaintain/InvoiceTitleUpload',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+
 
         ],
       },

@@ -118,7 +118,7 @@ export default {
   'menu.DictMaintain.SurveyStandard':'检验标准',
   'menu.DictMaintain.Intrusment':'仪器信息',
   'menu.DictMaintain.IntrusmentRecord':'仪器文件',
-
+  'menu.DictMaintain.InvoiceTitleUpload':'发票图片',
   'menu.CompanyManage':'公司管理',
   'menu.CompanyManage.CompanyInfo':'公司信息',
   'menu.CompanyManage.CompanyUpload':'公司图片',

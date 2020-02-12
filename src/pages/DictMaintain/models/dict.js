@@ -1,7 +1,8 @@
 import {getCargos , searchCargos, updateCargo, addCargo, deleteCargo, getItemList, searchItemList , addItem, updateItem, deleteItem, getTestStandard, updateTestStandard, addTestStandard, deleteTestStandard} from '@/services/dict';
 import {  getCheckProjectList,addCheckProject,updateCheckProject,deleteCheckProject} from '@/services/CheckProject';
 import { getBusinessSortList,addBusinessSort,updateBusinessSort,deleteBusinessSort, getBusinessSourceList,addBusinessSource,updateBusinessSource,deleteBusinessSource }from '@/services/Business';
-import { getInvoiceTitleList,addInvoiceTitle,updateInvoiceTitle,deleteInvoiceTitle} from '@/services/InvoiceTitle';
+import { getInvoiceTitleList,addInvoiceTitle,updateInvoiceTitle,deleteInvoiceTitle,uploadInvoiceTitle,getInvoiceTitleById} from '@/services/InvoiceTitle';
+import {getUrl} from '@/services/Company';
 
 export default {
   namespace: 'dict',
@@ -39,6 +40,22 @@ export default {
 
   },
   effects: {
+
+    *getUrl({ payload,callback }, { call, put }) {
+      const response = yield call(getUrl, payload);
+      if (callback) callback(response);
+    },
+
+    *getInvoiceTitleById({ payload,callback }, { call, put }) {
+      const response = yield call(getInvoiceTitleById, payload);
+      if (callback) callback(response.data);
+    },
+
+    *uploadInvoiceTitle({ payload,callback }, { call, put }) {
+      const response = yield call(uploadInvoiceTitle, payload);
+      if (callback) callback(response);
+    },
+
     *getCargos({ payload,callback }, { call, put }) {
       const response = yield call(getCargos, payload);
       yield put({

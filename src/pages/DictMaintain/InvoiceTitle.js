@@ -188,24 +188,23 @@ class BusinessSort extends PureComponent {
       dataIndex: 'cocode',
     },
     {
-      title: '地址电话',
-      dataIndex: 'addresstel',
-    },
-    {
       title: '开户行',
       dataIndex: 'bankaccount',
     },
 
+    {
+      title: '地址电话',
+      width:'15%',
+      dataIndex: 'addresstel',
+    },
 
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <div style={{width:100}}>
-            <a onClick={() => this.modifyItem(text, record)}>修改</a>
-            &nbsp;&nbsp;
-            <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          </div>
+          <a onClick={() => this.goToUploadPicture(text, record)}>发票图片</a>&nbsp;&nbsp;
+          <a onClick={() => this.modifyItem(text, record)}>修改</a>&nbsp;&nbsp;
+          <a onClick={() => this.deleteItem(text, record)}>删除</a>
         </Fragment>
       ),
     },
@@ -269,7 +268,7 @@ class BusinessSort extends PureComponent {
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  }
+  };
 
   modifyItem = text => {
     this.setState({
@@ -277,6 +276,14 @@ class BusinessSort extends PureComponent {
     });
     this.handleModalVisible(true);
   };
+
+  goToUploadPicture = (text) =>{
+    sessionStorage.setItem('invoiceTitle_keyno',text.keyno);
+    router.push({
+      pathname:'/DictMaintain/InvoiceTitleUpload',
+    });
+  };
+
 
 
 

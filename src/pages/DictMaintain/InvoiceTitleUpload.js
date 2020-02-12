@@ -7,24 +7,14 @@ import {
   Col,
   Card,
   Form,
-  Input,
   Button,
-  Select,
   Modal,
-  Checkbox,
-  Radio,
-  Table,
-  DatePicker,
   notification,
   Upload,
   Icon,
   message
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './company.less';
-import moment from 'moment'
-const CheckboxGroup = Checkbox.Group;
-const { Option } = Select;
 
 
 
@@ -36,52 +26,39 @@ function getBase64(file) {
     reader.onerror = error => reject(error);
   });
 }
-/* eslint react/no-multi-comp:0 */
+
 @Form.create()
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ dict, loading }) => ({
+  dict,
+  loading: loading.models.dict,
 }))
-class CompanyUpload extends PureComponent {
+class InvoiceTitleUpload extends PureComponent {
   state = {
     visible:false,
     previewVisible: false,
     previewImage: '',
     fileList: [],
-    headUrl:'',
-    signUrl:'',
-    uploadType:'',
+    pictureUrl:'',
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const keyno = sessionStorage.getItem('invoiceTitle_keyno');
     dispatch({
-      type: 'company/getCompany',
+      type: 'dict/getInvoiceTitleById',
       payload:{
-         certCode : user.certCode,
+        keyno,
       },
       callback:(response)=>{
-        if(response.code === 200){
+        if(response){
           dispatch({
-            type: 'company/getUrl',
+            type: 'dict/getUrl',
             payload:{
-               url : response.data.seal,
+               url : response,
             },
-            callback:(response)=>{
-              if(response.code === 200){
-                this.setState({signUrl:response.data});
-              }
-            }
-          });
-          dispatch({
-            type: 'company/getUrl',
-            payload:{
-               url : response.data.documenthead,
-            },
-            callback:(response)=>{
-              if(response.code === 200){
-                this.setState({headUrl:response.data});
+            callback:(response2)=>{
+              if(response2.code === 200){
+                this.setState({pictureUrl:response2.data});
               }
             }
           });
@@ -95,50 +72,30 @@ class CompanyUpload extends PureComponent {
       form: { validateFieldsAndScroll },
       dispatch,
     } = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const {uploadType} = this.state;
+    const keyno = sessionStorage.getItem('invoiceTitle_keyno');
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         let formData = new FormData();
         values.MultipartFile.fileList.forEach(file => {
-          formData.append('file', file.originFileObj);
+          formData.append('multipartFile', file.originFileObj);
         });
-        formData.append('certCode',user.certCode);
-        if(uploadType ==='sign'){
-          dispatch({
-            type: 'company/uploadSeal',
-            payload : formData,
-            callback: (response) => {
-              if(response.code === 400){
-                notification.open({
-                  message: '添加失败',
-                  description:response.data,
-                });
-              }else{
-                this.componentDidMount();
-              }
+        formData.append('keyno',keyno);
+        dispatch({
+          type: 'dict/uploadInvoiceTitle',
+          payload : formData,
+          callback: (response) => {
+            if(response.code === 400){
+              notification.open({
+                message: '添加失败',
+                description:response.data,
+              });
+            }else{
+              this.componentDidMount();
             }
-          });
-        }else if(uploadType === 'head'){
-          dispatch({
-            type: 'company/uploadDocumentHead',
-            payload : formData,
-            callback: (response) => {
-              if(response.code === 400){
-                notification.open({
-                  message: '添加失败',
-                  description:response.data,
-                });
-              }else{
-                this.componentDidMount();
-              }
-            }
-          });
-        }
+          }
+        });
         this.setState({ visible: false });
-        form.resetFields();
       }
-      console.log(error);
     });
   };
 
@@ -149,19 +106,8 @@ class CompanyUpload extends PureComponent {
     form.resetFields();
     this.setState({fileList:[]});
     this.setState({ visible: true });
-    this.setState({uploadType:'sign'})
   };
 
-
-  showHead = () => {
-    const {
-      form,
-    } = this.props;
-    form.resetFields();
-    this.setState({fileList:[]});
-    this.setState({ visible: true });
-    this.setState({uploadType:'head'})
-  };
 
   handleCancel = () =>{
     const {
@@ -178,7 +124,6 @@ class CompanyUpload extends PureComponent {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
-
     this.setState({
       previewImage: file.url || file.preview,
       previewVisible: true,
@@ -224,16 +169,14 @@ class CompanyUpload extends PureComponent {
       </div>
     );
     const {
-      certificate,
       loading,
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,signUrl,headUrl} = this.state
-
+    const {fileList,visible,previewVisible,previewImage,pictureUrl} = this.state;
     // 下载模板 模态框方法
     return (
-      <PageHeaderWrapper >
+      <PageHeaderWrapper>
         <Modal
           title="图片上传"
           visible={visible}
@@ -246,8 +189,6 @@ class CompanyUpload extends PureComponent {
                 rules: [{ required: true, message: '请选择上传文件' }],
               })(
                 <Upload
-                  //action="http://localhost:8000/api/recordinfo/upload"
-                  //data={{'reportno':reportno}}
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={this.handlePreview}
@@ -263,26 +204,20 @@ class CompanyUpload extends PureComponent {
             </Modal>
           </Form>
         </Modal>
-        <Card  size="small">
+        <Card size="small">
           <Row>
-            <Col span={24}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传公司业务用章</Button>
+            <Col span={22}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传发票盖章图片</Button>
+            </Col>
+            <Col span={2}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.back}>返回</Button>
             </Col>
           </Row>
-          <img src={signUrl} width="100" height="100"/>
-        </Card>
-        <br/>
-        <Card  size="small">
-          <Row>
-            <Col span={24}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传公司证书标识</Button>
-            </Col>
-          </Row>
-          <img style={{marginTop:20}} src={headUrl} width="200" />
+          {(pictureUrl===''||pictureUrl===null)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={pictureUrl} width="200" />]}
         </Card>
       </PageHeaderWrapper>
     );
   }
 }
 
-export default CompanyUpload;
+export default InvoiceTitleUpload;
