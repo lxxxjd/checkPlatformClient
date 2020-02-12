@@ -362,10 +362,11 @@ class Info extends PureComponent {
             </Form.Item>
             <Form.Item label="姓名">
               <span className="ant-form-text">{user.nameC}</span>
+            </Form.Item>
             <Form.Item label="角色">
               <span className="ant-form-text">{user.role}</span>
             </Form.Item>
-            <Form.Item label="是否授权签字人" />
+            <Form.Item label="是否授权签字人">
               <span className="ant-form-text">{user.isauthorize}</span>
             </Form.Item>
             <Form.Item label="身份证">
