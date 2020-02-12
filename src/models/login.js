@@ -68,6 +68,7 @@ export default {
             }),
           })
         );
+        localStorage.setItem("userinfo",undefined);
       }
     },
   },
