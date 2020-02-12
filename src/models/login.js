@@ -39,7 +39,6 @@ export default {
         }
         yield put(routerRedux.replace(redirect || '/'));
         localStorage.setItem("userinfo",JSON.stringify(response.user));
-        console.log(response.user);
       }
 
     },
