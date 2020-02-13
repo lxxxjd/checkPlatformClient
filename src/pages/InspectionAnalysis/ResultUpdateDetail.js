@@ -356,11 +356,16 @@ class ResultUpdateDetail extends PureComponent {
         func:"结果复核" ,
       },
       callback: (response) => {
-        if(response){
+        if(response===undefined || response===null || response.length===0){
+          Modal.info({
+            title: '实验室主任信息未配置',
+            content:'请管理员在“公司管理-用户管理”菜单配置，并在角色中加选实验室主任角色！',
+            okText:"知道了",
+            onOk() {},
+          });
+        }else{
           this.setState({reviewUsers:response});
           this.handleModalSaveListVisible(true);
-        }else{
-          message.error("未配置用户实验室主任角色");
         }
       }
     });

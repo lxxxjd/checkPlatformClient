@@ -108,7 +108,16 @@ class InspectionArrangement extends PureComponent {
         type:"实验室",
       },
       callback: (response) => {
-        this.setState({allCompanyName:response})
+        this.setState({allCompanyName:response});
+        if(response===null || response.length===0){
+          Modal.info({
+            title: '分包方信息未配置',
+            content:'请管理员在“公司管理-分包方”菜单配置！',
+            okText:"知道了",
+            onOk() {
+            },
+          });
+        }
       }
     });
   }

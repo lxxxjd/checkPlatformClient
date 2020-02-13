@@ -373,6 +373,16 @@ class InspectorDetail extends PureComponent {
       payload: params,
       callback: (response) => {
         if (response){
+          if(response.list===null || response.list.length===0){
+            Modal.info({
+              title: '检验人员信息未配置',
+              content:'请管理员在“公司管理-用户管理”菜单配置，并在角色中加选检验人员角色！',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+            return;
+          }
           this.state.taskData =  response.list;
           this.state.dataSource = this.state.taskData;
           // 添加到selectkey

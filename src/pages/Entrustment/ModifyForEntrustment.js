@@ -613,54 +613,69 @@ class ModifyForEntrustment extends PureComponent {
     });
   };
 
+
+
+
+
+
   onSectionFocus =()=>{
-    if(this.state.departments===undefined || this.state.departments.length===0){
+    if((this.state.departments==null || this.state.departments.length===0)&& this.state.isViewonSectionFocus ===false){
       Modal.info({
-        title: '公司部门信息未配置，请管理员在“公司管理-部门管理”菜单配置！',
+        title: '公司部门信息未配置',
+        content:'请管理员在“公司管理-部门管理”菜单配置！',
         okText:"知道了",
         onOk() {
 
         },
       });
+      this.state.isViewonSectionFocus = true;
     }
   };
+
 
   onTradeAwayFocus =()=>{
-    if(this.state.tradeway===undefined || this.state.tradeway.length===0){
+    if((this.state.tradeway==null || this.state.tradeway.length===0)&& this.state.isViewonTradeAway ===false){
       Modal.info({
-        title: '贸易方式信息未配置，请管理员在“字典管理-贸易方式”菜单配置！',
+        title: '贸易方式信息未配置',
+        content:'请管理员在“字典管理-贸易方式”菜单配置！',
         okText:"知道了",
         onOk() {
 
         },
       });
-      this.setState({ishasViewTradeAway:true});
+      this.setState({isViewonTradeAway:true});
     }
   };
 
+
   onBusinessSortFocus =()=>{
-    if(this.state.businessSort===undefined || this.state.businessSort.length===0){
+    if((this.state.businessSort==null || this.state.businessSort.length===0)&& this.state.isViewonBuinessSort ===false){
       Modal.info({
-        title: '业务分类信息未配置，请管理员在“字典管理-业务分类”菜单配置！',
+        title: '业务分类信息未配置',
+        content:'请管理员在“字典管理-业务分类”菜单配置！',
         okText:"知道了",
         onOk() {
 
         },
       });
+      this.setState({isViewonBuinessSort:true});
     }
   };
 
   onBusinessSourceFocus =()=>{
-    if(this.state.businessSource===undefined || this.state.businessSource.length===0 ){
+    if((this.state.businessSource==null || this.state.businessSource.length===0)&& this.state.isViewonBuinessSource ===false){
       Modal.info({
-        title: '业务来源信息未配置，请管理员在“字典管理-业务来源”菜单配置！',
+        title: '业务来源信息未配置',
+        content:'请管理员在“字典管理-业务来源”菜单配置！',
         okText:"知道了",
         onOk() {
 
         },
       });
+      this.setState({isViewonBuinessSource:true});
     }
   };
+
 
 
 

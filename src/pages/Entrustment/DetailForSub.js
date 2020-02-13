@@ -41,6 +41,8 @@ class DetailForSub extends PureComponent {
     priceMakeing:null,
     overallstate:undefined,
 
+    isViewCompany:false,
+
   };
 
   columns = [
@@ -293,16 +295,16 @@ class DetailForSub extends PureComponent {
   };
 
   onAllCompanyNameFocus =(e)=>{
-    console.log(e);
-    if((this.state.allCompanyName===undefined || this.state.allCompanyName.length===0)){
-      Modal.info({
-        title: '转委托信息未配置，请管理员在“公司管理-分包方”菜单配置！',
-        okText:"知道了",
-        onOk() {
-        },
-      });
-
-    }
+      if((this.state.allCompanyName===undefined || this.state.allCompanyName.length===0)&& this.state.isViewCompany ===false){
+        Modal.info({
+          title: '转委托信息未配置',
+          content:'请管理员在“公司管理-分包方”菜单配置！',
+          okText:"知道了",
+          onOk() {
+          },
+        });
+        this.state.isViewCompany=true;
+      }
   };
 
   render() {
