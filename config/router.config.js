@@ -346,6 +346,7 @@ export default [
             path: '/InspectionAnalysis/ResultReview',
             name: 'ResultReview',
             component: './InspectionAnalysis/ResultReview',
+            authority: ["总经理","业务副总","实验室主任"],
           },
 
           {
