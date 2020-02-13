@@ -826,7 +826,7 @@ class UserManage extends PureComponent {
           this.componentDidMount();
         }
         else{
-          message.success("保存失败");
+               message.error("保存失败");
         }
       }
     });
@@ -850,7 +850,7 @@ class UserManage extends PureComponent {
         if(response==="success")
           message.success("保存成功");
         else{
-          message.success("保存失败");
+               message.error("保存失败");
         }
       }
     });

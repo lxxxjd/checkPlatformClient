@@ -273,7 +273,7 @@ class ArchivesAdd extends PureComponent {
         if(response)
           message.success("保存成功");
         else{
-          message.success("保存失败");
+               message.error("保存失败");
         }
       }
     });

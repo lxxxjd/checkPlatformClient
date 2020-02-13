@@ -40,6 +40,7 @@ class DetailForSub extends PureComponent {
     report:null,
     priceMakeing:null,
     overallstate:undefined,
+
   };
 
   columns = [
@@ -290,6 +291,20 @@ class DetailForSub extends PureComponent {
       }
     }
   };
+
+  onAllCompanyNameFocus =(e)=>{
+    console.log(e);
+    if((this.state.allCompanyName===undefined || this.state.allCompanyName.length===0)){
+      Modal.info({
+        title: '转委托信息未配置，请管理员在“公司管理-分包方”菜单配置！',
+        okText:"知道了",
+        onOk() {
+        },
+      });
+
+    }
+  };
+
   render() {
     const {
       testInfo: {TestInfo},
@@ -323,6 +338,7 @@ class DetailForSub extends PureComponent {
                       placeholder="请选择"
                       filterOption={false}
                       onSearch={this.handleSearch}
+                      onFocus={this.onAllCompanyNameFocus}
                     >
                   {companyNameOptions}
                     </Select>

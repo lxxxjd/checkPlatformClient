@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
-import { connect } from 'dva';
+import { connect } from 'dva/index';
 import router from 'umi/router';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { formatMessage } from 'umi-plugin-react/locale/index';
 
 import {
   Row,
@@ -12,9 +12,9 @@ import {
   Button,
   Select,
   Table, message, Modal, DatePicker,
-} from 'antd';
+} from 'antd/lib/index';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import moment from 'moment';
+import moment from 'moment/moment';
 import styles from '../table.less';
 
 const FormItem = Form.Item;
@@ -37,23 +37,23 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="部门修改"
+      title="贸易方式修改"
       style={{ top: 100 }}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门名称">
-        {form.getFieldDecorator('branchname', {
-          initialValue: modalInfo.branchname,
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="贸易方式">
+        {form.getFieldDecorator('itemTrade', {
+          initialValue: modalInfo.itemTrade,
           rules: [
             {
               required: true,
-              message: "请输入部门名称",
+              message: "请输入贸易方式",
             },
           ],
-        })(<Input placeholder="请输入部门名称" />)}
+        })(<Input placeholder="请输入贸易方式" />)}
       </FormItem>
 
 
@@ -75,22 +75,22 @@ const AddForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="部门新增"
+      title="贸易方式新增"
       style={{ top: 100 }}
       visible={addModalVisible}
       onOk={okHandle}
       onCancel={() => addHandleModalVisible()}
     >
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门名称">
-        {form.getFieldDecorator('branchname', {
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="贸易方式">
+        {form.getFieldDecorator('itemTrade', {
           rules: [
             {
               required: true,
-              message: "请输入部门名称",
+              message: "请输入贸易方式",
             },
           ],
-        })(<Input placeholder="请输入部门名称" />)}
+        })(<Input placeholder="请输入贸易方式" />)}
       </FormItem>
 
     </Modal>
@@ -98,12 +98,12 @@ const AddForm = Form.create()(props => {
 });
 
 
-@connect(({ company, loading }) => ({
-  company,
-  loading: loading.models.company,
+@connect(({ dict, loading }) => ({
+  dict,
+  loading: loading.models.dict,
 }))
 @Form.create()
-class Department extends PureComponent {
+class TradeAway extends PureComponent {
   state = {
     modalVisible: false,
     addModalVisible:false,
@@ -113,8 +113,8 @@ class Department extends PureComponent {
 
   columns = [
     {
-      title: '部门名称',
-      dataIndex: 'branchname',
+      title: '贸易方式',
+      dataIndex: 'itemTrade',
     },
 
     {
@@ -133,7 +133,7 @@ class Department extends PureComponent {
 
 
   componentDidMount() {
-   this.init();
+    this.init();
   }
 
   init =()=>{
@@ -143,7 +143,7 @@ class Department extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'company/getDepartmentList',
+      type: 'dict/getTradeAwayList',
       payload: params,
       callback: (response) => {
         if (response){
@@ -151,13 +151,13 @@ class Department extends PureComponent {
         }
       }
     });
-  }
+  };
 
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
     this.init();
-  }
+  };
 
   handleSearch = e=> {
     e.preventDefault();
@@ -166,30 +166,28 @@ class Department extends PureComponent {
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
-        ...fieldsValue,
         kind :fieldsValue.kind.trim(),
         value: fieldsValue.value.trim(),
         certCode:user.certCode,
       };
       dispatch({
-        type: 'company/getDepartmentList',
+        type: 'dict/getTradeAwayList',
         payload: values,
         callback: (response) => {
           if (response){
-
             this.state.dataSource = response.data;
           }
         }
       });
     });
-  }
+  };
 
   isValidDate =date=> {
     if(date !==undefined && date !==null ){
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  }
+  };
 
   modifyItem = text => {
     this.setState({
@@ -204,7 +202,7 @@ class Department extends PureComponent {
       ...text
     };
     dispatch({
-      type: 'company/deleteDepartment',
+      type: 'dict/deleteTradeAway',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -215,7 +213,7 @@ class Department extends PureComponent {
         }
       }
     });
-  }
+  };
 
 
   addItem = () => {
@@ -241,13 +239,12 @@ class Department extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     let prams = modalInfo;
-    prams.branchname =  fields.branchname;
+    prams.itemTrade =  fields.itemTrade;
     const values = {
-      ...prams,
-      certcode:user.certCode,
+      ...prams
     };
     dispatch({
-      type: 'company/updateDepartment',
+      type: 'dict/updateTradeAway',
       payload:values,
       callback: (response) => {
         if(response==="success"){
@@ -261,41 +258,40 @@ class Department extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-  }
+  };
 
   handleAdd = (fields) => {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const values = {
       ...fields,
-      certcode:user.certCode,
+      certCode:user.certCode,
     };
-
 
     this.setState({
       addModalVisible: false,
     });
 
-    if( this.state.dataSource.find(item=>item.branchname === fields.branchname)){
-      message.success("添加部门已存在");
+    if( this.state.dataSource.find(item=>item.itemTrade === fields.itemTrade)){
+      message.error("添加项目已存在");
       return;
     }
 
     dispatch({
-      type: 'company/addDepartment',
+      type: 'dict/addTradeAway',
       payload:values,
       callback: (response) => {
         if(response==="success"){
           message.success("保存成功");
           this.init();
         } else{
-               message.error("保存失败");
+          message.error("保存失败");
         }
       }
     });
 
 
-  }
+  };
 
 
 
@@ -314,11 +310,11 @@ class Department extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
-                initialValue:"branchname",
+                initialValue:"itemTrade",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="branchname">部门名称</Option>
+                  <Option value="itemTrade">贸易方式</Option>
                 </Select>
               )}
             </Form.Item>
@@ -377,7 +373,7 @@ class Department extends PureComponent {
               loading={loading}
               dataSource={dataSource}
               columns={this.columns}
-              rowKey="keyno"
+              rowKey="itemno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />
           </div>
@@ -387,4 +383,4 @@ class Department extends PureComponent {
   }
 }
 
-export default Department;
+export default TradeAway;

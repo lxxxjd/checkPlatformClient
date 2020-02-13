@@ -878,7 +878,7 @@ class Intrusment extends PureComponent {
     });
 
     if( this.state.dataSource.find(item=>(item.divicename === fields.divicename)||(item.diviceId === fields.diviceId))){
-      message.success("添加项目已存在");
+      message.error("添加项目已存在");
       return;
     }
 

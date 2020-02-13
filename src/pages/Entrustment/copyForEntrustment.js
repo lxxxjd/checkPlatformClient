@@ -16,6 +16,7 @@ import {
   Radio,
   notification,
   AutoComplete, message,
+  Modal,
 } from 'antd';
 
 import router from 'umi/router';
@@ -118,6 +119,8 @@ class CopyForEntrustment extends PureComponent {
     isCustoms:false,
     customsOption:[],
     cargoname:"",
+
+
   };
 
 
@@ -575,22 +578,73 @@ class CopyForEntrustment extends PureComponent {
     }
   };
 
-  getRepeatCustomsNo = (rule, value, callback) => {
+ getRepeatCustomsNo = (rule, value, callback) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'entrustment/getRepeatCustomsNo',
       payload:{customsNo:value},
       callback: (response) => {
-        if(response === "repeat"){
+       if(response === "repeat"){
           callback(formatMessage({ id: 'validation.customsNo.repeat' }));
         }else if(response ==="success") {
           callback();
         }else{
-          callback(formatMessage({ id: 'validation.customsNo.error' }));
-        }
+         callback(formatMessage({ id: 'validation.customsNo.error' }));
+       }
       }
     });
   };
+
+  onSectionFocus =()=>{
+    if(this.state.departments===undefined || this.state.departments.length===0){
+      Modal.info({
+        title: '公司部门信息未配置，请管理员在“公司管理-部门管理”菜单配置！',
+        okText:"知道了",
+        onOk() {
+
+        },
+      });
+    }
+  };
+
+  onTradeAwayFocus =()=>{
+    if(this.state.tradeway===undefined || this.state.tradeway.length===0){
+      Modal.info({
+        title: '贸易方式信息未配置，请管理员在“字典管理-贸易方式”菜单配置！',
+        okText:"知道了",
+        onOk() {
+
+        },
+      });
+      this.setState({ishasViewTradeAway:true});
+    }
+  };
+
+  onBusinessSortFocus =()=>{
+    if(this.state.businessSort===undefined || this.state.businessSort.length===0){
+      Modal.info({
+        title: '业务分类信息未配置，请管理员在“字典管理-业务分类”菜单配置！',
+        okText:"知道了",
+        onOk() {
+
+        },
+      });
+    }
+  };
+
+  onBusinessSourceFocus =()=>{
+    if(this.state.businessSource===undefined || this.state.businessSource.length===0 ){
+      Modal.info({
+        title: '业务来源信息未配置，请管理员在“字典管理-业务来源”菜单配置！',
+        okText:"知道了",
+        onOk() {
+
+        },
+      });
+    }
+  };
+
+
 
 
   back = () => {
@@ -642,7 +696,7 @@ class CopyForEntrustment extends PureComponent {
                   {getFieldDecorator('section', {
                     //rules: [{required: true, message: '执行部门'}],
                   })(
-                    <Select mode="tags" placeholder="请选择执行部门">
+                  <Select mode="tags" placeholder="请选择执行部门" onFocus={this.onSectionFocus}>
                       {departmentOptions}
                     </Select>
                   )}
@@ -760,7 +814,7 @@ class CopyForEntrustment extends PureComponent {
                   {getFieldDecorator('tradeway', {
                     rules: [],
                   })(
-                    <Select placeholder="请选择贸易方式">
+                        <Select placeholder="请选择贸易方式" onFocus={this.onTradeAwayFocus}>
                       {tradewayOptions}
                     </Select>
                   )}
@@ -827,9 +881,10 @@ class CopyForEntrustment extends PureComponent {
                   {getFieldDecorator('businesssource', {
                     rules: [],
                   })(
-                    <Select
+                     <Select
                       placeholder="请选择业务来源"
                       filterOption={false}
+                      onFocus={this.onBusinessSourceFocus}
                     >
                       {businessSourceOptions}
                     </Select>
@@ -911,7 +966,7 @@ class CopyForEntrustment extends PureComponent {
                   {getFieldDecorator('businesssort', {
                     rules: [],
                   })(
-                    <Select placeholder="请选择业务分类">
+                   <Select placeholder="请选择业务分类" onFocus={this.onBusinessSortFocus}>
                       {businessSortOptions}
                     </Select>
                   )}

@@ -734,6 +734,12 @@ export default [
           },
 
           {
+            path: '/DictMaintain/TradeAway',
+            name: 'TradeAway',
+            component: './DictMaintain/TradeAway',
+          },
+
+          {
             path: '/DictMaintain/InvoiceTitle',
             name: 'InvoiceTitle',
             component: './DictMaintain/InvoiceTitle',

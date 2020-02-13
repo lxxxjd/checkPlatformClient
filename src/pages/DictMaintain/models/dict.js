@@ -3,6 +3,7 @@ import {  getCheckProjectList,addCheckProject,updateCheckProject,deleteCheckProj
 import { getBusinessSortList,addBusinessSort,updateBusinessSort,deleteBusinessSort, getBusinessSourceList,addBusinessSource,updateBusinessSource,deleteBusinessSource }from '@/services/Business';
 import { getInvoiceTitleList,addInvoiceTitle,updateInvoiceTitle,deleteInvoiceTitle,uploadInvoiceTitle,getInvoiceTitleById} from '@/services/InvoiceTitle';
 import {getUrl} from '@/services/Company';
+import {getTradeAwayList,addTradeAway,updateTradeAway,deleteTradeAway} from '@/services/TradeAway';
 
 export default {
   namespace: 'dict',
@@ -133,7 +134,29 @@ export default {
       if (callback) callback(response);
     },
 
+    // 贸易方式
+    // getTradeAwayList,addTradeAway,updateTradeAway,deleteTradeAway
+    *getTradeAwayList({ payload,callback }, { call, put }) {
+      const response = yield call(getTradeAwayList, payload);
+      if (callback) callback(response);
+    },
 
+    *addTradeAway({ payload,callback }, { call, put }) {
+      const response = yield call(addTradeAway, payload);
+      if (callback) callback(response.data);
+    },
+
+
+    *updateTradeAway({ payload,callback }, { call, put }) {
+      const response = yield call(updateTradeAway, payload);
+      if (callback) callback(response.data);
+    },
+
+
+    *deleteTradeAway({ payload,callback }, { call, put }) {
+      const response = yield call(deleteTradeAway, payload);
+      if (callback) callback(response.data);
+    },
     // 检验项目管理管理
 
     *getCheckProjectList({ payload,callback }, { call, put }) {

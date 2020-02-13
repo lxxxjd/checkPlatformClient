@@ -344,7 +344,7 @@ class BusinessSort extends PureComponent {
           message.success("保存成功");
           this.init();
         } else {
-          message.success("保存失败");
+               message.error("保存失败");
         }
       }
     });
@@ -368,7 +368,7 @@ class BusinessSort extends PureComponent {
           message.success("保存成功");
           this.init();
         } else{
-          message.success("保存失败");
+               message.error("保存失败");
         }
       }
     });

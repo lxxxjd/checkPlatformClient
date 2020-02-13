@@ -253,7 +253,7 @@ class BusinessSort extends PureComponent {
           message.success("保存成功");
           this.init();
         } else {
-          message.success("保存失败");
+               message.error("保存失败");
         }
       }
     });
@@ -275,7 +275,7 @@ class BusinessSort extends PureComponent {
     });
 
     if( this.state.dataSource.find(item=>item.itemname === fields.itemname)){
-      message.success("添加项目已存在");
+      message.error("添加项目已存在");
       return;
     }
 
@@ -287,7 +287,7 @@ class BusinessSort extends PureComponent {
           message.success("保存成功");
           this.init();
         } else{
-          message.success("保存失败");
+               message.error("保存失败");
         }
       }
     });

@@ -116,6 +116,7 @@ export default {
   'menu.DictMaintain.BusinessSource':'业务来源',
   'menu.DictMaintain.InvoiceTitle':'发票信息',
   'menu.DictMaintain.SurveyStandard':'检验标准',
+  'menu.DictMaintain.TradeAway':'贸易方式',
   'menu.DictMaintain.Intrusment':'仪器信息',
   'menu.DictMaintain.IntrusmentRecord':'仪器文件',
   'menu.DictMaintain.InvoiceTitleUpload':'发票图片',
