@@ -122,6 +122,11 @@ class ModifyForEntrustment extends PureComponent {
     isCustoms:false,
     customsOption:[],
     cargoname:"",
+
+    isViewonSectionFocus:false,
+    isViewonBuinessSort:false,
+    isViewonBuinessSource:false,
+    isViewonTradeAway:false,
   };
 
 

@@ -120,6 +120,11 @@ class ApplicationForEntrustment extends PureComponent {
     customsOption: [],
     cargoname: "",
 
+    isViewonSectionFocus:false,
+    isViewonBuinessSort:false,
+    isViewonBuinessSource:false,
+    isViewonTradeAway:false,
+
 
   };
 
@@ -448,16 +453,19 @@ class ApplicationForEntrustment extends PureComponent {
 
 
   onSectionFocus =()=>{
-    if(this.state.departments===undefined || this.state.departments.length===0){
+    //if((this.state.departments===undefined || this.state.departments==null || this.state.departments.length===0)&& this.state.isViewonSectionFocus ===false){
       Modal.info({
         title: '公司部门信息未配置，请管理员在“公司管理-部门管理”菜单配置！',
-        okText:"知道了",
-        onOk() {
+        cancelText:"关闭",
+        onCancel() {
 
         },
       });
-    }
+      //this.state.isViewonSectionFocus = true;
+    //}
   };
+
+  //onSectionBular
 
   onTradeAwayFocus =()=>{
     if(this.state.tradeway===undefined || this.state.tradeway.length===0){

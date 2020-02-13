@@ -122,6 +122,11 @@ class Accept extends PureComponent {
     cargoname:"",
     consigoruser:"",
 
+    isViewonSectionFocus:false,
+    isViewonBuinessSort:false,
+    isViewonBuinessSource:false,
+    isViewonTradeAway:false,
+
 
   };
 

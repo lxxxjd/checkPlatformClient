@@ -12,7 +12,7 @@ import {
   Button,
   Select,
   Radio,
-  Table, message, Modal, DatePicker,Upload,Icon,InputNumber
+  Table, message, Modal, DatePicker, Upload, Icon, InputNumber, notification,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment';
@@ -190,7 +190,7 @@ const CreateForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="出生年月" colon={false}>
         {form.getFieldDecorator('birthday', {
-          initialValue: modalInfo.birthday,
+          initialValue: modalInfo.birthday!==null||modalInfo.birthday!==null?moment(modalInfo.birthday,"YYYY-MM-DD"):[],
         })(
           <DatePicker
             style={{width:'100%'}}
@@ -233,7 +233,7 @@ const CreateForm = Form.create()(props => {
 
       <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="入岗日期" colon={false}>
         {form.getFieldDecorator('enterdate', {
-          initialValue: modalInfo.enterdate,
+          initialValue: modalInfo.enterdate!==undefined||modalInfo.enterdate!==null?moment(modalInfo.enterdate,"YYYY-MM-DD"):[],
         })(
           <DatePicker
             style={{width:'100%'}}
@@ -534,10 +534,10 @@ class UserManage extends PureComponent {
       title: '用户名',
       dataIndex: 'userName',
     },
-    {
-      title: '密码',
-      dataIndex: 'password',
-    },
+    // {
+    //   title: '密码',
+    //   dataIndex: 'password',
+    // },
     {
       title: '部门',
       dataIndex: 'section',
@@ -587,6 +587,7 @@ class UserManage extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
+          <a onClick={() => this.resetPassword(text, record)}>重置密码</a>    &nbsp;&nbsp;
           {text.signurl !== null ?[<a onClick={() => this.previewItem(text, record)}>查看签名&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.uploadItem(text, record)}>上传签名</a>
           &nbsp;&nbsp;
@@ -782,6 +783,36 @@ class UserManage extends PureComponent {
     this.setState({
       addModalVisible: !!flag,
     });
+  };
+
+
+  resetPassword =(text)=>{
+    Modal.confirm({
+      title: '确定重置密码吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        const {dispatch} = this.props;
+        let prams = text;
+        prams.password = "smlq123";
+        dispatch({
+          type: 'company/updateUser',
+          payload:{
+            ...prams
+          },
+          callback: (response) => {
+            if(response.code === 200){
+              message.success("重置密码为smlq123成功");
+              this.componentDidMount();
+            }
+            else{
+              message.error("重置密码失败");
+            }
+          }
+        });
+      }
+    });
+
   };
 
   handleEdit = (fields,modalInfo) => {

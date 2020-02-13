@@ -120,6 +120,11 @@ class CopyForEntrustment extends PureComponent {
     customsOption:[],
     cargoname:"",
 
+    isViewonSectionFocus:false,
+    isViewonBuinessSort:false,
+    isViewonBuinessSource:false,
+    isViewonTradeAway:false,
+
 
   };
 
