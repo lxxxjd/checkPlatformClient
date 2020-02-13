@@ -682,13 +682,14 @@ class Accept extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicantname', {})(
-                    <Select
-                      placeholder="请选择联系人"
-                      filterOption={false}
+                    <AutoComplete
+                      className="global-search"
+                      dataSource={applicantContactsOptions}
                       onChange={this.onAppliantNameChange}
+                      placeholder="请输入联系人"
                     >
-                      {applicantContactsOptions}
-                    </Select>
+                      <Input />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>
@@ -748,13 +749,14 @@ class Accept extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentname', {})(
-                    <Select
-                      placeholder="请选择联系人"
-                      filterOption={false}
+                    <AutoComplete
+                      className="global-search"
+                      dataSource={agentContactsOptions}
                       onChange={this.onAgentNameChange}
+                      placeholder="请输入联系人"
                     >
-                      {agentContactsOptions}
-                    </Select>
+                      <Input />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>

@@ -75,7 +75,8 @@ export default [
           {
             path: "/Entrustment/CancelForEntrustment",
             name: "CancelForEntrustment",
-            component: "./Entrustment/CancelForEntrustment"
+            component: "./Entrustment/CancelForEntrustment",
+            authority: ["总经理"],
           },
           {
             path: "/Entrustment/DetailForEntrustment",
@@ -449,6 +450,7 @@ export default [
             path: '/Certificate/CertificatePublish',
             name: 'CertificatePublish',
             component: './Certificate/CertificatePublish',
+            authority: ["总经理"],
           },
 
           {
@@ -456,6 +458,7 @@ export default [
             name: 'CertificatePublishDetail',
             component: './Certificate/CertificatePublishDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
+            authority: ["总经理","业务经理","业务副总"],
           },
 
           {
@@ -506,6 +509,7 @@ export default [
             path: '/Charge/ListReview',
             name: 'ListReview',
             component: './Charge/ListReview',
+            authority: ["总经理","业务经理","业务副总"],
           },
 
           {
@@ -587,6 +591,7 @@ export default [
             path: '/CostManage/CostlistReview',
             name: 'CostlistReview',
             component: './Charge/CostlistReview',
+            authority: ["总经理","财务经理","财务副总"],
           },
 
           {
@@ -676,6 +681,7 @@ export default [
         path: '/DictMaintain',
         icon: 'profile',
         name: 'DictMaintain',
+        authority: ["总经理","管理员"],
         routes: [
 
           {
@@ -755,6 +761,7 @@ export default [
         path: '/CompanyManage',
         icon: 'profile',
         name: 'CompanyManage',
+        authority: ["总经理","管理员"],
         routes: [
 
 

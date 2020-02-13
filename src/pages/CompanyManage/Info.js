@@ -453,17 +453,17 @@ class Info extends PureComponent {
                 />
               )}
             </Form.Item>
-            <Form.Item label="生日">
+            <Form.Item label="出生年月">
               {getFieldDecorator('birthday', {
                 rules: [
                   {
                     required: true,
-                    message: '请选择生日',
+                    message: '请选择出生年月',
                   },
                 ],
               })(
                 <DatePicker
-                    placeholder="生日"
+                    placeholder="出生年月"
                     format="YYYY-MM-DD"
                     getPopupContainer={trigger => trigger.parentNode}
                 />

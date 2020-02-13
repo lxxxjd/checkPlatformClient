@@ -729,13 +729,14 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('applicantname', {})(
-                    <Select
-                      placeholder="请选择联系人"
-                      filterOption={false}
+                    <AutoComplete
+                      className="global-search"
+                      dataSource={applicantContactsOptions}
                       onChange={this.onAppliantNameChange}
+                      placeholder="请输入联系人"
                     >
-                      {applicantContactsOptions}
-                    </Select>
+                      <Input />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>
@@ -746,7 +747,7 @@ class CopyForEntrustment extends PureComponent {
                   wrapperCol={{span: 16}}
                   colon={false}
                 >
-                  {getFieldDecorator('applicanttel', {})(<Input style={{width: '100%'}} placeholder="请输入手机"/>)}
+                  {getFieldDecorator('applicanttel', {})(<Input style={{width: '100%'}} placeholder="请输入手机" />)}
                 </Form.Item>
               </Col>
               <Col span={6}>
@@ -795,13 +796,14 @@ class CopyForEntrustment extends PureComponent {
                   colon={false}
                 >
                   {getFieldDecorator('agentname', {})(
-                    <Select
-                      placeholder="请选择联系人"
-                      filterOption={false}
+                    <AutoComplete
+                      className="global-search"
+                      dataSource={agentContactsOptions}
                       onChange={this.onAgentNameChange}
+                      placeholder="请输入联系人"
                     >
-                      {agentContactsOptions}
-                    </Select>
+                      <Input />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>
