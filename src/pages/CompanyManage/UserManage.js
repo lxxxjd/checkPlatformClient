@@ -190,7 +190,7 @@ const CreateForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="出生年月" colon={false}>
         {form.getFieldDecorator('birthday', {
-          initialValue: modalInfo.birthday!==null||modalInfo.birthday!==null?moment(modalInfo.birthday,"YYYY-MM-DD"):[],
+          initialValue: modalInfo.birthday!==undefined||modalInfo.birthday!==null?moment(modalInfo.birthday,"YYYY-MM-DD"):'',
         })(
           <DatePicker
             style={{width:'100%'}}
@@ -233,7 +233,7 @@ const CreateForm = Form.create()(props => {
 
       <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="入岗日期" colon={false}>
         {form.getFieldDecorator('enterdate', {
-          initialValue: modalInfo.enterdate!==undefined||modalInfo.enterdate!==null?moment(modalInfo.enterdate,"YYYY-MM-DD"):[],
+          initialValue: modalInfo.enterdate!==undefined||modalInfo.enterdate!==null?moment(modalInfo.enterdate,"YYYY-MM-DD"):'',
         })(
           <DatePicker
             style={{width:'100%'}}
