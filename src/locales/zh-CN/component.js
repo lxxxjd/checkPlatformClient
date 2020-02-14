@@ -4,6 +4,10 @@ export default {
   'component.tagSelect.all': '全部',
   'component.miniProgress.tooltipDefault': '目标值',
   'validation.customsNo.repeat':'报关号重复',
+  'validation.username.repeat':'与平台中其他用户名重复，请修改',
+  'validation.username.error':'用户名服务器错误',
+  'validation.usernamec.repeat':'与本公司其他真实姓名重复，请做适当修改',
+  'validation.usernamec.error':'真实姓名服务器错误',
   'validation.customsNo.error':'报关号服务器错误',
 
 

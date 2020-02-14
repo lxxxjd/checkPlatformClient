@@ -1,6 +1,6 @@
 import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser,
   getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,getUrl,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
-  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor} from '@/services/Company';
+  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor,verityUserNameC} from '@/services/Company';
 
 export default {
   namespace: 'company',
@@ -102,6 +102,13 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+    // 检测 用户名姓名重复
+    *verityUserNameC({ payload,callback }, { call, put }) {
+      const response = yield call(verityUserNameC, payload);
+      if (callback) callback(response.data);
+    },
+
 
     *updateUser({ payload,callback }, { call, put }) {
       const response = yield call(updateUser, payload);

@@ -290,7 +290,7 @@ const CreateForm = Form.create()(props => {
 
 
 const AddForm = Form.create()(props => {
-  const { addModalVisible, form, handleAdd, addHandleModalVisible,departmentOptions} = props;
+  const { addModalVisible, form, handleAdd, addHandleModalVisible,departmentOptions,checkUserNameFetch,verityUserNameC} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -318,6 +318,10 @@ const AddForm = Form.create()(props => {
                   required: true,
                   message: "请输入不重复的用户名",
                 },
+                {
+                  validator: checkUserNameFetch,
+                },
+
               ],
             })(<Input placeholder="用户名用姓名全拼，如张三：zhangsan" />)}
           </FormItem>
@@ -329,6 +333,9 @@ const AddForm = Form.create()(props => {
                 {
                   required: true,
                   message: "请输入真实姓名",
+                },
+                {
+                  validator: verityUserNameC,
                 },
               ],
             })(<Input placeholder="请输入真实姓名" />)}
@@ -634,6 +641,46 @@ class UserManage extends PureComponent {
    this.init();
   }
 
+  checkUserNameFetch = (rule, value, callback) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'company/checkUserNameFetch',
+      payload:{username:value},
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.username.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.username.error' }));
+        }
+      }
+    });
+  };
+
+  verityUserNameC = (rule, value, callback) => {
+    const { dispatch } = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'company/verityUserNameC',
+      payload:{
+        nameC:value,
+        certCode:user.certCode,
+      },
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.usernamec.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.usernamec.error' }));
+        }
+      }
+    });
+  };
+
+
+
   handleChange = ({ file,fileList }) => {
     //限制图片 格式、size、分辨率
     const isJPG = file.type === 'image/jpg';
@@ -892,7 +939,7 @@ class UserManage extends PureComponent {
           this.componentDidMount();
         }
         else{
-               message.error("保存失败");
+          message.error("保存失败,用户名已被占用，请重新设置");
         }
       }
     });
@@ -1004,6 +1051,8 @@ class UserManage extends PureComponent {
       addHandleModalVisible:this.addHandleModalVisible,
       handleChange : this.handleChange,
       handleCancel : this.handleCancel,
+      checkUserNameFetch:this.checkUserNameFetch,
+      verityUserNameC:this.verityUserNameC,
     };
     const departmentOptions = departments.map(d => <Option key={d.branchname} value={d.branchname}>{d.branchname}</Option>);
 

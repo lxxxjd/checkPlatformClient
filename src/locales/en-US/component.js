@@ -5,6 +5,11 @@ export default {
   'component.miniProgress.tooltipDefault': 'Target value',
   'validation.customsNo.repeat':'customsNo is repeated',
   'validation.customsNo.error':'customsNo has error',
+  'validation.username.repeat':'username is repeated',
+  'validation.username.error':'username is error',
+  'validation.usernamec.repeat':'namec is repeated',
+  'validation.usernamec.error':'namec is error',
+
 
   'validation.recordinfo.repeat':'recordinfo name is repeated',
   'validation.recordinfo.error':'recordinfo name has error',

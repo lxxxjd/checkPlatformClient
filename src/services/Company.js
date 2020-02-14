@@ -75,6 +75,10 @@ export async function getCompany(params) {
 }
 
 
+export async function verityUserNameC(params) {
+  return request(`/api/user/check_user_namec?certCode=${params.certCode}&nameC=${params.nameC}`);
+}
+
 export async function checkUserName(params) {
   return request(`/api/user/check_user?username=${params.username}`);
 }
