@@ -25,7 +25,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking,invoiceTitlesOptions,approverusersOptions,getRepeatListNo} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking,onFocusApproverusers,invoiceTitlesOptions,approverusersOptions,getRepeatListNo} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -35,6 +35,19 @@ const AddListFrom = Form.create()(props =>  {
       form.resetFields();
       handleAddListVisible();
     });
+  };
+
+  const onReviewerSelect = (value)=>{
+
+    if(value.signpictureoss===undefined && value.signpictureoss===null){
+      Modal.info({
+        title: '所选抬头未配置盖章图片',
+        content:'请管理员在“字典管理-发票信息”菜单配置，上传发票盖章png图片！',
+        okText:"知道了",
+        onOk() {
+        },
+      });
+    }
   };
 
   return (
@@ -70,7 +83,7 @@ const AddListFrom = Form.create()(props =>  {
           {form.getFieldDecorator('invoiceTitle', {
             rules: [{ required: true,message: '选择到账账户！'}],
           })(
-            <Select placeholder="请选择到账账户">
+            <Select placeholder="请选择到账账户" onSelect={onReviewerSelect}>
               {invoiceTitlesOptions}
             </Select>
           )}
@@ -79,7 +92,7 @@ const AddListFrom = Form.create()(props =>  {
           {form.getFieldDecorator('reviewer', {
             rules: [{ required: true,message: '请选择审核人'}],
           })(
-            <Select placeholder="请选择审核人">
+            <Select placeholder="请选择审核人" onFocus={onFocusApproverusers}>
               {approverusersOptions}
             </Select>)
           }
@@ -106,6 +119,7 @@ class ListFictionAdd extends PureComponent {
     total:0,
     invoiceTitles:[],
     approverusers:[],
+    isViewonApproverusers:false,
   };
 
   columns = [
@@ -224,21 +238,6 @@ class ListFictionAdd extends PureComponent {
     };
 
     dispatch({
-      type: 'user/getMan',
-      payload:{
-        certcode:user.certCode,
-        func:"清单审核" ,
-      },
-      callback: (response) => {
-        if(response){
-          this.setState({approverusers:response});
-        }else{
-          message.error("未配置审核人用户角色");
-        }
-      }
-    });
-
-    dispatch({
       type: 'charge/getInvoiceTitleList',
       payload:values,
       callback: (response) => {
@@ -263,7 +262,6 @@ class ListFictionAdd extends PureComponent {
             total += parseFloat(state.priceMaking[j].total);
           }
           this.state.total = total;
-          this.handleAddListVisible(true);
 
         }else{
           message.success('请配置到账账户');
@@ -271,6 +269,22 @@ class ListFictionAdd extends PureComponent {
       }
     });
 
+
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"清单审核" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({approverusers:response});
+          this.handleAddListVisible(true);
+        }else{
+          message.error("未配置审核人用户角色");
+        }
+      }
+    });
   };
 
   handleFormAddList =(fieldvalues)=>{
@@ -289,13 +303,31 @@ class ListFictionAdd extends PureComponent {
       type: 'charge/addListFetch',
       payload: values,
       callback: (response) => {
-        if (response === "success") {
-          message.success('清单添加成功');
+        if (response) {
+          message.success('收费清单添加成功');
+          sessionStorage.setItem('reportnoForList',JSON.stringify(response));
+          router.push({
+            pathname:'/Charge/DetailList',
+          });
         } else {
-          message.error('清单添加失败');
+          message.error('收费清单添加失败');
         }
       }
     });
+  };
+
+
+  onFocusApproverusers =()=>{
+    if((this.state.approverusers==null || this.state.approverusers.length===0)&& this.state.isViewonApproverusers ===false){
+      Modal.info({
+        title: '未配置清单审核用户角色',
+        content:'请管理员在“公司管理-用户管理”给用户修改，加选用户角色！业务经理，业务副总，总经理角色，都可清单审核。',
+        okText:"知道了",
+        onOk() {
+        },
+      });
+      this.setState({isViewonApproverusers:true});
+    }
   };
 
 
@@ -554,6 +586,7 @@ class ListFictionAdd extends PureComponent {
       handleAddListVisible:this.handleAddListVisible,
       handleFormAddList:this.handleFormAddList,
       getRepeatListNo:this.getRepeatListNo,
+      onFocusApproverusers:this.onFocusApproverusers,
     };
 
     const invoiceTitlesOptions = invoiceTitles.map(d => <Option key={d.namec} value={d.namec}>{d.namec}</Option>);

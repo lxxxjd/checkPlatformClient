@@ -140,6 +140,7 @@ class CertificateMakeDetail extends PureComponent {
     renderFormColumns: [],// 当前表格的信息
 
     approverusers:[],
+    ishasApprover:false,
 
     sampleColumnsLink: [ // 分析检测表格头
       {
@@ -227,6 +228,33 @@ class CertificateMakeDetail extends PureComponent {
       },
       callback: (response) => {
 
+      }
+    });
+
+    // 配置审核人
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"授权签字" ,
+      },
+      callback: (response) => {
+        if(response){
+          if(response===undefined || response===null || response.length===0){
+            Modal.info({
+              title: '授权签字人未配置！',
+              content:'缮制提交需提交授权签字人，请管理员在“公司管理-用户管理”给用户修改角色！用户修改，在是否为授权签字人，选“是”。',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+            return;
+          }
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置授权签字用户角色");
+        }
       }
     });
 
@@ -405,7 +433,14 @@ class CertificateMakeDetail extends PureComponent {
               },
             });
           }else{
-            message.error("缮制失败")
+            Modal.info({
+              title: '缮制失败！',
+              content:'请保证证书抬头标识已上传,管理员可在“公司管理-公司图片”菜单上传证书抬头”',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+            message.error("缮制失败,，请保证公司业务用章中的证书抬头已上传")
           }
         }
       });
@@ -420,24 +455,6 @@ class CertificateMakeDetail extends PureComponent {
 
   makeItem =text=>{
     const { dispatch } = this.props;
-
-    // 配置审核人
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    dispatch({
-      type: 'user/getMan',
-      payload:{
-        certcode:user.certCode,
-        func:"授权签字" ,
-      },
-      callback: (response) => {
-        if(response){
-          this.setState({approverusers:response});
-        }else{
-          message.error("未配置审核人用户角色");
-        }
-      }
-    });
-
     const params ={
       osspath:text.pdfpath
     };
@@ -449,13 +466,15 @@ class CertificateMakeDetail extends PureComponent {
         if(response.code === 200){
           this.state.treeData[0].children[0].children[0].data = response.data;
           this.state.treeData[0].children[0].children[0].title=text.name;
+
           this.setState({option:"缮制"});
           this.setState({urls: response.data});
           this.setState({value: "presentCert"});
           this.setState({showVisible:true});
           this.setState({text});
+
         }else {
-          message.success("打开缮制文件失败");
+          message.success("打开缮制文件失败，请保证用户已上传授权签字图片");
         }
       }
     });

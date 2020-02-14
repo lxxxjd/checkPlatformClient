@@ -25,7 +25,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,costList,paycompany,getRepeatPayListNo} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,paylistno,approverusersOptions,costList,paycompany,getRepeatPayListNo,onFocusApproverusers} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -72,7 +72,7 @@ const AddListFrom = Form.create()(props =>  {
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="清单号：">
           {form.getFieldDecorator('paylistno', {
-            initialValue:getDate(),
+            initialValue:paylistno!==undefined?paylistno:null,
             rules: [{required: true,validator:getRepeatPayListNo,}],
           })(<Input placeholder="请输入清单号" />)}
         </Form.Item>
@@ -86,10 +86,8 @@ const AddListFrom = Form.create()(props =>  {
           {form.getFieldDecorator('reviewer', {
             rules: [{ required: true,message: '请选择审核人'}],
           })(
-            <Select placeholder="请选择审核人">
-              <Option value="xjd"> 徐佳待</Option>
-
-
+            <Select placeholder="请选择审核人" onFocus={onFocusApproverusers}>
+              {approverusersOptions}
             </Select>)
           }
         </Form.Item>
@@ -113,6 +111,8 @@ class CostListAdd extends PureComponent {
     modalAddListVisible:false,
     paycompany:undefined,
     total:0,
+    paylistno:undefined,
+    approverusers:[],
   };
 
   columns = [
@@ -211,7 +211,6 @@ class CostListAdd extends PureComponent {
   removeExistItem = text => {
     this.listRemoveItem(this.state.costList,text.keyno);
     const dataSource = [...this.state.costList];
-    console.log(this.state.costList);
     this.setState({ costList: dataSource.filter(item => item.keyno !== text.keyno) });
   };
 
@@ -247,6 +246,25 @@ class CostListAdd extends PureComponent {
       total += parseFloat(state.costList[j].costmoney);
     }
     this.state.total = total;
+    if(state.costList!==undefined ) {
+      this.state.paylistno = state.costList[0].reportno;
+    }
+    const{dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"成本审核" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置审核人用户角色");
+        }
+      }
+    });
     this.handleAddListVisible(true);
   };
 
@@ -271,10 +289,14 @@ class CostListAdd extends PureComponent {
       type: 'cost/addList',
       payload: values,
       callback: (response) => {
-        if (response === "success") {
-          message.success('清单添加成功');
+        if (response) {
+          message.success('成本清单添加成功');
+          sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(response));
+          router.push({
+            pathname:'/CostManage/CostListDetail',
+          });
         } else {
-          message.error('清单添加失败');
+          message.error('成本清单添加失败');
         }
       }
     });
@@ -356,6 +378,18 @@ class CostListAdd extends PureComponent {
     });
   };
 
+  onFocusApproverusers =()=>{
+    if((this.state.approverusers==null || this.state.approverusers.length===0)&& this.state.isViewonApproverusers ===false){
+      Modal.info({
+        title: '未配置成本审核用户角色',
+        content:'请管理员在“公司管理-用户管理”给用户修改，加选用户角色！业务经理，业务副总，总经理角色，都可成本清单审核。',
+        okText:"知道了",
+        onOk() {
+        },
+      });
+      this.setState({isViewonApproverusers:true});
+    }
+  };
 
 
   // eslint-disable-next-line react/sort-comp
@@ -524,13 +558,14 @@ class CostListAdd extends PureComponent {
       loading,
     } = this.props;
 
-    const {costList,modalAddListVisible,total,paycompany} = this.state;
-
+    const {costList,modalAddListVisible,total,paycompany,paylistno,approverusers} = this.state;
+    const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
     // 下载模板 模态框方法
     const parentMethods = {
       handleAddListVisible:this.handleAddListVisible,
       handleFormAddList:this.handleFormAddList,
       getRepeatPayListNo:this.getRepeatPayListNo,
+      onFocusApproverusers:this.onFocusApproverusers,
     };
 
     const { getFieldDecorator, getFieldValue } = this.props.form;
@@ -615,7 +650,7 @@ class CostListAdd extends PureComponent {
             <Form onSubmit={this.handleSubmit}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
-              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} costList={costList} total={total} paycompany={paycompany}  />
+              <AddListFrom {...parentMethods} approverusersOptions={approverusersOptions} modalAddListVisible={modalAddListVisible} costList={costList} paylistno={paylistno} total={total} paycompany={paycompany}  />
             </Form>
             <Table
               style={{marginTop:5}}

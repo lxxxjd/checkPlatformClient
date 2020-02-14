@@ -116,6 +116,15 @@ class CertificateFinishedDetail extends PureComponent {
       },
       callback: (response) => {
         if(response){
+          if(response.length===0){
+            Modal.info({
+              title: '授权签字人未配置！',
+              content:'缮制提交需提交授权签字人，请管理员在“公司管理-用户管理”给用户修改角色！用户修改，在是否为授权签字人，选“是”。',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+          }
           this.setState({authorusers:response});
         }else{
           message.error("未配置授权签字用户角色");

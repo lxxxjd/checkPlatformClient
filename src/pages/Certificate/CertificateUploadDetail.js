@@ -244,6 +244,8 @@ class CertificateUploadDetail extends PureComponent {
     approverusers:[],
     modelPlatformType:"",
 
+    ishasApprover:false, // 是否存在审核人
+
     checkResult:[], // 申请项目
     sampleRegister:[],
     sampleColumnsLink: [ // 分析检测表格头
@@ -333,6 +335,32 @@ class CertificateUploadDetail extends PureComponent {
       payload:{
          reportno,
       },
+    });
+
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"证稿复核" ,
+      },
+      callback: (response) => {
+        if(response){
+          if(response===undefined || response===null || response.length===0){
+            Modal.info({
+              title: '未配置复核人用户角色，不能提交！',
+              content:'请管理员在“公司管理-用户管理”给用户修改，加选用户角色！除业务副总，财务副总，授权签字人，总经理外全部角色，都可复核证稿。',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+            return;
+          }
+          this.setState({approverusers:response});
+        }else{
+          message.error("复核人相关用户角色接口错误");
+        }
+      }
     });
 
     const reportnNo =reportno;
@@ -518,12 +546,12 @@ class CertificateUploadDetail extends PureComponent {
               }
             });
           }else{
-            message.error("拟制失败")
+            message.error("拟制出现错误,请保证用户的签名图片已上传")
           }
         }
       });
     }else{
-      message.error("拟制失败")
+      message.error("拟制出现错误,请保证用户的签名图片已上传")
     }
 
      this.setState({showVisible:false});
@@ -535,21 +563,6 @@ class CertificateUploadDetail extends PureComponent {
   signItem =text=>{
     message.success("正在拉取数据，请稍等几秒...");
     const { dispatch } = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    dispatch({
-      type: 'user/getMan',
-      payload:{
-        certcode:user.certCode,
-        func:"证稿复核" ,
-      },
-      callback: (response) => {
-        if(response){
-          this.setState({approverusers:response});
-        }else{
-          message.error("未配置审核人用户角色");
-        }
-      }
-    });
 
     const value = {
       ...text,

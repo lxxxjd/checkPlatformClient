@@ -139,6 +139,7 @@ class CertificateUploadDetail extends PureComponent {
     renderFormColumns: [],// 当前表格的信息
 
     approverusers:[],
+    ishasApprover:false,
 
     sampleColumnsLink: [ // 分析检测表格头
       {
@@ -226,6 +227,32 @@ class CertificateUploadDetail extends PureComponent {
       },
       callback: (response) => {
 
+      }
+    });
+
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"证稿复核" ,
+      },
+      callback: (response) => {
+        if(response){
+          if(response===undefined || response===null || response.length===0){
+            Modal.info({
+              title: '未配置缮制人用户角色，不能提交！',
+              content:'请管理员在“公司管理-用户管理”给用户修改，加选用户角色！除业务副总，财务副总，授权签字人，总经理外全部角色，都可缮制证书。',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+            return;
+          }
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置缮制人用户角色");
+        }
       }
     });
 
@@ -425,24 +452,6 @@ class CertificateUploadDetail extends PureComponent {
 
   reivewItem =text=>{
     const { dispatch } = this.props;
-
-    // 配置
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    dispatch({
-      type: 'user/getMan',
-      payload:{
-        certcode:user.certCode,
-        func:"证稿复核" ,
-      },
-      callback: (response) => {
-        if(response){
-          this.setState({approverusers:response});
-        }else{
-          message.error("未配置审核人用户角色");
-        }
-      }
-    });
-
     const params ={
       osspath:text.pdfeditorpath
     };
@@ -461,7 +470,6 @@ class CertificateUploadDetail extends PureComponent {
           this.setState({value: "presentCert"});
           this.setState({showVisible:true});
           this.setState({text});
-
         }else {
           message.success("打开复核文件失败");
         }

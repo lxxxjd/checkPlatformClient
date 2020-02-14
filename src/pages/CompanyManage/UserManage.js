@@ -683,6 +683,15 @@ class UserManage extends PureComponent {
       payload: params,
       callback: (response) => {
         if (response){
+          if(response.data===null || response.data.length===0){
+            Modal.info({
+              title: '未配置公司部门！',
+              content:'请管理员在“公司管理-部门管理”修改，用户需选择所在部门！',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+          }
           this.state.departments = response.data;
         }
       }

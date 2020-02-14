@@ -538,6 +538,7 @@ const AddForm = Form.create()(props => {
           ],
         })( <Select placeholder="选择字段" style={{ width: '100%' }}>
           <Option value="报废"> 报废</Option>
+          <Option value="正常"> 正常</Option>
         </Select>)}
       </FormItem>
 

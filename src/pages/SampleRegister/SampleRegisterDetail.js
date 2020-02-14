@@ -70,6 +70,20 @@ const ArrivalInvoiceForm = Form.create()(props => {
           })(<Input placeholder="请输入样品编号" />)}
         </Form.Item>
 
+        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="制样日期">
+          {form.getFieldDecorator('makingdate', {
+            rules: [{ required: true, message: '请输入制样日期' }],
+            initialValue:moment(sampledata.makingdate,"YYYY-MM-DD"),
+          })(
+            <DatePicker
+              placeholder="请选择制样日期"
+              style={{ width: '100%' }}
+              format="YYYY-MM-DD"
+              getPopupContainer={trigger => trigger.parentNode}
+            />,
+          )}
+        </Form.Item>
+
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品名称">
           {form.getFieldDecorator('samplename', {
             initialValue:sampledata.samplename
@@ -140,19 +154,7 @@ const ArrivalInvoiceForm = Form.create()(props => {
           })(<Input />)}
         </Form.Item>
 
-        <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="制样日期">
-          {form.getFieldDecorator('makingdate', {
-            rules: [{ required: true, message: '请输入制样日期' }],
-            initialValue:moment(sampledata.makingdate,"YYYY-MM-DD"),
-          })(
-            <DatePicker
-              placeholder="请选择制样日期"
-              style={{ width: '100%' }}
-              format="YYYY-MM-DD"
-              getPopupContainer={trigger => trigger.parentNode}
-            />,
-          )}
-        </Form.Item>
+
       </Form>
     </Modal>
   );
@@ -423,6 +425,19 @@ class SampleRegisterDetail extends PureComponent {
               })(<Input placeholder="请输入样品编号" />)}
             </Form.Item>
 
+            <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="制样日期">
+              {getFieldDecorator('makingdate', {
+                rules: [{ required: true, message: '请输入制样日期' }],
+              })(
+                <DatePicker
+                  placeholder="请选择制样日期"
+                  style={{ width: '100%' }}
+                  format="YYYY-MM-DD"
+                  getPopupContainer={trigger => trigger.parentNode}
+                />,
+              )}
+            </Form.Item>
+
             <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品名称">
               {getFieldDecorator('samplename', {
               })(
@@ -490,18 +505,7 @@ class SampleRegisterDetail extends PureComponent {
             </Form.Item>
 
 
-            <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="制样日期">
-              {getFieldDecorator('makingdate', {
-                rules: [{ required: true, message: '请输入制样日期' }],
-              })(
-                <DatePicker
-                  placeholder="请选择制样日期"
-                  style={{ width: '100%' }}
-                  format="YYYY-MM-DD"
-                  getPopupContainer={trigger => trigger.parentNode}
-                />,
-              )}
-            </Form.Item>
+
 
           </Form>
         </Modal>

@@ -266,6 +266,7 @@ class ResultDetail extends PureComponent {
             description:response.data,
           });
         }else{
+
           const instrumentData = response.data;
           var instrument = [];
           for (let i = 0 ;i < instrumentData.length ; i ++ ) {
@@ -560,32 +561,9 @@ class ResultDetail extends PureComponent {
   onInspwayChange = value => {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
-    dispatch({
-      type: 'checkResult/getTaskByReportNoAndInspway',
-      payload:{
-        reportno,
-        inspway : value,
-      },
-      callback : (response) => {
-        if(response.code === 400){
-          notification.open({
-            message: '获取失败',
-            description:response.data,
-          });
-        }else{
-          const peopleData = response.data;
-          var people = [];
-          for (let i = 0 ;i < peopleData.length ; i ++ ) {
-              people.push({
-                key: peopleData[i],
-              });
-          }
-        }
-        this.setState({people});
-      }
-    });
-
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    let content=""; // 提示信息
+    let title="";// 提示信息
     dispatch({
       type: 'checkResult/getStandard',
       payload:{
@@ -600,6 +578,20 @@ class ResultDetail extends PureComponent {
             description:response.data,
           });
         }else{
+
+          if(response.data===null || response.data.length===0){
+            title+="检验标准信息未配置";
+            Modal.info({
+              title: '当前检查项目的检验标准信息未配置',
+              content:'请管理员在“公司管理-检验标准”菜单配置',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+            return;
+          }
+
+
           const standardsData = response.data;
           var standards = [];
           for (let i = 0 ;i < standardsData.length ; i ++ ) {
@@ -613,6 +605,45 @@ class ResultDetail extends PureComponent {
         this.setState({standards});
       }
     });
+
+    dispatch({
+      type: 'checkResult/getTaskByReportNoAndInspway',
+      payload:{
+        reportno,
+        inspway : value,
+      },
+      callback : (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '获取失败',
+            description:response.data,
+          });
+        }else{
+
+          if(response.data===null || response.data.length===0){
+            Modal.info({
+              title: '检验人员未安排！',
+              content:'请在“任务指派-检验人员”为委托安排检验人员！',
+              okText:"知道了",
+              onOk() {
+              },
+            });
+            return;
+          }
+
+          const peopleData = response.data;
+          var people = [];
+          for (let i = 0 ;i < peopleData.length ; i ++ ) {
+              people.push({
+                key: peopleData[i],
+              });
+          }
+        }
+        this.setState({people});
+      }
+    });
+
+
   };
 
   isValidDate =date=> {

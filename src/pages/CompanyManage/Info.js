@@ -128,12 +128,12 @@ class Info extends PureComponent {
 			'section' : user.section,
 			'tel': user.tel,
 			'sex': user.sex,
-			'birthday': moment(user.birthday,"YYYY-MM-DD"),
+			'birthday':(user.birthday!==null&&user.birthday!==undefined )?moment(user.birthday,"YYYY-MM-DD"):null,
 			'education': user.education,
 			'idcard': user.idcard,
 			'major': user.major,
 			'workduty': user.workduty,
-			'enterdate': moment(user.enterdate,"YYYY-MM-DD"),
+			'enterdate':(user.enterdate!==null&& user.enterdate!==undefined )?moment(user.enterdate,"YYYY-MM-DD"):null,
 			'workyears': user.workyears,
 			'majoryears': user.majoryears,
 		});
@@ -447,9 +447,10 @@ class Info extends PureComponent {
                 ],
               })(
                 <DatePicker
-                    placeholder="入岗日期"
-                    format="YYYY-MM-DD"
-                    getPopupContainer={trigger => trigger.parentNode}
+                  style={{width:'100%'}}
+                  placeholder="入岗日期"
+                  format="YYYY-MM-DD"
+                  getPopupContainer={trigger => trigger.parentNode}
                 />
               )}
             </Form.Item>
@@ -463,9 +464,10 @@ class Info extends PureComponent {
                 ],
               })(
                 <DatePicker
-                    placeholder="出生年月"
-                    format="YYYY-MM-DD"
-                    getPopupContainer={trigger => trigger.parentNode}
+                  style={{width:'100%'}}
+                  placeholder="出生年月"
+                  format="YYYY-MM-DD"
+                  getPopupContainer={trigger => trigger.parentNode}
                 />
               )}
             </Form.Item>

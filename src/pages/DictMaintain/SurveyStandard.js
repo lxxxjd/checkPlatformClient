@@ -87,13 +87,13 @@ const CreateForm = Form.create()(props => {
       </FormItem>
 
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检查领域">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检查项目">
         {form.getFieldDecorator('field', {
           initialValue: (modalInfo.field===undefined || modalInfo.field===null)?[]:modalInfo.field.split(" "),
           rules: [
             {
               required: true,
-              message: "请选择检查领域",
+              message: "请选择检查项目",
             },
           ],
         })(
@@ -168,12 +168,12 @@ const AddForm = Form.create()(props => {
       </FormItem>
 
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检查领域">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="检查项目">
         {form.getFieldDecorator('field', {
           rules: [
             {
               required: true,
-              message: "请选择检查领域",
+              message: "请选择检查项目",
             },
           ],
         })(
@@ -200,7 +200,7 @@ class SurveyStandard extends PureComponent {
     modalInfo :{},
     dataSource:[],
 
-    fieldList:[], // 检查领域
+    fieldList:[], // 检查项目
     cargosortList:[], // 货物种类
 
   };
@@ -469,7 +469,7 @@ class SurveyStandard extends PureComponent {
                   <Option value="standardc">中文名称</Option>
                   <Option value="standarde">英文名称</Option>
                   <Option value="cargosort">货物种类</Option>
-                  <Option value="field">检查领域</Option>
+                  <Option value="field">检查项目</Option>
                 </Select>
               )}
             </Form.Item>

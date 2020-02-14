@@ -415,6 +415,7 @@ class CertificateSealDetail extends PureComponent {
           this.state.treeData[0].children[0].children[0].title=text.name;
           this.setState({option:"授权签字"});
           this.setState({urls: response.data});
+          this.setState({urls: response.data});
           this.setState({value: "presentCert"});
           this.setState({showVisible:true});
           this.setState({text});

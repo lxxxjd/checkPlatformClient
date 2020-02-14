@@ -69,7 +69,7 @@ export default {
   'menu.CostManage':'成本支出',
 
   'menu.PersonInfo':'个人设置',
-  'menu.PersonInfo.Info':'个人信息',
+  'menu.PersonInfo.Info':'密码设置',
 
   'menu.Archives':'业务归档',
   'menu.Archives.ArchivesAdd':'归档',
