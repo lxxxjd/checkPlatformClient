@@ -1,6 +1,6 @@
-import {uploadFile,getAllUserListByCertCode,checkUserName,updateUser,addUser,deleteUser,
-  getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,getUrl,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
-  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor,verityUserNameC} from '@/services/Company';
+import {uploadFile,getAllUserListByCertCode,updateUser,addUser,deleteUser,
+  getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
+  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor,checkUserName,verityUserNameC,getUrl} from '@/services/Company';
 
 export default {
   namespace: 'company',

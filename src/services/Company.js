@@ -70,11 +70,6 @@ export async function getUrl(params) {
   return request(`/api/cert_report/get_pdf?osspath=${params.url}`);
 }
 
-export async function getCompany(params) {
-  return request(`/api/company/getCompany?certCode=${params.certCode}`);
-}
-
-
 export async function verityUserNameC(params) {
   return request(`/api/user/check_user_namec?certCode=${params.certCode}&nameC=${params.nameC}`);
 }
@@ -82,6 +77,13 @@ export async function verityUserNameC(params) {
 export async function checkUserName(params) {
   return request(`/api/user/check_user?username=${params.username}`);
 }
+
+export async function getCompany(params) {
+  return request(`/api/company/getCompany?certCode=${params.certCode}`);
+}
+
+
+
 
 export async function getUser(params) {
   return request(`/api/user/get_user?name=${params.name}`);
