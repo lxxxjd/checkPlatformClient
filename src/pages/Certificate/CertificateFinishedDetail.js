@@ -333,11 +333,14 @@ class CertificateFinishedDetail extends PureComponent {
 
   handleChange = ({ file,fileList }) => {
     // 限制图片 格式、size、分辨率
-    const isPDF = file.type === 'application/pdf'
+    const isPDF = file.type === 'application/pdf';
+    const isJPG = file.type === 'image/jpg';
+    const isJPEG = file.type === 'image/jpeg';
+    const isPNG = file.type === 'image/png';
     const size = file.size / 1024 / 1024 < 20;
-    if (!(isPDF )) {
+    if (!(isPDF||isJPG  || isJPEG || isPNG )) {
       Modal.error({
-        title: '只能上传PDF格式~',
+        title: '只能上传PDF、PNG、JPG格式文件~',
       });
       return;
     } if (!size) {
@@ -346,6 +349,7 @@ class CertificateFinishedDetail extends PureComponent {
       });
       return;
     }
+
     let val = file.name;
     const pattern = /\.{1}[a-z]{1,}$/;
     if (pattern.exec(val) !== null) {
