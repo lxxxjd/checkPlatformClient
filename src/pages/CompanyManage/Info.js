@@ -68,7 +68,7 @@ const OldPassWordForm = Form.create()(props => {
 
   return (
     <Modal
-      title="确认旧密码"
+      title="确认原密码"
       style={{ top: 100 }}
       visible={OldPasswordVisible}
       onOk={okHandle}

@@ -310,43 +310,49 @@ class InspectorDetail extends PureComponent {
   };
 
   save = () => {
-    const {selectedRowKeys} = this.state;
-    const params = [];
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+    Modal.confirm({
+      title: '确定保存检验人员吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        const {selectedRowKeys} = this.state;
+        const params = [];
+        const reportinfo = JSON.parse(localStorage.getItem("reportinfoAndInspect"))
+        const user = JSON.parse(localStorage.getItem("userinfo"));
 
-    // eslint-disable-next-line no-restricted-syntax
-    for( const i of selectedRowKeys){
-      let itemtask = this.state.taskData.find(item => item.inspman === i );
-      itemtask.reportno = reportinfo.reportno;
-      itemtask.taskman =user.nameC;
-      params.push(itemtask);
-      if(itemtask.inspway ===undefined || itemtask.inspway=== null){
-        message.error("存在未分配工作任务的人员，请编辑后保存");
-        return;
-      }
-    }
-
-    let formData = new FormData();
-    formData.append('taskJson', JSON.stringify(params));
-    formData.append('reportno', reportinfo.reportno);
-    formData.append('inspmantype', '检验人员');
-
-
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'task/dealnspect',
-      payload: formData,
-      callback: (response) => {
-        if(response){
-          message.success('保存成功');
-          this.handleFormReset();
-        }else{
-          message.success('保存失败');
+        // eslint-disable-next-line no-restricted-syntax
+        for( const i of selectedRowKeys){
+          let itemtask = this.state.taskData.find(item => item.inspman === i );
+          itemtask.reportno = reportinfo.reportno;
+          itemtask.taskman =user.nameC;
+          params.push(itemtask);
+          if(itemtask.inspway ===undefined || itemtask.inspway=== null){
+            message.error("存在未分配工作任务的人员，请编辑后保存");
+            return;
+          }
         }
+
+        let formData = new FormData();
+        formData.append('taskJson', JSON.stringify(params));
+        formData.append('reportno', reportinfo.reportno);
+        formData.append('inspmantype', '检验人员');
+
+
+        const {dispatch} = this.props;
+        dispatch({
+          type: 'task/dealnspect',
+          payload: formData,
+          callback: (response) => {
+            if(response){
+              message.success('保存成功');
+              this.handleFormReset();
+            }else{
+              message.success('保存失败');
+            }
+          }
+        });
       }
     });
-
   };
 
   init = () =>{
@@ -378,8 +384,7 @@ class InspectorDetail extends PureComponent {
               title: '检验人员信息未配置',
               content:'请管理员在“公司管理-用户管理”菜单配置，并在角色中加选检验人员角色！',
               okText:"知道了",
-              onOk() {
-              },
+              onOk() {},
             });
             return;
           }

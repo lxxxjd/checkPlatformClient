@@ -57,28 +57,19 @@ class ResultRecord extends PureComponent {
     url:null,
     showVisible:false,
     overallstate:"",
+
+    dataSource:[],
   };
 
   columns = [
     {
-      title: '记录名',
+      title: '文件名',
       dataIndex: 'recordname',
-      render: val => {
-        //取文件名
-        var pattern = /\.{1}[a-z]{1,}$/;
-        if (pattern.exec(val) !== null) {
-          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
-        } else {
-          return <span>{val}</span>;
-        }
-      }
     },
     {
       title: '上传日期',
       dataIndex: 'recorddate',
-      render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
-      }</span>
+      render: val => this.isValidDate(val),
     },
     {
       title: '操作',
@@ -93,24 +84,13 @@ class ResultRecord extends PureComponent {
 
   columns2 = [
     {
-      title: '记录名',
+      title: '文件名',
       dataIndex: 'recordname',
-      render: val => {
-        //取文件名
-        var pattern = /\.{1}[a-z]{1,}$/;
-        if (pattern.exec(val) !== null) {
-          return <span>{val.slice(0, pattern.exec(val).index)}</span>;
-        } else {
-          return <span>{val}</span>;
-        }
-      }
     },
     {
       title: '上传日期',
       dataIndex: 'recorddate',
-      render: val => <span>{
-        moment(val).format('YYYY-MM-DD')
-      }</span>
+      render: val => this.isValidDate(val),
     },
     {
       title: '操作',
@@ -130,11 +110,23 @@ class ResultRecord extends PureComponent {
     dispatch({
       type: 'testRecord/getRecordInfo',
       payload:{
-         reportno : reportno,
+         reportno,
          source : '测试报告',
+      },
+      callback:(response) =>{
+        if(response){
+          this.setState({dataSource:response});
+        }
       }
     });
   }
+
+  isValidDate =date=> {
+    if(date !==undefined && date !==null ){
+      return <span>{moment(date).format('YYYY-MM-DD')}</span>;
+    }
+    return [];
+  };
 
   previewItem = text => {
     const { dispatch } = this.props;
@@ -214,6 +206,9 @@ class ResultRecord extends PureComponent {
               });
             }else{
               this.componentDidMount();
+              notification.open({
+                message: '添加成功',
+              });
             }
           }
         });
@@ -416,12 +411,11 @@ class ResultRecord extends PureComponent {
       </div>
     );
     const {
-      testRecord:{recordData},
       loading,
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible,overallstate} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible,overallstate,dataSource} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
 
 
@@ -480,16 +474,14 @@ class ResultRecord extends PureComponent {
               </Button>
             </Col>
           </Row>
-          <div className={styles.tableList}>
-            <Table
-              size="middle"
-              loading={loading}
-              dataSource={recordData}
-              columns={overallstate ==="已发布"|| overallstate==="申请作废"?[this.columns2]:[this.columns]}
-              rowKey="recordname"
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
-            />
-          </div>
+          <Table
+            size="middle"
+            loading={loading}
+            dataSource={dataSource}
+            columns={overallstate ==="已发布"|| overallstate==="申请作废"?this.columns2:this.columns}
+            rowKey="id"
+            pagination={{showQuickJumper:true,showSizeChanger:true}}
+          />
         </Card>
         <Modal
           title="记录详情"
@@ -497,8 +489,9 @@ class ResultRecord extends PureComponent {
           onCancel={this.showCancel}
           footer={null}
           width={800}
+          style={{top:10}}
         >
-          <embed src={url} width="700" height="700"/>
+          <embed src={url} width="700" height="700" type="application/pdf"/>
         </Modal>
       </PageHeaderWrapper>
     );

@@ -299,43 +299,49 @@ class CustomerServiceDetail extends PureComponent {
   };
 
   save = () => {
-    const {selectedRowKeys} = this.state;
-    const params = [];
-    const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
-    const user = JSON.parse(localStorage.getItem("userinfo"));
+    Modal.confirm({
+      title: '确定保存客服人员吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        const {selectedRowKeys} = this.state;
+        const params = [];
+        const reportinfo = JSON.parse(localStorage.getItem("reportinfo"))
+        const user = JSON.parse(localStorage.getItem("userinfo"));
 
-    // eslint-disable-next-line no-restricted-syntax
-    for( const i of selectedRowKeys){
-      let itemtask = this.state.taskData.find(item => item.inspman === i );
-      itemtask.reportno = reportinfo.reportno;
-      itemtask.taskman =user.nameC;
-      params.push(itemtask);
-      if(itemtask.inspway ===undefined || itemtask.inspway=== null){
-        message.error("存在未分配工作任务的人员，请编辑后保存");
-        return;
-      }
-    }
-
-    let formData = new FormData();
-    formData.append('taskJson', JSON.stringify(params));
-    formData.append('reportno', reportinfo.reportno);
-    formData.append('inspmantype', '客服人员');
-
-
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'task/dealTask',
-      payload: formData,
-      callback: (response) => {
-        if(response){
-          message.success('保存成功');
-          this.handleFormReset();
-        }else{
-          message.success('保存失败');
+        // eslint-disable-next-line no-restricted-syntax
+        for( const i of selectedRowKeys){
+          let itemtask = this.state.taskData.find(item => item.inspman === i );
+          itemtask.reportno = reportinfo.reportno;
+          itemtask.taskman =user.nameC;
+          params.push(itemtask);
+          if(itemtask.inspway ===undefined || itemtask.inspway=== null){
+            message.error("存在未分配工作任务的人员，请编辑后保存");
+            return;
+          }
         }
+
+        let formData = new FormData();
+        formData.append('taskJson', JSON.stringify(params));
+        formData.append('reportno', reportinfo.reportno);
+        formData.append('inspmantype', '客服人员');
+
+
+        const {dispatch} = this.props;
+        dispatch({
+          type: 'task/dealTask',
+          payload: formData,
+          callback: (response) => {
+            if(response){
+              message.success('保存成功');
+              this.handleFormReset();
+            }else{
+              message.success('保存失败');
+            }
+          }
+        });
       }
     });
-
   };
 
   init = () =>{

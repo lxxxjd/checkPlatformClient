@@ -423,7 +423,7 @@ class IntrusmentRecord extends PureComponent {
           width={800}
           style={{top: 10}}
         >
-          <embed src={url} width="700" height="700"/>
+          <embed src={url} width="700" height="700" type="application/pdf"/>
         </Modal>
       </PageHeaderWrapper>
     );

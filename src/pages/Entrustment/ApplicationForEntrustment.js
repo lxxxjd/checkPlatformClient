@@ -210,45 +210,53 @@ class ApplicationForEntrustment extends PureComponent {
   }
 
   validate = () => {
-    message.success("正在保存数据，请稍等几秒...");
-    const {
-      form: {validateFieldsAndScroll},
-      dispatch,
-    } = this.props;
-    const {cnasInfo} = this.state;
-    validateFieldsAndScroll((error, values) => {
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      if (!error) {
-        dispatch({
-          type: 'entrustment/addReport',
-          payload: {
-            ...values,
-            username: user.nameC,
-            certcode: user.certCode,
-            reportplace: user.place,
-            cnasCode: cnasInfo.checkcode
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              notification.open({
-                message: '添加成功',
-              });
-              sessionStorage.setItem('reportno', response.data.reportno);
-              router.push({
-                pathname: '/Entrustment/DetailForEntrustment',
-              });
-            } else {
-              notification.open({
-                message: '添加失败',
-                description: response.data,
-              });
-            }
+    Modal.confirm({
+      title: '确定新建此委托吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        message.success("正在保存数据，请稍等几秒...");
+        const {
+          form: {validateFieldsAndScroll},
+          dispatch,
+        } = this.props;
+        const {cnasInfo} = this.state;
+        validateFieldsAndScroll((error, values) => {
+          const user = JSON.parse(localStorage.getItem("userinfo"));
+          if (!error) {
+            dispatch({
+              type: 'entrustment/addReport',
+              payload: {
+                ...values,
+                username: user.nameC,
+                certcode: user.certCode,
+                reportplace: user.place,
+                cnasCode: cnasInfo.checkcode
+              },
+              callback: (response) => {
+                if (response.code === 200) {
+                  notification.open({
+                    message: '添加成功',
+                  });
+                  sessionStorage.setItem('reportno', response.data.reportno);
+                  router.push({
+                    pathname: '/Entrustment/DetailForEntrustment',
+                  });
+                } else {
+                  notification.open({
+                    message: '添加失败',
+                    description: response.data,
+                  });
+                }
+              }
+            });
+          } else {
+            console.log(error);
           }
         });
-      } else {
-        console.log(error);
       }
     });
+
   };
 
   onCnasChange = e => {

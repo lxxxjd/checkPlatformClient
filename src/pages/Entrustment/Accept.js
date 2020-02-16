@@ -300,12 +300,6 @@ class Accept extends PureComponent {
         const prereportno = sessionStorage.getItem("prereportno");
         validateFieldsAndScroll((error, values) => {
           const user = JSON.parse(localStorage.getItem("userinfo"));
-          if(values.inspplace1 !== null && values.inspplace1 !== undefined){
-            values.inspplace1 = values.inspplace1[2];
-          }
-          if(values.customsName !== null && values.customsName !== undefined){
-            values.customsName = values.customsName[1];
-          }
           if (!error) {
             dispatch({
               type: 'entrustment/addReport',

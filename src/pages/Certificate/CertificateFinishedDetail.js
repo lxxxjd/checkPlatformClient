@@ -425,7 +425,7 @@ class CertificateFinishedDetail extends PureComponent {
     return (
       <PageHeaderWrapper text={reprotText}>
         <Modal
-          title="证稿上传"
+          title="证书上传"
           visible={visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -446,11 +446,11 @@ class CertificateFinishedDetail extends PureComponent {
                 </Upload>
               )}
             </Form.Item>
-            <Form.Item label="证稿名称">
+            <Form.Item label="证书名称">
               {getFieldDecorator('recordname', {
                 rules: [{required: true,validator:this.getRepeatName,}],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入证稿名称,不超过10个字符" maxLength={10} />
+                <Input style={{ width: '100%' }} placeholder="请输入证书名称,不超过10个字符" maxLength={10} />
               )}
             </Form.Item>
             <Form.Item label="授权签字人">

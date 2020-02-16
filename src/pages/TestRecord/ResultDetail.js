@@ -79,6 +79,7 @@ const ReviewFrom = (props => {
 class ResultDetail extends PureComponent {
   state = {
     standards:[],
+    standardsAll:[],
     targetStandards : [],
     selectedStandards : [],
     instrument : [] ,
@@ -280,6 +281,34 @@ class ResultDetail extends PureComponent {
         this.setState({instrument});
       }
     });
+
+
+    dispatch({
+      type: 'checkResult/getStandard',
+      payload:{
+        certCode:user.certCode,
+      },
+      callback : (response) => {
+        if(response.code === 400){
+          notification.open({
+            message: '获取失败',
+            description:response.data,
+          });
+        }else{
+          const standardsData = response.data;
+          var standards = [];
+          for (let i = 0 ;i < standardsData.length ; i ++ ) {
+            standards.push({
+              title: standardsData[i].standarde,
+              description:standardsData[i].standardc,
+              key: standardsData[i].standarde,
+            });
+          }
+        }
+        this.setState({standardsAll:standards});
+      }
+    });
+
   }
 
   isValidDate =date=> {
@@ -296,31 +325,37 @@ class ResultDetail extends PureComponent {
     const {state} = this;
     let  instrumentArr = [];
     let  instrumentStr="";
+    if(text.instrument!==null){
       instrumentArr = text.instrument.split("|");
-    for(let i=0;i<instrumentArr.length;i++){
-      // eslint-disable-next-line no-loop-func
-      const divice = state.instrument.find(item => item.key === instrumentArr[i] );
-      if(divice!==undefined && divice!==null){
-        instrumentStr+=`${instrumentArr[i]}-${divice.description}\n`;
+      for(let i=0;i<instrumentArr.length;i++){
+        // eslint-disable-next-line no-loop-func
+        const divice = state.instrument.find(item => item.key === instrumentArr[i] );
+        if(divice!==undefined && divice!==null){
+          instrumentStr+=`${instrumentArr[i]}-${divice.description}\n`;
+        }
       }
     }
+
     // 分割标准
     let  standardArr = [];
     let  standardStr="";
-    standardArr = text.standard.split("|");
-    for(let i=0;i<standardArr.length;i++){
-      // eslint-disable-next-line react/destructuring-assignment
-      const standard = state.standards.find(item => item.key === standardArr[i] );
-      if(standard!==undefined && standard!==null){
-        standardStr+=`${standardArr[i]}-${standard.description}\n`;
+    if(text.standard!==null){
+      standardArr = text.standard.split("|");
+      for(let i=0;i<standardArr.length;i++){
+        // eslint-disable-next-line react/destructuring-assignment
+        const standard = state.standardsAll.find(item => item.key === standardArr[i] );
+        if(standard!==undefined){
+          standardStr+=`${standardArr[i]}-${standard.description}\n`;
+        }
       }
     }
+
     const values={
       inspway:text.inspway,
       begindate:text.begindate,
       finishdate:text.finishdate,
       weight:text.weight,
-      inspman:text.inspman.replace("|"," "),
+      inspman:text.inspman!==undefined && text.inspman!==null?text.inspman.replace("|"," "):"",
       standard:standardStr,
       instrument:instrumentStr,
       result:text.result,
@@ -347,17 +382,27 @@ class ResultDetail extends PureComponent {
     form.setFieldsValue({'inspway':text.inspway});
     form.setFieldsValue({'result':text.result});
     form.setFieldsValue({'weight':text.weight});
-    const standardsData = text.standard.split("|");
-    this.setState({targetStandards:standardsData});
-    const instrumentData = text.instrument.split("|");
-    this.setState({targetInstrument:instrumentData});
-    const peopleData = text.inspman.split("|");
-    this.setState({targetPeople:peopleData});
-    form.setFieldsValue({'inspman':text.inspman.split("|")});
-    form.setFieldsValue({'instrument':text.instrument.split("|")});
-    form.setFieldsValue({'standard':text.standard.split("|")});
-    form.setFieldsValue({'begindate':moment(text.begindate,"YYYY-MM-DD")});
-    form.setFieldsValue({'finishdate':moment(text.finishdate,"YYYY-MM-DD")});
+    if(text.standard!==undefined && text.standard!==null){
+      const standardsData = text.standard.split("|");
+      this.setState({targetStandards:standardsData});
+      form.setFieldsValue({'standard':text.standard.split("|")});
+    }
+    if(text.instrument!==undefined && text.instrument!==null){
+      const instrumentData = text.instrument.split("|");
+      this.setState({targetInstrument:instrumentData});
+      form.setFieldsValue({'instrument':text.instrument.split("|")});
+    }
+    if(text.inspman!==undefined && text.inspman!==null){
+      const peopleData = text.inspman.split("|");
+      this.setState({targetPeople:peopleData});
+      form.setFieldsValue({'inspman':text.inspman.split("|")});
+    }
+    if(text.begindate!==undefined && text.begindate!=null){
+      form.setFieldsValue({'begindate':moment(text.begindate,"YYYY-MM-DD")});
+    }
+    if(text.finishdate!==undefined && text.finishdate!=null){
+      form.setFieldsValue({'finishdate':moment(text.finishdate,"YYYY-MM-DD")});
+    }
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'checkResult/getProject',
@@ -474,9 +519,29 @@ class ResultDetail extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         const params = {
-          ...values,
+          inspway:  values.inspway,
+          weight:  values.weight,
+          standard: undefined,
+          inspman:undefined,
+          begindate:  values.begindate,
+          finishdate:  values.finishdate,
+          instrument:undefined,
+          result: values.result,
           reportno,
         };
+        if(values.inspman!==undefined && values.inspman !== null){
+          const inspman = values.inspman.join('|');
+          params.inspman = inspman;
+        }
+        if(values.standard!==undefined && values.standard !== null){
+          const standard = values.standard.join('|');
+          params.standard = standard;
+        }
+        if(values.instrument!==undefined && values.instrument !== null){
+          const instrument = values.instrument.join('|');
+          params.instrument = instrument;
+        }
+
         if(keyno !== null){
           params.keyno = keyno;
           dispatch({
@@ -526,7 +591,6 @@ class ResultDetail extends PureComponent {
         this.setState({ targetStandards: [] });
         form.resetFields();
       }
-      console.log(error);
     });
   };
 

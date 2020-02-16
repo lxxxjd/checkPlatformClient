@@ -2,32 +2,25 @@ import request from '@/utils/request';
 import { stringify } from 'qs';
 
 export async function addCheckResult(params) {
-  const inspman = params.inspman.join('|');
-  const standard = params.standard.join('|');
-  const instrument = params.instrument.join('|');
-  params.inspman = inspman;
-  params.standard = standard;
-  params.instrument = instrument;
+
   return request(`/api/checkResult/addCheckResult`,{
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }
 export async function updateCheckResult(params) {
-  const inspman = params.inspman.join('|');
-  const standard = params.standard.join('|');
-  const instrument = params.instrument.join('|');
-  params.inspman = inspman;
-  params.standard = standard;
-  params.instrument = instrument;
+  // const inspman = params.inspman.join('|');
+  // const standard = params.standard.join('|');
+  // const instrument = params.instrument.join('|');
+  // params.inspman = inspman;
+  // params.standard = standard;
+  // params.instrument = instrument;
   return request(`/api/checkResult/updateCheckResult`,{
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }
