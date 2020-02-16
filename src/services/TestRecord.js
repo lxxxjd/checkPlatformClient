@@ -20,6 +20,9 @@ export async function getRecordList(params) {
   });
 }
 
+export async function getSampleByReportno(params) {
+  return request(`/api/sampleRegister/getSampleByReportno?reportno=${params.reportno}`);
+}
 
 //get_pdf
 export async function getRecordInfo(params) {

@@ -343,6 +343,12 @@ export default [
           },
 
           {
+            path: '/InspectionAnalysis/RecordUpload',
+            name: 'RecordUpload',
+            component: './InspectionAnalysis/RecordUpload',
+          },
+
+          {
             path: '/InspectionAnalysis/ResultReview',
             name: 'ResultReview',
             component: './InspectionAnalysis/ResultReview',

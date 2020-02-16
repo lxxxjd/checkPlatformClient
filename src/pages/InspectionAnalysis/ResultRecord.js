@@ -20,7 +20,7 @@ import {
   notification,
   Upload,
   Icon,
-  message
+  message, AutoComplete,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment'
@@ -59,6 +59,7 @@ class ResultRecord extends PureComponent {
     overallstate:"",
 
     dataSource:[],
+    registerInReportno:[],
   };
 
   columns = [
@@ -104,14 +105,32 @@ class ResultRecord extends PureComponent {
 
 
   componentDidMount() {
+    this.init();
+    const { dispatch } = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    dispatch({
+      type: 'testRecord/getSampleByReportno',
+      payload:{
+        reportno,
+      },
+      callback:(response) =>{
+        if(response){
+          this.setState({registerInReportno:response});
+          console.log(this.state.registerInReportno);
+        }
+      }
+    });
+  }
+
+  init=()=>{
     this.setState({overallstate:sessionStorage.getItem('ResultRecord_overallstate')});
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     dispatch({
       type: 'testRecord/getRecordInfo',
       payload:{
-         reportno,
-         source : '测试报告',
+        reportno,
+        source : '测试报告',
       },
       callback:(response) =>{
         if(response){
@@ -119,7 +138,7 @@ class ResultRecord extends PureComponent {
         }
       }
     });
-  }
+  };
 
   isValidDate =date=> {
     if(date !==undefined && date !==null ){
@@ -279,17 +298,7 @@ class ResultRecord extends PureComponent {
       });
       return;
     }
-    let val = file.name;
-    const pattern = /\.{1}[a-z]{1,}$/;
-    if (pattern.exec(val) !== null) {
-      val = val.slice(0, pattern.exec(val).index)
-    }
-    const {
-      form
-    } = this.props;
-    form.setFieldsValue({['recordname']: val});
     this.setState({ fileList:fileList});
-    console.log(fileList)
   };
 
   handleBeforeUpload = file => {
@@ -415,8 +424,10 @@ class ResultRecord extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible,overallstate,dataSource} = this.state
+    const {fileList,visible,previewVisible,previewImage,downloadVisible,modelName,url,showVisible,overallstate,dataSource,registerInReportno} = this.state
     const typeOptions = modelName.map(d => <Option key={d} value={d}>{d}</Option>);
+
+    const registerOptions = registerInReportno.map(d => <Option key={d.sampleno} value={`${d.sampleno+d.samplename}报告`}>{d.sampleno}{d.samplename}报告</Option>);
 
 
     const reportno = sessionStorage.getItem('reportno');
@@ -455,7 +466,14 @@ class ResultRecord extends PureComponent {
               {getFieldDecorator('recordname', {
                 rules: [{required: true,validator:this.getRepeatRecordName,}],
               })(
-                <Input style={{ width: '100%' }} placeholder="请输入文件名称" />
+                <AutoComplete
+                  className="global-search"
+                  dataSource={registerOptions}
+                  style={{ width: '100%' }}
+                  placeholder="请输入文件名称"
+                >
+                  <Input />
+                </AutoComplete>
               )}
             </Form.Item>
             <Modal visible={previewVisible} footer={null} onCancel={this.Cancel}>

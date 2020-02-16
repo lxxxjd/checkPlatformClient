@@ -33,7 +33,7 @@ const { Option } = Select;
 class FinalPriceAdd extends PureComponent {
   state = {
     formValues: {},
-    value:'',
+    value:'按单价',
     checkProject:[],
     priceway:"",
   };
@@ -62,8 +62,8 @@ class FinalPriceAdd extends PureComponent {
             if(response.data.priceway.trim() === "按单价"){
               form.setFieldsValue({
                 'choose': response.data.choose.trim(),
-                'price': parseInt(response.data.price.trim()),
-                'quantity': parseInt(response.data.quantity.trim()),
+                'price': parseFloat(response.data.price.trim()),
+                'quantity': parseFloat(response.data.quantity.trim()),
               });
             }
           }
@@ -107,8 +107,8 @@ class FinalPriceAdd extends PureComponent {
               if(response.data.priceway.trim() === "按单价"){
                 form.setFieldsValue({
                   'choose': response.data.choose.trim(),
-                  'price': parseInt(response.data.price.trim()),
-                  'quantity': parseInt(response.data.quantity.trim()),
+                  'price': parseFloat(response.data.price.trim()),
+                  'quantity': parseFloat(response.data.quantity.trim()),
                 });
               }
             }
@@ -264,11 +264,11 @@ class FinalPriceAdd extends PureComponent {
           <br></br>
           <Card>
             <span> 选择定价方式： </span>
-            <Radio.Group onChange={this.onChange} value={value}>
+            <Radio.Group onChange={this.onChange} value={value} defaultValue="按单价">
               <Radio value="按单价">按单价</Radio>
               <Radio value="按批次">按批次</Radio>
-              <Radio value="按协议">按协议</Radio>
-              <Radio value="按项目">按项目</Radio>
+              {/*<Radio value="按协议">按协议</Radio>*/}
+              {/*<Radio value="按项目">按项目</Radio>*/}
             </Radio.Group>
           {
             value==='按单价' ? [<Form>

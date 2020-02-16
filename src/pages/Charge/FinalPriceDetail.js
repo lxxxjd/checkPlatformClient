@@ -60,8 +60,8 @@ class FinalPriceDetail extends PureComponent {
             if(response.data.priceway.trim() === "按单价"){
               form.setFieldsValue({
                 'choose': response.data.choose.trim(),
-                'price': parseInt(response.data.price.trim()),
-                'quantity': parseInt(response.data.quantity.trim()),
+                'price': parseFloat(response.data.price.trim()),
+                'quantity': parseFloat(response.data.quantity.trim()),
               });
             }
           }
@@ -105,8 +105,8 @@ class FinalPriceDetail extends PureComponent {
               if(response.data.priceway.trim() === "按单价"){
                 form.setFieldsValue({
                   'choose': response.data.choose.trim(),
-                  'price': parseInt(response.data.price.trim()),
-                  'quantity': parseInt(response.data.quantity.trim()),
+                  'price': parseFloat(response.data.price.trim()),
+                  'quantity': parseFloat(response.data.quantity.trim()),
                 });
               }
             }
@@ -128,59 +128,70 @@ class FinalPriceDetail extends PureComponent {
     const price = form.getFieldValue('price');
     const quantity = form.getFieldValue('quantity');
     if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
-      form.setFieldsValue({['total']: price * quantity});
+      let total =price * quantity
+      total = total.toFixed(2);
+      console.log(total);
+      form.setFieldsValue({['total']: total});
     }
   };
 
   submit = () => {
-    this.sum();
-    const {
-      form: {validateFieldsAndScroll},
-      dispatch,
-    } = this.props;
-    validateFieldsAndScroll((error, values) => {
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const reportno = sessionStorage.getItem('reportno');
-      const FinalPriceOrigin = sessionStorage.getItem('FinalPriceOrigin');
-      const {value} = this.state;
+    Modal.confirm({
+      title: '确定保存此定价吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        this.sum();
+        const {
+          form: {validateFieldsAndScroll},
+          dispatch,
+        } = this.props;
+        validateFieldsAndScroll((error, values) => {
+          const user = JSON.parse(localStorage.getItem("userinfo"));
+          const reportno = sessionStorage.getItem('reportno');
+          const FinalPriceOrigin = sessionStorage.getItem('FinalPriceOrigin');
+          const {value} = this.state;
 
-      if (!error) {
-        // submit the values
-        dispatch({
-          type: 'charge/updatePriceMaking',
-          payload: {
-            ...values,
-            reportno,
-            priceman: user.nameC,
-            priceway: value,
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              notification.open({
-                message: '定价成功',
-              });
-              // 判断页面来源
-              if(FinalPriceOrigin==='ListFictionAdd'){
-                router.push({
-                  pathname: '/Charge/ListFictionAdd',
-                });
-              }else if(FinalPriceOrigin==='FinalPrice'){
-                router.push({
-                  pathname: '/Charge/FinalPrice',
-                });
+          if (!error) {
+            // submit the values
+            dispatch({
+              type: 'charge/updatePriceMaking',
+              payload: {
+                ...values,
+                reportno,
+                priceman: user.nameC,
+                priceway: value,
+              },
+              callback: (response) => {
+                if (response.code === 200) {
+                  notification.open({
+                    message: '定价成功',
+                  });
+                  // 判断页面来源
+                  if(FinalPriceOrigin==='ListFictionAdd'){
+                    router.push({
+                      pathname: '/Charge/ListFictionAdd',
+                    });
+                  }else if(FinalPriceOrigin==='FinalPrice'){
+                    router.push({
+                      pathname: '/Charge/FinalPrice',
+                    });
+                  }
+
+                } else {
+                  notification.open({
+                    message: '添加失败',
+                    description: response.data,
+                  });
+                }
               }
-
-            } else {
-              notification.open({
-                message: '添加失败',
-                description: response.data,
-              });
-            }
+            });
           }
         });
       }
     });
-  }
+
+  };
   render() {
     const {
       charge: {data},
@@ -249,7 +260,7 @@ class FinalPriceDetail extends PureComponent {
                     }
                   }, message: '请输入数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} onBlur={this.sum}/>
+                <Input style={{ width: '25%' }} onChange={this.sum} />
               )}
             </Form.Item>
             <Form.Item label="数量" >
@@ -264,7 +275,7 @@ class FinalPriceDetail extends PureComponent {
                     }
                   }, message: '请输入数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} onBlur={this.sum}/>
+                <Input style={{ width: '25%' }} onChange={this.sum} />
               )}
             </Form.Item>
             <Form.Item label="总价">

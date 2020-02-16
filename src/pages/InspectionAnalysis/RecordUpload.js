@@ -19,9 +19,9 @@ const { Option } = Select;
 
 /* eslint react/no-multi-comp:0 */
 @Form.create()
-@connect(({ mTestRecord, loading }) => ({
-  mTestRecord,
-  loading: loading.models.mTestRecord,
+@connect(({ testRecord, loading }) => ({
+  testRecord,
+  loading: loading.models.testRecord,
 }))
 class RecordUpload extends PureComponent {
   state = {
@@ -59,7 +59,7 @@ class RecordUpload extends PureComponent {
       dataIndex: 'overallstate',
     },
     {
-      title: '记录名称',
+      title: '测试报告',
       dataIndex: 'recordname',
       render: (text, record) => {
         if(text === null || text === undefined){
@@ -95,8 +95,7 @@ class RecordUpload extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
-            :[<a onClick={() => this.modifyItem(text, record)}>上传记录&nbsp;&nbsp;</a>]}
+          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[<a onClick={() => this.uploadItem(text, record)}>查看报告&nbsp;&nbsp;</a>]:[<a onClick={() => this.uploadItem(text, record)}>上传报告&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -107,13 +106,22 @@ class RecordUpload extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'mTestRecord/getRecordList',
+      type: 'testRecord/getRecordList',
       payload:{
         certCode:user.certCode,
-        source:'检查记录'
+        source:'测试报告'
       }
     });
   }
+
+  uploadItem = text => {
+    sessionStorage.setItem('reportno',text.reportno);
+    router.push({
+      pathname:'/InspectionAnalysis/ResultRecord',
+    });
+    sessionStorage.setItem('ResultRecord_overallstate',text.overallstate);
+  };
+
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -149,10 +157,10 @@ class RecordUpload extends PureComponent {
       const values = {
         ...fieldsValue,
         certCode:user.certCode,
-        source:'检查记录'
+        source:'测试报告'
       };
       dispatch({
-        type: 'mTestRecord/getRecordList',
+        type: 'testRecord/getRecordList',
         payload: values,
       });
     });
@@ -164,10 +172,10 @@ class RecordUpload extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     dispatch({
-      type: 'mTestRecord/getRecordList',
+      type: 'testRecord/getRecordList',
       payload:{
         certCode:user.certCode,
-         source:'检查记录'
+         source:'测试报告'
       }
     });
   };
@@ -217,11 +225,11 @@ class RecordUpload extends PureComponent {
 
   render() {
     const {
-      mTestRecord:{data},
+      testRecord:{data},
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="检验记录上传" >
+      <PageHeaderWrapper title="测试报告上传" >
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>

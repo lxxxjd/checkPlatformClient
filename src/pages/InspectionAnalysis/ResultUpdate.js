@@ -78,8 +78,7 @@ class ResultUpdate extends PureComponent {
       render: (text, record) => (
         <Fragment>
           {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[]:[<a onClick={() => this.mobileItem(text, record)}>编辑&nbsp;&nbsp;</a>]}
-          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[<a onClick={() => this.uploadItem(text, record)}>查看文件</a>]:[<a onClick={() => this.uploadItem(text, record)}>上传文件</a>]}
-          &nbsp;&nbsp;
+          {/*{text.overallstate==="已发布"|| text.overallstate==="申请作废"?[<a onClick={() => this.uploadItem(text, record)}>查看文件</a>]:[<a onClick={() => this.uploadItem(text, record)}>上传文件</a>]}    &nbsp;&nbsp;*/}
           <a onClick={() => this.detailItem(text, record)}>查看</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
@@ -110,6 +109,7 @@ class ResultUpdate extends PureComponent {
       dataIndex: 'testresult',
     },
   ];
+
   componentDidMount() {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;

@@ -171,7 +171,7 @@ class CostlistEdit extends PureComponent {
 
   addItem = () => {
     router.push({
-      pathname:'/Charge/CostListAdd',
+      pathname:'/CostManage/CostListAdd',
     });
   };
 

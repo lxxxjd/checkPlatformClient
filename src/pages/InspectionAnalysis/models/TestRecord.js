@@ -1,5 +1,5 @@
 
-import {getRecordList,getRecordInfo,deleteRecordInfo,uploadFile,getRecord} from '@/services/TestRecord'
+import {getRecordList,getRecordInfo,deleteRecordInfo,uploadFile,getRecord,getSampleByReportno} from '@/services/TestRecord'
 
 
 
@@ -26,6 +26,12 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+    *getSampleByReportno({ payload,callback }, { call, put }) {
+      const response = yield call(getSampleByReportno, payload);
+      if (callback) callback(response.data);
+    },
+
     *getRecordInfo({ payload,callback }, { call, put }) {
       const response = yield call(getRecordInfo, payload);
       yield put({

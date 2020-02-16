@@ -141,10 +141,10 @@ class ListFictionAdd extends PureComponent {
       title: '检查品名',
       dataIndex: 'cargoname',
     },
-    {
-      title: '申请项目',
-      dataIndex: 'inspway',
-    },
+    // {
+    //   title: '申请项目',
+    //   dataIndex: 'inspway',
+    // },
     {
       title: '付款人',
       dataIndex: 'payer',

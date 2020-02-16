@@ -40,7 +40,7 @@ class InspectionArrangement extends PureComponent {
     visible:false,
     allCompanyName:[],
     selectEntrustment:null,
-    showPrice:false,
+    showPrice:true,
   };
 
   columns = [
@@ -299,25 +299,26 @@ class InspectionArrangement extends PureComponent {
               </Form.Item>
               <Form.Item label="计价方式">
                 {getFieldDecorator('priceway', {
+                  initialValue:'按单价',
                   rules: [{ required: true, message: '请选择计价方式' }],
                 })(
                   <Radio.Group onChange={this.onChange}>
                     <Radio value="按单价">按单价</Radio>
                     <Radio value="按批次">按批次</Radio>
-                    <Radio value="按比例">按比例</Radio>
+                    {/*<Radio value="按比例">按比例</Radio>*/}
                   </Radio.Group>,
                 )}
               </Form.Item>
               {
                 {true:
-                  <Form.Item label="单价/比例">
+                  <Form.Item label="单价">
                     { getFieldDecorator('price', {
                       rules:
                       showPrice === true
-                      ? [{ required: 'true', message: '请输入单价比例' }]
+                      ? [{ required: 'true', message: '请输入单价' }]
                       : []
                     })(
-                      <Input />
+                      <Input placeholder="请输入单价" />
                      )
                     }
                   </Form.Item>
