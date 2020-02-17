@@ -40,6 +40,9 @@ export async function submitApplication(params) {
 
 
 export async function updateReport(params) {
+
+
+
   if (params.inspplace1 !== undefined && params.inspplace1 !== null ) {
     params.inspplace1 = params.inspplace1[2];
   }
@@ -64,6 +67,8 @@ export async function updateReport(params) {
   }
   const inspway = params.inspway.join(' ');
   params.inspway = inspway;
+
+  console.log(params);
 
   return request('/api/report/update_report', {
     method: 'POST',

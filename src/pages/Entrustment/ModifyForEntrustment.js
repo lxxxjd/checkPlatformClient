@@ -386,16 +386,21 @@ class ModifyForEntrustment extends PureComponent {
 
           if (!error) {
             // submit the values
+            const parmas = {
+              ...values,
+              username: user.nameC,
+              certcode: user.certCode,
+              reportplace: user.place,
+              reportno,
+              cnasCode: cnasInfo.checkcode,
+              inspplace1 :values.inspplace1 ===undefined?null:values.inspplace1,
+              customsName:values.customsName===undefined?null:values.customsName,
+              certstyle:values.certstyle===undefined || values.certstyle.length===0?null:values.certstyle,
+            };
+            console.log(parmas);
             dispatch({
               type: 'entrustment/updateReport',
-              payload: {
-                ...values,
-                username: user.nameC,
-                certcode: user.certCode,
-                reportplace: user.place,
-                reportno,
-                cnasCode: cnasInfo.checkcode
-              },
+              payload:parmas ,
               callback: (response) => {
                 if (response.code === 200) {
                   notification.open({
