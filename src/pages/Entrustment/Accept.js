@@ -159,9 +159,13 @@ class Accept extends PureComponent {
       },
       callback: (response) => {
         const placecodes=[];
-        placecodes.push(`${response.data.inspplace1.substring(0,2)}0000`);
-        placecodes.push(`${response.data.inspplace1.substring(0,4)}00`);
-        placecodes.push(response.data.inspplace1);
+        if(response.data.inspplace1!==undefined && response.data.inspplace1!==null ){
+          placecodes.push(`${response.data.inspplace1.substring(0,2)}0000`);
+          placecodes.push(`${response.data.inspplace1.substring(0,4)}00`);
+          placecodes.push(response.data.inspplace1);
+          form.setFieldsValue({  'inspplace1':placecodes,});
+        }
+
         form.setFieldsValue({
           'reportdate': moment(response.data.reportdate, "YYYY-MM-DD"),
           'tradeway': response.data.tradeway,
@@ -171,7 +175,6 @@ class Accept extends PureComponent {
           'agent': response.data.agent,
           'applicant': response.data.applicant,
           'inspwaymemo1': response.data.inspwaymemo1,
-          'inspplace1':placecodes,
           'inspdate': moment(response.data.inspdate, "YYYY-MM-DD"),
           'inspplace2':response.data.inspplace2,
           'price': response.data.price,
