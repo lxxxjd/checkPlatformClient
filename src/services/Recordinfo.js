@@ -8,3 +8,37 @@ export async function getRepeatRecordName(params) {
     data: params,
   });
 }
+
+
+
+export async function getRecordCompanyList(params) {
+  return request(`/api/RecordCompany/getRecordCompanyList`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function uploadRecordCompany(params) {
+  return request(`/api/RecordCompany/uploadRecordCompany`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+export async function deleteRecordCompany(params) {
+  return request(`/api/RecordCompany/deleteRecordCompany`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function getPdfByOssPath(params) {
+  return request(`/api/cert_report/get_pdf?osspath=${params.osspath}`);
+}
+
+
+

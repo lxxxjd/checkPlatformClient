@@ -2,6 +2,8 @@ import {uploadFile,getAllUserListByCertCode,updateUser,addUser,deleteUser,
   getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
   , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor,checkUserName,verityUserNameC,getUrl} from '@/services/Company';
 
+import {getRecordCompanyList,uploadRecordCompany,deleteRecordCompany} from '@/services/Recordinfo';
+
 export default {
   namespace: 'company',
   state: {
@@ -27,9 +29,25 @@ export default {
 
   },
   effects: {
+
+
+    *uploadRecordCompany({ payload,callback }, { call, put }) {
+      const response = yield call(uploadRecordCompany, payload);
+      if (callback) callback(response);
+    },
+
+    *getRecordCompanyList({ payload,callback }, { call, put }) {
+      const response = yield call(getRecordCompanyList, payload);
+      if (callback) callback(response);
+    },
     *deleteManRecord({ payload,callback }, { call, put }) {
       const response = yield call(deleteManRecord, payload);
       if (callback) callback(response);
+    },
+
+    *deleteRecordCompany({ payload,callback }, { call, put }) {
+      const response = yield call(deleteRecordCompany, payload);
+      if (callback) callback(response.data);
     },
     *getUser({ payload,callback }, { call, put }) {
       const response = yield call(getUser, payload);
