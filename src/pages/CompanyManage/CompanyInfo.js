@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
+import { formatMessage } from 'umi-plugin-react/locale';
 import router from 'umi/router';
 import {
   Row,
@@ -18,9 +19,10 @@ import {
   Icon,
   message
 } from 'antd';
+import moment from 'moment'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './company.less';
-import moment from 'moment'
+
 const { Option } = Select;
 
 
@@ -55,6 +57,32 @@ const UploadForm = Form.create()(props => {
     form.setFieldsValue({['recordname']: val});
     setStateFileList(fileList);
   };
+
+
+  const  getRepeatRecordNameCompany = (rule, value, callback) => {
+    // 不存在文件名判空
+    if(value===undefined || value===null || value===""){
+      callback(formatMessage({ id: 'validation.recordcompany.noexist' }));
+    }
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    let formData = new FormData();
+    formData.append("certcode",user.certCode);
+    formData.append("recordname",value);
+    dispatch({
+      type: 'company/getRepeatRecordNameCompany',
+      payload:formData,
+      callback: (response) => {
+        if(response === "repeat"){
+          callback(formatMessage({ id: 'validation.recordcompany.repeat' }));
+        }else if(response ==="success") {
+          callback();
+        }else{
+          callback(formatMessage({ id: 'validation.recordcompany.error' }));
+        }
+      }
+    });
+  };
+
 
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -94,6 +122,9 @@ const UploadForm = Form.create()(props => {
     </div>
   );
 
+
+
+
   return (
     <Modal
       destroyOnClose
@@ -122,7 +153,7 @@ const UploadForm = Form.create()(props => {
         </Form.Item>
         <Form.Item label="文件名称">
           {getFieldDecorator('recordname', {
-            rules: [{required: true, message: '请输入文件名称'}],
+            rules: [{required: true,validator:getRepeatRecordNameCompany}],
           })(
             <Input style={{width: '100%'}} placeholder="请输入文件名称" />
           )}
@@ -340,6 +371,7 @@ class CompanyInfo extends PureComponent {
     });
   };
 
+
   // 显示模态框
   handleModifyModalVisble = (flag) => {
     this.setState({
@@ -393,6 +425,7 @@ class CompanyInfo extends PureComponent {
       handlePreview:this.handlePreview,
       init:this.init,
       setStateFileList:this.setStateFileList,
+      getRepeatName:this.getRepeatName,
     };
     const { modifyModalVisble} = this.state;
 

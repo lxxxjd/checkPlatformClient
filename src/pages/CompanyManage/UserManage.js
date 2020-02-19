@@ -233,37 +233,37 @@ const CreateForm = Form.create()(props => {
             )}
           </FormItem>
 
-          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="入岗日期" colon={false}>
+          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="入职日期" colon={false}>
             {form.getFieldDecorator('enterdate', {
               initialValue: modalInfo.enterdate!==undefined&&modalInfo.enterdate!==null?moment(modalInfo.enterdate,"YYYY-MM-DD"):null,
             })(
               <DatePicker
                 style={{width:'100%'}}
-                placeholder="请选择入岗日期"
+                placeholder="请选择入职日期"
                 format="YYYY-MM-DD"
                 getPopupContainer={trigger => trigger.parentNode}
               />
             )}
           </FormItem>
-          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="专业年限" colon={false}>
-            {form.getFieldDecorator('majoryears', {
-              initialValue: modalInfo.majoryears,
-            })(
-              <InputNumber style={{width:'100%'}} placeholder="请选择从事的专业年限" />
-            )}
-          </FormItem>
-          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="岗位年限" colon={false}>
+          {/*<FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="专业年限" colon={false}>*/}
+          {/*  {form.getFieldDecorator('majoryears', {*/}
+          {/*    initialValue: modalInfo.majoryears,*/}
+          {/*  })(*/}
+          {/*    <InputNumber style={{width:'100%'}} placeholder="请选择从事的专业年限" />*/}
+          {/*  )}*/}
+          {/*</FormItem>*/}
+          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="入职年限" colon={false}>
             {form.getFieldDecorator('workyears', {
               initialValue: modalInfo.workyears,
             })(
-              <InputNumber style={{width:'100%'}} placeholder="请选择从事的岗位年限年限" />
+              <InputNumber style={{width:'100%'}} placeholder="请选择从事的入职年限" />
             )}
           </FormItem>
         </Col>
         <Col span={11}>
           <span>
             <span style={{fontWeight:'bold'}}>平台拟制证书要求：如果您需要在平台自动拟制证书，<br /></span>
-              您新增该用户，添加成功后，在操作栏选择“上传签名”，<br />
+              您新增该用户，添加成功后，在操作栏选择“上传图片”，<br />
               （1）用户矢量签名图，png格式；<br />
               （2）授权图片：授权签字人证书章和签字合为一体的矢量图，png格式；<br />
               如果没有上传手签签名和授权签名，将不能在平台拟制证书！<br />
@@ -491,34 +491,34 @@ const AddForm = Form.create()(props => {
             )}
           </FormItem>
 
-          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="入岗日期" colon={false}>
+          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="入职日期" colon={false}>
             {form.getFieldDecorator('enterdate', {
             })(
               <DatePicker
                 style={{width:'100%'}}
-                placeholder="请选择入岗日期"
+                placeholder="请选择入职日期"
                 format="YYYY-MM-DD"
                 getPopupContainer={trigger => trigger.parentNode}
               />
             )}
           </FormItem>
-          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="专业年限" colon={false}>
-            {form.getFieldDecorator('majoryears', {
-            })(
-              <InputNumber style={{width:'100%'}} placeholder="请选择从事的专业年限" />
-            )}
-          </FormItem>
-          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="岗位年限" colon={false}>
+          {/*<FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="专业年限" colon={false}>*/}
+          {/*  {form.getFieldDecorator('majoryears', {*/}
+          {/*  })(*/}
+          {/*    <InputNumber style={{width:'100%'}} placeholder="请选择从事的专业年限" />*/}
+          {/*  )}*/}
+          {/*</FormItem>*/}
+          <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="入职年限" colon={false}>
             {form.getFieldDecorator('workyears', {
             })(
-              <InputNumber style={{width:'100%'}} placeholder="请选择从事的岗位年限年限" />
+              <InputNumber style={{width:'100%'}} placeholder="请选择从事的入职年限" />
             )}
           </FormItem>
         </Col>
         <Col span={11}>
           <span>
             <span style={{fontWeight:'bold'}}>平台拟制证书要求：如果您需要在平台自动拟制证书，<br /></span>
-              您新增该用户，添加成功后，在操作栏选择“上传签名”，<br />
+              您新增该用户，添加成功后，在操作栏选择“上传图片”，<br />
               （1）用户矢量签名图，png格式；<br />
               （2）授权图片：授权签字人证书章和签字合为一体的矢量图，png格式；<br />
               如果没有上传手签签名和授权签名，将不能在平台拟制证书！<br />
@@ -620,14 +620,12 @@ class UserManage extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
+          {/*{text.signurl !== null ?[<a onClick={() => this.previewItem(text, record)}>查看签名&nbsp;&nbsp;</a>]:[]}*/}
+          <a onClick={() => this.viewInfo(text, record)}>查看&nbsp;&nbsp;</a>
+          <a onClick={() => this.uploadItem(text, record)}>上传图片&nbsp;&nbsp;</a>
+          <a onClick={() => this.fileItem(text, record)}>上传文件&nbsp;&nbsp;</a>
+          <a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>
           <a onClick={() => this.resetPassword(text, record)}>重置密码</a>    &nbsp;&nbsp;
-          {text.signurl !== null ?[<a onClick={() => this.previewItem(text, record)}>查看签名&nbsp;&nbsp;</a>]:[]}
-          <a onClick={() => this.uploadItem(text, record)}>上传签名</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.fileItem(text, record)}>上传文件</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
         </Fragment>
       ),
@@ -706,6 +704,13 @@ class UserManage extends PureComponent {
     sessionStorage.setItem('nameC',text.nameC);
     router.push({
       pathname:'/CompanyManage/ManRecord',
+    });
+  };
+
+  viewInfo = text => {
+    sessionStorage.setItem('usertext',JSON.stringify(text));
+    router.push({
+      pathname:'/CompanyManage/ManDetail',
     });
   };
 
@@ -922,7 +927,7 @@ class UserManage extends PureComponent {
     prams.idcard = fields.idcard;
     prams.isauthorize = fields.isauthorize;
     prams.sex = fields.sex;
-    prams.majoryears = fields.majoryears;
+    //prams.majoryears = fields.majoryears;
     prams.workduty = fields.workduty;
     prams.major = fields.major;
     prams.enterdate = fields.enterdate;

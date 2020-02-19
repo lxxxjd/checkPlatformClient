@@ -437,18 +437,18 @@ class Info extends PureComponent {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item label="入岗日期">
+            <Form.Item label="入职日期">
               {getFieldDecorator('enterdate', {
                 rules: [
                   {
                     required: true,
-                    message: '请选择入岗日期',
+                    message: '请选择入职日期',
                   },
                 ],
               })(
                 <DatePicker
                   style={{width:'100%'}}
-                  placeholder="入岗日期"
+                  placeholder="入职日期"
                   format="YYYY-MM-DD"
                   getPopupContainer={trigger => trigger.parentNode}
                 />

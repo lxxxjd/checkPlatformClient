@@ -50,6 +50,7 @@ class ManUpload extends PureComponent {
     fileList: [],
     headUrl:undefined,
     signUrl:undefined,
+    photoUrl:undefined,
     uploadType:'',
   };
 
@@ -69,9 +70,9 @@ class ManUpload extends PureComponent {
               payload:{
                 url : response.data.signurl,
               },
-              callback:(response)=>{
-                if(response.code === 200){
-                  this.setState({signUrl:response.data});
+              callback:(response1)=>{
+                if(response1.code === 200){
+                  this.setState({signUrl:response1.data});
                 }
               }
             });
@@ -82,13 +83,28 @@ class ManUpload extends PureComponent {
               payload:{
                 url : response.data.authorizeurl,
               },
-              callback:(response)=>{
-                if(response.code === 200){
-                  this.setState({headUrl:response.data});
+              callback:(response2)=>{
+                if(response2.code === 200){
+                  this.setState({headUrl:response2.data});
                 }
               }
             });
           }
+
+          if( response.data.photourl!==null){
+            dispatch({
+              type: 'company/getUrl',
+              payload:{
+                url : response.data.photourl,
+              },
+              callback:(response3)=>{
+                if(response3.code === 200){
+                  this.setState({photoUrl:response3.data});
+                }
+              }
+            });
+          }
+
 
         }
       }
@@ -116,10 +132,11 @@ class ManUpload extends PureComponent {
             callback: (response) => {
               if(response.code === 400){
                 notification.open({
-                  message: '添加失败',
+                  message: '上传失败',
                   description:response.data,
                 });
               }else{
+                message.success("上传成功");
                 this.componentDidMount();
               }
             }
@@ -131,10 +148,27 @@ class ManUpload extends PureComponent {
             callback: (response) => {
               if(response.code === 400){
                 notification.open({
-                  message: '添加失败',
+                  message: '上传失败',
                   description:response.data,
                 });
               }else{
+                message.success("上传成功");
+                this.componentDidMount();
+              }
+            }
+          });
+        }else if(uploadType === 'photo'){
+          dispatch({
+            type: 'company/uploadUserPhoto',
+            payload : formData,
+            callback: (response) => {
+              if(response.code === 400){
+                notification.open({
+                  message: '上传失败',
+                  description:response.data,
+                });
+              }else{
+                message.success("上传成功");
                 this.componentDidMount();
               }
             }
@@ -166,6 +200,17 @@ class ManUpload extends PureComponent {
     this.setState({ visible: true });
     this.setState({uploadType:'head'})
   };
+
+  showPhoto = () => {
+    const {
+      form,
+    } = this.props;
+    form.resetFields();
+    this.setState({fileList:[]});
+    this.setState({ visible: true });
+    this.setState({uploadType:'photo'})
+  };
+
 
   handleCancel = () =>{
     const {
@@ -233,7 +278,7 @@ class ManUpload extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,signUrl,headUrl} = this.state;
+    const {fileList,visible,previewVisible,previewImage,signUrl,headUrl,photoUrl} = this.state;
     const username = sessionStorage.getItem('username');
     const reprotText = {
         nameC:username
@@ -270,26 +315,37 @@ class ManUpload extends PureComponent {
             </Modal>
           </Form>
         </Modal>
-        <Card  size="small">
+
+        <Card size="small">
           <Row>
             <Col span={22}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传签名</Button>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showPhoto}>上传二寸照片</Button>
             </Col>
             <Col span={2}>
               <Button style={{ marginBottom: 12 }} type="primary" onClick={this.back}>返回</Button>
             </Col>
           </Row>
-          {(signUrl===''||signUrl===null||signUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={signUrl} width="200" />]}
+          {(photoUrl===''||photoUrl===null||photoUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={photoUrl} height="200" />]}
         </Card>
-        <br/>
-        <Card  size="small">
+        <br />
+        <Card size="small">
+          <Row>
+            <Col span={24}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传签名</Button>
+            </Col>
+          </Row>
+          {(signUrl===''||signUrl===null||signUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={signUrl} height="100" />]}
+        </Card>
+        <br />
+        <Card size="small">
           <Row>
             <Col span={24}>
               <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传授权图片</Button>
             </Col>
           </Row>
-          {(headUrl===''||headUrl===null||headUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={headUrl} width="200" />]}
+          {(headUrl===''||headUrl===null||headUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={headUrl} height="150" />]}
         </Card>
+
       </PageHeaderWrapper>
     );
   }

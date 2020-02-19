@@ -36,6 +36,15 @@ export async function deleteRecordCompany(params) {
   });
 }
 
+export async function getRepeatRecordNameCompany(params) {
+  return request(`/api/RecordCompany/getRepeatRecordNameCompany`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
+
+
 export async function getPdfByOssPath(params) {
   return request(`/api/cert_report/get_pdf?osspath=${params.osspath}`);
 }

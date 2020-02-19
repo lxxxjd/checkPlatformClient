@@ -1,8 +1,8 @@
 import {uploadFile,getAllUserListByCertCode,updateUser,addUser,deleteUser,
   getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
-  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor,checkUserName,verityUserNameC,getUrl} from '@/services/Company';
+  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor,checkUserName,verityUserNameC,getUrl,uploadUserPhoto} from '@/services/Company';
 
-import {getRecordCompanyList,uploadRecordCompany,deleteRecordCompany} from '@/services/Recordinfo';
+import {getRecordCompanyList,uploadRecordCompany,deleteRecordCompany,getRepeatRecordNameCompany} from '@/services/Recordinfo';
 
 export default {
   namespace: 'company',
@@ -31,6 +31,11 @@ export default {
   effects: {
 
 
+    *getRepeatRecordNameCompany({ payload,callback }, { call, put }) {
+      const response = yield call(getRepeatRecordNameCompany, payload);
+      if (callback) callback(response.data);
+    },
+
     *uploadRecordCompany({ payload,callback }, { call, put }) {
       const response = yield call(uploadRecordCompany, payload);
       if (callback) callback(response);
@@ -55,6 +60,10 @@ export default {
     },
     *uploadUserAuthor({ payload,callback }, { call, put }) {
       const response = yield call(uploadUserAuthor, payload);
+      if (callback) callback(response);
+    },
+    *uploadUserPhoto({ payload,callback }, { call, put }) {
+      const response = yield call(uploadUserPhoto, payload);
       if (callback) callback(response);
     },
     *uploadManRecord({ payload,callback }, { call, put }) {

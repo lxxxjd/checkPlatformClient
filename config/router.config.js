@@ -1,3 +1,4 @@
+
 export default [
   // user
   {
@@ -794,6 +795,12 @@ export default [
             path: '/CompanyManage/TestMan',
             name: 'TestMan',
             component: './CompanyManage/TestMan',
+          },
+
+          {
+            path: '/CompanyManage/ManDetail',
+            name: 'ManDetail',
+            component: './CompanyManage/ManDetail',
           },
           {
             path: '/CompanyManage/Port',

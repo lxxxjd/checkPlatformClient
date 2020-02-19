@@ -32,5 +32,9 @@ export default {
   'validation.certname.noexist':'certname cannot be empty',
 
 
+  'validation.recordcompany.repeat':'filename is repeated',
+  'validation.recordcompany.error':'filename has error',
+  'validation.recordcompany.noexist':'filename cannot be empty',
+
 
 };
