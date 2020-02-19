@@ -801,6 +801,7 @@ export default [
             path: '/CompanyManage/ManDetail',
             name: 'ManDetail',
             component: './CompanyManage/ManDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
             path: '/CompanyManage/Port',
