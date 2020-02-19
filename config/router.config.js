@@ -1,4 +1,3 @@
-
 export default [
   // user
   {
@@ -796,13 +795,6 @@ export default [
             name: 'TestMan',
             component: './CompanyManage/TestMan',
           },
-
-          {
-            path: '/CompanyManage/ManDetail',
-            name: 'ManDetail',
-            component: './CompanyManage/ManDetail',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
           {
             path: '/CompanyManage/Port',
             name: 'Port',
@@ -834,6 +826,13 @@ export default [
             path: '/CompanyManage/ManUpload',
             name: 'ManUpload',
             component: './CompanyManage/ManUpload',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+
+          {
+            path: '/CompanyManage/ManDetail',
+            name: 'ManDetail',
+            component: './CompanyManage/ManDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
         ],
