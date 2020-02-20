@@ -811,11 +811,11 @@ export default [
             name: 'CompanyUpload',
             component: './CompanyManage/CompanyUpload',
           },
-          {
-            path: '/CompanyManage/Info',
-            name: 'Info',
-            component: './CompanyManage/Info',
-          },
+          // {
+          //   path: '/CompanyManage/Info',
+          //   name: 'Info',
+          //   component: './CompanyManage/Info',
+          // },
           {
             path: '/CompanyManage/ManRecord',
             name: 'ManRecord',

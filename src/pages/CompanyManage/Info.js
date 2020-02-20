@@ -209,7 +209,14 @@ class Info extends PureComponent {
   };
 
 
-  checkPassword = (rule, value, callback) => {
+  showPersonalInfo = ()=>{
+    sessionStorage.setItem('usertext',localStorage.getItem("userinfo"));
+    router.push({
+      pathname:'/CompanyManage/ManDetail',
+    });
+  };
+
+checkPassword = (rule, value, callback) => {
     if(this.state.passwordVisible === false){
       callback();
     }
@@ -369,24 +376,24 @@ class Info extends PureComponent {
             <Form.Item label="是否授权签字人">
               <span className="ant-form-text">{user.isauthorize}</span>
             </Form.Item>
-            <Form.Item label="身份证">
-              {getFieldDecorator('idcard', {
-                rules: [
-                    {
-                      required: true,
-                      message: '请输入身份证',
-                    },
-                    {
-                    type: 'number',
-                    transform(value) {
-                      if (value) {
-                        return Number(value);
-                      }
-                    }, message: '请输入数字'
-                  }
-                ],
-              })(<Input />)}
-            </Form.Item>
+            {/*<Form.Item label="身份证">*/}
+            {/*  {getFieldDecorator('idcard', {*/}
+            {/*    rules: [*/}
+            {/*        {*/}
+            {/*          required: true,*/}
+            {/*          message: '请输入身份证',*/}
+            {/*        },*/}
+            {/*        {*/}
+            {/*        type: 'number',*/}
+            {/*        transform(value) {*/}
+            {/*          if (value) {*/}
+            {/*            return Number(value);*/}
+            {/*          }*/}
+            {/*        }, message: '请输入数字'*/}
+            {/*      }*/}
+            {/*    ],*/}
+            {/*  })(<Input />)}*/}
+            {/*</Form.Item>*/}
             <Form.Item label="地址">
               {getFieldDecorator('place', {
                 rules: [
@@ -397,16 +404,16 @@ class Info extends PureComponent {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item label="部门">
-              {getFieldDecorator('section', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入部门',
-                  },
-                ],
-              })(<Input />)}
-            </Form.Item>
+            {/*<Form.Item label="部门">*/}
+            {/*  {getFieldDecorator('section', {*/}
+            {/*    rules: [*/}
+            {/*      {*/}
+            {/*        required: true,*/}
+            {/*        message: '请输入部门',*/}
+            {/*      },*/}
+            {/*    ],*/}
+            {/*  })(<Input />)}*/}
+            {/*</Form.Item>*/}
             <Form.Item label="手机">
               {getFieldDecorator('tel', {
                 rules: [
@@ -417,90 +424,93 @@ class Info extends PureComponent {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item label="文化程度">
-              {getFieldDecorator('education', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入文化程度',
-                  },
-                ],
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="专业">
-              {getFieldDecorator('major', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入专业',
-                  },
-                ],
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="入职日期">
-              {getFieldDecorator('enterdate', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择入职日期',
-                  },
-                ],
-              })(
-                <DatePicker
-                  style={{width:'100%'}}
-                  placeholder="入职日期"
-                  format="YYYY-MM-DD"
-                  getPopupContainer={trigger => trigger.parentNode}
-                />
-              )}
-            </Form.Item>
-            <Form.Item label="出生年月">
-              {getFieldDecorator('birthday', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择出生年月',
-                  },
-                ],
-              })(
-                <DatePicker
-                  style={{width:'100%'}}
-                  placeholder="出生年月"
-                  format="YYYY-MM-DD"
-                  getPopupContainer={trigger => trigger.parentNode}
-                />
-              )}
-            </Form.Item>
-            <Form.Item label="入岗年限">
-              {getFieldDecorator('workyears', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入入岗年限',
-                  },
-                ],
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="专业年限">
-              {getFieldDecorator('majoryears', {
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="职务">
-              {getFieldDecorator('workduty', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入专业年限',
-                  },
-                ],
-              })(<Input />)}
-            </Form.Item>
+            {/*<Form.Item label="文化程度">*/}
+            {/*  {getFieldDecorator('education', {*/}
+            {/*    rules: [*/}
+            {/*      {*/}
+            {/*        required: true,*/}
+            {/*        message: '请输入文化程度',*/}
+            {/*      },*/}
+            {/*    ],*/}
+            {/*  })(<Input />)}*/}
+            {/*</Form.Item>*/}
+            {/*<Form.Item label="专业">*/}
+            {/*  {getFieldDecorator('major', {*/}
+            {/*    rules: [*/}
+            {/*      {*/}
+            {/*        required: true,*/}
+            {/*        message: '请输入专业',*/}
+            {/*      },*/}
+            {/*    ],*/}
+            {/*  })(<Input />)}*/}
+            {/*</Form.Item>*/}
+            {/*<Form.Item label="入职日期">*/}
+            {/*  {getFieldDecorator('enterdate', {*/}
+            {/*    rules: [*/}
+            {/*      {*/}
+            {/*        required: true,*/}
+            {/*        message: '请选择入职日期',*/}
+            {/*      },*/}
+            {/*    ],*/}
+            {/*  })(*/}
+            {/*    <DatePicker*/}
+            {/*      style={{width:'100%'}}*/}
+            {/*      placeholder="入职日期"*/}
+            {/*      format="YYYY-MM-DD"*/}
+            {/*      getPopupContainer={trigger => trigger.parentNode}*/}
+            {/*    />*/}
+            {/*  )}*/}
+            {/*</Form.Item>*/}
+            {/*<Form.Item label="出生年月">*/}
+            {/*  {getFieldDecorator('birthday', {*/}
+            {/*    rules: [*/}
+            {/*      {*/}
+            {/*        required: true,*/}
+            {/*        message: '请选择出生年月',*/}
+            {/*      },*/}
+            {/*    ],*/}
+            {/*  })(*/}
+            {/*    <DatePicker*/}
+            {/*      style={{width:'100%'}}*/}
+            {/*      placeholder="出生年月"*/}
+            {/*      format="YYYY-MM-DD"*/}
+            {/*      getPopupContainer={trigger => trigger.parentNode}*/}
+            {/*    />*/}
+            {/*  )}*/}
+            {/*</Form.Item>*/}
+            {/*<Form.Item label="入岗年限">*/}
+            {/*  {getFieldDecorator('workyears', {*/}
+            {/*    rules: [*/}
+            {/*      {*/}
+            {/*        required: true,*/}
+            {/*        message: '请输入入岗年限',*/}
+            {/*      },*/}
+            {/*    ],*/}
+            {/*  })(<Input />)}*/}
+            {/*</Form.Item>*/}
+            {/*<Form.Item label="专业年限">*/}
+            {/*  {getFieldDecorator('majoryears', {*/}
+            {/*  })(<Input />)}*/}
+            {/*</Form.Item>*/}
+            {/*<Form.Item label="职务">*/}
+            {/*  {getFieldDecorator('workduty', {*/}
+            {/*    rules: [*/}
+            {/*      {*/}
+            {/*        required: true,*/}
+            {/*        message: '请输入专业年限',*/}
+            {/*      },*/}
+            {/*    ],*/}
+            {/*  })(<Input />)}*/}
+            {/*</Form.Item>*/}
             <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
               <Button type="primary" onClick={this.handleSubmit}>
                 保存
               </Button>
               <Button type="primary" style={{marginLeft:10}} onClick={this.showPassword}>
                 修改密码
+              </Button>
+              <Button type="primary" style={{marginLeft:10}} onClick={this.showPersonalInfo}>
+                查看
               </Button>
             </Form.Item>
         </Form>
