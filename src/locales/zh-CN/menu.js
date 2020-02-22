@@ -132,6 +132,7 @@ export default {
   'menu.CompanyManage.ManUpload':'上传图片',
   'menu.CompanyManage.Info':'个人信息',
   'menu.CompanyManage.ManDetail':'用户信息',
+  'menu.CompanyManage.CustomReceive':'海关备案',
 
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',

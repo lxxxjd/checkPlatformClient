@@ -817,6 +817,12 @@ export default [
           //   component: './CompanyManage/Info',
           // },
           {
+            path: '/CompanyManage/CustomReceive',
+            name: 'CustomReceive',
+            component: './CompanyManage/CustomReceive',
+          },
+
+          {
             path: '/CompanyManage/ManRecord',
             name: 'ManRecord',
             component: './CompanyManage/ManRecord',

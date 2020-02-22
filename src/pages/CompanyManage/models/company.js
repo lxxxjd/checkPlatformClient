@@ -4,6 +4,11 @@ import {uploadFile,getAllUserListByCertCode,updateUser,addUser,deleteUser,
 
 import {getRecordCompanyList,uploadRecordCompany,deleteRecordCompany,getRepeatRecordNameCompany} from '@/services/Recordinfo';
 
+import {getPreCustomReceiveList,addPreCustomReceive,updatePreCustomReceive,deletePreCustomReceive,
+  getCustomReceiveList,addCustomReceive,updateCustomReceive,deleteCustomReceive, } from '@/services/CustomReceive';
+import {getCustomInfos, } from '@/services/Entrustment';
+
+
 export default {
   namespace: 'company',
   state: {
@@ -29,6 +34,61 @@ export default {
 
   },
   effects: {
+
+
+    // 海关备案
+
+    *getCustomInfos({ payload , callback}, { call, put }) {
+      const response = yield call(getCustomInfos, payload);
+      if (callback) callback(response);
+    },
+
+    *getPreCustomReceiveList({ payload,callback }, { call, put }) {
+      const response = yield call(getPreCustomReceiveList, payload);
+      if (callback) callback(response);
+    },
+
+    *addPreCustomReceive({ payload,callback }, { call, put }) {
+      const response = yield call(addPreCustomReceive, payload);
+      if (callback) callback(response.data);
+    },
+
+
+    *updatePreCustomReceive({ payload,callback }, { call, put }) {
+      const response = yield call(updatePreCustomReceive, payload);
+      if (callback) callback(response.data);
+    },
+
+
+    *deletePreCustomReceive({ payload,callback }, { call, put }) {
+      const response = yield call(deletePreCustomReceive, payload);
+      if (callback) callback(response.data);
+    },
+
+    *getCustomReceiveList({ payload,callback }, { call, put }) {
+      const response = yield call(getCustomReceiveList, payload);
+      if (callback) callback(response);
+    },
+
+    *addCustomReceive({ payload,callback }, { call, put }) {
+      const response = yield call(addCustomReceive, payload);
+      if (callback) callback(response.data);
+    },
+
+
+    *updateCustomReceive({ payload,callback }, { call, put }) {
+      const response = yield call(updateCustomReceive, payload);
+      if (callback) callback(response.data);
+    },
+
+
+    *deleteCustomReceive({ payload,callback }, { call, put }) {
+      const response = yield call(deleteCustomReceive, payload);
+      if (callback) callback(response.data);
+    },
+
+
+
 
 
     *getRepeatRecordNameCompany({ payload,callback }, { call, put }) {
