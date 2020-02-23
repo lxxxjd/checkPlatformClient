@@ -385,7 +385,7 @@ class ManRecord extends PureComponent {
               {getFieldDecorator('filetype', {
                 rules: [{required: true, message: '请输入文件名称'}],
               })(
-                <Select style={{width:300}} placeholder="请输入文件名称">
+                <Select style={{width:'100%'}} placeholder="请输入文件名称">
                   <Option value="身份资料">身份资料</Option>
                   <Option value="能力保持">能力保持</Option>
                   <Option value="奖惩情况">奖惩情况</Option>

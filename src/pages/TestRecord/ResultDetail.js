@@ -60,10 +60,10 @@ const ReviewFrom = (props => {
         <Descriptions.Item label="开始日期">{handleDate(modalInfo.begindate)}</Descriptions.Item>
         <Descriptions.Item label="结束日期">{handleDate(modalInfo.finishdate)}</Descriptions.Item>
         <Descriptions.Item label="重量">{modalInfo.weight}</Descriptions.Item>
-        <Descriptions.Item label="人员">{modalInfo.inspman}</Descriptions.Item>
-        <Descriptions.Item label="仪器"><div style={{"white-space":"pre"}}>{modalInfo.instrument}</div></Descriptions.Item>
+        <Descriptions.Item label="人员" span={2}>{modalInfo.inspman}</Descriptions.Item>
+        <Descriptions.Item label="仪器" span={3}><div style={{"white-space":"pre"}}>{modalInfo.instrument}</div></Descriptions.Item>
         <Descriptions.Item label="检验标准" span={3}><div style={{"white-space":"pre"}}>{modalInfo.standard}</div></Descriptions.Item>
-        <Descriptions.Item label="结果" span={3}>{modalInfo.result}</Descriptions.Item>
+        <Descriptions.Item label="结果描述" span={3}>{modalInfo.result}</Descriptions.Item>
       </Descriptions>
     </Modal>
   );
@@ -272,8 +272,8 @@ class ResultDetail extends PureComponent {
           var instrument = [];
           for (let i = 0 ;i < instrumentData.length ; i ++ ) {
               instrument.push({
-                key: instrumentData[i].diviceId,
-                title: instrumentData[i].diviceId,
+                key: instrumentData[i].diviceid,
+                title: instrumentData[i].diviceid,
                 description:instrumentData[i].divicename,
               });
           }

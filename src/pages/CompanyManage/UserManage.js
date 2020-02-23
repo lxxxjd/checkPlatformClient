@@ -790,6 +790,7 @@ class UserManage extends PureComponent {
   };
 
 
+
   previewItem = text =>{
     this.setState({previewVisible:true});
     const {

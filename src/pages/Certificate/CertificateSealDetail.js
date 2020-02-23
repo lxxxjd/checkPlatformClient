@@ -591,13 +591,14 @@ class CertificateSealDetail extends PureComponent {
     return (
       <div style={{width:'100%',height:document.body.clientHeight*1.2,backgroundColor:'white',padding:10}}>
         <Descriptions style={{ marginBottom: 10 }} size='small' title="现场检查" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-          <Descriptions.Item label="检查项目">{checkData.inspway}</Descriptions.Item>
-          <Descriptions.Item label="开始日期">{moment(checkData.begindate).format('YYYY-MM-DD')}</Descriptions.Item>
-          <Descriptions.Item label="结束日期">{moment(checkData.finishdate).format('YYYY-MM-DD')}</Descriptions.Item>
+          <Descriptions.Item label="检验项目">{checkData.inspway}</Descriptions.Item>
+          <Descriptions.Item label="开始日期">{this.isValidDate(checkData.begindate)}</Descriptions.Item>
+          <Descriptions.Item label="结束日期">{this.isValidDate(checkData.finishdate)}</Descriptions.Item>
           <Descriptions.Item label="重量">{checkData.weight}</Descriptions.Item>
-          <Descriptions.Item label="标准">{checkData.standard}</Descriptions.Item>
-          <Descriptions.Item label="检验员">{checkData.inspman}</Descriptions.Item>
-          <Descriptions.Item label="检验仪器">{checkData.instrument}</Descriptions.Item>
+          <Descriptions.Item label="人员" span={2}>{checkData.inspman}</Descriptions.Item>
+          <Descriptions.Item label="仪器" span={3}><div style={{"white-space":"pre"}}>{checkData.instrument}</div></Descriptions.Item>
+          <Descriptions.Item label="检验标准" span={3}><div style={{"white-space":"pre"}}>{checkData.standard}</div></Descriptions.Item>
+          <Descriptions.Item label="结果描述" span={3}>{checkData.result}</Descriptions.Item>
         </Descriptions>
       </div>
     );

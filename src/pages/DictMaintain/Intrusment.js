@@ -50,7 +50,7 @@ const ReviewFrom = (props => {
       ]}
     >
       <Descriptions bordered>
-        <Descriptions.Item label="设备编号">{modalInfo.diviceId}</Descriptions.Item>
+        <Descriptions.Item label="设备编号">{modalInfo.diviceid}</Descriptions.Item>
         <Descriptions.Item label="设备名称">{modalInfo.divicename}</Descriptions.Item>
         <Descriptions.Item label="规格/型号">{modalInfo.specifications}</Descriptions.Item>
         <Descriptions.Item label="国别/生产厂">{modalInfo.manufacturer}</Descriptions.Item>
@@ -94,8 +94,8 @@ const CreateForm = Form.create()(props => {
       onCancel={() => handleModalVisible()}
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="设备编号">
-        {form.getFieldDecorator('diviceId', {
-          initialValue: modalInfo.diviceId,
+        {form.getFieldDecorator('diviceid', {
+          initialValue: modalInfo.diviceid,
           rules: [
             {
               required: true,
@@ -340,7 +340,7 @@ const AddForm = Form.create()(props => {
     >
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="设备编号">
-        {form.getFieldDecorator('diviceId', {
+        {form.getFieldDecorator('diviceid', {
           rules: [
             {
               required: true,
@@ -569,7 +569,7 @@ class Intrusment extends PureComponent {
 
     {
       title: '设备编号',
-      dataIndex: 'diviceId',
+      dataIndex: 'diviceid',
     },
 
     {
@@ -829,7 +829,7 @@ class Intrusment extends PureComponent {
     let prams = modalInfo;
 
     prams.divicename =  fields. divicename;
-    prams.diviceId =  fields. diviceId;
+    prams.diviceid =  fields. diviceid;
     prams.specifications =  fields. specifications;
     prams.buydate =  fields. buydate;
     prams.acceptdate =  fields. acceptdate;
@@ -878,7 +878,7 @@ class Intrusment extends PureComponent {
       addModalVisible: false,
     });
 
-    if( this.state.dataSource.find(item=>(item.divicename === fields.divicename)||(item.diviceId === fields.diviceId))){
+    if( this.state.dataSource.find(item=>(item.divicename === fields.divicename)||(item.diviceid === fields.diviceid))){
       message.error("添加项目已存在");
       return;
     }
@@ -920,7 +920,7 @@ class Intrusment extends PureComponent {
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
-                  <Option value="diviceId">设备编号</Option>
+                  <Option value="diviceid">设备编号</Option>
                   <Option value="divicename">设备名称</Option>
                   <Option value="specifications">规格/型号</Option>
                   <Option value="manufacturer">国别/生产厂</Option>

@@ -1,6 +1,6 @@
 import React, { Component,Fragment } from 'react';
 import { connect } from 'dva';
-import { Card, Divider ,Descriptions,Row, Col,  Button,Typography ,Modal,Icon,Table} from 'antd';
+import { Card, Divider ,Descriptions,Row, Col,  Button,Typography ,Modal,Icon,Table,notification} from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForEntrustment.less';
 import moment from 'moment'

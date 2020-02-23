@@ -287,9 +287,8 @@ class CertificateAbandon extends PureComponent {
   // 判断是否存在已阅人，是否可以需要申请作废
   applyAbandon = (text)=>{
     const { dispatch } = this.props;
-    const {AbandonText} = this.state;
     const values = new FormData();
-    values.append('reportno',AbandonText.reportno);
+    values.append('reportno',text.reportno);
     dispatch({
       type: 'certificate/getAllReadRecords',
       payload:values,
@@ -315,8 +314,8 @@ class CertificateAbandon extends PureComponent {
           }
         }else{
           // 不存在已阅人
-          Modal.success({
-            content: "不存在已阅人记录，直接作废即可！",
+          Modal.error({
+            content: "请求服务器错误，请联系管理员！",
           });
         }
       }
