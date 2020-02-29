@@ -5,7 +5,7 @@ import {uploadFile,getAllUserListByCertCode,updateUser,addUser,deleteUser,
 import {getRecordCompanyList,uploadRecordCompany,deleteRecordCompany,getRepeatRecordNameCompany} from '@/services/Recordinfo';
 
 import {getPreCustomReceiveList,addPreCustomReceive,updatePreCustomReceive,deletePreCustomReceive,
-  getCustomReceiveList,addCustomReceive,updateCustomReceive,deleteCustomReceive, } from '@/services/CustomReceive';
+  getCustomReceiveList,addCustomReceive,updateCustomReceive,deleteCustomReceive,getAllReceive,getMonthReceive} from '@/services/CustomReceive';
 import {getCustomInfos, } from '@/services/Entrustment';
 
 
@@ -37,6 +37,17 @@ export default {
 
 
     // 海关备案
+
+    *getAllReceive({ payload , callback}, { call, put }) {
+      const response = yield call(getAllReceive, payload);
+      if (callback) callback(response.data);
+    },
+
+    *getMonthReceive({ payload , callback}, { call, put }) {
+      const response = yield call(getMonthReceive, payload);
+      if (callback) callback(response.data);
+    },
+
 
     *getCustomInfos({ payload , callback}, { call, put }) {
       const response = yield call(getCustomInfos, payload);

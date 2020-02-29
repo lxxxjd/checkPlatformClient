@@ -25,7 +25,7 @@ const {TextArea} = Input;
 
 // 修改的Form
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo ,customsOption} = props;
+  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo ,customsOption ,getValidation } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -47,12 +47,7 @@ const CreateForm = Form.create()(props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="海关名称">
         {form.getFieldDecorator('customsname', {
           initialValue:modalInfo.customsname,
-          rules: [
-            {
-              required: true,
-              message: "请选择海关名称",
-            },
-          ],
+          rules: [{required: true,validator:getValidation,}],
         })(<Cascader style={{width:'100%'}} options={customsOption} placeholder="请选择海关名称" />)}
       </FormItem>
 
@@ -104,7 +99,7 @@ const CreateForm = Form.create()(props => {
 
 
 const AddForm = Form.create()(props => {
-  const { addModalVisible, form, handleAdd, addHandleModalVisible,customsOption } = props;
+  const { addModalVisible, form, handleAdd, addHandleModalVisible,customsOption,getValidation } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -127,12 +122,7 @@ const AddForm = Form.create()(props => {
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="海关名称">
         {form.getFieldDecorator('customsname', {
-          rules: [
-            {
-              required: true,
-              message: "请选择海关名称",
-            },
-          ],
+          rules: [{required: true,validator:getValidation,}],
         })(<Cascader style={{width:'100%'}} options={customsOption} placeholder="请选择海关名称" />)}
       </FormItem>
 
@@ -269,6 +259,46 @@ class CustomReceive extends PureComponent {
     this.init();
   };
 
+
+  // 文件名查重
+  getValidation = (rule, value, callback) => {
+    if(value===undefined || value===null || value.length<=1){
+      callback(formatMessage({ id: 'validation.customreceive.noexist' }));
+    }
+    const { dispatch } = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const values = {
+      certcode:user.certCode,
+      customsname:value[1],
+    };
+    dispatch({
+      type: 'company/getAllReceive',
+      payload:values,
+      callback: (response) => {
+        if(response === "1"){
+          callback(formatMessage({ id: 'validation.customreceive.error1' }));
+        }else{
+          dispatch({
+            type: 'company/getMonthReceive',
+            payload:values,
+            callback: (response2) => {
+              if(response2 === "2"){
+                callback(formatMessage({ id: 'validation.customreceive.error2' }));
+              }else{
+                callback();
+              }
+            }
+          });
+        }
+      }
+    });
+  };
+
+
+
+
+
+
   handleSearch = e=> {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -292,6 +322,7 @@ class CustomReceive extends PureComponent {
       });
     });
   };
+
 
   isValidDate =date=> {
     if(date !==undefined && date !==null ){
@@ -321,7 +352,7 @@ class CustomReceive extends PureComponent {
         && state.customsOption[i].children.length !==undefined){
         for(let j =0;j<state.customsOption[i].children.length;j++){
           const subitem = state.customsOption[i].children[j];
-          if(subitem.value ===val){
+          if(subitem.value === val){
             res.push(item.value);
             res.push(subitem.value);
             return res;
@@ -508,6 +539,7 @@ class CustomReceive extends PureComponent {
       handleAdd:this.handleAdd,
       handleModalVisible: this.handleModalVisible,
       addHandleModalVisible:this.addHandleModalVisible,
+      getValidation:this.getValidation,
     };
 
 

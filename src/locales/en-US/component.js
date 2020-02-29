@@ -37,4 +37,9 @@ export default {
   'validation.recordcompany.noexist':'filename cannot be empty',
 
 
+  'validation.customreceive.error1': 'customreceive has submitted',
+  'validation.customreceive.error2': 'customreceive has submitted',
+  'validation.customreceive.noexist': 'customreceive cannot be empty',
+
+
 };

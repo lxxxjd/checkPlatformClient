@@ -81,3 +81,13 @@ export async function deleteCustomReceive(params) {
     },
   });
 }
+
+export async function getAllReceive(params) {
+  return request(`/api/PreCustomReceive/getAllReceive?certcode=${params.certcode}&customsname=${params.customsname}`);
+}
+
+
+export async function getMonthReceive(params) {
+  return request(`/api/PreCustomReceive/getMonthReceive?certcode=${params.certcode}&customsname=${params.customsname}`);
+}
+

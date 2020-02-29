@@ -8,8 +8,6 @@ export function getAuthority(str) {
   let authority;
   try {
     authority = JSON.parse(authorityString);
-    console.log(authority);
-    console.log(typeof  authority);
   } catch (e) {
     authority = authorityString;
   }
