@@ -133,6 +133,20 @@ class CertificatePublish extends PureComponent {
   publishItem =(text) =>{
     const { dispatch } = this.props;
     const {init} = this;
+    // const user = JSON.parse(localStorage.getItem("userinfo"));
+    // if(user.role!==undefined && user.role!==null){
+    //     //   if(!user.role.includes("总经理")){
+    //     //     confirm({
+    //     //       title:"您未具有总经理权限，无法发布证书。如需发布请联系管理员申请总经理权限！",
+    //     //       okText:"确定",
+    //     //       cancelText:"取消",
+    //     //       onOk() {},
+    //     //       onCancel() {},
+    //     //     });
+    //     //     return;
+    //     //   }
+    //     // }
+
     confirm({
       title:"您确实要发布该套证书？发布后，一经委托人确认，没有委托人同意，将无法修改。",
       okText:"确定",

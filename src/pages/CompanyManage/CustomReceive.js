@@ -213,9 +213,8 @@ class CustomReceive extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          {(text.status!=="已备案")?[<a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>]:[<span>修改&nbsp;&nbsp;</span>]}
+          {(text.status!=="已备案")?[<a onClick={() => this.deleteItem(text, record)}>撤销&nbsp;&nbsp;</a>]:[<span>撤销&nbsp;&nbsp;</span>]}
         </Fragment>
       ),
     },

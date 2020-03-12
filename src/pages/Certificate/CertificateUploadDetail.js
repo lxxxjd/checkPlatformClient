@@ -991,6 +991,20 @@ class CertificateUploadDetail extends PureComponent {
         }
       });
       this.setState({ value: selectedKeys[0] });
+    }else if(selectedKeys[0].indexOf("abandon")  === 0){   // 证书
+      console.log( selectedKeys[0]);
+      const key = selectedKeys[0].substring(7);
+      dispatch({
+        type: 'certificate/getPdfByOssPath',
+        payload:{osspath:key},
+        callback: (response) => {
+          if (response) {
+            this.state.urls = response.data;
+            this.forceUpdate();
+          }
+        }
+      });
+      this.setState({ value: selectedKeys[0] });
     }
     return null;
   };
@@ -1128,6 +1142,8 @@ class CertificateUploadDetail extends PureComponent {
     }else if(value.indexOf("recordinfo")  === 0) { // 附件
       return this.renderLinkFileForm();
     }else if(value.indexOf("certpdf")  === 0) {  // 已经盖章的证书
+      return this.renderLinkFileForm();
+    }else if(value.indexOf("abandon")  === 0) {  // 已经盖章的证书
       return this.renderLinkFileForm();
     }else{
       return null;
