@@ -62,15 +62,15 @@ class SearchSubcontact  extends PureComponent {
 	    return (
 	      <Form onSubmit={this.handleSearch} layout="inline" >
 	        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-	          <Col md={3} sm={20}>
-	            <Form.Item
-	              labelCol={{ span: 5 }}
-	              wrapperCol={{ span: 6 }}
-	              colon={false}
-	            >
-	              {getFieldDecorator('kind', {
-	                rules: [{  message: '搜索类型' }],
-	              })(
+	          <Col md={4} sm={20}>
+            <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+              colon={false}
+            >
+              {getFieldDecorator('kind', {
+                rules: [{  message: '搜索类型' }],
+              })(
 	                <Select placeholder="搜索类型">
 	                 <Option value="m.reportno">委托编号</Option>
 	                  <Option value="shipname">船名标识</Option>

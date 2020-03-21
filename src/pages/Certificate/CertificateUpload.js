@@ -164,8 +164,10 @@ class CertificateUpload extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={3}>
+              <Col md={4} sm={20}>
             <Form.Item
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
               colon={false}
             >
               {getFieldDecorator('kind', {
