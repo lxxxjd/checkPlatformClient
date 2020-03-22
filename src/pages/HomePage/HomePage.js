@@ -26,7 +26,7 @@ const { Footer } = Layout;
 @Form.create()
 class HomePage extends Component {
   state = {
-    url:"http://www.smlq.vip",
+    url:"https://www.smlq.vip",
   };
 
   componentWillUnmount() {
@@ -35,27 +35,27 @@ class HomePage extends Component {
 
 
   toCompany = ()=>{
-    window.open(`${this.state.url}:82/user/login`)
+    window.open(`${this.state.url}/checkPlatformClient/user/login`)
   };
 
   toConsignor = ()=>{
-    window.open(`${this.state.url}:84/user/login`)
+    window.open(`${this.state.url}/checkPlatformConsignor/user/login`)
   };
 
   toCustoms = ()=>{
-    window.open(`${this.state.url}:85/user/login`)
+    window.open(`${this.state.url}/checkPlatformCustoms/user/login`)
   };
 
   toCNAS = ()=>{
-    window.open(`${this.state.url}:86/user/login`)
+    window.open(`${this.state.url}/checkPlatformCNAS/user/login`)
   };
 
   toMain = ()=>{
-    window.open(`${this.state.url}:83/user/login`)
+    window.open(`${this.state.url}/checkPlatformMain/user/login`)
   };
 
   toTry = ()=>{
-    window.open(`${this.state.url}:83/user/register`)
+    window.open(`${this.state.url}/checkPlatformMain/user/register`)
   };
 
   openContactReadMe =()=>{
