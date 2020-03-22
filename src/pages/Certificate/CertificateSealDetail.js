@@ -452,7 +452,7 @@ class CertificateSealDetail extends PureComponent {
             // eslint-disable-next-line camelcase,no-underscore-dangle
             const _w_signature = response.data;
             // eslint-disable-next-line camelcase
-            const wpsUrl = `https://121.199.20.146:81/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
+            const wpsUrl = `https://www.smlq.vip/certificate?_w_signature=${_w_signature}&_w_userid=${_w_userid}&_w_fname=${_w_fname}`;
             window.open('about:blank').location.href=wpsUrl;
           } else {
             notification.open({
