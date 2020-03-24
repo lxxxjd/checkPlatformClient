@@ -51,6 +51,7 @@ class CompanyUpload extends PureComponent {
     headUrl:'',
     signUrl:'',
     uploadType:'',
+    photourl:'',
   };
 
   componentDidMount() {
@@ -79,9 +80,20 @@ class CompanyUpload extends PureComponent {
             payload:{
                url : response.data.documenthead,
             },
-            callback:(response)=>{
-              if(response.code === 200){
-                this.setState({headUrl:response.data});
+            callback:(response2)=>{
+              if(response2.code === 200){
+                this.setState({headUrl:response2.data});
+              }
+            }
+          });
+          dispatch({
+            type: 'company/getUrl',
+            payload:{
+              url : response.data.photourl,
+            },
+            callback:(response3)=>{
+              if(response3.code === 200){
+                this.setState({photourl:response3.data});
               }
             }
           });
@@ -115,6 +127,7 @@ class CompanyUpload extends PureComponent {
                   description:response.data,
                 });
               }else{
+                message.success("上传成功");
                 this.componentDidMount();
               }
             }
@@ -130,11 +143,29 @@ class CompanyUpload extends PureComponent {
                   description:response.data,
                 });
               }else{
+                message.success("上传成功");
+                this.componentDidMount();
+              }
+            }
+          });
+        }else if(uploadType === 'photo'){
+          dispatch({
+            type: 'company/uploadPhoto',
+            payload : formData,
+            callback: (response) => {
+              if(response.code === 400){
+                notification.open({
+                  message: '添加失败',
+                  description:response.data,
+                });
+              }else{
+                message.success("上传成功");
                 this.componentDidMount();
               }
             }
           });
         }
+
         this.setState({ visible: false });
         form.resetFields();
       }
@@ -162,6 +193,19 @@ class CompanyUpload extends PureComponent {
     this.setState({ visible: true });
     this.setState({uploadType:'head'})
   };
+
+
+  showPhoto= () => {
+    const {
+      form,
+    } = this.props;
+    form.resetFields();
+    this.setState({fileList:[]});
+    this.setState({ visible: true });
+    this.setState({uploadType:'photo'})
+  };
+
+
 
   handleCancel = () =>{
     const {
@@ -229,7 +273,7 @@ class CompanyUpload extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     // state 方法
-    const {fileList,visible,previewVisible,previewImage,signUrl,headUrl} = this.state
+    const {fileList,visible,previewVisible,previewImage,signUrl,headUrl,photourl} = this.state
 
     // 下载模板 模态框方法
     return (
@@ -279,6 +323,15 @@ class CompanyUpload extends PureComponent {
             </Col>
           </Row>
           <img style={{marginTop:20}} src={headUrl} width="200" />
+        </Card>
+        <br/>
+        <Card  size="small">
+          <Row>
+            <Col span={24}>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showPhoto}>上传公司商标</Button>
+            </Col>
+          </Row>
+          <img style={{marginTop:20}} src={photourl} width="120" />
         </Card>
       </PageHeaderWrapper>
     );

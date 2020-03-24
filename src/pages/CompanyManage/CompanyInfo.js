@@ -22,7 +22,7 @@ import {
 import moment from 'moment'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './company.less';
-
+const {TextArea} = Input;
 const { Option } = Select;
 
 
@@ -254,6 +254,8 @@ class CompanyInfo extends PureComponent {
             'bank' : response.data.bank,
             'belongto': response.data.belongto,
             'cocode':response.data.cocode,
+            'tel':response.data.tel,
+            explanation:response.data.explanation,
           });
         }
       }
@@ -300,6 +302,8 @@ class CompanyInfo extends PureComponent {
 	        company.bank = form.getFieldValue('bank');
 	        company.belongto = form.getFieldValue('belongto');
 	       	company.cocode = form.getFieldValue('cocode');
+          company.tel = form.getFieldValue('tel');
+          company.explanation = form.getFieldValue('explanation');
 	        dispatch({
 	          type: 'company/updateCompany',
 	          payload: {
@@ -486,6 +490,13 @@ class CompanyInfo extends PureComponent {
 			            ],
 			          })(<Input />)}
 			        </Form.Item>
+              <Form.Item label="业务咨询电话">
+                {getFieldDecorator('tel', {
+                  rules: [
+
+                  ],
+                })(<Input placeholder="请输入业务咨询电话" />)}
+              </Form.Item>
 			        <Form.Item
 	                  label="母公司"
 	                >
@@ -499,6 +510,13 @@ class CompanyInfo extends PureComponent {
 	                    </Select>
 	                  )}
 			        </Form.Item>
+              <Form.Item label="能力说明">
+                {getFieldDecorator('explanation', {
+                  rules: [
+
+                  ],
+                })(<TextArea placeholder="请输入能力说明,不超过50个字" style={{minHeight: 32}} rows={3} maxLength={50} />)}
+              </Form.Item>
               <Form.Item label="请上传">
                 <span>营业执照、资质证书等</span>
                 <Button style={{marginLeft:10}} type="primary" onClick={this.openModal}>

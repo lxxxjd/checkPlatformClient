@@ -1,6 +1,6 @@
 import {uploadFile,getAllUserListByCertCode,updateUser,addUser,deleteUser,
   getDepartmentList,addDepartment,updateDepartment,deleteDepartment, getCompany,uploadSeal,uploadDocumentHead,uploadUserSeal,updateCompany,getParent
-  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor,checkUserName,verityUserNameC,getUrl,uploadUserPhoto} from '@/services/Company';
+  , getManRecord, uploadManRecord, deleteManRecord, getUser, uploadUserAuthor,checkUserName,verityUserNameC,getUrl,uploadUserPhoto,uploadPhoto} from '@/services/Company';
 
 import {getRecordCompanyList,uploadRecordCompany,deleteRecordCompany,getRepeatRecordNameCompany} from '@/services/Recordinfo';
 
@@ -171,6 +171,12 @@ export default {
       const response = yield call(uploadDocumentHead, payload);
       if (callback) callback(response);
     },
+
+    *uploadPhoto({ payload,callback }, { call, put }) {
+      const response = yield call(uploadPhoto, payload);
+      if (callback) callback(response);
+    },
+
     *getCompany({ payload,callback }, { call, put }) {
       const response = yield call(getCompany, payload);
       if (callback) callback(response);

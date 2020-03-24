@@ -37,7 +37,7 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="海关备案修改"
+      title="推送海关修改"
       style={{ top: 100 }}
       visible={modalVisible}
       onOk={okHandle}
@@ -112,7 +112,7 @@ const AddForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="海关备案"
+      title="选择数据推送的海关"
       style={{ top: 100 }}
       visible={addModalVisible}
       onOk={okHandle}
@@ -186,7 +186,7 @@ class CustomReceive extends PureComponent {
 
   columns = [
     {
-      title: '已备案/已提交的隶属关',
+      title: '隶属关',
       dataIndex: 'customsname',
     },
     {
@@ -205,7 +205,7 @@ class CustomReceive extends PureComponent {
     },
 
     {
-      title: '状态',
+      title: '可接收',
       dataIndex: 'status',
     },
 
@@ -513,7 +513,7 @@ class CustomReceive extends PureComponent {
                 重置
               </Button>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.addItem}>
-                申请备案
+                数据推送
               </Button>
             </span>
           </Col>

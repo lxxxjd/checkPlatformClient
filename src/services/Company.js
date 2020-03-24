@@ -75,6 +75,13 @@ export async function uploadDocumentHead(params) {
   });
 }
 
+export async function uploadPhoto(params) {
+  return request(`/api/company/uploadPhoto`,{
+    method: 'POST',
+    data:params,
+  });
+}
+
 export async function getUrl(params) {
   return request(`/api/cert_report/get_pdf?osspath=${params.url}`);
 }
