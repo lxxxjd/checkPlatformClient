@@ -23,7 +23,7 @@ const { Option } = Select;
   charge,
   loading: loading.models.charge,
 }))
-class ListFiction extends PureComponent {
+class ListFictionDelete extends PureComponent {
   state = {
   };
 
@@ -57,8 +57,8 @@ class ListFiction extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {/*{(record.paystatus==='未审核'||text.paystatus==='审核退回')?[ <span><a onClick={() => this.deleteBylistno(text, record)}>删除</a></span>]:null}*/}
-          {/*&nbsp;&nbsp;*/}
+          {(record.paystatus==='未审核'||text.paystatus==='审核退回')?[ <span><a onClick={() => this.deleteBylistno(text, record)}>删除</a></span>]:null}
+          &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text)}>查看</a>
         </Fragment>
       ),
@@ -184,7 +184,7 @@ class ListFiction extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.toListFictionAdd}>拟制</Button>
+              {/*<Button type="primary" style={{ marginLeft: 8 }} onClick={this.toListFictionAdd}>新建</Button>*/}
             </span>
           </Col>
         </Row>
@@ -223,4 +223,4 @@ class ListFiction extends PureComponent {
   }
 }
 
-export default ListFiction;
+export default ListFictionDelete;

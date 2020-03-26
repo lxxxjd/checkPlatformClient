@@ -11,7 +11,7 @@ import {
   Input,
   Button,
   Select,
-  Table, message, Modal, DatePicker, Icon,
+  Table, message, Modal, DatePicker, Icon, Descriptions, AutoComplete,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -22,11 +22,53 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 
+// 查看框
+const ReviewCostDetailFrom = (props => {
+  const { modalReviewVisible, handleModalReviewVisible,modalInfo } = props;
+
+  // 处理操作时间
+  const handleDate = (val) => {
+    if(val!==undefined && val!==null){
+      return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+    }
+    return null;
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="查看成本详情"
+      visible={modalReviewVisible}
+      width={800}
+      style={{ top: 100 }}
+      onCancel={() => handleModalReviewVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleModalReviewVisible()}>
+          关闭
+        </Button>
+      ]}
+    >
+      <Descriptions bordered>
+        <Descriptions.Item label="费用名称">{modalInfo.costname}</Descriptions.Item>
+        <Descriptions.Item label="金额">{modalInfo.costmoney}</Descriptions.Item>
+        <Descriptions.Item label="数量">{modalInfo.amout}</Descriptions.Item>
+        <Descriptions.Item label="发生日期">{handleDate(modalInfo.occurdate)}</Descriptions.Item>
+        <Descriptions.Item label="接受人">{modalInfo.reciever}</Descriptions.Item>
+        <Descriptions.Item label="费用种类">{modalInfo.costtype}</Descriptions.Item>
+        <Descriptions.Item label="登记日期">{handleDate(modalInfo.registdate)}</Descriptions.Item>
+        <Descriptions.Item label="登记人">{modalInfo.register}</Descriptions.Item>
+        <Descriptions.Item label="状态">{modalInfo.status}</Descriptions.Item>
+        <Descriptions.Item label="备注">{modalInfo.remark}</Descriptions.Item>
+      </Descriptions>
+    </Modal>
+  );
+});
+
 
 
 // 修改组件
 const CostAddUpdateForm = Form.create()(props => {
-  const { modalVisible, form, handleModalVisible,CostItemData,dispatch,init} = props;
+  const { modalVisible, form, handleModalVisible,CostItemData,dispatch,init,applicantOptions,handleApplicantSearch} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -72,14 +114,16 @@ const CostAddUpdateForm = Form.create()(props => {
           })(
             <Select placeholder="请选择费用种类">
               <Option value="餐饮费">餐饮费</Option>
+              <Option value="交通费">交通费</Option>
+              <Option value="住宿费">住宿费</Option>
+              <Option value="邮寄费">邮寄费</Option>
               <Option value="差旅费">差旅费</Option>
               <Option value="外聘劳务">外聘劳务</Option>
-              <Option value="邮寄费">邮寄费</Option>
-              <Option value="误支费">误支费</Option>
               <Option value="车辆">车辆</Option>
               <Option value="耗材">耗材</Option>
               <Option value="仪器设备">仪器设备</Option>
               <Option value="药品试剂">药品试剂</Option>
+              <Option value="误支费">误支费</Option>
               <Option value="其他费">其他费</Option>
             </Select>
           )}
@@ -106,7 +150,16 @@ const CostAddUpdateForm = Form.create()(props => {
           {form.getFieldDecorator('reciever', {
             initialValue:CostItemData.reciever,
             rules: [{ required: true,message: '请输入接收人'}],
-          })(<Input placeholder="请输入接收人" />)}
+          })(
+            <AutoComplete
+              className="global-search"
+              dataSource={applicantOptions}
+              onSearch={handleApplicantSearch}
+              placeholder="请输入接收人"
+            >
+              <Input />
+            </AutoComplete>
+          )}
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="金额">
           {form.getFieldDecorator('costmoney', {
@@ -135,7 +188,7 @@ const CostAddUpdateForm = Form.create()(props => {
 
 // 新建组件
 const CostAddNewForm = Form.create()(props => {
-  const { modalAddNewVisble, form,handleModalAddNewVisible,dispatch,init} = props;
+  const { modalAddNewVisble, form,handleModalAddNewVisible,dispatch,init,applicantOptions,handleApplicantSearch} = props;
   const reportno = sessionStorage.getItem('reportNoForCostEdit');
   const user = JSON.parse(localStorage.getItem("userinfo"));
   const okHandle = () => {
@@ -152,15 +205,15 @@ const CostAddNewForm = Form.create()(props => {
         register:user.nameC,
         reportno,
         status:"已登记",
-      }
+      };
       dispatch({
         type: 'charge/addCostFetch',
         payload:values,
         callback: (response) => {
           if(response==="success"){
-            message.success("成本添加成功");
+            message.success("该成本已经加入！");
           }else{
-            message.success('成本添加失败');
+            message.success('该成本添加失败！');
           }
         }
       });
@@ -185,15 +238,16 @@ const CostAddNewForm = Form.create()(props => {
             rules: [{ required: true,message: '选择费用种类'}],
           })(
             <Select placeholder="请选择费用种类">
+              <Option value="餐饮费">餐饮费</Option>
+              <Option value="交通费">交通费</Option>
+              <Option value="住宿费">住宿费</Option>
+              <Option value="邮寄费">邮寄费</Option>
+              <Option value="差旅费">差旅费</Option>
+              <Option value="外聘劳务">外聘劳务</Option>
               <Option value="车辆">车辆</Option>
               <Option value="耗材">耗材</Option>
-              <Option value="餐饮费">餐饮费</Option>
-              <Option value="住宿费">住宿费</Option>
-              <Option value="外聘劳务">交通费</Option>
               <Option value="仪器设备">仪器设备</Option>
               <Option value="药品试剂">药品试剂</Option>
-              <Option value="交通费">交通费</Option>
-              <Option value="邮寄费">邮寄费</Option>
               <Option value="误支费">误支费</Option>
               <Option value="其他费">其他费</Option>
             </Select>
@@ -218,7 +272,16 @@ const CostAddNewForm = Form.create()(props => {
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="接收/使用人">
           {form.getFieldDecorator('reciever', {
             rules: [{ required: true,message: '请输入接收人'}],
-          })(<Input placeholder="请输入接收人" />)}
+          })(
+            <AutoComplete
+              className="global-search"
+              dataSource={applicantOptions}
+              onSearch={handleApplicantSearch}
+              placeholder="请输入接收人"
+            >
+              <Input />
+            </AutoComplete>
+          )}
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="金额">
           {form.getFieldDecorator('costmoney', {
@@ -254,7 +317,10 @@ class Cost extends PureComponent {
   state = {
     modalVisible: false,
     modalAddNewVisble: false,
+    modalReviewVisible:false,
+    modalInfo:{},
     CostItemData :{},
+    applicantName:[],
   };
 
   columns = [
@@ -298,9 +364,9 @@ class Cost extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleAddUpdateCost(text, true)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
+          {text.costtype!=="分包费"&&text.costtype!=="绩效" &&text.status==="已登记"?[<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>]:[]}
+          {text.costtype!=="分包费"&&text.costtype!=="绩效" &&text.status==="已登记"?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
+          <a onClick={() => this.handleReview(true, text)}>查看&nbsp;&nbsp;</a>
         </Fragment>
       ),
     },
@@ -404,8 +470,36 @@ class Cost extends PureComponent {
     });
   };
 
+  handleApplicantSearch = value => {
+    // 工商接口
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'charge/getBusiness',
+      payload: {
+        name: value
+      },
+      callback: (response) => {
+        this.setState({applicantName: response})
+      }
+    });
+  };
+
+
   back = () =>{
     this.props.history.goBack();
+  };
+
+  handleReview = (flag,text) => {
+    this.state.modalInfo = text;
+    this.handleModalReviewVisible(flag);
+  };
+
+
+
+  handleModalReviewVisible = (flag) => {
+    this.setState({
+      modalReviewVisible: !!flag,
+    });
   };
 
   renderSimpleForm() {
@@ -469,7 +563,7 @@ class Cost extends PureComponent {
       loading,
       dispatch,
     } = this.props;
-    const{modalAddNewVisble,modalVisible,CostItemData}  = this.state;
+    const{modalAddNewVisble,modalVisible,CostItemData,modalReviewVisible,modalInfo,applicantName}  = this.state;
     const reportinfo = JSON.parse(sessionStorage.getItem("reportinfoCost"));
     const reprotText= {
       reportno:reportinfo.reportno,
@@ -477,6 +571,13 @@ class Cost extends PureComponent {
       shipname:reportinfo.shipname,
       inspway:reportinfo.inspway,
     };
+    const parentMethods = {
+      handleModalVisible: this.handleModalVisible,
+      handleModalReviewVisible:this.handleModalReviewVisible,
+      handleApplicantSearch:this.handleApplicantSearch,
+    };
+
+    const applicantOptions = applicantName.map(d => <Option key={d} value={d}>{d}</Option>);
 
     return (
       <PageHeaderWrapper text={reprotText} title="成本支出">
@@ -493,8 +594,9 @@ class Cost extends PureComponent {
             />
           </div>
         </Card>
-        <CostAddNewForm modalAddNewVisble={modalAddNewVisble} handleModalAddNewVisible={this.handleModalAddNewVisible} dispatch={dispatch} init={this.init} />
-        <CostAddUpdateForm modalVisible={modalVisible} handleModalVisible={this.handleModalVisible} CostItemData={CostItemData} dispatch={dispatch} init={this.init}  />
+        <ReviewCostDetailFrom {...parentMethods} modalReviewVisible={modalReviewVisible} modalInfo={modalInfo} />
+        <CostAddNewForm {...parentMethods} applicantOptions={applicantOptions} modalAddNewVisble={modalAddNewVisble} handleModalAddNewVisible={this.handleModalAddNewVisible} dispatch={dispatch} init={this.init} />
+        <CostAddUpdateForm {...parentMethods} applicantOptions={applicantOptions} modalVisible={modalVisible} handleModalVisible={this.handleModalVisible} CostItemData={CostItemData} dispatch={dispatch} init={this.init}  />
       </PageHeaderWrapper>
     );
   }

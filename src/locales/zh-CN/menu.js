@@ -63,6 +63,8 @@ export default {
   'menu.CostManage.CostListDetailReviewBack':'成本审核退回',
   'menu.CostManage.CostListDetailReviewPass':'成本审核通过',
   'menu.CostManage.CostlistPay':'成本支付',
+  'menu.Charge.ListFictionDelete':'收费清单删除',
+  'menu.CostManage.CostlistDelete':'成本清单删除',
 
   'menu.Charge.ListFile':'收费清单生成',
   'menu.CostManage.CostlistFile':'成本清单生成',

@@ -59,6 +59,10 @@ class DetailList extends PureComponent {
       dataIndex: 'inspplace2',
     },
     {
+      title: '申报数量',
+      render: (text, record) => this.getQuanlitydUnit(text)
+    },
+    {
       title: '检验费',
       dataIndex: 'total',
     },
@@ -72,6 +76,8 @@ class DetailList extends PureComponent {
     this.init();
   }
 
+
+
   init =()=>{
     const { dispatch } = this.props;
     const listView = JSON.parse(sessionStorage.getItem("reportnoForList"));
@@ -83,6 +89,13 @@ class DetailList extends PureComponent {
       type: 'charge/getReportListBylistnoFetch',
       payload:values,
     });
+  };
+
+  getQuanlitydUnit=(text)=>{
+    if(text.quantityd!==undefined&&text.quantityd!==null){
+      return <span>{text.quantityd}{text.unit}</span>
+    }
+    return [];
   };
 
   // eslint-disable-next-line no-shadow

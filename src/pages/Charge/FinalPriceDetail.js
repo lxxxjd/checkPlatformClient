@@ -14,7 +14,8 @@ import {
   Icon,
   Modal,
   Radio,
-  notification
+  notification,
+  InputNumber
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './FinalPrice.less';
@@ -44,6 +45,8 @@ class FinalPriceDetail extends PureComponent {
     const reportNo = sessionStorage.getItem('reportno');
     const allInspway = sessionStorage.getItem('inspway').split(" ");
     this.setState({ checkProject : allInspway });
+    allInspway.push("申报数量");
+    allInspway.push("其他");
     dispatch({
       type: 'charge/getPriceMaking',
       payload:{
@@ -76,7 +79,8 @@ class FinalPriceDetail extends PureComponent {
   }
 
   back = () =>{
-    this.props.history.goBack();
+    // this.props.history.goBack();
+    window.history.back();
   };
 
   onChange = e => {
@@ -121,6 +125,34 @@ class FinalPriceDetail extends PureComponent {
     }
   };
 
+
+  sumQuanlity = (value) =>{
+    const {
+      form
+    } = this.props;
+    const price = form.getFieldValue('price');
+    const quantity = value;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['total']: total});
+    }
+  };
+
+  sumPrice= (value) =>{
+    const {
+      form
+    } = this.props;
+    const quantity = form.getFieldValue('quantity');
+    const price = value;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['total']: total});
+    }
+  };
+
+
   sum = () =>{
     const {
       form
@@ -128,12 +160,12 @@ class FinalPriceDetail extends PureComponent {
     const price = form.getFieldValue('price');
     const quantity = form.getFieldValue('quantity');
     if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
-      let total =price * quantity
+      let total =price * quantity;
       total = total.toFixed(2);
-      console.log(total);
       form.setFieldsValue({['total']: total});
     }
   };
+
 
   submit = () => {
     Modal.confirm({
@@ -190,8 +222,8 @@ class FinalPriceDetail extends PureComponent {
         });
       }
     });
-
   };
+
   render() {
     const {
       charge: {data},
@@ -234,8 +266,8 @@ class FinalPriceDetail extends PureComponent {
             <Radio.Group onChange={this.onChange} value={value}>
               <Radio value="按单价">按单价</Radio>
               <Radio value="按批次">按批次</Radio>
-              <Radio value="按协议">按协议</Radio>
-              <Radio value="按项目">按项目</Radio>
+              {/*<Radio value="按协议">按协议</Radio>*/}
+              {/*<Radio value="按项目">按项目</Radio>*/}
             </Radio.Group>
           {
             value==='按单价' ? [<Form>
@@ -258,9 +290,9 @@ class FinalPriceDetail extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} onChange={this.sum} />
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01} onChange={this.sumPrice} />
               )}
             </Form.Item>
             <Form.Item label="数量" >
@@ -273,9 +305,9 @@ class FinalPriceDetail extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} onChange={this.sum} />
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01} onChange={this.sumQuanlity} />
               )}
             </Form.Item>
             <Form.Item label="总价">
@@ -288,15 +320,15 @@ class FinalPriceDetail extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} />
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01} onBlur={this.sum} />
               )}
             </Form.Item>
           </Form>]:[]
           }
           {
-            value==='按批次' ? [<Form >
+            value==='按批次' ? [<Form>
             <Form.Item label="检验费">
               {getFieldDecorator('total', {
                 rules: value==='按批次' ? [{
@@ -307,9 +339,9 @@ class FinalPriceDetail extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input  style={{ width: '25%' }}/>
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01}  />
               )}
             </Form.Item>
           </Form>]:[]
@@ -333,9 +365,9 @@ class FinalPriceDetail extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input style={{ width: '25%' }}/>
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01}  />
               )}
             </Form.Item>
           </Form>]:[]
@@ -352,9 +384,9 @@ class FinalPriceDetail extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input style={{ width: '25%' }}/>
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01}  />
               )}
             </Form.Item>
           </Form>]:[]

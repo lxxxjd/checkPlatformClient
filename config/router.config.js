@@ -1,3 +1,6 @@
+import { Select } from 'antd';
+import React from 'react';
+
 export default [
   // user
   {
@@ -17,6 +20,9 @@ export default [
       },
     ],
   },
+
+  //authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人","管理员"],
+  // authority: ["总经理","管理员"],
 
   {
     path: '/home',
@@ -55,7 +61,7 @@ export default [
         path: "/Entrustment",
         icon: "file",
         name: "Entrustment",
-        // authority: ["操作经理","admin"],
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/Entrustment/AcceptList',
@@ -170,6 +176,7 @@ export default [
         path: '/TaskAppoint',
         icon: 'table',
         name: 'TaskAppoint',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/TaskAppoint/CustomerService',
@@ -230,6 +237,7 @@ export default [
         path: '/TestRecord',
         icon: 'form',
         name: 'TestRecord',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/TestRecord/ResultRegistration',
@@ -260,6 +268,7 @@ export default [
         path: '/SampleRegister',
         icon: 'profile',
         name: 'SampleRegister',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/SampleRegister/SampleRegister',
@@ -300,6 +309,7 @@ export default [
         path: '/InspectionAnalysis',
         icon: 'table',
         name: 'InspectionAnalysis',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/InspectionAnalysis/SampleIndex',
@@ -391,6 +401,7 @@ export default [
         path: '/Certificate',
         icon: 'profile',
         name: 'Certificate',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/Certificate/CertificateUpload',
@@ -490,6 +501,7 @@ export default [
         path: '/Charge',
         icon: 'profile',
         name: 'Charge',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/Charge/FinalPrice',
@@ -507,10 +519,16 @@ export default [
             name: 'ListFiction',
             component: './Charge/ListFiction',
           },
+          //
           {
             path: '/Charge/ListFictionAdd',
             name: 'ListFictionAdd',
             component: './Charge/ListFictionAdd',
+          },
+          {
+            path: '/Charge/ListFictionDelete',
+            name: 'ListFictionDelete',
+            component: './Charge/ListFictionDelete',
           },
           {
             path: '/Charge/ListReview',
@@ -574,6 +592,7 @@ export default [
         path: '/CostManage',
         icon: 'profile',
         name: 'CostManage',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/CostManage/Cost',
@@ -592,6 +611,11 @@ export default [
             path: '/CostManage/CostListAdd',
             name: 'CostListAdd',
             component: './Charge/CostListAdd',
+          },
+          {
+            path: '/CostManage/CostlistDelete',
+            name: 'CostlistDelete',
+            component: './Charge/CostlistDelete',
           },
 
           {
@@ -663,6 +687,7 @@ export default [
         path: '/Archives',
         icon: 'profile',
         name: 'Archives',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/Archives/ArchivesAdd',
@@ -851,6 +876,7 @@ export default [
         path: '/Statistics',
         icon: 'profile',
         name: 'Statistics',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
 
           {
@@ -908,6 +934,7 @@ export default [
         path: '/CNAS',
         icon: 'profile',
         name: 'CNAS',
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
         routes: [
           {
             path: '/CNAS/CNASCheckFourCertCode',

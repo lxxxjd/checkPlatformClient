@@ -14,7 +14,7 @@ import {
   Icon,
   Modal,
   Radio,
-  notification
+  notification, InputNumber,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './FinalPrice.less';
@@ -36,6 +36,7 @@ class FinalPriceAdd extends PureComponent {
     value:'按单价',
     checkProject:[],
     priceway:"",
+
   };
 
   componentDidMount() {
@@ -78,7 +79,8 @@ class FinalPriceAdd extends PureComponent {
   }
 
   back = () =>{
-    this.props.history.goBack();
+    //this.props.history.goBack();
+    window.history.back();
   };
 
   onChange = e => {
@@ -123,6 +125,34 @@ class FinalPriceAdd extends PureComponent {
     }
   };
 
+
+  sumQuanlity = (value) =>{
+    const {
+      form
+    } = this.props;
+    const price = form.getFieldValue('price');
+    const quantity = value;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['total']: total});
+    }
+  };
+
+  sumPrice= (value) =>{
+    const {
+      form
+    } = this.props;
+    const quantity = form.getFieldValue('quantity');
+    const price = value;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['total']: total});
+    }
+  };
+
+
   sum = () =>{
     const {
       form
@@ -130,9 +160,13 @@ class FinalPriceAdd extends PureComponent {
     const price = form.getFieldValue('price');
     const quantity = form.getFieldValue('quantity');
     if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
-      form.setFieldsValue({['total']: price * quantity});
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['total']: total});
     }
   };
+
+
 
   chooseChange = e =>{
     const {
@@ -281,7 +315,7 @@ class FinalPriceAdd extends PureComponent {
                 </Radio.Group>
               )}
             </Form.Item>
-            <Form.Item label="单价" >
+            <Form.Item label="单价">
               {getFieldDecorator('price', {
                 rules: value==='按单价' ? [{
                   required: true,
@@ -291,12 +325,12 @@ class FinalPriceAdd extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} onBlur={this.sum}/>
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01} onChange={this.sumPrice} />
               )}
             </Form.Item>
-            <Form.Item label="数量" >
+            <Form.Item label="数量">
               {getFieldDecorator('quantity', {
                 rules: value==='按单价' ? [{
                   required: true,
@@ -306,9 +340,9 @@ class FinalPriceAdd extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} onBlur={this.sum}/>
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01} onChange={this.sumQuanlity} />
               )}
             </Form.Item>
             <Form.Item label="总价">
@@ -321,77 +355,33 @@ class FinalPriceAdd extends PureComponent {
                     if (value) {
                       return Number(value);
                     }
-                  }, message: '请输入数字' }]:[]
+                  }, message: '请输入正确的数字' }]:[]
               })(
-                <Input style={{ width: '25%' }} />
+                <InputNumber style={{ width: '25%' }} min={0} step={0.01} onBlur={this.sum} />
               )}
             </Form.Item>
           </Form>]:[]
           }
-          {
-            value==='按批次' ? [<Form >
-            <Form.Item label="检验费">
-              {getFieldDecorator('total', {
-                rules: value==='按批次' ? [{
-                  required: true,
-                  whitespace: true,
-                  type: 'number',
-                  transform(value) {
-                    if (value) {
-                      return Number(value);
-                    }
-                  }, message: '请输入数字' }]:[]
-              })(
-                <Input  style={{ width: '25%' }}/>
-              )}
-            </Form.Item>
-          </Form>]:[]
-          }
-          {
-            value==='按协议' ? [<Form >
-            <Form.Item label="定价方式">
-              {getFieldDecorator('choose', {
-                rules: value==='按协议' ? [{ required: true, message: '请输入定价方式' }]:[]
-              })(
-                <Input style={{ width: '25%' }}/>
-              )}
-            </Form.Item>
-            <Form.Item label="总价">
-              {getFieldDecorator('total', {
-                rules: value==='按协议' ? [{
-                  required: true,
-                  whitespace: true,
-                  type: 'number',
-                  transform(value) {
-                    if (value) {
-                      return Number(value);
-                    }
-                  }, message: '请输入数字' }]:[]
-              })(
-                <Input style={{ width: '25%' }}/>
-              )}
-            </Form.Item>
-          </Form>]:[]
-          }
-          {
-            value==='按项目' ? [<Form >
-            <Form.Item label="总价">
-              {getFieldDecorator('total', {
-                rules: value==='按项目' ? [{
-                  required: true,
-                  whitespace: true,
-                  type: 'number',
-                  transform(value) {
-                    if (value) {
-                      return Number(value);
-                    }
-                  }, message: '请输入数字' }]:[]
-              })(
-                <Input style={{ width: '25%' }}/>
-              )}
-            </Form.Item>
-          </Form>]:[]
-          }
+            {
+              value === '按批次' ? [<Form>
+                <Form.Item label="检验费">
+                  {getFieldDecorator('total', {
+                    rules: value === '按批次' ? [{
+                      required: true,
+                      whitespace: true,
+                      type: 'number',
+                      transform(value) {
+                        if (value) {
+                          return Number(value);
+                        }
+                      }, message: '请输入正确的数字'
+                    }] : []
+                  })(
+                    <InputNumber style={{ width: '25%' }} min={0} step={0.01}/>
+                  )}
+                </Form.Item>
+              </Form>] : []
+            }
           </Card>
         </Card>
       </PageHeaderWrapper>

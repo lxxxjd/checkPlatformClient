@@ -1,8 +1,9 @@
 import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,passListFiction,getCosts,getAllCost ,
   addCost,getReportPriceMaking,updatePriceMaking,getPriceMaking,deleteCost,updateCost, getCheckResultInspway,
   downloadListTemp,downloadCostListTemp,getPdfByOssPath,getRepeatListNo,getRepeatPayListNo} from '@/services/Charge';
-import { getAllClientName } from '@/services/Entrustment';
+import { getAllClientName,getBusiness} from '@/services/Entrustment';
 import { getInvoiceTitleList } from '@/services/InvoiceTitle';
+
 
 export default {
   namespace: 'charge',
@@ -25,6 +26,12 @@ export default {
 
     *getRepeatPayListNo({ payload,callback }, { call, put }) {
       const response = yield call(getRepeatPayListNo, payload);
+      if (callback) callback(response.data);
+    },
+
+    // 工商接口
+    *getBusiness({ payload , callback}, { call, put }) {
+      const response = yield call(getBusiness, payload);
       if (callback) callback(response.data);
     },
 

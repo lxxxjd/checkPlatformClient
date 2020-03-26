@@ -117,18 +117,26 @@ class CostListDetailReviewBack extends PureComponent {
     listView.status="审核退回";
     listView.reviewer = user.nameC;
     const { dispatch } = this.props;
-    dispatch({
-      type: 'costlist/updateCostlist',
-      payload:listView,
-      callback: (response) => {
-        if(response==="success"){
-          this.state.list.status="审核退回";
-          message.success("审核退回成功");
-        }else{
-          message.error("操作失败");
-        }
+    Modal.confirm({
+      title: '确定审核退回吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'costlist/updateCostlist',
+          payload:listView,
+          callback: (response) => {
+            if(response==="success"){
+              this.state.list.status="审核退回";
+              message.success("审核退回成功");
+            }else{
+              message.error("操作失败");
+            }
+          }
+        });
       }
     });
+
   };
 
     render(){

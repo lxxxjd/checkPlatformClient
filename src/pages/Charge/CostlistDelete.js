@@ -23,7 +23,7 @@ const { Option } = Select;
   loading: loading.models.costlist,
 }))
 @Form.create()
-class CostlistEdit extends PureComponent {
+class CostlistDelete extends PureComponent {
   state = {
     dataSource:[],
   };
@@ -66,9 +66,8 @@ class CostlistEdit extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.goToCostlistDetail(text, record)}>查看</a>
-          {/*&nbsp;&nbsp;*/}
-          {/*{text.status==="已拟制"||text.status==="已退款"||text.status==="审核退回"?[<a onClick={() => this.deleteItem(text, record)}>删除</a>]:[]}*/}
+          {text.status==="已拟制"||text.status==="已退款"||text.status==="审核退回"?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
+          <a onClick={() => this.goToCostlistDetail(text, record)}>查看&nbsp;&nbsp;</a>
         </Fragment>
       ),
     },
@@ -219,9 +218,9 @@ class CostlistEdit extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.addItem}>
-                拟制
-              </Button>
+              {/*<Button type="primary" style={{ marginLeft: 8 }} onClick={this.addItem}>*/}
+              {/*  新增*/}
+              {/*</Button>*/}
             </span>
           </Col>
         </Row>
@@ -258,4 +257,4 @@ class CostlistEdit extends PureComponent {
   }
 }
 
-export default CostlistEdit;
+export default CostlistDelete;

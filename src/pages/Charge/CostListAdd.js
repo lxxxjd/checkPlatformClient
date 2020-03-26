@@ -11,7 +11,7 @@ import {
   Input,
   Button,
   Select,
-  Table, DatePicker, message, Icon, Switch, Radio, Modal,
+  Table, DatePicker, message, Icon, Switch, Radio, Modal, AutoComplete,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -113,6 +113,7 @@ class CostListAdd extends PureComponent {
     total:0,
     paylistno:undefined,
     approverusers:[],
+    applicantName:[],//工商接口申请人
   };
 
   columns = [
@@ -160,7 +161,7 @@ class CostListAdd extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.removeExistItem(text, record)}>删除</a>
+          <a onClick={() => this.removeExistItem(text, record)}>剔除</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
           &nbsp;&nbsp;
@@ -235,16 +236,32 @@ class CostListAdd extends PureComponent {
       return;
     }
 
+    let flag = 1;
     for(let j = 0,len = state.costList.length; j < len; j++){
       if(state.costList[j].status !=="已登记"){
-        message.error('存在已拟制的条目，请查询完重试');
+        // message.error('存在已拟制的条目请查询完重试');，
+        Modal.error({
+          okText: '确定',
+          title:'清单记录不是全部‘已登记’状态！',
+          content: "请选择剔除或者重新查询！",
+        });
         return;
       }
       if(state.costList[j].reciever!==undefined){
         state.paycompany = state.costList[j].reciever;
       }
-      total += parseFloat(state.costList[j].costmoney);
+      if(state.costList[j].costmoney!==undefined && state.costList[j].costmoney!==null && state.costList[j].costmoney!==""){
+        total += parseFloat(state.costList[j].costmoney);
+      }else{
+        total += 0;
+        flag=0;// 表明存在没有金额的成本
+      }
     }
+
+    if(flag===0){
+      message.warn('存在金额为空的成本，请审阅后继续！');
+    }
+
     this.state.total = total;
     if(state.costList!==undefined ) {
       this.state.paylistno = state.costList[0].reportno;
@@ -391,12 +408,27 @@ class CostListAdd extends PureComponent {
     }
   };
 
+  handleApplicantSearch = value => {
+    // 工商接口
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'charge/getBusiness',
+      payload: {
+        name: value
+      },
+      callback: (response) => {
+        this.setState({applicantName: response})
+      }
+    });
+  };
 
   // eslint-disable-next-line react/sort-comp
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const {applicantName} = this.state;
+    const applicantOptions = applicantName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
@@ -423,7 +455,16 @@ class CostListAdd extends PureComponent {
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
             >
-              {getFieldDecorator('reciever',{rules: [{ message: '请输入' }],})(<Input placeholder="请输入" />)}
+              {getFieldDecorator('reciever',{rules: [{ message: '请输入全称' }],})(
+                <AutoComplete
+                  className="global-search"
+                  dataSource={applicantOptions}
+                  onSearch={this.handleApplicantSearch}
+                  placeholder="请输入全称"
+                >
+                  <Input />
+                </AutoComplete>
+              )}
             </Form.Item>
           </Col>
           <Col md={8} sm={20}>

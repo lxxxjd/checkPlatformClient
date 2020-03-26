@@ -11,7 +11,7 @@ import {
   Input,
   Button,
   Select,
-  Table, DatePicker, message, Icon, Switch, Radio, Modal,
+  Table, DatePicker, message, Icon, Switch, Radio, Modal, AutoComplete, InputNumber, notification,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -66,7 +66,7 @@ const AddListFrom = Form.create()(props =>  {
           确认拟制
         </Button>
       ]}
-    >
+   >
       <Form>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="总金额：">
           {form.getFieldDecorator('money', {
@@ -76,6 +76,7 @@ const AddListFrom = Form.create()(props =>  {
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="清单号：">
           {form.getFieldDecorator('listno', {
+            initialValue:(priceMaking!==undefined&&priceMaking.length>0)?priceMaking[0].reportno:undefined,
             rules: [{required: true,validator:getRepeatListNo,}],
           })(<Input placeholder="请输入清单号" />)}
         </Form.Item>
@@ -104,6 +105,207 @@ const AddListFrom = Form.create()(props =>  {
 });
 
 
+
+// 定价模态框
+const PriceMakingForm = Form.create()(props =>  {
+  const { form,modalPriceMakingVisible,handlePriceMakingVisible,reportPriceMaking,handlePriceMakingSubmit,dispatch,onChange,checkProjectRadio,value} = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err){
+        return;
+      }
+      handlePriceMakingSubmit(fieldsValue,reportPriceMaking);
+      form.resetFields();
+      handlePriceMakingVisible();
+    });
+  };
+
+
+  const sumQuanlity = (value) =>{
+    const price = form.getFieldValue('price');
+    const quantity = value;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['total']: total});
+    }
+  };
+
+  const sumPrice= (value) =>{
+    const quantity = form.getFieldValue('quantity');
+    const price = value;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['total']: total});
+    }
+  };
+
+
+  const sum = () =>{
+    const price = form.getFieldValue('price');
+    const quantity = form.getFieldValue('quantity');
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['total']: total});
+    }
+  };
+
+
+  const chooseChange = e =>{
+    if(e.target.value === '其他'){
+      form.setFieldsValue({['quantity']: ""});
+    }else if(e.target.value === '申报数量'){
+      const {quantityd} = reportPriceMaking;
+      if(quantityd !== 'null' ){
+        form.setFieldsValue({['quantity']: quantityd});
+      }else{
+        form.setFieldsValue({['quantity']: ""});
+      }
+    }else{
+      const {reportno} = reportPriceMaking;
+      dispatch({
+        type: 'charge/getCheckResultInspway',
+        payload:{
+          reportno,
+          inspway:e.target.value,
+        },
+        callback : (response) =>{
+          if (response.code === 200) {
+            if(response.data !== null){
+              form.setFieldsValue({
+                'quantity': response.data.weight,
+              });
+            }else{
+              form.setFieldsValue({['quantity']: ""});
+            }
+          } else {
+            notification.open({
+              message: '获取失败',
+              description: response.data,
+            });
+          }
+        }
+      });
+    }
+  };
+
+
+
+
+  return (
+    <Modal
+      destroyOnClose
+      title="定价"
+      visible={modalPriceMakingVisible}
+      style={{ top: 60 }}
+      width={800}
+      onCancel={() => handlePriceMakingVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handlePriceMakingVisible()}>
+          关闭
+        </Button>,
+        <Button type="primary" onClick={() => okHandle()}>
+          确认定价
+        </Button>
+      ]}
+   >
+        <Card>
+          <span> 选择定价方式： </span>
+          <Radio.Group onChange={onChange} value={value}>
+            <Radio value="按单价">按单价</Radio>
+            <Radio value="按批次">按批次</Radio>
+          </Radio.Group>
+          {
+            value==='按单价' ? [<Form>
+              <Form.Item label="数量选择">
+                {form.getFieldDecorator('choose', {
+                  initialValue:reportPriceMaking.choose===undefined?undefined:reportPriceMaking.choose,
+                  rules: value==='按单价' ? [{ required: true, message: '请选择数量选择' }]:[]
+                })(
+                  <Radio.Group onChange= {chooseChange}>
+                    {checkProjectRadio}
+                  </Radio.Group>
+                )}
+              </Form.Item>
+              <Form.Item label="单价">
+                {form.getFieldDecorator('price', {
+                  initialValue:reportPriceMaking.priceway==='按单价' &&reportPriceMaking.price!==undefined?reportPriceMaking.price:undefined,
+                  rules: value==='按单价' ? [{
+                    required: true,
+                    whitespace: true,
+                    type: 'number',
+                    transform(value) {
+                      if (value) {
+                        return Number(value);
+                      }
+                    }, message: '请输入正确的数字' }]:[]
+                })(
+                  <InputNumber style={{ width: '25%' }} min={0} step={0.01} onChange={sumPrice} />
+                )}
+              </Form.Item>
+              <Form.Item label="数量">
+                {form.getFieldDecorator('quantity', {
+                  initialValue:reportPriceMaking.priceway==='按单价' &&reportPriceMaking.quantity!==undefined?reportPriceMaking.quantity:undefined,
+                  rules: value==='按单价' ? [{
+                    required: true,
+                    whitespace: true,
+                    type: 'number',
+                    transform(value) {
+                      if (value) {
+                        return Number(value);
+                      }
+                    }, message: '请输入正确的数字' }]:[]
+                })(
+                  <InputNumber style={{ width: '25%' }} min={0} step={0.01} onChange={sumQuanlity} />
+                )}
+              </Form.Item>
+              <Form.Item label="总价">
+                {form.getFieldDecorator('total', {
+                  initialValue: reportPriceMaking.priceway==='按单价' &&reportPriceMaking.total!==undefined?reportPriceMaking.total:undefined,
+                  rules: value==='按单价' ? [{
+                    required: true,
+                    whitespace: true,
+                    type: 'number',
+                    transform(value) {
+                      if (value) {
+                        return Number(value);
+                      }
+                    }, message: '请输入正确的数字' }]:[]
+                })(
+                  <InputNumber style={{ width: '25%' }} min={0} step={0.01} onBlur={sum} />
+                )}
+              </Form.Item>
+            </Form>]:[]
+          }
+          {
+            value==='按批次' ? [<Form>
+              <Form.Item label="检验费">
+                {form.getFieldDecorator('total', {
+                  initialValue: reportPriceMaking.priceway==='按批次' &&reportPriceMaking.total!==undefined?reportPriceMaking.total:undefined,
+                  rules: value==='按批次' ? [{
+                    required: true,
+                    whitespace: true,
+                    type: 'number',
+                    transform(value) {
+                      if (value) {
+                        return Number(value);
+                      }
+                    }, message: '请输入正确的数字' }]:[]
+                })(
+                  <InputNumber style={{ width: '25%' }} min={0} step={0.01}  />
+                )}
+              </Form.Item>
+            </Form>]:[]
+          }
+        </Card>
+    </Modal>
+  );
+});
+
+
+
 let id = 0;
 // eslint-disable-next-line no-class-assign,react/no-multi-comp
 @Form.create()
@@ -115,11 +317,17 @@ class ListFictionAdd extends PureComponent {
   state = {
     priceMaking:[],
     modalAddListVisible:false,
+    modalPriceMakingVisible:false,
     payer:undefined,
     total:0,
     invoiceTitles:[],
     approverusers:[],
     isViewonApproverusers:false,
+    applicantName:[],
+
+    reportPriceMaking:{},
+    checkProject:[],
+    value:'按单价',
   };
 
   columns = [
@@ -161,9 +369,9 @@ class ListFictionAdd extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text)}>定价</a>
+          <a onClick={() => this.mobileItem(text, record)}>定价</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.removeExistItem(text, record)}>删除</a>
+          <a onClick={() => this.removeExistItem(text, record)}>剔除</a>
           &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
           &nbsp;&nbsp;
@@ -192,6 +400,14 @@ class ListFictionAdd extends PureComponent {
         }
       }
     });
+
+    // dispatch({
+    //   type: 'charge/getClientName',
+    //   payload: {},
+    //   callback: (response) => {
+    //     this.setState({applicantName: response});
+    //   }
+    // });
 
 
   };
@@ -231,6 +447,14 @@ class ListFictionAdd extends PureComponent {
 
 
   handleSubmit = () => {
+
+    const {form} = this.props;
+    const payer = form.getFieldValue('payer');
+    if(payer===undefined || payer===null|| payer===""){
+      message.error('付款人不能为空，请输入付款人查询后拟制！');
+      return;
+    }
+
     const {dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const values = {
@@ -243,7 +467,7 @@ class ListFictionAdd extends PureComponent {
       callback: (response) => {
 
         // 设置账户
-        if(response!==undefined && response.length !==undefined && response.length >0) {
+        if(response!==undefined && response.length !==undefined && response.length>0) {
           this.setState({
             invoiceTitles: response,
           });
@@ -253,7 +477,12 @@ class ListFictionAdd extends PureComponent {
           let total = 0;
           for(let j = 0,len = state.priceMaking.length; j < len; j++){
             if(state.priceMaking[j].status ==="未定价"){
-              message.error('存在未定价的条目，请定价完重试');
+              // message.error('存在未定价的条目，请定价完重试');
+              Modal.error({
+                okText: '确定',
+                title:'清单记录不是全部‘已定价未拟制’状态！',
+                content: "请选择“已定价未拟制”状态，或进行定价！。",
+              });
               return;
             }
             if(state.priceMaking[j].payer!==undefined){
@@ -263,28 +492,29 @@ class ListFictionAdd extends PureComponent {
           }
           this.state.total = total;
 
+          //获取清单审核人员
+          dispatch({
+            type: 'user/getMan',
+            payload:{
+              certcode:user.certCode,
+              func:"清单审核" ,
+            },
+            callback: (response2) => {
+              if(response2){
+                this.setState({approverusers:response2});
+                this.handleAddListVisible(true);
+              }else{
+                message.error("未配置审核人用户角色");
+              }
+            }
+          });
+
         }else{
           message.success('请配置到账账户');
         }
       }
     });
 
-
-    dispatch({
-      type: 'user/getMan',
-      payload:{
-        certcode:user.certCode,
-        func:"清单审核" ,
-      },
-      callback: (response) => {
-        if(response){
-          this.setState({approverusers:response});
-          this.handleAddListVisible(true);
-        }else{
-          message.error("未配置审核人用户角色");
-        }
-      }
-    });
   };
 
   handleFormAddList =(fieldvalues)=>{
@@ -426,6 +656,20 @@ class ListFictionAdd extends PureComponent {
     });
   };
 
+  handleApplicantSearch = value => {
+    // 工商接口
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'charge/getBusiness',
+      payload: {
+        name: value
+      },
+      callback: (response) => {
+        this.setState({applicantName: response})
+      }
+    });
+  };
+
 
 
   // eslint-disable-next-line react/sort-comp
@@ -433,6 +677,8 @@ class ListFictionAdd extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const {applicantName} = this.state;
+    const applicantOptions = applicantName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
@@ -459,8 +705,17 @@ class ListFictionAdd extends PureComponent {
               label="付款人"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
-            >
-              {getFieldDecorator('payer',{rules: [{ message: '请输入' }],})(<Input placeholder="请输入" />)}
+           >
+              {getFieldDecorator('payer',{rules: [{ message: '请输入全称' }],})(
+                <AutoComplete
+                  className="global-search"
+                  dataSource={applicantOptions}
+                  onSearch={this.handleApplicantSearch}
+                  placeholder="请输入全称"
+               >
+                  <Input />
+                </AutoComplete>
+              )}
             </Form.Item>
           </Col>
           <Col md={8} sm={20}>
@@ -469,7 +724,7 @@ class ListFictionAdd extends PureComponent {
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
               colon={false}
-            >
+           >
               {getFieldDecorator('reportdate', {
 
               })(
@@ -484,7 +739,7 @@ class ListFictionAdd extends PureComponent {
               label="收费状态："
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
-            >
+           >
               {getFieldDecorator('status',{rules: [{ message: '请输入' }],
                 initialValue :"全部"
               })(
@@ -554,16 +809,32 @@ class ListFictionAdd extends PureComponent {
 
   // 定价
   mobileItem = text => {
-    sessionStorage.setItem('reportno',text.reportno);
-    sessionStorage.setItem('reportdate',text.reportdate);
-    sessionStorage.setItem('applicant',text.applicant);
-    sessionStorage.setItem('cargoname',text.cargoname);
-    sessionStorage.setItem('inspway',text.inspway);
-    sessionStorage.setItem('FinalPriceOrigin','ListFictionAdd');
-
-    router.push({
-      pathname:'/Charge/FinalPriceDetail',
+    // sessionStorage.setItem('reportno',text.reportno);
+    // sessionStorage.setItem('reportdate',text.reportdate);
+    // sessionStorage.setItem('applicant',text.applicant);
+    // sessionStorage.setItem('cargoname',text.cargoname);
+    // sessionStorage.setItem('inspway',text.inspway);
+    // sessionStorage.setItem('FinalPriceOrigin','ListFictionAdd');
+    //
+    // router.push({
+    //   pathname:'/Charge/FinalPriceDetail',
+    // });
+    this.state.reportPriceMaking=text;
+    console.log(this.state.reportPriceMaking);
+    let checkProject=[];
+    if(text.inspway!==undefined && text.inspway!==null){
+      checkProject = text.inspway.split(" ");
+    }
+    checkProject.push("申报数量");
+    checkProject.push("其他");
+    this.setState({checkProject});
+    if(text.priceway!==undefined){
+      this.setState({value:text.priceway});
+    }
+    this.setState({
+      modalPriceMakingVisible: true,
     });
+
   };
 
   handleAddListVisible = (flag) => {
@@ -572,14 +843,64 @@ class ListFictionAdd extends PureComponent {
     });
   };
 
+  handlePriceMakingVisible = (flag) => {
+    this.setState({
+      modalPriceMakingVisible: !!flag,
+    });
+  };
+
+
+  onChange = e => {
+    this.setState({
+      value: e.target.value,
+    });
+  };
+
+  handlePriceMakingSubmit=(values,text)=>{
+    const {dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const {value} = this.state;
+    dispatch({
+      type: 'charge/updatePriceMaking',
+      payload: {
+        ...values,
+        reportno: text.reportno,
+        priceman: user.nameC,
+        priceway: value,
+      },
+      callback: (response) => {
+        if (response.code === 200) {
+          notification.open({
+            message: '定价成功',
+          });
+          const res = response.data;
+          if(this.state.priceMaking!==undefined && this.state.priceMaking.length>0){
+            for(let i=0;i<this.state.priceMaking.length;i++){
+              if(this.state.priceMaking[i].reportno === res.reportno){
+                this.state.priceMaking[i]= res;
+                break;
+              }
+            }
+          }
+        } else {
+          notification.open({
+            message: '添加失败',
+            description: response.data,
+          });
+        }
+      }
+    });
+  };
+
+
 
 
   render(){
     const {
-      loading,
+      loading,dispatch
     } = this.props;
 
-    const {priceMaking,modalAddListVisible,total,payer,invoiceTitles,approverusers} = this.state;
+    const {priceMaking,modalAddListVisible,total,payer,invoiceTitles,approverusers,modalPriceMakingVisible,reportPriceMaking,checkProject,value} = this.state;
 
     // 下载模板 模态框方法
     const parentMethods = {
@@ -587,10 +908,15 @@ class ListFictionAdd extends PureComponent {
       handleFormAddList:this.handleFormAddList,
       getRepeatListNo:this.getRepeatListNo,
       onFocusApproverusers:this.onFocusApproverusers,
+      handlePriceMakingVisible:this.handlePriceMakingVisible,
+      sum:this.sum,
+      onChange:this.onChange,
+      handlePriceMakingSubmit:this.handlePriceMakingSubmit,
     };
 
     const invoiceTitlesOptions = invoiceTitles.map(d => <Option key={d.namec} value={d.namec}>{d.namec}</Option>);
     const approverusersOptions = approverusers.map(d => <Option key={d.userName} value={d.userName}>{d.nameC}</Option>);
+    const checkProjectRadio = checkProject.map(d => <Radio key={d} value={d}>{d}</Radio>);
 
     const { getFieldDecorator, getFieldValue } = this.props.form;
     getFieldDecorator('keys', { initialValue: [] });
@@ -606,7 +932,7 @@ class ListFictionAdd extends PureComponent {
             labelCol={{ span: 5 }}
             wrapperCol={{ span: 6 }}
             colon={false}
-          >
+         >
             {getFieldDecorator(`check${k}`, {
               initialValue: true,
               valuePropName: 'checked',
@@ -620,7 +946,7 @@ class ListFictionAdd extends PureComponent {
             style={{marginRight:8}}
             labelCol={{ span: 5 }}
             wrapperCol={{ span: 6 }}
-          >
+         >
             {getFieldDecorator(`kinds${k}`, {
               rules: [{  message: '选择字段' }],
             })(
@@ -646,7 +972,7 @@ class ListFictionAdd extends PureComponent {
             style={{marginRight:8}}
             labelCol={{ span: 5 }}
             wrapperCol={{ span: 6 }}
-          >
+         >
             {getFieldDecorator(`conditions${k}`, {
               rules: [{  message: '选择条件' }],
             })(
@@ -665,7 +991,7 @@ class ListFictionAdd extends PureComponent {
           </Form.Item>
         </Col>
         <Col md={1} sm={5}>
-          {keys.length >= 1 ? (
+          {keys.length>= 1 ? (
             <Icon style={{fontSize:24,marginLeft:8}} type="minus-circle" theme='twoTone' twoToneColor="#ff0000" onClick={() => this.remove(k)} />
           ) : null}
         </Col>
@@ -681,6 +1007,7 @@ class ListFictionAdd extends PureComponent {
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
               <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} invoiceTitlesOptions={invoiceTitlesOptions} approverusersOptions={approverusersOptions} />
+              <PriceMakingForm {...parentMethods} modalPriceMakingVisible={modalPriceMakingVisible} dispatch={dispatch} reportPriceMaking={reportPriceMaking} checkProjectRadio={checkProjectRadio} value={value} />
             </Form>
             <Table
               style={{marginTop:5}}
