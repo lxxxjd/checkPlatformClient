@@ -1,7 +1,9 @@
 import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
         getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,
-  getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo,getBusiness, addConfigorAuthority} from '@/services/Entrustment';
+  getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo,getBusiness, addConfigorAuthority,getPortList,
+  searchPortForEntrustment,searchByKindValue,searchPlaceByPlaceCode
+} from '@/services/Entrustment';
 
 
 export default {
@@ -31,7 +33,7 @@ export default {
       const response = yield call(getRepeatCustomsNo, payload);
       if (callback) callback(response.data);
     },
-    
+
     // 受理
     *addConfigorAuthority({ payload , callback}, { call, put }) {
       const response = yield call(addConfigorAuthority, payload);
@@ -74,6 +76,28 @@ export default {
         payload: response,
       });
     },
+
+    *getPortList({ payload,callback }, { call, put }) {
+      const response = yield call(getPortList, payload);
+      if (callback) callback(response);
+    },
+
+    *searchByKindValue({ payload,callback }, { call, put }) {
+      const response = yield call(searchByKindValue, payload);
+      if (callback) callback(response);
+    },
+
+    *searchPlaceByPlaceCode({ payload,callback }, { call, put }) {
+      const response = yield call(searchPlaceByPlaceCode, payload);
+      if (callback) callback(response);
+    },
+
+
+    *searchPortForEntrustment({ payload,callback }, { call, put }) {
+      const response = yield call(searchPortForEntrustment, payload);
+      if (callback) callback(response);
+    },
+
 
     *getReport({ payload,callback }, { call, put }) {
       const response = yield call(queryReport, payload);

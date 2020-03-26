@@ -159,7 +159,8 @@ class Port extends PureComponent {
     modalInfo :{},
     dataSource:[],
     placecode:[],
-    searchOption:"portC",
+    searchOption:"portc",
+    areaOptions:[],
   };
 
   columns = [
@@ -199,6 +200,7 @@ class Port extends PureComponent {
 
   componentDidMount() {
    this.init();
+    this.setState({areaOptions});
   }
 
   getPlaceFromCode =(val)=>{
@@ -234,7 +236,7 @@ class Port extends PureComponent {
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
-    this.setState({searchOption:"portC"});
+    this.setState({searchOption:"portc"});
     this.init();
   };
 
@@ -245,10 +247,10 @@ class Port extends PureComponent {
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       let value;
-      if(this.state==="placename"){
-        value=fieldsValue.value.trim();
-      }else{
+      if(this.state.searchOption==="placec"){
         value = fieldsValue.value[2];
+      }else{
+        value=fieldsValue.value.trim();
       }
       const values = {
         ...fieldsValue,
@@ -354,7 +356,7 @@ class Port extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-  }
+  };
 
   handleAdd = (fields) => {
     const { dispatch } = this.props;
@@ -412,22 +414,30 @@ class Port extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
-                initialValue:"portC",
+                initialValue:"portc",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型" onChange={this.onChangeSearch}>
-                  <Option value="portC">地点名称</Option>
-                  <Option value="portE">地点英文</Option>
+                  <Option value="portc">地点名称</Option>
+                  <Option value="porte">地点英文</Option>
                   <Option value="placec">所属区域</Option>
                 </Select>
               )}
             </Form.Item>
           </Col>
           <Col md={6} sm={20}>
-            <FormItem>
-              {getFieldDecorator('value',{rules: [],})(
-                searchOption === "placec"?<Cascader options={areaOptions} placeholder="请选择所属地区" />:<Input placeholder="请输入" />)}
-            </FormItem>
+            {searchOption === "placec" ? [
+              <FormItem>
+                {getFieldDecorator('value', { rules: [], })(
+                  <Cascader options={this.state.areaOptions} placeholder="请选择所属地区" />)}
+              </FormItem>
+            ] : [
+              <FormItem>
+                {getFieldDecorator('value', { rules: [], })(
+                  <Input placeholder="请输入"/>)}
+              </FormItem>
+            ]
+            }
           </Col>
 
           <Col md={8} sm={20}>

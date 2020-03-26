@@ -127,6 +127,9 @@ class ModifyForEntrustment extends PureComponent {
     isViewonBuinessSort:false,
     isViewonBuinessSource:false,
     isViewonTradeAway:false,
+
+    placeName: [],
+    placecode:'',
   };
 
 
@@ -163,6 +166,7 @@ class ModifyForEntrustment extends PureComponent {
               form.setFieldsValue({
                 'inspplace1':placecodes
               });
+              this.setState({placecode:response.inspplace1});
             }
             form.setFieldsValue({
               'reportdate': moment(response.reportdate, "YYYY-MM-DD"),
@@ -678,6 +682,89 @@ class ModifyForEntrustment extends PureComponent {
 
 
 
+  onChangeInspplace = value => {
+    const { dispatch } = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    if(value===undefined || value.length===0){
+      dispatch({
+        type: 'entrustment/getPortList',
+        payload: {
+          certCode: user.certCode,
+        },
+        callback: (response) => {
+          if(response.code ===200){
+            this.setState({ placeName: response.data });
+          }
+        }
+      });
+      this.setState({placecode:""});
+      return;
+    }
+    const values = {
+      kind:'placec',
+      value: value[2],
+      certCode:user.certCode,
+    };
+    dispatch({
+      type: 'entrustment/searchPortForEntrustment',
+      payload: values,
+      callback: (response) => {
+        if(response.code ===200){
+          this.setState({ placeName: response.data });
+        }
+      }
+    });
+    this.setState({placecode:value[2]});
+  };
+
+  onPlaceChange =(value)=>{
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const values = {
+      kind:'portc',
+      value,
+      certCode:user.certCode,
+    };
+    const { dispatch,form} = this.props;
+    dispatch({
+      type: 'entrustment/searchByKindValue',
+      payload: values,
+      callback: (response) => {
+        if(response.code ===200 && response.data && response.data.length>0){
+          const code = response.data[0].placec;
+          let codeArr=[];
+          codeArr.push(`${code.substring(0,2)}0000`);
+          codeArr.push(`${code.substring(0,4)}00`);
+          codeArr.push(code);
+          form.setFieldsValue({'inspplace1':codeArr});
+          this.setState({placecode:code});
+        }
+      }
+    });
+  };
+
+
+  placeSearch = value => {
+    const { dispatch } = this.props;
+    const {placecode} = this.state;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const values = {
+      kind:'portc',
+      value,
+      placecode,
+      certCode:user.certCode,
+    };
+    dispatch({
+      type: 'entrustment/searchPlaceByPlaceCode',
+      payload: values,
+      callback: (response) => {
+        if(response){
+          this.setState({ placeName: response.data })
+        }
+      }
+    });
+  };
+
+
 
   back = () => {
     this.props.history.goBack();
@@ -687,7 +774,7 @@ class ModifyForEntrustment extends PureComponent {
     const {
       form: {getFieldDecorator},
     } = this.props;
-    const {applicantName, agentName, payerName , businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments,isCustoms,customsOption,disable} = this.state;
+    const {applicantName, agentName, payerName , businessSort, businessSource, tradeway, checkProject, cargos, agentContacts, applicantContacts, cnasInfo, cnasCheckInfo, departments,isCustoms,customsOption,disable,placeName} = this.state;
 
     const applicantOptions = applicantName.map(d => <Option key={d} value={d}>{d}</Option>);
     const agentOptions = agentName.map(d => <Option key={d} value={d}>{d}</Option>);
@@ -699,6 +786,7 @@ class ModifyForEntrustment extends PureComponent {
     const departmentOptions = departments.map(d => <Option key={d.branchname} value={d.branchname}>{d.branchname}</Option>);
     const applicantContactsOptions = applicantContacts.map(d => <Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
     const agentContactsOptions = agentContacts.map(d =><Option key={d.contactName} value={d.contactName}>{d.contactName}</Option>);
+    const placeOptions = placeName.map(d => <Option key={d.keyno} value={d.portc}>{d.portc}</Option>);
     // 申请人选项
     return (
       <PageHeaderWrapper
@@ -863,8 +951,8 @@ class ModifyForEntrustment extends PureComponent {
                     <AutoComplete
                       className="global-search"
                       dataSource={agentOptions}
-                      onChange={this.handleAgentSearch}
-                      onSearch={this.onAgentChange}
+                      onChange={this.onAgentChange}
+                      onSearch={this.handleAgentSearch}
                       placeholder="请输入代理人"
                     >
                       <Input />
@@ -1174,7 +1262,7 @@ class ModifyForEntrustment extends PureComponent {
                   {getFieldDecorator('inspplace1', {
                     rules: [],
                   })(
-                    <Cascader options={areaOptions} placeholder="请选择检验地点" />
+                    <Cascader options={areaOptions} placeholder="请选择检验地点" onChange={this.onChangeInspplace} />
                   )}
                 </Form.Item>
               </Col>
@@ -1188,7 +1276,15 @@ class ModifyForEntrustment extends PureComponent {
                   {getFieldDecorator('inspplace2', {
                     rules: [],
                   })(
-                    <Input placeholder="请输入详细地址" />
+                    <AutoComplete
+                      className="global-search"
+                      dataSource={placeOptions}
+                      onSearch={this.placeSearch}
+                      // onChange={this.onPlaceChange}
+                      placeholder="请输入详细地址"
+                    >
+                      <Input />
+                    </AutoComplete>
                   )}
                 </Form.Item>
               </Col>

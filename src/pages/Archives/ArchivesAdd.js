@@ -128,7 +128,7 @@ class ArchivesAdd extends PureComponent {
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  }
+  };
 
 
   init =() =>{
@@ -312,12 +312,15 @@ class ArchivesAdd extends PureComponent {
                   <Option value="shipname">船名标识</Option>
                   <Option value="cargoname">检查品名</Option>
                   <Option value="archiveplace">归档位置</Option>
+                  <Option value="cargo.cargosort">货物种类</Option>
+                  <Option value="inspectplace">检验地点</Option>
+                  <Option value="section">执行部门</Option>
                 </Select>
               )}
             </Form.Item>
           </Col>
 
-          <Col md={2} sm={20}>
+          <Col md={4} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
@@ -381,7 +384,7 @@ class ArchivesAdd extends PureComponent {
             </Form.Item>
           </Col>
 
-          <Col md={8} sm={20}>
+          <Col md={5} sm={20}>
             <span className={styles.submitButtons}>
               <Button type="primary" style={{ marginLeft: 45 }} htmlType="submit">
                 查询
@@ -446,11 +449,14 @@ class ArchivesAdd extends PureComponent {
                 <Option value="shipname">船名标识</Option>
                 <Option value="cargoname">检查品名</Option>
                 <Option value="archiveplace">归档位置</Option>
+                <Option value="cargo.cargosort">货物种类</Option>
+                <Option value="inspectplace">检验地点</Option>
+                <Option value="section">执行部门</Option>
               </Select>
             )}
           </Form.Item>
         </Col>
-        <Col md={2} sm={20}>
+        <Col md={4} sm={20}>
           <Form.Item
             style={{marginRight:8}}
             labelCol={{ span: 5 }}

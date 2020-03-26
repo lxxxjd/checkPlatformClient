@@ -172,6 +172,45 @@ export async function cancelReportItem(params) {
   });
 }
 
+// 查详细地址
+export async function getPortList(params) {
+  return request(`/api/port/getPortList`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function searchPortForEntrustment(params) {
+  return request(`/api/port/searchPortForEntrustment`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function searchByKindValue(params) {
+  return request(`/api/port/searchByKindValue`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function searchPlaceByPlaceCode(params) {
+  return request(`/api/port/searchPlaceByPlaceCode`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
+
 // 报关号查重
 export async function getRepeatCustomsNo(params) {
   return request(`/api/report/getRepeatCustomsNo?customsNo=${params.customsNo}`);
