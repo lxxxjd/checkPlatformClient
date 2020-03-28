@@ -259,7 +259,7 @@ class InspectorDetail extends PureComponent {
     },
     {
       title: '部门',
-      dataIndex: 'section',
+      dataIndex: 'usersection',
     },
     {
       title: '岗位',
@@ -290,7 +290,7 @@ class InspectorDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?[]:[<a onClick={() => this.handleEdit(true,text)}>编辑&nbsp;&nbsp;</a>]}
+          {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"|| this.state.selectedRowKeys.find(item => item === text.inspman)===undefined?[]:[<a onClick={() => this.handleEdit(true,text)}>编辑&nbsp;&nbsp;</a>]}
           <a onClick={() => this.handleReview(true,text)}>查看</a>
         </Fragment>
       ),
