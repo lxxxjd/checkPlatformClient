@@ -1,7 +1,7 @@
 import { queryReport, getCnasInfo} from '@/services/Entrustment';
 import { getCheckResult} from '@/services/CheckResult';
 import { getRecordInfo, getOssPdf} from '@/services/TestRecord';
-import { getTestByReportNo} from '@/services/TestInfo';
+import { getTestByReportNo,getTestByReportNoAndAssignsort} from '@/services/TestInfo';
 import { getCertFiles} from '@/services/Certificate';
 import { getTestBySampleNo, getAllSampleAndTestMan , getAllDetails, getAllSampleAndTestCompany} from '@/services/InspectionAnalysis'
 import { getPriceMakingList } from '@/services/Business'
@@ -15,6 +15,12 @@ export default {
   },
 
   effects: {
+
+    *getTestByReportNoAndAssignsort({ payload,callback }, { call, put }) {
+      const response = yield call(getTestByReportNoAndAssignsort, payload);
+      if (callback) callback(response);
+    },
+
     // 成本信息
     *getCostInfosFetch({ payload,callback }, { call, put }) {
       const response = yield call(getAllCost, payload);

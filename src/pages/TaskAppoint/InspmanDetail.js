@@ -280,7 +280,7 @@ class InspmanDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?[]:[<a onClick={() => this.handleEdit(true,text)}>编辑&nbsp;&nbsp;</a>]}
+          {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"|| this.state.selectedRowKeys.find(item => item === text.inspman)===undefined?[]:[<a onClick={() => this.handleEdit(true,text)}>编辑&nbsp;&nbsp;</a>]}
           <a onClick={() => this.handleReview(true,text)}>查看</a>
         </Fragment>
       ),
@@ -530,7 +530,7 @@ class InspmanDetail extends PureComponent {
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
-              {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"|| this.state.selectedRowKeys.find(item => item === text.inspman)===undefined?[]:<Button style={{ marginLeft: 8 }} type="primary" onClick={this.save}>保存</Button>}
+              {this.state.overallstate==="已发布"|| this.state.overallstate==="申请作废"?[]:<Button style={{ marginLeft: 8 }} type="primary" onClick={this.save}>保存</Button>}
               <Button style={{ marginLeft: 8  ,paddingLeft:0,paddingRight:15}} type="primary" onClick={this.back}><Icon type="left" />返回</Button>
             </span>
           </Col>

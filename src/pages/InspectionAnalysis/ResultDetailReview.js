@@ -12,7 +12,7 @@ import {
   Button,
   Table,
   Icon,
-  message,
+  message, Modal,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
@@ -83,18 +83,25 @@ class ResultDetailReview extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const sampleno = sessionStorage.getItem('sampleno');
-    dispatch({
-      type: 'inspectionAnalysis/reviewSampleRegister',
-      payload:{
-        reportno : reportno,
-        sampleno : sampleno ,
-      },
-      callback: (response) => {
-       if(response ==="success"){
-         message.success("复核通过");
-       }else{
-         message.error("操作失败")
-       }
+    Modal.confirm({
+      title: '确定审核通过吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'inspectionAnalysis/reviewSampleRegister',
+          payload:{
+            reportno : reportno,
+            sampleno : sampleno ,
+          },
+          callback: (response) => {
+            if(response ==="success"){
+              message.success("复核通过");
+            }else{
+              message.error("操作失败")
+            }
+          }
+        });
       }
     });
   };
@@ -103,18 +110,25 @@ class ResultDetailReview extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const sampleno = sessionStorage.getItem('sampleno');
-    dispatch({
-      type: 'inspectionAnalysis/returnSampleRegister',
-      payload:{
-        reportno : reportno,
-        sampleno : sampleno ,
-      },
-      callback: (response) => {
-        if(response ==="success"){
-          message.success("退回成功");
-        }else{
-          message.error("操作失败")
-        }
+    Modal.confirm({
+      title: '确定审核退回吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'inspectionAnalysis/returnSampleRegister',
+          payload:{
+            reportno : reportno,
+            sampleno : sampleno ,
+          },
+          callback: (response) => {
+            if(response ==="success"){
+              message.success("退回成功");
+            }else{
+              message.error("操作失败")
+            }
+          }
+        });
       }
     });
   };

@@ -11,6 +11,7 @@ export async function getBusinessSortList(params) {
   });
 }
 
+
 export async function addBusinessSort(params) {
   return request(`/api/business_sort/addBusinessSort`,{
     method: 'POST',
@@ -82,4 +83,5 @@ export async function deleteBusinessSource(params) {
 export async function getPriceMakingList(params) {
   return request(`/api/pricemaking/getPriceMakingList?reportno=${params.reportno}`);
 }
+
 

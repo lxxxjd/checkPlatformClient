@@ -16,7 +16,7 @@ import {
   DatePicker,
   Radio,
   notification,
-  message,
+  message, InputNumber,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -41,6 +41,9 @@ class InspectionArrangement extends PureComponent {
     allCompanyName:[],
     selectEntrustment:null,
     showPrice:true,
+
+    modalText:{},
+
   };
 
   columns = [
@@ -187,6 +190,7 @@ class InspectionArrangement extends PureComponent {
   };
 
   show = text =>{
+    this.setState({modalText:text});
     if(text.testman===null||text.testman===undefined){
       if(text.state ==="已登记"){
         Modal.confirm({
@@ -240,6 +244,34 @@ class InspectionArrangement extends PureComponent {
   handleCancel = () =>{
     this.setState({ visible: false });
   };
+
+  sumPrice= (value) =>{
+    console.log(this.state.modalText)
+    const {
+      form
+    } = this.props;
+    const quantity = this.state.modalText.quantityd;
+    const price = value;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['totalfee']: total});
+    }
+  };
+
+  sum = () =>{
+    const {
+      form
+    } = this.props;
+    const price = form.getFieldValue('price');
+    const quantity = this.state.modalText.quantityd;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['totalfee']: total});
+    }
+  };
+
 
   render() {
     const {
@@ -318,7 +350,7 @@ class InspectionArrangement extends PureComponent {
                       ? [{ required: 'true', message: '请输入单价' }]
                       : []
                     })(
-                      <Input placeholder="请输入单价" />
+                      <InputNumber style={{width:'100%'}} placeholder="请输入单价" min={0} step={0.01} onChange={this.sumPrice} />
                      )
                     }
                   </Form.Item>
@@ -328,7 +360,7 @@ class InspectionArrangement extends PureComponent {
                 {getFieldDecorator('totalfee', {
                   rules: [{ required: true, message: '请输入总计费用' }],
                 })(
-                      <Input placeholder="请输入总计费用" />
+                  <InputNumber style={{width:'100%'}} placeholder="请输入总计费用" min={0} step={0.01} onBlur={this.sum} />
                   )}
               </Form.Item>
               <Form.Item label=" 备注">

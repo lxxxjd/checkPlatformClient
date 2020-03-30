@@ -117,17 +117,24 @@ class ListFictionReview extends PureComponent {
     let  values = this.state.list;
     values.paystatus=state;
     values.reviewMan=user.nameC;
-    dispatch({
-      type: 'charge/passListFictionFetch',
-      payload:values,
-      callback: (response) => {
-        if(response==="success"){
-          localStorage.setItem("listListFictionReview",JSON.stringify(values));
-          this.state.list = values;
-          message.success(text);
-        }else{
-          message.success('操作失败');
-        }
+    Modal.confirm({
+      title: `确定${state}吗？`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'charge/passListFictionFetch',
+          payload:values,
+          callback: (response) => {
+            if(response==="success"){
+              localStorage.setItem("listListFictionReview",JSON.stringify(values));
+              this.state.list = values;
+              message.success(text);
+            }else{
+              message.success('操作失败');
+            }
+          }
+        });
       }
     });
   };

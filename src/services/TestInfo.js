@@ -93,3 +93,8 @@ export async function deleteReportLink(params) {
 export async function getCheckProject() {
   return request('/api/check_project/get_project');
 }
+
+
+export async function getTestByReportNoAndAssignsort(params) {
+  return request(`/api/TestInfo/getTestByReportNoAndAssignsort?reportno=${params.reportno}&assignsort=${params.assignsort}`);
+}

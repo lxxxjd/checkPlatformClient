@@ -307,17 +307,29 @@ class ReportPriceMakingQuery extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="horizontal">
         {/* 检验总额 利润总额 平均利润率 */}
-        <Row gutter={16}>
+
+        <h3 style={{margin:5,fontWeight:'bold'}}>统计结果:</h3>
+        <Row gutter={16} style={{marginBottom:5,marginLeft:100,marginRight:100}}>
           <Col span={8}>
-            <div>检验总额：{reportPriceMakingWithProfitResult.checkSum}</div>
+            <h4 style={{fontWeight:'bold'}}>
+              检验总额：{reportPriceMakingWithProfitResult.checkSum===undefined?"":
+              reportPriceMakingWithProfitResult.checkSum}
+            </h4>
           </Col>
           <Col span={8}>
-            <div>利润总额：{reportPriceMakingWithProfitResult.totalProfit}</div>
+            <h4 style={{fontWeight:'bold'}}>
+              利润总额：{reportPriceMakingWithProfitResult.totalProfit===undefined?"":
+              reportPriceMakingWithProfitResult.totalProfit}
+            </h4>
           </Col>
           <Col span={8}>
-            <div>平均利润率：{reportPriceMakingWithProfitResult.averageProfitRate}</div>
+            <h4 style={{fontWeight:'bold'}}>
+              平均利润率：{reportPriceMakingWithProfitResult.averageProfitRate===undefined?"":
+              reportPriceMakingWithProfitResult.averageProfitRate}
+            </h4>
           </Col>
         </Row>
+
         {/* 利润率 */}
         <Row gutter={16}>
           <Col span={4}>
@@ -330,6 +342,8 @@ class ReportPriceMakingQuery extends PureComponent {
                 rules: [],
               })(
                 <InputNumber
+                  min={0}
+                  max={100}
                   formatter={value => `${value}%`}
                   parser={value => value.replace('%', '')}
                 />)
@@ -347,6 +361,8 @@ class ReportPriceMakingQuery extends PureComponent {
                 rules: [],
               })(
                 <InputNumber
+                  min={0}
+                  max={100}
                   formatter={value => `${value}%`}
                   parser={value => value.replace('%', '')}
                 />)

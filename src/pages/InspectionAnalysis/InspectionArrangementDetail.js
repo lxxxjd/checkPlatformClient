@@ -118,7 +118,7 @@ class InspectionArrangementDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>检验人员</a>
+          <a onClick={() => this.mobileItem(text, record)}>修改</a>
           &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
           &nbsp;&nbsp;

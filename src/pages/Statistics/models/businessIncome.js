@@ -1,4 +1,4 @@
-import {selectBusinessIncomesByConditions, selectBusinessIncomeTotalByConditions, downloadBusinessIncomesAsExcelByConditions} from '@/services/Report';
+import {selectBusinessIncomesByConditions, selectBusinessIncomeTotalByConditions, downloadBusinessIncomesAsExcelByConditions,downloadFile} from '@/services/Report';
 
 export default {
   namespace: 'businessIncome',
@@ -32,12 +32,16 @@ export default {
 
     * downloadBusinessIncomesAsExcelByConditions({payload, callback}, {call, put}){
       const response = yield call(downloadBusinessIncomesAsExcelByConditions, payload);
-      yield put({
-        type: 'downloadBusinessIncomesAsExcelByConditionsResult',
-        payload: response
-      });
-      if(callback) callback(response.data);
+      if(callback) callback(response);
     },
+
+    * downloadFile({payload, callback}, {call, put}){
+      const response = yield call(downloadFile, payload);
+      if(callback) callback(response);
+    },
+
+
+
 
   },
 

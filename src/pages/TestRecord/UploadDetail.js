@@ -150,7 +150,7 @@ class UploadDetail extends PureComponent {
       title: '上传日期',
       dataIndex: 'recorddate',
       render: val => <span>{
-         moment(val).format('YYYY-MM-DD')
+        moment(val).format('YYYY-MM-DD')
       }</span>
     },
     {

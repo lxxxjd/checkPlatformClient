@@ -10,13 +10,14 @@ import {
   Input,
   Button,
   Select,
-  Table, message, DatePicker,
+  Table, message, DatePicker, Switch, Icon, Modal,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
+import queryStyles from './ReportPriceMakingQuery.less';
 
 const { Option } = Select;
-
+const FormItem = Form.Item;
 let id = 0;
 
 /* eslint react/no-multi-comp:0 */
@@ -43,8 +44,8 @@ class BusinessIncomeQuery extends PureComponent {
       render: val => <span>{ moment(val).format('YYYY-MM-DD')}</span>,
     },
     {
-      title: '委托人',
-      dataIndex: 'reportMan',
+      title: '申请人',
+      dataIndex: 'applicant',
     },
     {
       title: '检查品名',
@@ -66,10 +67,10 @@ class BusinessIncomeQuery extends PureComponent {
       title: '清单号',
       dataIndex: 'listNo',
     },
-    {
-      title: '发票号',
-      dataIndex: 'invoiceNo',
-    },
+    // {
+    //   title: '发票号',
+    //   dataIndex: 'invoiceNo',
+    // },
     {
       title: '到账状态',
       dataIndex: 'payStatus',
@@ -82,8 +83,6 @@ class BusinessIncomeQuery extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {(record.paystatus==='未审核'||text.paystatus==='审核退回')?[ <span><a onClick={() => this.deleteBylistno(text, record)}>删除</a></span>]:null}
-          &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text)}>查看</a>
         </Fragment>
       ),
@@ -102,6 +101,9 @@ class BusinessIncomeQuery extends PureComponent {
       type: 'businessIncome/selectBusinessIncomesByConditions',
       payload:{
         certCode:user.certCode
+      },
+      callback: (response) => {
+        this.state.selectBusinessIncomesByConditionsResult = response;
       }
     });
   };
@@ -118,17 +120,239 @@ class BusinessIncomeQuery extends PureComponent {
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err){
+        console.log(err);
+        return;
+      }
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const mkinds=[];
+      const mvalues=[];
+      const mconditions=[];
+
+      // 日期条件，日期间隔
+      if(fieldsValue.statisticFields !== undefined){
+        if(fieldsValue.statisticDateRange !== undefined && fieldsValue.statisticDateRange.length!==0){
+          if(fieldsValue.statisticFields==="reportdate"){
+            mkinds.push("m.reportdate");
+            mkinds.push("m.reportdate");
+            mconditions.push(">=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[0]).format('YYYY-MM-DD'));
+            mconditions.push("<=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[1]).format('YYYY-MM-DD'));
+          }else{
+            mkinds.push("m.overalltime");
+            mkinds.push("m.overalltime");
+            mkinds.push("m.overallstate");
+            mconditions.push(">=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[0]).format('YYYY-MM-DD'));
+            mconditions.push("<=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[1]).format('YYYY-MM-DD'));
+            mconditions.push("=");
+            mvalues.push(fieldsValue.statisticFields);
+          }
+        }
+      }
+
+      const keys = form.getFieldValue('keys');
+      for(const key in keys){
+        const k = keys[key];
+        console.log(k);
+        const kind = form.getFieldValue(`kinds${k}`);
+        const condition = form.getFieldValue(`conditions${k}`);
+        const value = form.getFieldValue(`values${k}`);
+        const checkk = form.getFieldValue(`check${k}`);
+        if( checkk ===true &&  kind!==undefined &&value !==undefined &&condition !== undefined ){
+          mkinds.push(kind);
+          mvalues.push(value);
+          mconditions.push(condition);
+        }
+      }
+      const params = {
+        kinds :mkinds,
+        values: mvalues,
+        conditions: mconditions,
+        certCode: user.certCode,
+      };
+      dispatch({
+        type: 'businessIncome/selectBusinessIncomesByConditions',
+        payload: params,
+        callback: (response) => {
+          this.state.selectBusinessIncomesByConditionsResult = response;
+          dispatch({
+            type: 'businessIncome/selectBusinessIncomeTotalByConditions',
+            payload: params,
+            callback: (response2) => {
+              this.state.selectBusinessIncomeTotalByConditionsResult = response2;
+            }
+          });
+        }
+      });
+     });
   };
 
   // 查询总额
   handleTotalSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err){
+        console.log(err);
+        return;
+      }
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const mkinds=[];
+      const mvalues=[];
+      const mconditions=[];
+
+
+
+      // 日期条件，日期间隔
+      if(fieldsValue.statisticFields !== undefined){
+        if(fieldsValue.statisticDateRange !== undefined && fieldsValue.statisticDateRange.length!==0){
+          if(fieldsValue.statisticFields==="reportdate"){
+            mkinds.push("m.reportdate");
+            mkinds.push("m.reportdate");
+            mconditions.push(">=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[0]).format('YYYY-MM-DD'));
+            mconditions.push("<=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[1]).format('YYYY-MM-DD'));
+          }else{
+            mkinds.push("m.overalltime");
+            mkinds.push("m.overalltime");
+            mkinds.push("m.overallstate");
+            mconditions.push(">=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[0]).format('YYYY-MM-DD'));
+            mconditions.push("<=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[1]).format('YYYY-MM-DD'));
+            mconditions.push("=");
+            mvalues.push(fieldsValue.statisticFields);
+          }
+        }
+      }
+
+      const keys = form.getFieldValue('keys');
+      for(const key in keys){
+        const k = keys[key];
+        console.log(k);
+        const kind = form.getFieldValue(`kinds${k}`);
+        const condition = form.getFieldValue(`conditions${k}`);
+        const value = form.getFieldValue(`values${k}`);
+        const checkk = form.getFieldValue(`check${k}`);
+        if( checkk ===true &&  kind!==undefined &&value !==undefined &&condition !== undefined ){
+          mkinds.push(kind);
+          mvalues.push(value);
+          mconditions.push(condition);
+        }
+      }
+      const params = {
+        kinds :mkinds,
+        values: mvalues,
+        conditions: mconditions,
+        certCode: user.certCode,
+      };
+      dispatch({
+        type: 'businessIncome/selectBusinessIncomeTotalByConditions',
+        payload: params,
+        callback: (response2) => {
+          this.state.selectBusinessIncomeTotalByConditionsResult = response2;
+        }
+      });
+    });
+  };
+
+  handleConfirmExport = (e) => {
+    const {  form } = this.props;
+    Modal.confirm({
+      title: '确定要导出业务记录吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        this.handleExport(e,form);
+      }
+    });
   };
 
   // 导出excel表格
-  handleExport = () => {
+  handleExport = (e,form) => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      const mkinds = [];
+      const mvalues = [];
+      const mconditions = [];
+      // 日期条件，日期间隔
+      if (fieldsValue.statisticFields !== undefined) {
+        if (fieldsValue.statisticDateRange !== undefined && fieldsValue.statisticDateRange.length !== 0) {
+          if (fieldsValue.statisticFields === "reportdate") {
+            mkinds.push("m.reportdate");
+            mkinds.push("m.reportdate");
+            mconditions.push(">=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[0]).format('YYYY-MM-DD'));
+            mconditions.push("<=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[1]).format('YYYY-MM-DD'));
+          } else {
+            mkinds.push("m.overalltime");
+            mkinds.push("m.overalltime");
+            mkinds.push("m.overallstate");
+            mconditions.push(">=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[0]).format('YYYY-MM-DD'));
+            mconditions.push("<=");
+            mvalues.push(moment(fieldsValue.statisticDateRange[1]).format('YYYY-MM-DD'));
+            mconditions.push("=");
+            mvalues.push(fieldsValue.statisticFields);
+          }
+        }
+      }
 
+      const keys = form.getFieldValue('keys');
+      for (const key in keys) {
+        const k = keys[key];
+        console.log(k);
+        const kind = form.getFieldValue(`kinds${k}`);
+        const condition = form.getFieldValue(`conditions${k}`);
+        const value = form.getFieldValue(`values${k}`);
+        const checkk = form.getFieldValue(`check${k}`);
+        if (checkk === true && kind !== undefined && value !== undefined && condition !== undefined) {
+          mkinds.push(kind);
+          mvalues.push(value);
+          mconditions.push(condition);
+        }
+      }
+      const params = {
+        kinds: mkinds,
+        values: mvalues,
+        conditions: mconditions,
+        certCode: user.certCode,
+      };
+      message.success("正在下载文件，请稍后！")
+      const reqUrl = `/api/template/downloadBusinessIncomesAsExcelByConditions`;
+      fetch(reqUrl, {
+        method:'post',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify(params),
+      }).then((response) => {
+        response.blob().then(blob => {
+          let blobUrl = window.URL.createObjectURL(blob);
+          const filename = '导出记录.xls';
+          const aElement = document.createElement('a');
+          document.body.appendChild(aElement);
+          aElement.style.display = 'none';
+          aElement.href = blobUrl;
+          aElement.download = filename;
+          aElement.click();
+          document.body.removeChild(aElement);
+        });
+      }).catch((error) => {
+        console.log('文件下载失败', error);
+      });
+    });
   };
 
   handleFormReset = () => {
@@ -147,19 +371,28 @@ class BusinessIncomeQuery extends PureComponent {
     } = this.props;
     const { RangePicker } = DatePicker;
     const {selectBusinessIncomeTotalByConditionsResult} = this.state;
-    const {selectBusinessIncomesByConditionsResult} = this.state;
 
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={16}>
+        <h3 style={{margin:5,fontWeight:'bold'}}>统计结果:</h3>
+        <Row gutter={16} style={{marginBottom:5,marginLeft:100,marginRight:100}}>
           <Col span={8}>
-            <div>申报数量总和：{selectBusinessIncomeTotalByConditionsResult.declaredQuantityTotal}</div>
+            <h4 style={{fontWeight:'bold'}}>
+              申报数量总和：{selectBusinessIncomeTotalByConditionsResult.declaredQuantityTotal===undefined?"":
+              selectBusinessIncomeTotalByConditionsResult.declaredQuantityTotal}
+            </h4>
           </Col>
           <Col span={8}>
-            <div>批次总和：{selectBusinessIncomeTotalByConditionsResult.recordQuantityTotal}</div>
+            <h4 style={{fontWeight:'bold'}}>
+              批次总和：{selectBusinessIncomeTotalByConditionsResult.recordQuantityTotal===undefined?"":
+              selectBusinessIncomeTotalByConditionsResult.recordQuantityTotal}
+            </h4>
           </Col>
           <Col span={8}>
-            <div>检验费总和：{selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal}</div>
+            <h4 style={{fontWeight:'bold'}}>
+              检验费总和：{selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal===undefined?"":
+              selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal}
+            </h4>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -205,11 +438,14 @@ class BusinessIncomeQuery extends PureComponent {
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleTotalSearch}>
                 查询总额
               </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleConfirmExport}>
+                导出
+              </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleAdvanceSearch}>
                 高级检索
               </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleExport}>
-                导出
+              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+                重置
               </Button>
             </span>
           </Col>
@@ -268,14 +504,97 @@ class BusinessIncomeQuery extends PureComponent {
 
   render() {
     const {
-      businessIncome:{selectBusinessIncomesByConditionsResult},
       loading,
     } = this.props;
+    const {selectBusinessIncomesByConditionsResult} = this.state;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
+    getFieldDecorator('keys', { initialValue: [] });
+    const keys = getFieldValue('keys');
+    const formItems = keys.map((k, index) => (
+      <div>
+        { index %2===0 && keys.length!==0? (
+          <Row className={queryStyles.rowClass} />
+        ) : null}
+        <Col md={1} sm={20}>
+          <Form.Item
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 6 }}
+            colon={false}
+          >
+            {getFieldDecorator(`check${k}`, {
+              initialValue: true,
+              valuePropName: 'checked',
+            })(
+              <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked />
+            )}
+          </Form.Item>
+        </Col>
+        <Col md={3} sm={20}>
+          <Form.Item
+            style={{marginRight:8}}
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 6 }}
+          >
+            {getFieldDecorator(`kinds${k}`, {
+              rules: [{  message: '选择字段' }],
+            })(
+              <Select placeholder="选择字段" style={{width:'100%'}}>
+                <Option value="m.reportno"> 委托编号</Option>
+                <Option value="m.reportno20"> 自编号</Option>
+                <Option value="m.shipname"> 船名标识</Option>
+                <Option value="m.applicant">委托人</Option>
+                <Option value="m.agent">代理人</Option>
+                <Option value="m.businesssort">业务类别</Option>
+                <Option value="m.businesssource">业务来源</Option>
+                <Option value="m.tradeway">贸易方式</Option>
+                <Option value="m.cargoname">检查品名</Option>
+                <Option value="m.cargosort">货物种类</Option>
+                <Option value="m.cnasProject">CNAS检查项目</Option>
+                <Option value="m.cnasCode">CNAS编码</Option>
+                <Option value="m.inspectplace">检验地点</Option>
+                <Option value="m.section">执行部门</Option>
+              </Select>
+            )}
+          </Form.Item>
+        </Col>
+        <Col md={3} sm={20}>
+          <Form.Item
+            style={{marginRight:8}}
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 6 }}
+          >
+            {getFieldDecorator(`conditions${k}`, {
+              rules: [{  message: '选择条件' }],
+            })(
+              <Select placeholder="选择条件" style={{width:'100%'}}>
+                <Option value="=">等于</Option>
+                <Option value="!=">不等于</Option>
+                <Option value="like">包含</Option>
+                <Option value="not like">不包含</Option>
+              </Select>
+            )}
+          </Form.Item>
+        </Col>
+        <Col md={4} sm={10}>
+          <FormItem>
+            {getFieldDecorator(`values${k}`,{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
+          </FormItem>
+        </Col>
+        <Col md={1} sm={5}>
+          {keys.length >= 1 ? (
+            <Icon style={{fontSize:24,marginLeft:8}} type="minus-circle" theme='twoTone' twoToneColor="#ff0000" onClick={() => this.remove(k)} />
+          ) : null}
+        </Col>
+      </div>
+    ));
+
+
     return (
       <PageHeaderWrapper>
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <Row className={styles.tableListForm}>{formItems}</Row>
             <Table
               size="middle"
               loading={loading}

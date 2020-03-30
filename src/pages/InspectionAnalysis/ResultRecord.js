@@ -73,6 +73,10 @@ class ResultRecord extends PureComponent {
       render: val => this.isValidDate(val),
     },
     {
+      title: '上传人',
+      dataIndex: 'creator',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
@@ -92,6 +96,10 @@ class ResultRecord extends PureComponent {
       title: '上传日期',
       dataIndex: 'recorddate',
       render: val => this.isValidDate(val),
+    },
+    {
+      title: '上传人',
+      dataIndex: 'creator',
     },
     {
       title: '操作',
@@ -205,6 +213,7 @@ class ResultRecord extends PureComponent {
       dispatch,
     } = this.props;
     const reportno = sessionStorage.getItem('reportno');
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         let formData = new FormData();
@@ -214,6 +223,7 @@ class ResultRecord extends PureComponent {
         formData.append('reportno', reportno);
         formData.append('source', '测试报告');
         formData.append('fileName', values.recordname);
+        formData.append('creator', user.nameC);
         dispatch({
           type: 'testRecord/uploadFile',
           payload : formData,

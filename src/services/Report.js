@@ -52,5 +52,8 @@ export async function selectReportPriceMakingByConditionsWithProfit(params){
     },
   });
 }
+export async function downloadFile(params) {
+  return request(`/api/test/download`);
+}
 
 

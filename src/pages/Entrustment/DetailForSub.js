@@ -42,6 +42,7 @@ class DetailForSub extends PureComponent {
     overallstate:undefined,
 
     isViewCompany:false,
+    dataSource:[],
 
   };
 
@@ -120,12 +121,7 @@ class DetailForSub extends PureComponent {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
     const reportno = sessionStorage.getItem('reportno');
-    dispatch({
-      type: 'testInfo/getTestByReportNo',
-      payload:{
-         reportno : reportno,
-      }
-    });
+    this.init();
     dispatch({
       type: 'testInfo/getCompany',
       payload: {
@@ -177,6 +173,24 @@ class DetailForSub extends PureComponent {
       }
     });
   };
+
+  init =()=>{
+    const {dispatch} = this.props;
+    const reportno = sessionStorage.getItem('reportno');
+    dispatch({
+      type: 'testInfo/getTestByReportNoAndAssignsort',
+      payload:{
+        reportno,
+        assignsort : '转委托',
+      },
+      callback: (response) => {
+        if(response.code===200){
+          this.setState({dataSource:response.data});
+        }
+      }
+    });
+  };
+
   modifyItem = text => {
     const { form } = this.props;
     this.setState({visible:true});
@@ -206,24 +220,40 @@ class DetailForSub extends PureComponent {
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         // 设置操作用户
-        values.nameC = JSON.parse(localStorage.getItem("userinfo")).nameC;
+        let nameC = JSON.parse(localStorage.getItem("userinfo")).nameC;
         if(selectEntrustment&&typeof(selectEntrustment) !== "undefined"){
           values.keyno = selectEntrustment.keyno;
           values.reportno = selectEntrustment.reportno;
-          values.assignman = selectEntrustment.assignman;
+          values.assignman = nameC;
           values.inspway = values.inspway.join(" ");
           dispatch({
             type: 'testInfo/updateTestInfo',
             payload: values,
+            callback: (response) => {
+              this.init();
+              if (response.code === 200) {
+                notification.open({
+                  message: '添加成功',
+                });
+              } else {
+                notification.open({
+                  message: '添加失败',
+                  description: response.data,
+                });
+              }
+            }
           });
+
         }else{
           const reportno = sessionStorage.getItem('reportno');
           values.reportno = reportno;
           values.inspway = values.inspway.join(" ");
+          values.assignman = nameC;
           dispatch({
             type: 'testInfo/addTestInfo',
             payload: values,
             callback: (response) => {
+              this.init();
               if (response.code === 200) {
                 notification.open({
                   message: '添加成功',
@@ -237,6 +267,7 @@ class DetailForSub extends PureComponent {
             }
           });
         }
+
         this.setState({ selectEntrustment: null });
         this.setState({ visible: false });
         form.resetFields();
@@ -309,7 +340,6 @@ class DetailForSub extends PureComponent {
 
   render() {
     const {
-      testInfo: {TestInfo},
       loading,
       form: { getFieldDecorator },
     } = this.props;
@@ -321,7 +351,7 @@ class DetailForSub extends PureComponent {
       shipname,
       applicant,
     };
-    const {  showPrice,checkProject,allCompanyName,visible} = this.state;
+    const {  showPrice,checkProject,allCompanyName,visible,dataSource} = this.state;
     const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper text = {reprotText}>
@@ -438,7 +468,7 @@ class DetailForSub extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={TestInfo}
+              dataSource={dataSource}
               columns={this.state.overallstate==="已发布"||this.state.overallstate==="申请作废"?this.columns2:this.columns}
               rowKey="testman"
               pagination={{showQuickJumper:true,showSizeChanger:true}}

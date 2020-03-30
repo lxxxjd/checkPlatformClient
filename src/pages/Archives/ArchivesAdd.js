@@ -243,7 +243,7 @@ class ArchivesAdd extends PureComponent {
 
   onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRowKeys });
-  }
+  };
 
 
   handleAdd = (fields) => {
@@ -280,7 +280,7 @@ class ArchivesAdd extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-  }
+  };
 
 
   handleModalVisible = (flag) => {
@@ -420,7 +420,26 @@ class ArchivesAdd extends PureComponent {
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
-    }
+      hideDefaultSelections: true,
+      selections: [
+        {
+          text: '全选',
+          onSelect: changableRowKeys => {
+            let newSelectedRowKeys=[];
+            for(let i=0;i<dataSource.length;i++){
+              newSelectedRowKeys.push(dataSource[i].reportno);
+            }
+            this.setState({ selectedRowKeys: newSelectedRowKeys });
+          },
+        },
+        {
+          text: '全不选',
+          onSelect: changableRowKeys => {
+            this.setState({ selectedRowKeys: [] });
+          },
+        },
+      ],
+    };
 
     const {  modalVisible } = this.state;
     const parentMethods = {

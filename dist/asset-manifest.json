@@ -146,7 +146,6 @@
   "/p__Statistics__CostQueryDetail.js": "/p__Statistics__CostQueryDetail.async.js",
   "/p__Statistics__ExpenditureBurdenQuery.js": "/p__Statistics__ExpenditureBurdenQuery.async.js",
   "/p__Statistics__IncomeDistributionQuery.js": "/p__Statistics__IncomeDistributionQuery.async.js",
-  "/p__Statistics__ReportPriceMakingQuery.css": "/p__Statistics__ReportPriceMakingQuery.chunk.css",
   "/p__Statistics__ReportPriceMakingQuery.js": "/p__Statistics__ReportPriceMakingQuery.async.js",
   "/p__Statistics__ReportPriceMakingQueryDetail.js": "/p__Statistics__ReportPriceMakingQueryDetail.async.js",
   "/p__Statistics__models__BusinessIncomeDetail.js.js": "/p__Statistics__models__BusinessIncomeDetail.js.async.js",

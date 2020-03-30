@@ -117,6 +117,10 @@ class BusinessIncomeDetail extends Component {
       }
     },
     {
+      title: '上传人',
+      dataIndex: 'creator',
+    },
+    {
       title: '操作',
       render: (text, record) => (
         <Fragment>
@@ -189,30 +193,31 @@ class BusinessIncomeDetail extends Component {
 
   columns4 = [
     {
-      title: '分包日期',
-      dataIndex: 'assigndate',
-      render: val => {
-        if(val != null){
-          return <span>{moment(val).format('YYYY-MM-DD')}</span>
-        }
-      }
-    },
-    {
-      title: '实验室',
+      title: '实验室/检验机构',
       dataIndex: 'testman',
     },
-    // {
-    //   title: '状态日期',
-    //   dataIndex: 'recorddate',
-    //   render: val => {
-    //     if(val != null){
-    //       return <span>{moment(val).format('YYYY-MM-DD')}</span>
-    //     }
-    //   }
-    // },
+    {
+      title: '分包日期',
+      dataIndex: 'assigndate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '计价方式',
+      dataIndex: 'priceway',
+    },
+    {
+      title: '单价',
+      dataIndex: 'price',
+    },
+    {
+      title: '总价',
+      dataIndex: 'totalfee',
+    },
     {
       title: '状态',
-      dataIndex: 'state',
+      dataIndex: 'reviewstatus',
     },
   ];
 
@@ -379,9 +384,10 @@ class BusinessIncomeDetail extends Component {
       }
     });
     dispatch({
-      type: 'businessIncomeDetail/getTestByReportNo',
+      type: 'businessIncomeDetail/getTestByReportNoAndAssignsort',
       payload:{
          reportno,
+        assignsort:'转委托',
       },
       callback:response=>{
         if(response.code === 200){
@@ -425,11 +431,10 @@ class BusinessIncomeDetail extends Component {
       }
     });
     dispatch({
-      type: 'businessIncomeDetail/getAllSampleAndTestCompany',
+      type: 'businessIncomeDetail/getTestByReportNoAndAssignsort',
       payload:{
-         certCode : user.certCode,
-         kind:'sr.reportno',
-         value:reportno
+        reportno,
+        assignsort:'品质分包',
       },
       callback:response=>{
         if(response.code === 200){
@@ -569,8 +574,8 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
             <Descriptions.Item label="申报数量和单位">{((report.quantityd === undefined || report.quantityd === null ) ? "":report.quantityd  )+report.unit }</Descriptions.Item>
             <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
-            <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
-            <Descriptions.Item label="检验地点">{report.inspplace1}</Descriptions.Item>
+            <Descriptions.Item label="检验港口">{report.fromto}</Descriptions.Item>
+            <Descriptions.Item label="检验地点">{report.inspectplace}</Descriptions.Item>
           </Descriptions>
         </Card>
         <Card title="检查项目" className={styles.card} bordered={false}>
@@ -665,7 +670,7 @@ class BusinessIncomeDetail extends Component {
             <Table
               size="middle"
               loading={loading}
-              dataSource={sampleCompany.list}
+              dataSource={sampleCompany}
               columns={this.columns4}
               rowKey="recordname"
               pagination={{showQuickJumper:true,showSizeChanger:true}}
