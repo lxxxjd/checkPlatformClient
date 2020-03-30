@@ -23,6 +23,7 @@ import styles from './FinalPrice.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const {TextArea} = Input;
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ charge, loading }) => ({
@@ -58,6 +59,9 @@ class FinalPriceDetail extends PureComponent {
             this.setState({value:response.data.priceway.trim()});
             form.setFieldsValue({
               'total': response.data.total,
+            });
+            form.setFieldsValue({
+              'remark': response.data.remark,
             });
             this.setState({priceway:response.data.priceway.trim()});
             if(response.data.priceway.trim() === "按单价"){
@@ -391,6 +395,12 @@ class FinalPriceDetail extends PureComponent {
             </Form.Item>
           </Form>]:[]
           }
+            <Form.Item label="备注">
+              {getFieldDecorator('remark', {
+              })(
+                <TextArea style={{ width: '25%',minHeight: 32 }} placeholder="请输入备注不超过50个字" rows={5} />
+              )}
+            </Form.Item>
           </Card>
         </Card>
       </PageHeaderWrapper>

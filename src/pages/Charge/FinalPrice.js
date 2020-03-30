@@ -73,9 +73,8 @@ class FinalPrice extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>编辑</a>
-          &nbsp;&nbsp;
-          {text.status==="已定价"?[<a onClick={() => this.detailItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
+          {text.status==="未定价"||text.status==="已定价未拟制"?[<a onClick={() => this.mobileItem(text, record)}>编辑&nbsp;&nbsp;</a>]:[]}
+          {text.status!=="未定价"?[<a onClick={() => this.detailItem(text, record)}>查看&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),

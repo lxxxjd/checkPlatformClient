@@ -22,6 +22,7 @@ import styles from './FinalPrice.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
+const {TextArea} = Input;
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ charge, loading }) => ({
@@ -382,6 +383,12 @@ class FinalPriceAdd extends PureComponent {
                 </Form.Item>
               </Form>] : []
             }
+            <Form.Item label="备注">
+              {getFieldDecorator('remark', {
+              })(
+                <TextArea style={{ width: '25%',minHeight: 32 }} placeholder="请输入备注不超过50个字" rows={5} />
+              )}
+            </Form.Item>
           </Card>
         </Card>
       </PageHeaderWrapper>

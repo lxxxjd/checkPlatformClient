@@ -131,7 +131,15 @@ class ListFictionReviewBack extends PureComponent {
   };
 
   handleNoPass = () => {
-    this.handleReview('审核退回',"审核退回成功");
+    Modal.confirm({
+      title: '确定退回吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        this.handleReview('审核退回',"审核退回成功");
+      }
+    });
+
   };
 
 
