@@ -246,16 +246,17 @@ class IncomeDistributionQuery extends PureComponent {
 
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={16}>
-          <Col span={8}>
-            <div>开票总额：{selectListInfoTotalByConditionsResult!==undefined && selectListInfoTotalByConditionsResult!== null?selectListInfoTotalByConditionsResult.billingTotal:0}</div>
+        <h3 style={{margin:5,fontWeight:'bold'}}>统计结果:</h3>
+        <Row gutter={16} style={{marginBottom:5,marginLeft:200,marginRight:200}}>
+          <Col span={12}>
+            <h4 style={{fontWeight:'bold'}}>开票总额：{selectListInfoTotalByConditionsResult!==undefined && selectListInfoTotalByConditionsResult!== null?selectListInfoTotalByConditionsResult.billingTotal:0}</h4>
           </Col>
-          <Col span={8}>
-            <div>到账总额：{selectListInfoTotalByConditionsResult!==undefined && selectListInfoTotalByConditionsResult!== null?selectListInfoTotalByConditionsResult.receivedTotal:0}</div>
+          <Col span={12}>
+            <h4 style={{fontWeight:'bold'}}>到账总额：{selectListInfoTotalByConditionsResult!==undefined && selectListInfoTotalByConditionsResult!== null?selectListInfoTotalByConditionsResult.receivedTotal:0}</h4>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={6}>
+          <Col span={9}>
             <Form.Item
               label="进账账户"
             >
@@ -276,7 +277,10 @@ class IncomeDistributionQuery extends PureComponent {
           </Col>
           <Col span={5}>
             <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
+              <Button style={{ marginLeft: 0 }} onClick={this.handleFormReset}>
+                重置
+              </Button>
+              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit">
                 查询
               </Button>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleTotalSearch}>

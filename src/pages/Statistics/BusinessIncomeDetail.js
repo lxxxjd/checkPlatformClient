@@ -710,7 +710,7 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="拟单人">{pricemaking.listman}</Descriptions.Item>
             <Descriptions.Item label="拟单号">{pricemaking.listno}</Descriptions.Item>
             <Descriptions.Item label="发票日期">{pricemaking.invoiceDate !== null ? moment(pricemaking.invoiceDate).format('YYYY-MM-DD'):null}</Descriptions.Item>
-            <Descriptions.Item label="开票人">{pricemaking.invoiceno}</Descriptions.Item>
+            <Descriptions.Item label="开票人">{pricemaking.invoiceMan}</Descriptions.Item>
             <Descriptions.Item label="发票号码">{pricemaking.invoiceno}</Descriptions.Item>
             <Descriptions.Item label="到账日期">{pricemaking.paydate !== null ? moment(pricemaking.paydate).format('YYYY-MM-DD'):null}</Descriptions.Item>
             <Descriptions.Item label="到账日期">{pricemaking.listman}</Descriptions.Item>

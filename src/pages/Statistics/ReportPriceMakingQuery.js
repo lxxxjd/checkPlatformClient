@@ -312,19 +312,19 @@ class ReportPriceMakingQuery extends PureComponent {
         <Row gutter={16} style={{marginBottom:5,marginLeft:100,marginRight:100}}>
           <Col span={8}>
             <h4 style={{fontWeight:'bold'}}>
-              检验总额：{reportPriceMakingWithProfitResult.checkSum===undefined?"":
+              检验总额（元）：{reportPriceMakingWithProfitResult.checkSum===undefined?"":
               reportPriceMakingWithProfitResult.checkSum}
             </h4>
           </Col>
           <Col span={8}>
             <h4 style={{fontWeight:'bold'}}>
-              利润总额：{reportPriceMakingWithProfitResult.totalProfit===undefined?"":
+              利润总额（元）：{reportPriceMakingWithProfitResult.totalProfit===undefined?"":
               reportPriceMakingWithProfitResult.totalProfit}
             </h4>
           </Col>
           <Col span={8}>
             <h4 style={{fontWeight:'bold'}}>
-              平均利润率：{reportPriceMakingWithProfitResult.averageProfitRate===undefined?"":
+              平均利润率（%）：{reportPriceMakingWithProfitResult.averageProfitRate===undefined?"":
               reportPriceMakingWithProfitResult.averageProfitRate}
             </h4>
           </Col>

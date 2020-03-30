@@ -237,12 +237,15 @@ class ExpenditureBurdenQuery extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={16}>
-          <Col span={8}>
-            <div>支付总额：{selectCostListTotalByConditionsResult!==undefined&&selectCostListTotalByConditionsResult!==null? selectCostListTotalByConditionsResult.paymentTotal:0}</div>
+          <Col span={4} style={{marginBottom:5}}>
+            <h3 style={{fontWeight:'bold'}}>统计结果:</h3>
+          </Col>
+          <Col span={12} style={{marginBottom:5,marginLeft:200,marginRight:200}}>
+            <h3 style={{fontWeight:'bold'}}>支付总额：{selectCostListTotalByConditionsResult!==undefined&&selectCostListTotalByConditionsResult!==null? selectCostListTotalByConditionsResult.paymentTotal:0}</h3>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col span={6}>
+          <Col span={9}>
             <Form.Item
               label="支出账户"
             >
@@ -263,7 +266,10 @@ class ExpenditureBurdenQuery extends PureComponent {
           </Col>
           <Col span={5}>
             <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
+              <Button style={{ marginLeft: 0 }} onClick={this.handleFormReset}>
+                重置
+              </Button>
+              <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit">
                 查询
               </Button>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleTotalSearch}>

@@ -384,13 +384,13 @@ class BusinessIncomeQuery extends PureComponent {
           </Col>
           <Col span={8}>
             <h4 style={{fontWeight:'bold'}}>
-              批次总和：{selectBusinessIncomeTotalByConditionsResult.recordQuantityTotal===undefined?"":
+              批次总和（批）：{selectBusinessIncomeTotalByConditionsResult.recordQuantityTotal===undefined?"":
               selectBusinessIncomeTotalByConditionsResult.recordQuantityTotal}
             </h4>
           </Col>
           <Col span={8}>
             <h4 style={{fontWeight:'bold'}}>
-              检验费总和：{selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal===undefined?"":
+              检验费总和（元）：{selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal===undefined?"":
               selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal}
             </h4>
           </Col>
