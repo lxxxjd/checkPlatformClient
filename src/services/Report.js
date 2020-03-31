@@ -11,6 +11,16 @@ export async function selectBusinessIncomesByConditions(params){
   });
 }
 
+// 数据统计-业务收入-查询
+export async function selectBusinessIncomesByConditionsInit(params){
+  return request('/api/report/selectBusinessIncomesByConditionsInit', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 // 数据统计-业务收入-查询总额
 export async function selectBusinessIncomeTotalByConditions(params){
   return request('/api/report/selectBusinessIncomeTotalByConditions', {
@@ -42,6 +52,21 @@ export async function selectReportPriceMakingByConditions(params) {
     },
   });
 }
+
+
+
+
+// 数据统计-成本统计-查询
+// eslint-disable-next-line import/prefer-default-export
+export async function selectReportPriceMakingByConditionsInit(params) {
+  return request('/api/report/selectReportPriceMakingByConditionsInit', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 
 // 数据统计-利润分析-查询
 export async function selectReportPriceMakingByConditionsWithProfit(params){

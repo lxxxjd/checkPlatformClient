@@ -98,14 +98,28 @@ class BusinessIncomeQuery extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'businessIncome/selectBusinessIncomesByConditions',
+      type: 'businessIncome/selectBusinessIncomesByConditionsInit',
       payload:{
         certCode:user.certCode
       },
       callback: (response) => {
         this.state.selectBusinessIncomesByConditionsResult = response;
+        const params = {
+          kinds :[],
+          values: [],
+          conditions: [],
+          certCode: user.certCode,
+        };
+        dispatch({
+          type: 'businessIncome/selectBusinessIncomeTotalByConditions',
+          payload: params,
+          callback: (response2) => {
+            this.state.selectBusinessIncomeTotalByConditionsResult = response2;
+          }
+        });
       }
     });
+
   };
 
 

@@ -40,7 +40,8 @@ class CancelForEntrustment extends PureComponent {
     selectedRows: [],
     formValues: {},
     visible: false,
-    reportNo:'0'
+    reportNo:'0',
+    dataSource:[],
   };
 
 
@@ -105,9 +106,12 @@ class CancelForEntrustment extends PureComponent {
     const params = {
       certCode:user.certCode
     };
-    dispatch({
+   dispatch({
       type: 'entrustment/fetch',
       payload: params,
+      callback: (response) => {
+        this.setState({dataSource:response.data.list});
+      }
     });
 
   }
@@ -139,6 +143,9 @@ class CancelForEntrustment extends PureComponent {
       dispatch({
         type: 'entrustment/fetch',
         payload: params,
+        callback: (response) => {
+          this.setState({dataSource:response.data.list});
+        }
       });
     });
   };
@@ -156,9 +163,12 @@ class CancelForEntrustment extends PureComponent {
       formValues: {},
     });
     const { dispatch } = this.props;
-    dispatch({
+   dispatch({
       type: 'entrustment/fetch',
       payload: params,
+      callback: (response) => {
+        this.setState({dataSource:response.data.list});
+      }
     });
   };
 
@@ -179,6 +189,9 @@ class CancelForEntrustment extends PureComponent {
       dispatch({
         type: 'entrustment/fetch',
         payload: values,
+        callback: (response) => {
+          this.setState({dataSource:response.data.list});
+        }
       });
     });
   };
@@ -243,8 +256,15 @@ class CancelForEntrustment extends PureComponent {
       },
       callback: () => {
         message.success('撤销成功');
+        const params = {
+          certCode:user.certCode
+        };
         dispatch({
           type: 'entrustment/fetch',
+          payload: params,
+          callback: (response) => {
+            this.setState({dataSource:response.data.list});
+          }
         });
       },
     });
@@ -266,7 +286,7 @@ class CancelForEntrustment extends PureComponent {
       entrustment: {data},
       loading,
     } = this.props;
-    const { selectedRows,visible,reportNo} = this.state;
+    const { selectedRows,visible,reportNo,dataSource} = this.state;
 
     return (
       <PageHeaderWrapper title="撤销委托">
@@ -286,7 +306,7 @@ class CancelForEntrustment extends PureComponent {
               //selectedRows={selectedRows}
               size="middle"
               loading={loading}
-              dataSource={data.list}
+              dataSource={dataSource}
               columns={this.columns}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               //onSelectRow={this.handleSelectRows}

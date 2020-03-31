@@ -12,6 +12,17 @@ export async function selectListInfosByConditions(params){
   });
 }
 
+// 数据统计-收入分配-查询
+// eslint-disable-next-line import/prefer-default-export
+export async function selectListInfosByConditionsInit(params){
+  return request('/api/list/selectListInfosByConditionsInit', {
+    method: 'post',
+    data: {
+      ...params,
+    },
+  });
+}
+
 // 数据统计-收入分配-查询总额
 export async function selectListInfoTotalByConditions(params){
   return request('/api/list/selectListInfoTotalByConditions', {

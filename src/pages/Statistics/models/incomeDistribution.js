@@ -1,4 +1,4 @@
-import {selectListInfosByConditions, selectListInfoTotalByConditions} from '@/services/ListInfo';
+import {selectListInfosByConditions, selectListInfoTotalByConditions,selectListInfosByConditionsInit} from '@/services/ListInfo';
 
 export default {
   namespace: 'incomeDistribution',
@@ -8,6 +8,11 @@ export default {
   },
 
   effects: {
+
+    * selectListInfosByConditionsInit({ payload, callback }, { call, put }) {
+      const response = yield call(selectListInfosByConditionsInit, payload);
+      if (callback) callback(response.data);
+    },
 
     * selectListInfosByConditions({ payload, callback }, { call, put }) {
       const response = yield call(selectListInfosByConditions, payload);

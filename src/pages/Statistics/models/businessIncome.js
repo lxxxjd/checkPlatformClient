@@ -1,4 +1,5 @@
-import {selectBusinessIncomesByConditions, selectBusinessIncomeTotalByConditions, downloadBusinessIncomesAsExcelByConditions,downloadFile} from '@/services/Report';
+import {selectBusinessIncomesByConditions, selectBusinessIncomeTotalByConditions,
+  downloadBusinessIncomesAsExcelByConditions,downloadFile,selectBusinessIncomesByConditionsInit} from '@/services/Report';
 
 export default {
   namespace: 'businessIncome',
@@ -20,6 +21,12 @@ export default {
       );
       if(callback) callback(response.data);
     },
+
+    * selectBusinessIncomesByConditionsInit({payload, callback}, {call, put}){
+      const response = yield call(selectBusinessIncomesByConditionsInit, payload);
+      if(callback) callback(response.data);
+    },
+
 
     * selectBusinessIncomeTotalByConditions({payload, callback}, {call, put}){
       const response = yield call(selectBusinessIncomeTotalByConditions, payload);

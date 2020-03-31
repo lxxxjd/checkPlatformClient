@@ -24,12 +24,12 @@ const { Option } = Select;
   testInfo,
   loading: loading.models.testInfo,
 }))
-
 @Form.create()
 class EntrustmentRelevance extends PureComponent {
   state = {
     formValues: {},
     visible:false,
+    dataSource:[],
   };
 
   columns = [
@@ -104,6 +104,9 @@ class EntrustmentRelevance extends PureComponent {
       type: 'testInfo/getReports',
       payload:{
          certCode : certCode,
+      },
+      callback: (response) => {
+        this.setState({dataSource:response.list});
       }
     });
   }
@@ -138,6 +141,9 @@ class EntrustmentRelevance extends PureComponent {
       type: 'testInfo/getReports',
       payload:{
          certCode : certCode,
+      },
+      callback: (response) => {
+        this.setState({dataSource:response.list});
       }
     });
   };
@@ -157,6 +163,9 @@ class EntrustmentRelevance extends PureComponent {
       dispatch({
         type: 'testInfo/getReports',
         payload: values,
+        callback: (response) => {
+          this.setState({dataSource:response.list});
+        }
       });
     });
   };
@@ -225,6 +234,7 @@ class EntrustmentRelevance extends PureComponent {
       testInfo: {relevanceData},
       loading,
     } = this.props;
+    const {dataSource} = this.state;
     return (
       <PageHeaderWrapper title="委托关联">
         <Card bordered={false}  size="small">
@@ -233,7 +243,7 @@ class EntrustmentRelevance extends PureComponent {
             <Table
               size="middle"
               loading={loading}
-              dataSource={relevanceData.list}
+              dataSource={dataSource}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
               rowKey="reportno"

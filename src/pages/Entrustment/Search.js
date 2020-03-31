@@ -21,7 +21,7 @@ import styles from './Search.less';
 class Search  extends PureComponent {
 	handleSearch = e => {
 	    e.preventDefault();
-	    const { dispatch, form } = this.props;
+	    const { dispatch, form ,setDataSource} = this.props;
 	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
 	    form.validateFields((err, fieldsValue) => {
 	      console.log(err);
@@ -35,24 +35,28 @@ class Search  extends PureComponent {
 	      dispatch({
 	        type: 'testInfo/getTestInfos',
 	        payload: values,
+          callback: (response) => {
+            setDataSource(response.data.list);
+          }
 	      });
 	    });
   	};
+
   	handleFormReset = () => {
-	    const { form } = this.props;
-	    form.resetFields();
-	    this.setState({
-	      formValues: {},
-	    });
-	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-	    const { dispatch } = this.props;
-	    dispatch({
-	        type: 'testInfo/getTestInfos',
-      		payload:{
-         		certCode : certCode,
-     		}
-	    });
-  	};
+	    const { form ,dispatch,setDataSource} = this.props;
+	    const {certCode} = JSON.parse(localStorage.getItem("userinfo"));
+      const values = {
+        certCode
+      };
+      dispatch({
+        type: 'testInfo/getTestInfos',
+        payload: values,
+        callback: (response) => {
+          setDataSource(response.data.list);
+        }
+      });
+      form.resetFields();
+    };
 
 	 render() {
 		const {

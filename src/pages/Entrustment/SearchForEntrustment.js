@@ -31,12 +31,12 @@ const getValue = obj =>
   entrustment,
   loading: loading.models.entrustment,
 }))
-
 @Form.create()
 class SearchForEntrustment extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
+    dataSource:[],
   };
 
   columns = [
@@ -89,6 +89,13 @@ class SearchForEntrustment extends PureComponent {
     dispatch({
       type: 'entrustment/fetch',
       payload: params,
+      callback: (response) => {
+        this.setState({dataSource:response.data.list});
+        const res = JSON.parse(sessionStorage.getItem("PerTaskReportnos"));
+        console.log(res);
+        console.log(res[0]);
+        console.log(res[1]);
+      }
     });
   }
 
@@ -120,6 +127,9 @@ class SearchForEntrustment extends PureComponent {
       dispatch({
         type: 'entrustment/fetch',
         payload: params,
+        callback: (response) => {
+          this.setState({dataSource:response.data.list});
+        }
       });
     });
 
@@ -167,6 +177,9 @@ class SearchForEntrustment extends PureComponent {
     dispatch({
       type: 'entrustment/fetch',
       payload: params,
+      callback: (response) => {
+        this.setState({dataSource:response.data.list});
+      }
     });
   };
 
@@ -189,6 +202,9 @@ class SearchForEntrustment extends PureComponent {
       dispatch({
         type: 'entrustment/fetch',
         payload: values,
+        callback: (response) => {
+          this.setState({dataSource:response.data.list});
+        }
       });
     });
   };
@@ -250,7 +266,7 @@ class SearchForEntrustment extends PureComponent {
       entrustment: {data},
       loading,
     } = this.props;
-    const { selectedRows, } = this.state;
+    const { selectedRows,dataSource} = this.state;
     return (
       <PageHeaderWrapper>
         <Card size='small' bordered={false}>
@@ -262,7 +278,7 @@ class SearchForEntrustment extends PureComponent {
               rowClassName={styles.antTable2}
               loading={loading}
               rowKey='reportno'
-              dataSource={data.list}
+              dataSource={dataSource}
               columns={this.columns}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />

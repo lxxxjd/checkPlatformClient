@@ -95,13 +95,12 @@ class IncomeDistributionQuery extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
-      type: 'incomeDistribution/selectListInfosByConditions',
+      type: 'incomeDistribution/selectListInfosByConditionsInit',
       payload: {
         certCode: user.certCode
       },
       callback: (response) => {
         this.state.selectListInfosByConditionsResult = response;
-
         dispatch({
           type: 'incomeDistribution/selectListInfoTotalByConditions',
           payload: {

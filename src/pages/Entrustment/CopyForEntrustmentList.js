@@ -32,12 +32,12 @@ const getValue = obj =>
   entrustment,
   loading: loading.models.entrustment,
 }))
-
 @Form.create()
 class CopyForEntrustmentList extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
+    dataSource:[],
   };
 
   columns = [
@@ -85,6 +85,9 @@ class CopyForEntrustmentList extends PureComponent {
     dispatch({
       type: 'entrustment/fetch',
       payload: params,
+      callback: (response) => {
+        this.setState({dataSource:response.data.list});
+      }
     });
   };
 
@@ -118,6 +121,9 @@ class CopyForEntrustmentList extends PureComponent {
     dispatch({
       type: 'entrustment/fetch',
       payload: params,
+      callback: (response) => {
+        this.setState({dataSource:response.data.list});
+      }
     });
   };
 
@@ -140,6 +146,9 @@ class CopyForEntrustmentList extends PureComponent {
       dispatch({
         type: 'entrustment/fetch',
         payload: values,
+        callback: (response) => {
+          this.setState({dataSource:response.data.list});
+        }
       });
     });
   };
@@ -200,7 +209,7 @@ class CopyForEntrustmentList extends PureComponent {
       entrustment: {data},
       loading,
     } = this.props;
-    const { selectedRows, } = this.state;
+    const { selectedRows,dataSource } = this.state;
     return (
       <PageHeaderWrapper>
         <Card size='small' bordered={false}>
@@ -210,7 +219,7 @@ class CopyForEntrustmentList extends PureComponent {
               size="middle"
               loading={loading}
               rowKey='reportno'
-              dataSource={data.list}
+              dataSource={dataSource}
               columns={this.columns}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
             />

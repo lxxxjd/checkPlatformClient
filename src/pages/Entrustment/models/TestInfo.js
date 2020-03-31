@@ -25,10 +25,6 @@ export default {
   effects: {
     *getReports({ payload,callback }, { call, put }) {
       const response = yield call(queryReport, payload);
-      yield put({
-        type: 'getReportList',
-        payload: response,
-      });
       if (callback) callback(response.data);
     },
     *getReport({ payload,callback }, { call, put }) {
@@ -79,13 +75,12 @@ export default {
       const response = yield call(deleteTestBySampleNo, payload);
       if (callback) callback(response);
     },
-    *getTestInfos({ payload }, { call, put }) {
+
+    *getTestInfos({ payload,callback }, { call, put }) {
       const response = yield call(getTestInfo, payload);
-      yield put({
-        type: 'get',
-        payload: response,
-      });
+      if (callback) callback(response);
     },
+
     *getReportLink({ payload }, { call, put }) {
       const response = yield call(getReportLink, payload);
       yield put({

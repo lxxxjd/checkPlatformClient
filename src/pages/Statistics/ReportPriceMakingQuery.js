@@ -113,10 +113,23 @@ class ReportPriceMakingQuery extends PureComponent {
       certCode:user.certCode
     };
     dispatch({
-      type: 'report/selectReportPriceMakingByConditions',
+      type: 'report/selectReportPriceMakingByConditionsInit',
       payload: params,
       callback: (response) => {
         this.state.reportPriceMakingResult = response;
+        const params2 = {
+          kinds :[],
+          values: [],
+          conditions: [],
+          certCode: user.certCode,
+        };
+        dispatch({
+          type: 'report/selectReportPriceMakingByConditionsWithProfit',
+          payload: params2,
+          callback: (response2) => {
+            this.state.reportPriceMakingWithProfitResult = response2;
+          }
+        });
       }
     });
   };
@@ -332,7 +345,7 @@ class ReportPriceMakingQuery extends PureComponent {
 
         {/* 利润率 */}
         <Row gutter={16}>
-          <Col span={4}>
+          <Col span={3}>
             <FormItem
               label="利率"
               labelCol={{span: 1}}
@@ -355,7 +368,7 @@ class ReportPriceMakingQuery extends PureComponent {
               ~
             </span>
           </Col>
-          <Col span={3}>
+          <Col span={2}>
             <FormItem>
               {getFieldDecorator('maxRate', {
                 rules: [],
@@ -385,7 +398,7 @@ class ReportPriceMakingQuery extends PureComponent {
             </Form.Item>
           </Col>
           {/* 重置 增加条件 高级检索 查询 */}
-          <Col span={8}>
+          <Col span={9}>
             <span className={styles.submitButtons}>
               <Button style={{ marginLeft: 0 }} onClick={this.handleFormReset}>
                 重置

@@ -24,6 +24,8 @@ const SearchForm = Form.create()(Search);
 }))
 class SubEntrustment extends PureComponent {
   state = {
+    dataSource:[],
+    allReporterName:[],
   };
 
   columns = [
@@ -95,6 +97,9 @@ class SubEntrustment extends PureComponent {
       type: 'testInfo/getTestInfos',
       payload:{
          certCode : certCode,
+      },
+      callback: (response) => {
+        this.setState({dataSource:response.data.list});
       }
     });
     dispatch({
@@ -124,21 +129,26 @@ class SubEntrustment extends PureComponent {
     localStorage.setItem('reportDetailNo',text.reportno);
   };
 
+  setDataSource = (dataSource) =>{
+    this.setState({dataSource});
+  };
 
   render() {
     const {
       testInfo: {data},
       loading,
     } = this.props;
+    const {dataSource} = this.state;
     return (
       <PageHeaderWrapper title="转委托">
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}><SearchForm></SearchForm></div>
+            <div className={styles.tableListForm}><SearchForm setDataSource={this.setDataSource}></SearchForm></div>
             <Table
+              style={{marginTop:5}}
               size="middle"
               loading={loading}
-              dataSource={data.list}
+              dataSource={dataSource}
               columns={this.columns}
               rowKey="reportno"
               pagination={{showQuickJumper:true,showSizeChanger:true}}

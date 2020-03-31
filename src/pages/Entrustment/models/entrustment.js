@@ -46,13 +46,11 @@ export default {
       if (callback) callback(response.data);
     },
 
-    *fetch({ payload }, { call, put }) {
+    *fetch({ payload , callback}, { call, put }) {
       const response = yield call(queryAllReports, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
+      if (callback) callback(response);
     },
+
     *getDepartmentList({ payload , callback}, { call, put }) {
       const response = yield call(getDepartmentList, payload);
       if (callback) callback(response);

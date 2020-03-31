@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import {selectReportPriceMakingByConditions, selectReportPriceMakingByConditionsWithProfit} from '@/services/Report';
+import {selectReportPriceMakingByConditions, selectReportPriceMakingByConditionsWithProfit,selectReportPriceMakingByConditionsInit} from '@/services/Report';
 
 export default{
   namespace: "report",
@@ -16,6 +16,11 @@ export default{
           payload: response
         }
       );
+      if(callback) callback(response.data);
+    },
+
+    *selectReportPriceMakingByConditionsInit({ payload,callback}, { call, put}){
+      const response = yield call(selectReportPriceMakingByConditionsInit, payload);
       if(callback) callback(response.data);
     },
 
