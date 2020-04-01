@@ -112,11 +112,13 @@ class ResultUpdate extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'inspectionAnalysis/getAllSampleAndTestMan',
       payload:{
-         certCode : certCode,
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
       }
     });
   };
@@ -176,6 +178,7 @@ class ResultUpdate extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm /></div>
             <Table
+              style={{marginTop:5}}
               size="middle"
               loading={loading}
               dataSource={samples.list}

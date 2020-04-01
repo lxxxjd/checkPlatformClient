@@ -148,7 +148,7 @@ class SampleDestory extends PureComponent {
         <Fragment>
           <a onClick={() =>  this.handleReview(true,text)}>查看</a>
           &nbsp;&nbsp;
-          <a onClick={() => this.removeExistItem(text, record)}>删除</a>
+          <a onClick={() => this.removeExistItem(text, record)}>剔除</a>
         </Fragment>
       ),
     },
@@ -226,7 +226,15 @@ class SampleDestory extends PureComponent {
 
 
   destoryExist = () => {
-      this.setDestoryStatus("销毁","销毁成功","销毁失败");
+    Modal.confirm({
+      title: '确认要销毁这些样品吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        this.setDestoryStatus("销毁","销毁成功","销毁失败");
+      }
+    });
+
   };
 
   // 设置销毁状态
@@ -256,7 +264,15 @@ class SampleDestory extends PureComponent {
   };
 
   undestory = () => {
-    this.setDestoryStatus(undefined,"未销毁成功","未销毁失败");
+    Modal.confirm({
+      title: '确认要设置这些样品为“未销毁”状态吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        this.setDestoryStatus(undefined,"未销毁成功","未销毁失败");
+      }
+    });
+
   };
 
 

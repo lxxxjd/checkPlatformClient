@@ -272,7 +272,9 @@ class CertificateAbandon extends PureComponent {
     dispatch({
       type: 'certificate/getCertReports',
       payload:{
-        certCode:user.certCode
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
       }
     });
   };
@@ -480,7 +482,9 @@ class CertificateAbandon extends PureComponent {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
-        certCode:user.certCode,
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
       };
       dispatch({
         type: 'certificate/getCertReports',

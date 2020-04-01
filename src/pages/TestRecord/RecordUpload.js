@@ -110,6 +110,8 @@ class RecordUpload extends PureComponent {
       type: 'mTestRecord/getRecordList',
       payload:{
         certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
         source:'检查记录'
       }
     });
@@ -149,6 +151,8 @@ class RecordUpload extends PureComponent {
       const values = {
         ...fieldsValue,
         certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
         source:'检查记录'
       };
       dispatch({
@@ -167,7 +171,9 @@ class RecordUpload extends PureComponent {
       type: 'mTestRecord/getRecordList',
       payload:{
         certCode:user.certCode,
-         source:'检查记录'
+        role:user.role,
+        nameC:user.nameC,
+        source:'检查记录'
       }
     });
   };

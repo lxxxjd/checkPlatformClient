@@ -147,7 +147,9 @@ class SampleRegister extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     const params = {
-      certCode:user.certCode
+      certCode:user.certCode,
+      nameC:user.nameC,
+      role:user.role,
     };
     dispatch({
       type: 'sample/getSampleRegister',
@@ -171,6 +173,8 @@ class SampleRegister extends PureComponent {
         kind :fieldsValue.kind,
         value: fieldsValue.value,
         certCode:user.certCode,
+        nameC:user.nameC,
+        role:user.role,
       };
       dispatch({
         type: 'sample/getSampleRegister',

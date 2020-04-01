@@ -22,16 +22,18 @@ class Search  extends PureComponent {
 	handleSearch = e => {
 	    e.preventDefault();
 	    const { dispatch, form ,setDataSource} = this.props;
-	    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+      const user = JSON.parse(localStorage.getItem("userinfo"));
 	    form.validateFields((err, fieldsValue) => {
 	      console.log(err);
 	      if (err) return;
 	      const values = {
 	        ...fieldsValue,
-	        certCode:certCode,
+          certCode : user.certCode,
 	        kind :fieldsValue.kind,
 	        value: fieldsValue.value,
-	      };
+          role:user.role,
+          nameC:user.nameC,
+        };
 	      dispatch({
 	        type: 'testInfo/getTestInfos',
 	        payload: values,
@@ -44,9 +46,11 @@ class Search  extends PureComponent {
 
   	handleFormReset = () => {
 	    const { form ,dispatch,setDataSource} = this.props;
-	    const {certCode} = JSON.parse(localStorage.getItem("userinfo"));
+      const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
-        certCode
+          certCode : user.certCode,
+          role:user.role,
+          nameC:user.nameC,
       };
       dispatch({
         type: 'testInfo/getTestInfos',

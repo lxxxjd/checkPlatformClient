@@ -99,11 +99,13 @@ class EntrustmentRelevance extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'testInfo/getReports',
       payload:{
-         certCode : certCode,
+          certCode : user.certCode,
+          role:user.role,
+          nameC:user.nameC,
       },
       callback: (response) => {
         this.setState({dataSource:response.list});
@@ -135,12 +137,15 @@ class EntrustmentRelevance extends PureComponent {
     this.setState({
        formValues: {},
     });
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     dispatch({
       type: 'testInfo/getReports',
       payload:{
-         certCode : certCode,
+        certCode : user.certCode,
+        role:user.role,
+        nameC:user.nameC,
+
       },
       callback: (response) => {
         this.setState({dataSource:response.list});
@@ -153,12 +158,14 @@ class EntrustmentRelevance extends PureComponent {
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
         ...fieldsValue,
-        certCode : certCode,
+        certCode : user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       };
       dispatch({
         type: 'testInfo/getReports',

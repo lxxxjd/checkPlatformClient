@@ -106,7 +106,9 @@ class CertificateUpload extends PureComponent {
     dispatch({
       type: 'certificate/getCertReports',
       payload:{
-        certCode:user.certCode
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
       }
     });
   }
@@ -116,7 +118,7 @@ class CertificateUpload extends PureComponent {
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  }
+  };
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -144,7 +146,9 @@ class CertificateUpload extends PureComponent {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
-        certCode:user.certCode,
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
       };
       dispatch({
         type: 'certificate/getCertReports',

@@ -108,7 +108,9 @@ class RecordUpload extends PureComponent {
     dispatch({
       type: 'testRecord/getRecordList',
       payload:{
-        certCode:user.certCode,
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
         source:'测试报告'
       }
     });
@@ -156,7 +158,9 @@ class RecordUpload extends PureComponent {
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         ...fieldsValue,
-        certCode:user.certCode,
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
         source:'测试报告'
       };
       dispatch({
@@ -174,8 +178,10 @@ class RecordUpload extends PureComponent {
     dispatch({
       type: 'testRecord/getRecordList',
       payload:{
-        certCode:user.certCode,
-         source:'测试报告'
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
+        source:'测试报告'
       }
     });
   };

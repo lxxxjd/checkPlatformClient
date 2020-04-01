@@ -77,7 +77,9 @@ class ResultRegistration extends PureComponent {
     dispatch({
       type: 'mTestRecord/getReports',
       payload:{
-        certCode:user.certCode
+        certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       }
     });
   }
@@ -119,6 +121,8 @@ class ResultRegistration extends PureComponent {
         kind :fieldsValue.kind,
         value: fieldsValue.value,
         certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       };
       dispatch({
         type: 'mTestRecord/getReports',
@@ -130,12 +134,14 @@ class ResultRegistration extends PureComponent {
   handleFormReset = () => {
     const { form } = this.props;
     form.resetFields();
-    const {certCode} = JSON.parse(localStorage.getItem("userinfo"));
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     dispatch({
       type: 'mTestRecord/getReports',
       payload:{
-         certCode,
+        certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       }
     });
   };

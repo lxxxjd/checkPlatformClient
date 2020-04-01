@@ -97,17 +97,19 @@ class InspectionArrangement extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'inspectionAnalysis/getAllSampleAndTestCompany',
       payload:{
-         certCode : certCode,
+        certCode : user.certCode,
+        nameC:user.nameC,
+        role:user.role,
       }
     });
     dispatch({
       type: 'inspectionAnalysis/getCompany',
       payload: {
-        certCode : certCode,
+        certCode : user.certCode,
         type:"实验室",
       },
       callback: (response) => {
@@ -287,6 +289,7 @@ class InspectionArrangement extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm></SearchForm></div>
             <Table
+              style={{marginTop:5}}
               size="middle"
               loading={loading}
               dataSource={samplesSubcontact.list}

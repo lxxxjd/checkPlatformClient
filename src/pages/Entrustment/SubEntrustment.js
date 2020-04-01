@@ -92,11 +92,13 @@ class SubEntrustment extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'testInfo/getTestInfos',
       payload:{
-         certCode : certCode,
+        certCode : user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       },
       callback: (response) => {
         this.setState({dataSource:response.data.list});
