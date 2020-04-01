@@ -13,16 +13,19 @@ import {
   Table,
   notification,
   Modal,
-  Typography, message,
+  Typography, message,Icon,Tooltip
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './style.less';
 import moment from 'moment';
 import { Bar } from '@/components/Charts';
+import { ChartCard} from '@/components/Charts';
+import Yuan from '@/utils/Yuan';
 
 const { Text } = Typography;
 const FormItem = Form.Item;
 const { Option } = Select;
+
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ main, loading }) => ({
@@ -203,7 +206,7 @@ class Main extends PureComponent {
         temp.push({
           'x':'今年',
           'y':response.data[0]/10000
-        })
+        });
         this.setState({yearPay:temp});
         this.setState({yearPayTotal:response.data});
       }
@@ -386,23 +389,67 @@ class Main extends PureComponent {
 
   transfor = value =>{
     return (value / 10000).toFixed(2) +"万元"
-  }
+  };
 
   render() {
     const {
       //preMainInfo: {preMainInfoList},
       loading,
     } = this.props;
+    // const user = JSON.parse(localStorage.getItem("userinfo"));
     const {reportNum, dayDillTotal, mouthBillTotal, yearBillTotal, yearPayTotal, perTask, perApprove, totalPay, salesData, mouthBill, yearBill, yearPay} = this.state;
     return (
       <PageHeaderWrapper>
           <Row gutter={16}>
             <Col span={6}>
               <Card size='small' bordered={false}>
-                <div align="center">
-                  <Text>今日开票{this.transfor(dayDillTotal)}</Text>
-                  <br/>
-                  <Text>今日委托{reportNum}</Text>
+                {/*<div>*/}
+                {/*  <div align="center" style={{backgroundColor:'white',height:200}}>*/}
+                {/*    <img src="https://checkplatform2.oss-cn-hangzhou.aliyuncs.com/platform/main/mainpic.png" style={{width:'100%',paddingLeft:10,paddingRight:10,height:180,paddingTop:20}} />*/}
+                {/*  </div>*/}
+                {/*  <div align="center">*/}
+                {/*    <Text style={{color:'#52c41a'}}>今日开票{this.transfor(dayDillTotal)}</Text>*/}
+                {/*    <br />*/}
+                {/*    <Text>今日委托{reportNum}</Text>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
+                <div>
+                  <div align="center" style={{backgroundColor:'white',height:200}}>
+                    <ChartCard
+                      style={{backgroundColor:'white',height:100}}
+                      bordered={false}
+                      title="今日开票"
+                      action={
+                        <Tooltip
+                          title="指标说明：今日开票的金额（元）"
+                        >
+                          <Icon type="info-circle-o" />
+                        </Tooltip>
+                      }
+                      loading={loading}
+                      total={() => <Yuan>{this.transfor(dayDillTotal)}单</Yuan>}
+                      contentHeight={46}
+                    />
+                    <ChartCard
+                      bordered={false}
+                      title="今日委托"
+                      action={
+                        <Tooltip
+                          title="指标说明：今日委托的数量"
+                        >
+                          <Icon type="info-circle-o" />
+                        </Tooltip>
+                      }
+                      loading={loading}
+                      total={() => <span>{reportNum}</span>}
+                      contentHeight={46}
+                    />
+                  </div>
+                  <div align="center" style={{backgroundColor:'white',width:'100%'}}>
+                    <Text style={{fontWeight:'bold',color:'#52c41a',fontFamily:"楷体",fontSize:20}}>祝您开心每一天！</Text>
+                    <br />
+                    <br />
+                  </div>
                 </div>
               </Card>
             </Col>
@@ -414,9 +461,9 @@ class Main extends PureComponent {
                   data={mouthBill}
                 />
                 <div align="center">
-                  {mouthBillTotal[0]>mouthBillTotal[1]?[<Text type="danger">今年本月开票{this.transfor(mouthBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年本月开票{this.transfor(mouthBillTotal[0])}</span>]}
-                  <br/>
-                  <Text>去年本月开票{this.transfor(mouthBillTotal[1])}</Text>
+                  {mouthBillTotal[0]>mouthBillTotal[1]?[<Text style={{fontWeight:'bold',fontFamily:"楷体",color:'#52c41a'}}>今年本月开票{this.transfor(mouthBillTotal[0])}</Text>]:[<span style={{fontWeight:'bold',fontFamily:"楷体",color:'#52c41a'}}>今年本月开票{this.transfor(mouthBillTotal[0])}</span>]}
+                  <br />
+                  <Text style={{fontWeight:'bold',fontFamily:"楷体"}}>去年本月开票{this.transfor(mouthBillTotal[1])}</Text>
                 </div>
               </Card>
             </Col>
@@ -428,9 +475,9 @@ class Main extends PureComponent {
                   data={yearBill}
                 />
                 <div align="center">
-                  {yearBillTotal[0]>yearBillTotal[1]?[<Text type="danger">今年累计开票{this.transfor(yearBillTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计开票{this.transfor(yearBillTotal[0])}</span>]}
-                  <br/>
-                  <Text>去年累计开票{this.transfor(yearBillTotal[1])}</Text>
+                  {yearBillTotal[0]>yearBillTotal[1]?[<Text style={{fontWeight:'bold',fontFamily:"楷体",color:'#52c41a'}}>今年累计开票{this.transfor(yearBillTotal[0])}</Text>]:[<span style={{fontWeight:'bold',fontFamily:"楷体",color:'#52c41a'}}>今年累计开票{this.transfor(yearBillTotal[0])}</span>]}
+                  <br />
+                  <Text style={{fontWeight:'bold',fontFamily:"楷体"}}>去年累计开票{this.transfor(yearBillTotal[1])}</Text>
                 </div>
               </Card>
             </Col>
@@ -442,37 +489,38 @@ class Main extends PureComponent {
                   data={yearPay}
                 />
                 <div align="center">
-                  {yearPayTotal[0]>yearPayTotal[1]?[<Text type="danger">今年累计到账{this.transfor(yearPayTotal[0])}</Text>]:[<span style={{color:'#52c41a'}}>今年累计到账{this.transfor(yearPayTotal[0])}</span>]}
+                  {yearPayTotal[0]>yearPayTotal[1]?[<Text style={{fontWeight:'bold',fontFamily:"楷体",color:'#52c41a'}}>今年累计到账{this.transfor(yearPayTotal[0])}</Text>]:[<span style={{fontWeight:'bold',fontFamily:"楷体",color:'#52c41a'}}>今年累计到账{this.transfor(yearPayTotal[0])}</span>]}
                   <br/>
-                  <Text>去年累计到账{this.transfor(yearPayTotal[1])}</Text>
+                  <Text style={{fontWeight:'bold',fontFamily:"楷体"}}>去年累计到账{this.transfor(yearPayTotal[1])}</Text>
                 </div>
               </Card>
             </Col>
           </Row>
           <br/>
           <Card title="我的收费统计" size='small' bordered={false}>
-            <Table
-              size="middle"
-              loading={loading}
-              rowKey='payer'
-              bordered
-              dataSource={totalPay}
-              columns={this.columns2}
-              pagination={{showQuickJumper:true,showSizeChanger:true}}
-            />
+
+              <Table
+                size="middle"
+                loading={loading}
+                rowKey='payer'
+                bordered
+                dataSource={totalPay}
+                columns={this.columns2}
+                pagination={{showQuickJumper:true,showSizeChanger:true}}
+              />
           </Card>
           <br/>
           <Row gutter={16}>
             <Col span={13}>
               <Card title="我的任务" size='small' bordered={false}>
-                <Table
-                  size="middle"
-                  loading={loading}
-                  rowKey='reportno'
-                  dataSource={perTask}
-                  columns={this.columns}
-                  pagination={{showQuickJumper:true,showSizeChanger:true}}
-                />
+                  <Table
+                    size="middle"
+                    loading={loading}
+                    rowKey='reportno'
+                    dataSource={perTask}
+                    columns={this.columns}
+                    pagination={{showQuickJumper:true,pageSize: 3}}
+                  />
               </Card>
             </Col>
             <Col span={11}>
@@ -483,7 +531,7 @@ class Main extends PureComponent {
                   rowKey='keyno'
                   dataSource={perApprove}
                   columns={this.columns1}
-                  pagination={{showQuickJumper:true,showSizeChanger:true}}
+                  pagination={{showQuickJumper:true,pageSize: 3}}
                 />
               </Card>
             </Col>
