@@ -5,6 +5,10 @@ import { submitApplication ,queryAllReports,queryAllReportsByFilter,
   searchPortForEntrustment,searchByKindValue,searchPlaceByPlaceCode
 } from '@/services/Entrustment';
 
+import {
+  getPerTaskReportnos
+} from '@/services/Task';
+
 
 export default {
   namespace: 'entrustment',
@@ -27,6 +31,10 @@ export default {
 
   effects: {
 
+    *getPerTaskReportnos({ payload , callback}, { call, put }) {
+      const response = yield call(getPerTaskReportnos, payload);
+      if (callback) callback(response);
+    },
 
     // 报关号查重
     *getRepeatCustomsNo({ payload , callback}, { call, put }) {

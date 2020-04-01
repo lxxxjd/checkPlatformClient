@@ -110,7 +110,9 @@ export async function updateInspman(params) {
   });
 }
 
-
+export async function getPerTaskReportnos(params) {
+  return request(`/api/homepage/getPerTaskReportnos?nameC=${params.nameC}&certCode=${params.certCode}`);
+}
 
 
 

@@ -80,7 +80,9 @@ class CopyForEntrustmentList extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     const params = {
-      certCode:user.certCode
+      certCode:user.certCode,
+      role:user.role,
+      nameC:user.nameC,
     };
     dispatch({
       type: 'entrustment/fetch',
@@ -110,7 +112,9 @@ class CopyForEntrustmentList extends PureComponent {
 
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const params = {
-      certCode:user.certCode
+      certCode:user.certCode,
+      role:user.role,
+      nameC:user.nameC,
     };
     const { form } = this.props;
     form.resetFields();
@@ -142,6 +146,9 @@ class CopyForEntrustmentList extends PureComponent {
         kind :fieldsValue.kind,
         value: fieldsValue.value,
         certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
+
       };
       dispatch({
         type: 'entrustment/fetch',

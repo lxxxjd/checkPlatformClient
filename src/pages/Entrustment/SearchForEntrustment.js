@@ -84,17 +84,16 @@ class SearchForEntrustment extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     const params = {
-      certCode:user.certCode
+      certCode:user.certCode,
+      role:user.role,
+      nameC:user.nameC,
     };
     dispatch({
       type: 'entrustment/fetch',
       payload: params,
       callback: (response) => {
         this.setState({dataSource:response.data.list});
-        const res = JSON.parse(sessionStorage.getItem("PerTaskReportnos"));
-        console.log(res);
-        console.log(res[0]);
-        console.log(res[1]);
+
       }
     });
   }
@@ -117,6 +116,8 @@ class SearchForEntrustment extends PureComponent {
         certCode:user.certCode,
         kind :fieldsValue.kind,
         value: fieldsValue.value,
+        role:user.role,
+        nameC:user.nameC,
         ...formValues,
         ...filters,
       };
@@ -166,7 +167,9 @@ class SearchForEntrustment extends PureComponent {
 
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const params = {
-      certCode:user.certCode
+      certCode:user.certCode,
+      role:user.role,
+      nameC:user.nameC,
     };
     const { form } = this.props;
     form.resetFields();
@@ -198,6 +201,8 @@ class SearchForEntrustment extends PureComponent {
         kind :fieldsValue.kind,
         value: fieldsValue.value,
         certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       };
       dispatch({
         type: 'entrustment/fetch',
@@ -274,8 +279,8 @@ class SearchForEntrustment extends PureComponent {
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Table
               size="middle"
-              className={styles.antTable}
-              rowClassName={styles.antTable2}
+              // className={styles.antTable}
+              // rowClassName={styles.antTable2}
               loading={loading}
               rowKey='reportno'
               dataSource={dataSource}
