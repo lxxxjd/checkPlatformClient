@@ -15,7 +15,7 @@ import {
   Modal,
   DatePicker,
   Radio,
-  notification
+  notification, InputNumber,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
@@ -43,7 +43,9 @@ class InspectionArrangementDetail extends PureComponent {
     operationkey: 'tab1',
     visible:false,
     allCompanyName:[],
-    showPrice:false
+    showPrice:false,
+    modalInfo:{},
+    maininfoText:{},
   };
   onOperationTabChange = key => {
     this.setState({ operationkey: key });
@@ -126,6 +128,7 @@ class InspectionArrangementDetail extends PureComponent {
       ),
     },
   ];
+
   componentDidMount() {
     const { dispatch } = this.props;
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
@@ -155,21 +158,18 @@ class InspectionArrangementDetail extends PureComponent {
         this.setState({allCompanyName:response})
       }
     });
+   const maininfo = JSON.parse(sessionStorage.getItem('InspectionArrangementDetail_Report'));
+   this.setState({maininfoText:maininfo});
+
   }
 
   mobileItem = text => {
-    const {
-      dispatch,
-      form
-    } = this.props;
-    form.setFieldsValue({
-      'testman' : text.testman,
-      'assigndate' : moment(text.assigndate, "YYYY-MM-DD"),
-      'priceway' : text.priceway,
-      'totalfee' : text.totalfee,
-      'price' : text.price,
-      'inspwaymemo1' : text.inspwaymemo1,
-    });
+    if(text.priceway === "按单价" ){
+      this.setState({showPrice:true});
+    }else{
+      this.setState({showPrice:false});
+    }
+    this.setState({modalInfo:text});
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('sampleno',text.sampleno);
     sessionStorage.setItem('keyno',text.keyno);
@@ -178,25 +178,32 @@ class InspectionArrangementDetail extends PureComponent {
 
   deleteItem = text => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'inspectionAnalysis/deleteTestBySampleNo',
-      payload:{
-         keyno : text.keyno,
-         reportno : text.reportno,
-         sampleno : text.sampleno,
-      },
-      callback: (response) => {
-        if (response.code === 200) {
-          this.componentDidMount();
-          notification.open({
-            message: '删除成功',
-          });
-        } else {
-          notification.open({
-            message: '删除失败',
-            description: response.data,
-          });
-        }
+    Modal.confirm({
+      title: '确定删除此记录吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'inspectionAnalysis/deleteTestBySampleNo',
+          payload:{
+            keyno : text.keyno,
+            reportno : text.reportno,
+            sampleno : text.sampleno,
+          },
+          callback: (response) => {
+            if (response.code === 200) {
+              this.componentDidMount();
+              notification.open({
+                message: '删除成功',
+              });
+            } else {
+              notification.open({
+                message: '删除失败',
+                description: response.data,
+              });
+            }
+          }
+        });
       }
     });
   };
@@ -206,12 +213,42 @@ class InspectionArrangementDetail extends PureComponent {
   };
 
   onChange = e =>{
-    if(e.target.value === "按单价"  || e.target.value ==="按比例"){
+    if(e.target.value === "按单价" ){
       this.setState({showPrice:true});
     }else{
       this.setState({showPrice:false});
     }
   };
+
+
+  sumPrice= (value) =>{
+    const {
+      form
+    } = this.props;
+    const quantity = this.state.maininfoText.quantityd;
+    const price = value;
+    console.log(quantity);
+    console.log(price);
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['totalfee']: total});
+    }
+  };
+
+  sum = () =>{
+    const {
+      form
+    } = this.props;
+    const price = form.getFieldValue('price');
+    const quantity = this.state.maininfoText.quantityd;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['totalfee']: total});
+    }
+  };
+
 
   handleCancel = () =>{
     this.setState({ visible: false });
@@ -268,7 +305,7 @@ class InspectionArrangementDetail extends PureComponent {
       loading,
       form:{getFieldDecorator}
     } = this.props;
-    const { operationkey , allCompanyName , showPrice , visible } = this.state;
+    const { operationkey , allCompanyName , showPrice , visible,modalInfo } = this.state;
     const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
@@ -328,6 +365,7 @@ class InspectionArrangementDetail extends PureComponent {
             <Form>
               <Form.Item label="分包实验室">
                 {getFieldDecorator('testman', {
+                  initialValue:modalInfo.testman,
                   rules: [{ required: true, message: '请选择分包实验室' }],
                 })(<Select
                       showSearch
@@ -341,6 +379,7 @@ class InspectionArrangementDetail extends PureComponent {
               </Form.Item>
               <Form.Item label="分包日期">
                 {getFieldDecorator('assigndate', {
+                  initialValue: moment(modalInfo.assigndate, "YYYY-MM-DD"),
                   rules: [{ required: true, message: '请选择分包日期' }],
                 })(
                     <DatePicker
@@ -353,39 +392,36 @@ class InspectionArrangementDetail extends PureComponent {
               </Form.Item>
               <Form.Item label="计价方式">
                 {getFieldDecorator('priceway', {
+                  initialValue:modalInfo.priceway,
                   rules: [{ required: true, message: '请选择计价方式' }],
                 })(
                   <Radio.Group onChange={this.onChange}>
                     <Radio value="按单价">按单价</Radio>
                     <Radio value="按批次">按批次</Radio>
-                    <Radio value="按比例">按比例</Radio>
                   </Radio.Group>,
                 )}
               </Form.Item>
-              {
-                {true:
-                  <Form.Item label="单价/比例">
-                    { getFieldDecorator('price', {
-                      rules:
-                      showPrice === true
-                      ? [{ required: 'true', message: '请输入单价比例' }]
-                      : []
-                    })(
-                      <Input />
-                     )
-                    }
-                  </Form.Item>
-                }[showPrice]
-              }
+              {showPrice===true?[
+                <Form.Item label="单价">
+                  {getFieldDecorator('price',
+                    { initialValue:modalInfo.price,
+                    rules: [{ required: true, message: '请输入单价' }],
+                })(
+                  <InputNumber style={{width:'100%'}} placeholder="请输入单价" min={0} step={0.01} onChange={this.sumPrice} />
+                )}
+                </Form.Item>
+                ]:[]}
               <Form.Item label="总计费用">
                 {getFieldDecorator('totalfee', {
+                  initialValue:modalInfo.totalfee,
                   rules: [{ required: true, message: '请输入总计费用' }],
                 })(
-                      <Input />
+                  <InputNumber style={{width:'100%'}} placeholder="请输入单价" min={0} step={0.01}/>
                   )}
               </Form.Item>
               <Form.Item label=" 备注">
                 {getFieldDecorator('inspwaymemo1', {
+                  initialValue:modalInfo.inspwaymemo1,
                   rules: [{ required: true, message: '请输入备注' }],
                 })(
                       <Input />

@@ -53,12 +53,12 @@ const ReviewCostDetailFrom = (props => {
         <Descriptions.Item label="金额">{modalInfo.costmoney}</Descriptions.Item>
         <Descriptions.Item label="数量">{modalInfo.amout}</Descriptions.Item>
         <Descriptions.Item label="发生日期">{handleDate(modalInfo.occurdate)}</Descriptions.Item>
-        <Descriptions.Item label="接受人">{modalInfo.reciever}</Descriptions.Item>
         <Descriptions.Item label="费用种类">{modalInfo.costtype}</Descriptions.Item>
         <Descriptions.Item label="登记日期">{handleDate(modalInfo.registdate)}</Descriptions.Item>
         <Descriptions.Item label="登记人">{modalInfo.register}</Descriptions.Item>
         <Descriptions.Item label="状态">{modalInfo.status}</Descriptions.Item>
         <Descriptions.Item label="备注">{modalInfo.remark}</Descriptions.Item>
+        <Descriptions.Item label="接受人">{modalInfo.reciever}</Descriptions.Item>
       </Descriptions>
     </Modal>
   );

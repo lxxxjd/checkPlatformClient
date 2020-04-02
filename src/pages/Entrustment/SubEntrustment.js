@@ -57,7 +57,7 @@ class SubEntrustment extends PureComponent {
       dataIndex: 'overallstate',
     },
     {
-      title: '转委托公司',
+      title: '转委托/分包公司',
       dataIndex: 'company',
       render: (text, record) => {
         let  contentStr = [];
@@ -114,6 +114,7 @@ class SubEntrustment extends PureComponent {
   }
 
   detailItem = text => {
+    sessionStorage.setItem('DetailForSub_text',JSON.stringify(text));
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);

@@ -15,7 +15,7 @@ import {
   Radio,
   Table,
   Icon,
-  notification
+  notification, InputNumber,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailForSub.less';
@@ -36,13 +36,15 @@ class DetailForSub extends PureComponent {
     checkProject:[],
     allCompanyName:[],
     selectEntrustment:null,
-    showPrice:false,
+    showPrice:'按单价',
     report:null,
     priceMakeing:null,
     overallstate:undefined,
 
     isViewCompany:false,
     dataSource:[],
+
+    modalInfo:{},
 
   };
 
@@ -141,6 +143,7 @@ class DetailForSub extends PureComponent {
         this.setState({priceMakeing:response});
       }
     });
+
     dispatch({
       type: 'testInfo/getReport',
       payload: {
@@ -151,25 +154,33 @@ class DetailForSub extends PureComponent {
       }
     });
   }
+
   deleteItem = text => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'testInfo/deleteTestBySampleNo',
-      payload:{
-         keyno : text.keyno,
-      },
-      callback: (response) => {
-        if (response.code === 200) {
-          this.componentDidMount();
-          notification.open({
-            message: '删除成功',
-          });
-        } else {
-          notification.open({
-            message: '删除失败',
-            description: response.data,
-          });
-        }
+    Modal.confirm({
+      title: '确定删除此记录吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'testInfo/deleteTestBySampleNo',
+          payload:{
+            keyno : text.keyno,
+          },
+          callback: (response) => {
+            if (response.code === 200) {
+              notification.open({
+                message: '删除成功',
+              });
+              this.init();
+            } else {
+              notification.open({
+                message: '删除失败',
+                description: response.data,
+              });
+            }
+          }
+        });
       }
     });
   };
@@ -177,11 +188,13 @@ class DetailForSub extends PureComponent {
   init =()=>{
     const {dispatch} = this.props;
     const reportno = sessionStorage.getItem('reportno');
+    const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
       type: 'testInfo/getTestByReportNoAndAssignsort',
       payload:{
         reportno,
         assignsort : '转委托',
+        nameC:user.nameC,
       },
       callback: (response) => {
         if(response.code===200){
@@ -193,14 +206,12 @@ class DetailForSub extends PureComponent {
 
   modifyItem = text => {
     const { form } = this.props;
-    this.setState({visible:true});
     this.setState({selectEntrustment:text});
     if(text.inspway && typeof(text.inspway) !== "undefined"){
         const inspway = text.inspway.split(" ");
         form.setFieldsValue({['inspway']:inspway});
     }
     const allInspway = sessionStorage.getItem('inspway').split(" ");
-
     this.setState({ checkProject : allInspway });
     form.setFieldsValue({['testman']:text.testman});
     form.setFieldsValue({['price']:text.price});
@@ -208,6 +219,23 @@ class DetailForSub extends PureComponent {
     form.setFieldsValue({['totalfee']:text.totalfee});
     form.setFieldsValue({['inspwaymemo1']:text.inspwaymemo1});
     this.setState({showPrice:text.priceway });
+    this.setState({modalInfo:text});
+    this.setState({visible:true});
+  };
+
+
+  sumPrice= (value) =>{
+    const report = JSON.parse(sessionStorage.getItem('DetailForSub_text'));
+    const {
+      form
+    } = this.props;
+    const quantity = report.quantityd;
+    const price = value;
+    if(quantity!==undefined && quantity !=="" && price !=="" && price !== undefined){
+      let total =price * quantity;
+      total = total.toFixed(2);
+      form.setFieldsValue({['totalfee']: total});
+    }
   };
 
 
@@ -226,18 +254,23 @@ class DetailForSub extends PureComponent {
           values.reportno = selectEntrustment.reportno;
           values.assignman = nameC;
           values.inspway = values.inspway.join(" ");
+          values.assignsort = "转委托";
+          const prams={
+            ...values,
+            nameC,
+          };
           dispatch({
             type: 'testInfo/updateTestInfo',
-            payload: values,
+            payload: prams,
             callback: (response) => {
               this.init();
               if (response.code === 200) {
                 notification.open({
-                  message: '添加成功',
+                  message: '修改成功',
                 });
               } else {
                 notification.open({
-                  message: '添加失败',
+                  message: '修改失败',
                   description: response.data,
                 });
               }
@@ -249,9 +282,13 @@ class DetailForSub extends PureComponent {
           values.reportno = reportno;
           values.inspway = values.inspway.join(" ");
           values.assignman = nameC;
+          const prams={
+            ...values,
+            nameC,
+          };
           dispatch({
             type: 'testInfo/addTestInfo',
-            payload: values,
+            payload: prams,
             callback: (response) => {
               this.init();
               if (response.code === 200) {
@@ -285,6 +322,7 @@ class DetailForSub extends PureComponent {
     form.resetFields();
     form.setFieldsValue({['inspwaymemo1']:report.inspwaymemo1});
     this.setState({ visible: true });
+    this.setState({modalInfo:undefined});
   };
 
   handleCancel = () =>{
@@ -292,12 +330,7 @@ class DetailForSub extends PureComponent {
   };
 
   onChange = e =>{
-    const {
-      form
-    } = this.props;
     this.setState({showPrice:e.target.value});
-    form.setFieldsValue({['price']: null });
-    form.setFieldsValue({['totalfee']: null });
   };
 
   back = () =>{
@@ -351,7 +384,7 @@ class DetailForSub extends PureComponent {
       shipname,
       applicant,
     };
-    const {  showPrice,checkProject,allCompanyName,visible,dataSource} = this.state;
+    const {  showPrice,checkProject,allCompanyName,visible,dataSource,modalInfo} = this.state;
     const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper text = {reprotText}>
@@ -392,57 +425,25 @@ class DetailForSub extends PureComponent {
                 <Radio.Group onChange={this.onChange}>
                   <Radio value="按单价">按单价</Radio>
                   <Radio value="按批次">按批次</Radio>
-                  <Radio value="按比例">按比例</Radio>
                 </Radio.Group>
               )}
             </Form.Item>
             {showPrice === "按单价" ?
-              [<Form.Item label="单价">
-                { getFieldDecorator('price', {
-                  rules:
-                  showPrice === "按单价"
-                  ? [{
-                      required: true,
-                      whitespace: true,
-                      type: 'number',
-                      transform(value) {
-                      if (value) {
-                        return Number(value);
-                      }
-                  }, message: '请输入数字' }]
-                  : []
-                })(
-                  <Input onBlur={this.sum}/>
-                 )
-                }
-              </Form.Item>] : []
-            }
-            {showPrice === "按比例" ?
-              [<Form.Item label="比例">
-                { getFieldDecorator('price', {
-                  rules:
-                  showPrice === "按比例"
-                  ? [{
-                  required: true,
-                  whitespace: true,
-                  type: 'number',
-                  transform(value) {
-                    if (value) {
-                      return Number(value);
-                    }
-                  }, message: '请输入数字' }]
-                  : []
-                })(
-                  <Input onBlur={this.sum}/>
-                 )
-                }
-              </Form.Item>] : []
+              [
+                <Form.Item label="单价">
+                  {getFieldDecorator('price', {
+                    initialValue:modalInfo!==undefined && modalInfo.price!==undefined ?modalInfo.price:[],
+                    rules: [{ required: true, message: '请输入单价' }],
+                  })(
+                    <InputNumber style={{width:'100%'}} placeholder="请输入单价" min={0} step={0.01} onChange={this.sumPrice} />
+                  )}
+                </Form.Item>] : []
             }
             <Form.Item label="总计费用">
               {getFieldDecorator('totalfee', {
                 rules: [{ required: true, message: '请输入总计费用' }],
               })(
-                    <Input />
+                <InputNumber style={{width:'100%'}} placeholder="请输入单价" min={0} step={0.01} />
                 )}
             </Form.Item>
             <Form.Item label="转委托要求">

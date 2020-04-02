@@ -138,6 +138,7 @@ class InspectionArrangement extends PureComponent {
   };
 
   detailItem = text => {
+    sessionStorage.setItem('InspectionArrangementDetail_Report',JSON.stringify(text));
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
@@ -170,11 +171,10 @@ class InspectionArrangement extends PureComponent {
           },
           callback: (response) => {
             if (response.code === 200) {
-              const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
               dispatch({
                 type: 'inspectionAnalysis/getAllSample',
                 payload:{
-                   certCode : certCode,
+                   certCode : user.certCode,
                 }
               });
               message.success("分包成功");
@@ -192,6 +192,8 @@ class InspectionArrangement extends PureComponent {
   };
 
   show = text =>{
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('sampleno',text.sampleno);
     this.setState({modalText:text});
     if(text.testman===null||text.testman===undefined){
       if(text.state ==="已登记"){
@@ -248,7 +250,6 @@ class InspectionArrangement extends PureComponent {
   };
 
   sumPrice= (value) =>{
-    console.log(this.state.modalText)
     const {
       form
     } = this.props;
