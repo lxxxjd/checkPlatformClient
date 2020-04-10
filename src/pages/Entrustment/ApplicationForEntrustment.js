@@ -82,7 +82,8 @@ const fieldLabels = {
   inspwaymemo1: '检验备注',
   certstyle: '证书要求',
   section: '执行部门',
-  customsName: '海关部门'
+  customsName: '海关部门',
+  iscostoms:"是否向海关推送报告",
 };
 
 
@@ -940,35 +941,37 @@ class ApplicationForEntrustment extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={6}>
                 <Form.Item
+                  label={fieldLabels.iscostoms}
                   colon={false}
+                  labelCol={{span: 13}}
+                  wrapperCol={{span: 11}}
                 >
                   {getFieldDecorator('iscostoms', {
                     rules: [],
                   })(
                     <Radio.Group onChange={this.changeIsCustoms}>
-                      <Radio value={1}>海关管辖</Radio>
-                      <Radio value={0}>非海关管辖</Radio>
+                      <Radio value={1}>是</Radio>
+                      <Radio value={0}>否</Radio>
                     </Radio.Group>
                   )}
                 </Form.Item>
               </Col>
-              <Col span={10}>
+              <Col span={9}>
                 <Form.Item
                   label={fieldLabels.customsName}
-                  labelCol={{span: 4}}
-                  wrapperCol={{span: 19}}
+                  labelCol={{span: 5}}
+                  wrapperCol={{span: 18}}
                   colon={false}
                 >
                   {getFieldDecorator('customsName', {
                     //rules:
                   })(
-                    <Cascader options={customsOption} disabled={!isCustoms} placeholder="请选择海关部门" />
+                    <Cascader options={customsOption} disabled={!isCustoms} placeholder="请选择海关部门"/>
                   )}
                 </Form.Item>
               </Col>
-
             </Row>
 
           </Form>

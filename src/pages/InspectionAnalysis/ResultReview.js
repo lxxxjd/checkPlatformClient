@@ -181,6 +181,7 @@ class ResultReview extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm /></div>
             <Table
+              style={{marginTop:5}}
               size="middle"
               loading={loading}
               dataSource={samples.list}

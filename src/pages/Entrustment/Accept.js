@@ -83,7 +83,8 @@ const fieldLabels = {
   inspwaymemo1: '检验备注',
   certstyle: '证书要求',
   section:'执行部门',
-  customsName:'海关部门'
+  customsName:'海关部门',
+  iscostoms:"是否向海关推送报告",
 };
 
 
@@ -156,6 +157,14 @@ class Accept extends PureComponent {
       }
     });
     dispatch({
+      type: 'entrustment/getCustomInfos',
+      payload: {
+      },
+      callback: (response) => {
+        this.setState({customsOption: response.data})
+      }
+    });
+    dispatch({
       type: 'preMainInfo/getPremaininfo',
       payload: {
         prereportno,
@@ -187,7 +196,16 @@ class Accept extends PureComponent {
           'agentname': response.data.agentname,
           'agenttel': response.data.agenttel,
           'chineselocalname': response.data.chineselocalname,
+          'customsNo':response.data.customsNo,
         });
+        if(response.data.iscostoms === "1"){
+          this.setState({isCustoms:true});
+          form.setFieldsValue({
+            'iscostoms': 1,
+            'customsName': this.getCustomsArr(response.data.customsName),
+          });
+        }
+        console.log(this.getCustomsArr(response.data.customsName));
         this.setState({consigoruser:response.data.consigoruser});
         form.setFieldsValue({'inspway': response.data.inspway.split(" ")});
 
@@ -238,18 +256,32 @@ class Accept extends PureComponent {
         this.setState({departments: response.data})
       }
     });
-    dispatch({
-      type: 'entrustment/getCustomInfos',
-      payload: {
-      },
-      callback: (response) => {
-        this.setState({customsOption: response.data})
-      }
-    });
+
 
 
 
   }
+
+
+  getCustomsArr =(val)=>{
+    const res =[];
+    const {state} = this;
+    for(let i=0;state.customsOption.length!==undefined&&i<state.customsOption.length;i++){
+      const item = state.customsOption[i];
+      if(state.customsOption[i].children!==undefined && state.customsOption[i].children!==null
+        && state.customsOption[i].children.length !==undefined){
+        for(let j =0;j<state.customsOption[i].children.length;j++){
+          const subitem = state.customsOption[i].children[j];
+          if(subitem.value ===val){
+            res.push(item.value);
+            res.push(subitem.value);
+            return res;
+          }
+        }
+      }
+    }
+    return res;
+  };
 
   getErrorInfo = () => {
     const {
@@ -1031,25 +1063,28 @@ class Accept extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-              <Col span={5}>
+              <Col span={6}>
                 <Form.Item
+                  label={fieldLabels.iscostoms}
                   colon={false}
+                  labelCol={{span: 13}}
+                  wrapperCol={{span: 11}}
                 >
                   {getFieldDecorator('iscostoms', {
                     rules: [],
                   })(
                     <Radio.Group onChange={this.changeIsCustoms}>
-                      <Radio value={1}>海关管辖</Radio>
-                      <Radio value={0}>非海关管辖</Radio>
+                      <Radio value={1}>是</Radio>
+                      <Radio value={0}>否</Radio>
                     </Radio.Group>
                   )}
                 </Form.Item>
               </Col>
-              <Col span={10}>
+              <Col span={9}>
                 <Form.Item
                   label={fieldLabels.customsName}
-                  labelCol={{span: 4}}
-                  wrapperCol={{span: 19}}
+                  labelCol={{span: 5}}
+                  wrapperCol={{span: 18}}
                   colon={false}
                 >
                   {getFieldDecorator('customsName', {
@@ -1059,7 +1094,6 @@ class Accept extends PureComponent {
                   )}
                 </Form.Item>
               </Col>
-
             </Row>
 
           </Form>

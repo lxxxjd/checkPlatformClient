@@ -181,6 +181,8 @@ class DetailForUnAccept extends Component {
             <Descriptions.Item label="付款人">{preMainInfo.payer}</Descriptions.Item>
             <Descriptions.Item label="检验费">{preMainInfo.price}</Descriptions.Item>
             <Descriptions.Item label="船名标识">{preMainInfo.shipname}</Descriptions.Item>
+            <Descriptions.Item label="报关号">{preMainInfo.customsNo}</Descriptions.Item>
+            <Descriptions.Item label="海关部门">{preMainInfo.customsName}</Descriptions.Item>
           </Descriptions>
           <Divider style={{ marginBottom: 32 }} />
           <Descriptions size="large" title="检查对象" style={{ marginBottom: 32 }} bordered>
