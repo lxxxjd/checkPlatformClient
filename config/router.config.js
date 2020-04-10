@@ -503,7 +503,7 @@ export default [
         path: '/Charge',
         icon: 'profile',
         name: 'Charge',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","财务人员","授权签字人"],
+        //authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","财务人员","授权签字人"],
         routes: [
           {
             path: '/Charge/FinalPrice',
@@ -594,7 +594,7 @@ export default [
         path: '/CostManage',
         icon: 'profile',
         name: 'CostManage',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","财务人员","授权签字人"],
+        //authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","财务人员","授权签字人"],
         routes: [
           {
             path: '/CostManage/Cost',
@@ -689,7 +689,7 @@ export default [
         path: '/Archives',
         icon: 'profile',
         name: 'Archives',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","授权签字人"],
+        //authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","授权签字人"],
         routes: [
           {
             path: '/Archives/ArchivesAdd',
