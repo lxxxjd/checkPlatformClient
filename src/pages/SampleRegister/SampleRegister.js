@@ -121,9 +121,7 @@ class SampleRegister extends PureComponent {
 
   previewItem = text => {
     localStorage.setItem('reportDetailNo',text.reportno);
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
+   window.open("/Entrustment/DetailForEntrustment");
   };
 
   toRegisterDetail = text => {

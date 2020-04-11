@@ -10,7 +10,7 @@ import {
   Input,
   Button,
   Select,
-  Table, message, DatePicker, Switch, Icon, Modal,
+  Table, message, DatePicker, Switch, Icon, Modal, Radio,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
@@ -72,8 +72,8 @@ class BusinessIncomeQuery extends PureComponent {
     //   dataIndex: 'invoiceNo',
     // },
     {
-      title: '到账状态',
-      dataIndex: 'payStatus',
+      title: '收费状态',
+      dataIndex: 'status',
     },
     {
       title: '状态',
@@ -143,6 +143,34 @@ class BusinessIncomeQuery extends PureComponent {
       const mkinds=[];
       const mvalues=[];
       const mconditions=[];
+
+      // 状态条件
+      if(fieldsValue.status !== undefined){
+
+        /*
+          未定价：pricemaking.total为空或者等于0的情况；
+          未到账：pricemaking.total不是空或者不等于0的情况，但是state不是“收讫”
+          已收讫：state=’收讫’
+        */
+        if(fieldsValue.status ==="未定价"){
+          mkinds.push("p.status");
+          mconditions.push("=");
+          mvalues.push("未定价");
+        }else if(fieldsValue.status ==="未到账"){
+          mkinds.push("p.status");
+          mconditions.push("!=");
+          mvalues.push("未定价");
+          mkinds.push("p.status");
+          mconditions.push("!=");
+          mvalues.push("收讫");
+        }else if(fieldsValue.status ==="已收讫"){
+          mkinds.push("p.status");
+          mconditions.push("=");
+          mvalues.push("收讫");
+        }
+
+      }
+
 
       // 日期条件，日期间隔
       if(fieldsValue.statisticFields !== undefined){
@@ -219,7 +247,33 @@ class BusinessIncomeQuery extends PureComponent {
       const mvalues=[];
       const mconditions=[];
 
+      // 状态条件
+      if(fieldsValue.status !== undefined){
 
+        /*
+          未定价：pricemaking.total为空或者等于0的情况；
+          未到账：pricemaking.total不是空或者不等于0的情况，但是state不是“收讫”
+          已收讫：state=’收讫’
+        */
+
+        if(fieldsValue.status ==="未定价"){
+          mkinds.push("p.status");
+          mconditions.push("=");
+          mvalues.push("未定价");
+        }else if(fieldsValue.status ==="未到账"){
+          mkinds.push("p.status");
+          mconditions.push("!=");
+          mvalues.push("未定价");
+          mkinds.push("p.status");
+          mconditions.push("!=");
+          mvalues.push("收讫");
+        }else if(fieldsValue.status ==="已收讫"){
+          mkinds.push("p.status");
+          mconditions.push("=");
+          mvalues.push("收讫");
+        }
+
+      }
 
       // 日期条件，日期间隔
       if(fieldsValue.statisticFields !== undefined){
@@ -299,6 +353,35 @@ class BusinessIncomeQuery extends PureComponent {
       const mkinds = [];
       const mvalues = [];
       const mconditions = [];
+
+      // 状态条件
+      if(fieldsValue.status !== undefined){
+
+        /*
+          未定价：pricemaking.total为空或者等于0的情况；
+          未到账：pricemaking.total不是空或者不等于0的情况，但是state不是“收讫”
+          已收讫：state=’收讫’
+        */
+
+        if(fieldsValue.status ==="未定价"){
+          mkinds.push("p.status");
+          mconditions.push("=");
+          mvalues.push("未定价");
+        }else if(fieldsValue.status ==="未到账"){
+          mkinds.push("p.status");
+          mconditions.push("!=");
+          mvalues.push("未定价");
+          mkinds.push("p.status");
+          mconditions.push("!=");
+          mvalues.push("收讫");
+        }else if(fieldsValue.status ==="已收讫"){
+          mkinds.push("p.status");
+          mconditions.push("=");
+          mvalues.push("收讫");
+        }
+
+      }
+
       // 日期条件，日期间隔
       if (fieldsValue.statisticFields !== undefined) {
         if (fieldsValue.statisticDateRange !== undefined && fieldsValue.statisticDateRange.length !== 0) {
@@ -373,6 +456,7 @@ class BusinessIncomeQuery extends PureComponent {
     const { form } = this.props;
     form.resetFields();
     this.init();
+    this.flag=0;
   };
 
 
@@ -407,6 +491,27 @@ class BusinessIncomeQuery extends PureComponent {
               检验费总和（元）：{selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal===undefined?"":
               selectBusinessIncomeTotalByConditionsResult.inspectionCostTotal}
             </h4>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }} style={{marginTop: 10}}>
+          <Col span={10}>
+            <span className={styles.submitButtons}>
+              <Button type="primary" htmlType="submit">
+                查询
+              </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleTotalSearch}>
+                查询总额
+              </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleConfirmExport}>
+                导出
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleAdvanceSearch}>
+                高级检索
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+                重置
+              </Button>
+            </span>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -445,23 +550,20 @@ class BusinessIncomeQuery extends PureComponent {
             </Form.Item>
           </Col>
           <Col span={10}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">
-                查询
-              </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleTotalSearch}>
-                查询总额
-              </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleConfirmExport}>
-                导出
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleAdvanceSearch}>
-                高级检索
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
-              </Button>
-            </span>
+            <Form.Item
+              label="收费状态："
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 6 }}
+            >
+              {getFieldDecorator('status',{rules: [], initialValue :"全部"
+              })(
+                <Radio.Group buttonStyle="solid">
+                  <Radio.Button value="全部">全部</Radio.Button>
+                  <Radio.Button value="未定价">未定价</Radio.Button>
+                  <Radio.Button value="未到账">未到账</Radio.Button>
+                  <Radio.Button value="已收讫">已收讫</Radio.Button>
+                </Radio.Group>)}
+            </Form.Item>
           </Col>
         </Row>
       </Form>
@@ -558,6 +660,8 @@ class BusinessIncomeQuery extends PureComponent {
                 <Option value="m.shipname"> 船名标识</Option>
                 <Option value="m.applicant">委托人</Option>
                 <Option value="m.agent">代理人</Option>
+                <Option value="m.payer">付款人</Option>
+                <Option value="m.inspway">检查项目</Option>
                 <Option value="m.businesssort">业务类别</Option>
                 <Option value="m.businesssource">业务来源</Option>
                 <Option value="m.tradeway">贸易方式</Option>
@@ -610,6 +714,7 @@ class BusinessIncomeQuery extends PureComponent {
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
             <Row className={styles.tableListForm}>{formItems}</Row>
             <Table
+              style={{marginTop:5}}
               size="middle"
               loading={loading}
               dataSource={selectBusinessIncomesByConditionsResult}

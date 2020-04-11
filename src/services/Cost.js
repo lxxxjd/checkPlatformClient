@@ -22,6 +22,16 @@ export async function selectCostByConditions(params) {
   });
 }
 
+// 查询
+export async function selectCostByConditionsSumMoney(params) {
+  return request('/api/cost/selectCostByConditionsSumMoney', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 export async function addList(params) {
   return request('/api/costlist/addList', {
     method: 'POST',

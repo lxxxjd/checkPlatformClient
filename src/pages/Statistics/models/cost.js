@@ -1,4 +1,4 @@
-import {selectCostByConditions} from '@/services/Cost'
+import {selectCostByConditions,selectCostByConditionsSumMoney} from '@/services/Cost'
 
 
 
@@ -20,6 +20,12 @@ export default {
       );
       if(callback) callback(response.data);
     },
+
+    *selectCostByConditionsSumMoney({ payload,callback}, { call, put}){
+      const response = yield call(selectCostByConditionsSumMoney, payload);
+      if(callback) callback(response);
+    },
+
 
   },
 

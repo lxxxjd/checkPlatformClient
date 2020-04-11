@@ -118,9 +118,7 @@ class FinalPrice extends PureComponent {
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
+   window.open("/Entrustment/DetailForEntrustment");
   };
 
   mobileItem = text => {

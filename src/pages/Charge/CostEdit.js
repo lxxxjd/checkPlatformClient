@@ -381,9 +381,7 @@ class Cost extends PureComponent {
   previewItem = text => {
     sessionStorage.setItem('reportNoForCostEdit',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
+   window.open("/Entrustment/DetailForEntrustment");
   };
 
   deleteItem = text => {

@@ -12,7 +12,7 @@ import {
   Select,
   Table, message, Icon,
   Checkbox,
-  Image, Modal, Descriptions,Switch,
+  Image, Modal, Descriptions, Switch, DatePicker,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import queryStyles from './CostQuery.less'
@@ -91,6 +91,7 @@ class CostQuery extends PureComponent {
     modalReviewVisible:false,
     modalInfo :{},
     costResult:[],
+    costsum:'0',
   };
 
   columns = [
@@ -155,14 +156,21 @@ class CostQuery extends PureComponent {
       payload: params,
       callback: (response) => {
           this.state.costResult = response;
+        dispatch({
+          type: 'cost/selectCostByConditionsSumMoney',
+          payload: params,
+          callback: (response2) => {
+            if(response2.code ===200){
+              this.setState({costsum:response2.data});
+            }
+          }
+        });
       }
     });
   };
 
   previewItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
+   window.open("/Entrustment/DetailForEntrustment");
     localStorage.setItem('reportDetailNo',text.reportno);
   };
 
@@ -192,11 +200,19 @@ class CostQuery extends PureComponent {
       let mvalues=[];
       let mconditions=[];
 
-      if( fieldsValue.check ===true && fieldsValue.kind !==undefined &&fieldsValue.value !==undefined &&fieldsValue.condition !== undefined ){
-        mkinds.push(fieldsValue.kind );
-        mvalues.push(fieldsValue.value);
-        mconditions.push(fieldsValue.condition );
+
+      // 日期条件，日期间隔statisticFields
+      if(fieldsValue.occurdate !== undefined){
+        if(fieldsValue.occurdate !== undefined && fieldsValue.occurdate.length!==0){
+          mkinds.push("occurdate");
+          mkinds.push("occurdate");
+          mconditions.push(">=");
+          mvalues.push(moment(fieldsValue.occurdate[0]).format('YYYY-MM-DD'));
+          mconditions.push("<=");
+          mvalues.push(moment(fieldsValue.occurdate[1]).format('YYYY-MM-DD'));
+        }
       }
+
       const keys = form.getFieldValue('keys');
       for(let key in keys){
         let k = keys[key];
@@ -222,6 +238,74 @@ class CostQuery extends PureComponent {
         payload: params,
         callback: (response) => {
           this.state.costResult = response;
+          dispatch({
+            type: 'cost/selectCostByConditionsSumMoney',
+            payload: params,
+            callback: (response2) => {
+              if(response2.code ===200){
+                this.setState({costsum:response2.data});
+              }
+            }
+          });
+        }
+      });
+
+    });
+  };
+
+  handleTotalSearch = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err){
+        console.log(err);
+        return;
+      }
+      const user = JSON.parse(localStorage.getItem("userinfo"));
+      let mkinds=[];
+      let mvalues=[];
+      let mconditions=[];
+
+
+      // 日期条件，日期间隔statisticFields
+      if(fieldsValue.occurdate !== undefined){
+        if(fieldsValue.occurdate !== undefined && fieldsValue.occurdate.length!==0){
+          mkinds.push("occurdate");
+          mkinds.push("occurdate");
+          mconditions.push(">=");
+          mvalues.push(moment(fieldsValue.occurdate[0]).format('YYYY-MM-DD'));
+          mconditions.push("<=");
+          mvalues.push(moment(fieldsValue.occurdate[1]).format('YYYY-MM-DD'));
+        }
+      }
+
+      const keys = form.getFieldValue('keys');
+      for(let key in keys){
+        let k = keys[key];
+        console.log(k);
+        const kind = form.getFieldValue(`kinds${k}`);
+        const condition = form.getFieldValue(`conditions${k}`);
+        const value = form.getFieldValue(`values${k}`);
+        const checkk = form.getFieldValue(`check${k}`);
+        if( checkk ===true &&  kind!==undefined &&value !==undefined &&condition !== undefined ){
+          mkinds.push(kind );
+          mvalues.push(value);
+          mconditions.push(condition);
+        }
+      }
+      const params = {
+        kinds :mkinds,
+        values: mvalues,
+        conditions:mconditions,
+        certCode:user.certCode,
+      };
+      dispatch({
+        type: 'cost/selectCostByConditionsSumMoney',
+        payload: params,
+        callback: (response2) => {
+          if(response2.code ===200){
+            this.setState({costsum:response2.data});
+          }
         }
       });
     });
@@ -251,83 +335,47 @@ class CostQuery extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const {costsum} = this.state;
+    const { RangePicker } = DatePicker;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={16}>
+          <Col span={4} style={{marginBottom:5}}>
+            <h3 style={{fontWeight:'bold'}}>统计结果:</h3>
+          </Col>
+          <Col span={12} style={{marginBottom:5,marginLeft:200,marginRight:200}}>
+            <h3 style={{fontWeight:'bold'}}>成本总额：{costsum!==undefined&&costsum!==null? costsum:0}</h3>
+          </Col>
+        </Row>
         <Row gutter={{ md: 6, lg: 18, xl: 5 }}>
-          <Col md={1} sm={20}>
+          <Col span={9}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
+              label="发生日期"
               colon={false}
             >
-              {getFieldDecorator('check', {
-                initialValue: true,
-                valuePropName: 'checked',
+              {getFieldDecorator("occurdate", {
               })(
-                <Switch checkedChildren="开" unCheckedChildren="关"  />
+                <RangePicker
+                  format="YYYY-MM-DD"
+                />
               )}
             </Form.Item>
           </Col>
-          <Col md={3} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('kind', {
-                rules: [{  message: '选择字段' }],
-              })(
-                <Select placeholder="选择字段">
-                  <Option value="reportno">委托编号</Option>
-                  <Option value="shipname">船名标识</Option>
-                  <Option value="cargoname">检查品名</Option>
-                  <Option value="sampleno">样品编号</Option>
-                  <Option value="samplename">样品名称</Option>
-                  <Option value="sampleuse">样品用途</Option>
-                  <Option value="owner">持有人</Option>
-                  <Option value="duration">保存天数</Option>
-                  <Option value="position">存放位置</Option>
-                  <Option value="status">状态</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-
-          <Col md={3} sm={20}>
-            <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
-              colon={false}
-            >
-              {getFieldDecorator('condition', {
-                rules: [{  message: '条件' }],
-              })(
-                <Select placeholder="条件">
-                  <Option value="=">等于</Option>
-                  <Option value="!=">不等于</Option>
-                  <Option value="like">包含</Option>
-                  <Option value="not like">不包含</Option>
-                </Select>
-              )}
-            </Form.Item>
-          </Col>
-          <Col md={4} sm={20}>
-            <FormItem>
-              {getFieldDecorator('value',{rules: [{ message: '请输入' }],})(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-          <Col md={1} sm={20}>  <Icon type="plus-circle" style={{fontSize:24, marginLeft: 8 ,marginTop:4}} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} /></Col>
-
           <Col md={8} sm={20}>
             <span className={styles.submitButtons}>
-              <Button style={{ marginLeft: 0 }} onClick={this.handleFormReset}>
-                重置
+              <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">
+                查询
+              </Button>
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleTotalSearch}>
+                查询总额
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleAdvanceSearch}>
                 高级检索
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} htmlType="submit">
-                查询
+              <Button style={{ marginLeft: 0 }} onClick={this.handleFormReset}>
+                重置
               </Button>
             </span>
           </Col>
@@ -436,13 +484,16 @@ class CostQuery extends PureComponent {
                 <Option value="reportno"> 委托编号</Option>
                 <Option value="shipname">船名标识</Option>
                 <Option value="cargoname">检查品名</Option>
-                <Option value="sampleno">样品编号</Option>
-                <Option value="samplename">样品名称</Option>
-                <Option value="sampleuse">样品用途</Option>
-                <Option value="owner">持有人</Option>
-                <Option value="duration">保存天数</Option>
-                <Option value="position">存放位置</Option>
-                <Option value="status">状态</Option>
+                <Option value="cargoname">检查项目</Option>
+                <Option value="cargosort">货物种类</Option>
+                <Option value="inspectplace">检验地点</Option>
+                <Option value="section">执行部门</Option>
+                <Option value="applicant">委托人</Option>
+                <Option value="agent">代理人</Option>
+                <Option value="payer">付款人</Option>
+                <Option value="costtype">费用种类</Option>
+                <Option value="costname">费用名称</Option>
+                <Option value="reciever">接收人</Option>
               </Select>
             )}
           </Form.Item>

@@ -64,12 +64,12 @@ class ReportPriceMakingQuery extends PureComponent {
       dataIndex: 'applicant',
     },
     {
-      title: '检测品名',
+      title: '检查品名',
       dataIndex: 'cargoname',
     },
     {
       title: '检验费',
-      dataIndex: 'price',
+      dataIndex: 'total',
     },
     {
       title: '支出总额',
@@ -167,7 +167,7 @@ class ReportPriceMakingQuery extends PureComponent {
       const mvalues=[];
       const mconditions=[];
 
-      // 得到最大利率 最小利率 委托日期 三个表单域的值并加入条件
+      // 得到最大利润率 最小利润率 委托日期 三个表单域的值并加入条件
       if(fieldsValue.minRate !== undefined){
         if(fieldsValue.minRate !== null){
           mkinds.push("profitRate");
@@ -240,7 +240,7 @@ class ReportPriceMakingQuery extends PureComponent {
       const mvalues=[];
       const mconditions=[];
 
-      // 得到最大利率 最小利率 委托日期 三个表单域的值并加入条件
+      // 得到最大利润率 最小利润率 委托日期 三个表单域的值并加入条件
       if(fieldsValue.minRate !== undefined){
           if(fieldsValue.minRate !== null){
             mkinds.push("profitRate");
@@ -347,7 +347,7 @@ class ReportPriceMakingQuery extends PureComponent {
         <Row gutter={16}>
           <Col span={3}>
             <FormItem
-              label="利率"
+              label="利润率"
               labelCol={{span: 1}}
               wrapperCol={{span: 3}}
             >
@@ -355,7 +355,7 @@ class ReportPriceMakingQuery extends PureComponent {
                 rules: [],
               })(
                 <InputNumber
-                  min={0}
+                  min={-100}
                   max={100}
                   formatter={value => `${value}%`}
                   parser={value => value.replace('%', '')}
@@ -374,7 +374,7 @@ class ReportPriceMakingQuery extends PureComponent {
                 rules: [],
               })(
                 <InputNumber
-                  min={0}
+                  min={-100}
                   max={100}
                   formatter={value => `${value}%`}
                   parser={value => value.replace('%', '')}
@@ -515,12 +515,14 @@ class ReportPriceMakingQuery extends PureComponent {
                 <Option value="reportno"> 委托编号</Option>
                 <Option value="applicant">委托人</Option>
                 <Option value="agent">代理人</Option>
+                <Option value="payer">付款人</Option>
                 <Option value="businesssort">业务类别</Option>
                 <Option value="businesssource">业务来源</Option>
                 <Option value="tradeway">贸易方式</Option>
                 <Option value="cargoname">检查品名</Option>
+                <Option value="inspway">检查项目</Option>
                 <Option value="cargosort">货物种类</Option>
-                <Option value="inspplace1">检验地点</Option>
+                <Option value="inspectplace">检验地点</Option>
                 <Option value="section">执行部门</Option>
               </Select>
             )}

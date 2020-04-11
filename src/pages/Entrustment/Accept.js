@@ -205,7 +205,6 @@ class Accept extends PureComponent {
             'customsName': this.getCustomsArr(response.data.customsName),
           });
         }
-        console.log(this.getCustomsArr(response.data.customsName));
         this.setState({consigoruser:response.data.consigoruser});
         form.setFieldsValue({'inspway': response.data.inspway.split(" ")});
 

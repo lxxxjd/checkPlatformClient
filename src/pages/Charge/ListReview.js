@@ -58,11 +58,8 @@ class ListReview extends PureComponent {
       render: (text, record) => (
         <Fragment>
           {text.paystatus==="未审核"||text.paystatus==="审核退回"?[<a onClick={() => this.toListFictionReview(text, record)}>审核&nbsp;&nbsp;</a>]:[]}
-          &nbsp;&nbsp;
           {text.paystatus==="审核通过"||text.paystatus==="发票作废"?[<a onClick={() => this.toListFictionReviewBack(text, record)}>退回&nbsp;&nbsp;</a>]:[]}
-          &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>查看</a>
-          &nbsp;&nbsp;
         </Fragment>
       ),
     },
@@ -173,7 +170,7 @@ class ListReview extends PureComponent {
                   <Option value="listno">清单号</Option>
                   <Option value="listman">拟制人</Option>
                   <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
+                  <Option value="paystatus">状态</Option>
                 </Select>
               )}
             </Form.Item>

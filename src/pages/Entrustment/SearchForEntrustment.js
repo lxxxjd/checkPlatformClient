@@ -135,18 +135,21 @@ class SearchForEntrustment extends PureComponent {
     });
 
   };
+
   uploadItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     router.push({
       pathname:'/Entrustment/EntrustmentRecord',
     });
   };
+
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
+    // router.push({
+    //   pathname:'/Entrustment/DetailForEntrustment',
+    // });
+    window.open("/Entrustment/DetailForEntrustment");
   };
 
   modifyItem = text => {

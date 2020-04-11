@@ -165,7 +165,7 @@ class ListFictionDelete extends PureComponent {
                   <Option value="listno">清单号</Option>
                   <Option value="listman">拟制人</Option>
                   <Option value="payer">付款人</Option>
-                  <Option value="invoiceStatus">状态</Option>
+                  <Option value="paystatus">状态</Option>
                 </Select>
               )}
             </Form.Item>

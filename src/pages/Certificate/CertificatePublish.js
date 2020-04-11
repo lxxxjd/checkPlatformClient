@@ -123,9 +123,7 @@ class CertificatePublish extends PureComponent {
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
+   window.open("/Entrustment/DetailForEntrustment");
   };
 
 

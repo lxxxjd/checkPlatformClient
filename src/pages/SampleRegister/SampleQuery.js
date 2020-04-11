@@ -171,9 +171,7 @@ class SampleQuery extends PureComponent {
   }
 
   previewItem = text => {
-    router.push({
-      pathname:'/Entrustment/DetailForEntrustment',
-    });
+   window.open("/Entrustment/DetailForEntrustment");
     localStorage.setItem('reportDetailNo',text.reportno);
   };
 

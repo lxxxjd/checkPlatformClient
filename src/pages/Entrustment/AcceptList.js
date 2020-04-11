@@ -94,30 +94,39 @@ class AcceptList extends PureComponent {
 
   previewItem = text => {
     sessionStorage.setItem('prereportno',text.prereportno);
-    router.push({
-      pathname:'/Entrustment/DetailForUnAccept',
-    });
+    // router.push({
+    //   pathname:'/Entrustment/DetailForUnAccept',
+    // });
+    window.open("/Entrustment/DetailForUnAccept");
+    //this.props.history.push('/Entrustment/DetailForUnAccept');
   };
 
   deleteItem = text => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'preMainInfo/unAcceptPremaininfo',
-      payload: {
-        prereportno:text.prereportno,
-      },
-      callback:response =>{
-        if (response.code === 200) {
-          notification.open({
-            message: '拒绝成功',
-          });
-          this.componentDidMount();
-        }else {
-          notification.open({
-            message: '拒绝失败',
-            description: response.data,
-          });
-        }
+    Modal.confirm({
+      title: '确定拒绝该网上委托吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'preMainInfo/unAcceptPremaininfo',
+          payload: {
+            prereportno:text.prereportno,
+          },
+          callback:response =>{
+            if (response.code === 200) {
+              notification.open({
+                message: '拒绝成功',
+              });
+              this.componentDidMount();
+            }else {
+              notification.open({
+                message: '拒绝失败',
+                description: response.data,
+              });
+            }
+          }
+        });
       }
     });
   };

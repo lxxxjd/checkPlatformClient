@@ -118,7 +118,7 @@ class DetailForUnAccept extends Component {
   };
 
   back = () =>{
-    this.props.history.goBack();
+    window.close();
   };
 
   showCancel = () =>{
@@ -155,7 +155,7 @@ class DetailForUnAccept extends Component {
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
-                <Icon type="left" />返回
+                <Icon style={{paddingLeft:5}} type="close" />关闭
               </Button>
             </Col>
           </Row>
@@ -198,7 +198,7 @@ class DetailForUnAccept extends Component {
             <Descriptions.Item label="检验备注">{preMainInfo.inspwaymemo1}</Descriptions.Item>
           </Descriptions>
         </Card>
-        <Card bordered={false}  title="附件">
+        <Card bordered={false} title="附件">
           <div>
             <Table
               size="middle"
