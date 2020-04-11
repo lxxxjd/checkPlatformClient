@@ -109,7 +109,9 @@ class CertificatePublish extends PureComponent {
     dispatch({
       type: 'certificate/getCertReports',
       payload:{
-        certCode:user.certCode
+        certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       }
     });
   };
@@ -189,6 +191,8 @@ class CertificatePublish extends PureComponent {
       const values = {
         ...fieldsValue,
         certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       };
       dispatch({
         type: 'certificate/getCertReports',
