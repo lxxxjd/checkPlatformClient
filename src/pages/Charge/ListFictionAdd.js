@@ -534,9 +534,7 @@ class ListFictionAdd extends PureComponent {
         if (response) {
           message.success('收费清单添加成功');
           sessionStorage.setItem('reportnoForList',JSON.stringify(response));
-          router.push({
-            pathname:'/Charge/DetailList',
-          });
+          window.open("/Charge/DetailList");
         } else {
           message.error('收费清单添加失败');
         }

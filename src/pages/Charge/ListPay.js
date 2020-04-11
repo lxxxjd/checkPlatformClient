@@ -220,9 +220,7 @@ class ListPay extends PureComponent {
 
   previewItem = text => {
     sessionStorage.setItem('reportnoForList',JSON.stringify(text));
-    router.push({
-      pathname:'/Charge/DetailList',
-    });
+    window.open("/Charge/DetailList");
   };
 
 

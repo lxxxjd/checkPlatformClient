@@ -107,21 +107,18 @@ class ListFiction extends PureComponent {
         certCode:user.certCode
       }
     });
-  }
+  };
 
 
   previewItem = text => {
     sessionStorage.setItem('reportnoForList',JSON.stringify(text));
-    router.push({
-      pathname:'/Charge/DetailList',
-    });
+    window.open("/Charge/DetailList");
   };
 
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {

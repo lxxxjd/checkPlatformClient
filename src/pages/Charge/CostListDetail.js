@@ -10,11 +10,11 @@ import {
   Input,
   Button,
   Select,
-  Table, DatePicker, message, Icon, Modal,
+  Table, DatePicker, message, Icon, Modal, Typography,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './DetailList.less';
-
+const { Title} = Typography;
 const { Option } = Select;
 
 
@@ -121,7 +121,7 @@ class CostListDetail extends PureComponent {
 
 
   back = () =>{
-    this.props.history.goBack();
+    window.close();
   };
 
 
@@ -135,9 +135,13 @@ class CostListDetail extends PureComponent {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <Row gutter={8}>
+            <Col span={3}>
+              <Title level={3}>成本清单</Title>
+            </Col>
+            <Col span={19} />
             <Col span={2}>
-              <Button type="primary" style={{ marginLeft: 1  ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
-                <Icon type="left" />返回
+              <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
+                <Icon style={{paddingLeft:5}} type="close" />关闭
               </Button>
             </Col>
           </Row>

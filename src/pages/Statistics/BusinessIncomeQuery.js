@@ -125,9 +125,7 @@ class BusinessIncomeQuery extends PureComponent {
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportNo);
-    router.push({
-      pathname:'BusinessIncomeDetail',
-    });
+    window.open("/Statistics/BusinessIncomeDetail");
   };
 
   // 查询
@@ -143,20 +141,16 @@ class BusinessIncomeQuery extends PureComponent {
       const mkinds=[];
       const mvalues=[];
       const mconditions=[];
-
       // 状态条件
       if(fieldsValue.status !== undefined){
-
-        /*
-          未定价：pricemaking.total为空或者等于0的情况；
-          未到账：pricemaking.total不是空或者不等于0的情况，但是state不是“收讫”
-          已收讫：state=’收讫’
-        */
         if(fieldsValue.status ==="未定价"){
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("未定价");
         }else if(fieldsValue.status ==="未到账"){
+          mkinds.push("p.status");
+          mconditions.push("is not");
+          mvalues.push("null");
           mkinds.push("p.status");
           mconditions.push("!=");
           mvalues.push("未定价");
@@ -167,10 +161,12 @@ class BusinessIncomeQuery extends PureComponent {
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("收讫");
+        }else if(fieldsValue.status ==="已开票"){
+          mkinds.push("p.status");
+          mconditions.push("like");
+          mvalues.push("%收讫%");
         }
-
       }
-
 
       // 日期条件，日期间隔
       if(fieldsValue.statisticFields !== undefined){
@@ -249,18 +245,14 @@ class BusinessIncomeQuery extends PureComponent {
 
       // 状态条件
       if(fieldsValue.status !== undefined){
-
-        /*
-          未定价：pricemaking.total为空或者等于0的情况；
-          未到账：pricemaking.total不是空或者不等于0的情况，但是state不是“收讫”
-          已收讫：state=’收讫’
-        */
-
         if(fieldsValue.status ==="未定价"){
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("未定价");
         }else if(fieldsValue.status ==="未到账"){
+          mkinds.push("p.status");
+          mconditions.push("is not");
+          mvalues.push("null");
           mkinds.push("p.status");
           mconditions.push("!=");
           mvalues.push("未定价");
@@ -271,8 +263,11 @@ class BusinessIncomeQuery extends PureComponent {
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("收讫");
+        }else if(fieldsValue.status ==="已开票"){
+          mkinds.push("p.status");
+          mconditions.push("like");
+          mvalues.push("%收讫%");
         }
-
       }
 
       // 日期条件，日期间隔
@@ -356,18 +351,14 @@ class BusinessIncomeQuery extends PureComponent {
 
       // 状态条件
       if(fieldsValue.status !== undefined){
-
-        /*
-          未定价：pricemaking.total为空或者等于0的情况；
-          未到账：pricemaking.total不是空或者不等于0的情况，但是state不是“收讫”
-          已收讫：state=’收讫’
-        */
-
         if(fieldsValue.status ==="未定价"){
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("未定价");
         }else if(fieldsValue.status ==="未到账"){
+          mkinds.push("p.status");
+          mconditions.push("is not");
+          mvalues.push("null");
           mkinds.push("p.status");
           mconditions.push("!=");
           mvalues.push("未定价");
@@ -378,8 +369,11 @@ class BusinessIncomeQuery extends PureComponent {
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("收讫");
+        }else if(fieldsValue.status ==="已开票"){
+          mkinds.push("p.status");
+          mconditions.push("like");
+          mvalues.push("%收讫%");
         }
-
       }
 
       // 日期条件，日期间隔
@@ -535,7 +529,7 @@ class BusinessIncomeQuery extends PureComponent {
             </Form.Item>
           </Col>
           {/* 日期范围选择控件 */}
-          <Col span={10}>
+          <Col span={8}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
@@ -549,7 +543,7 @@ class BusinessIncomeQuery extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col span={10}>
+          <Col span={12}>
             <Form.Item
               label="收费状态："
               labelCol={{ span: 5 }}
@@ -561,6 +555,7 @@ class BusinessIncomeQuery extends PureComponent {
                   <Radio.Button value="全部">全部</Radio.Button>
                   <Radio.Button value="未定价">未定价</Radio.Button>
                   <Radio.Button value="未到账">未到账</Radio.Button>
+                  <Radio.Button value="已开票">已开票</Radio.Button>
                   <Radio.Button value="已收讫">已收讫</Radio.Button>
                 </Radio.Group>)}
             </Form.Item>

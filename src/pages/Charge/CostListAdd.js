@@ -307,9 +307,7 @@ class CostListAdd extends PureComponent {
         if (response) {
           message.success('成本清单添加成功');
           sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(response));
-          router.push({
-            pathname:'/CostManage/CostListDetail',
-          });
+         window.open("/CostManage/CostListDetail");
         } else {
           message.error('成本清单添加失败');
         }

@@ -66,10 +66,8 @@ class CostlistEdit extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.status==="已拟制"||text.status==="审核退回"?[<a onClick={() => this.goToCostlistDetailReviewPass(text, record)}>通过</a>]:[]}
-          &nbsp;&nbsp;
-          {text.status==="审核通过"?[<a onClick={() => this.goToCostlistDetailReviewBack(text, record)}>退回</a>]:[]}
-          &nbsp;&nbsp;
+          {text.status==="已拟制"||text.status==="审核退回"?[<a onClick={() => this.goToCostlistDetailReviewPass(text, record)}>通过 &nbsp;&nbsp;</a>]:[]}
+          {text.status==="审核通过"?[<a onClick={() => this.goToCostlistDetailReviewBack(text, record)}>退回   &nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.goToCostlistDetail(text, record)}>查看</a>
         </Fragment>
       ),
@@ -160,9 +158,7 @@ class CostlistEdit extends PureComponent {
 
   goToCostlistDetail = text => {
     sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
-    router.push({
-      pathname:'/CostManage/CostListDetail',
-    });
+   window.open("/CostManage/CostListDetail");
   };
 
   renderSimpleForm() {

@@ -138,9 +138,7 @@ class ReportPriceMakingQuery extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('reportNoForCostEdit',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
-    router.push({
-      pathname:'/Statistics/ReportPriceMakingQueryDetail',
-    });
+    window.open("/Statistics/ReportPriceMakingQueryDetail");
   };
 
 

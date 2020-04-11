@@ -143,9 +143,7 @@ class CostlistDelete extends PureComponent {
 
   goToCostlistDetail = text => {
     sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
-    router.push({
-      pathname:'/CostManage/CostListDetail',
-    });
+   window.open("/CostManage/CostListDetail");
   };
 
   deleteItem = text =>{

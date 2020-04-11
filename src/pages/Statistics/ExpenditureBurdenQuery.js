@@ -108,9 +108,7 @@ class ExpenditureBurdenQuery extends PureComponent {
 
   previewItem = text => {
     sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
-    router.push({
-      pathname:'/CostManage/CostListDetail',
-    });
+   window.open("/CostManage/CostListDetail");
   };
 
   // 查询

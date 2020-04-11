@@ -315,9 +315,7 @@ class CostQuery extends PureComponent {
     sessionStorage.setItem('reportno',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
     sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(text));
-    router.push({
-      pathname:'/Statistics/CostQueryDetail',
-    });
+    window.open("/Statistics/CostQueryDetail");
   };
 
 

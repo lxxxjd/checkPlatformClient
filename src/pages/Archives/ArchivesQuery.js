@@ -48,7 +48,7 @@ const CreateForm = Form.create()(props => {
 
       <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15}} label="归档时间">
         {form.getFieldDecorator('archivesdate', {
-          initialValue: moment(modalInfo.archivesdate, "YYYY-MM-DD"),
+          initialValue: modalInfo.archivesdate===undefined || modalInfo.archivesdate===null ?null:moment(modalInfo.archivesdate, "YYYY-MM-DD"),
         })(
           <DatePicker
             style={{ width: '100%' }}
@@ -213,7 +213,7 @@ class ArchivesQuery extends PureComponent {
     this.setState({
       modalVisible: false,
     });
-  }
+  };
 
 
 
