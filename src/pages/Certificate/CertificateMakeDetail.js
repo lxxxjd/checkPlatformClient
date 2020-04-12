@@ -68,7 +68,7 @@ const CertForm = Form.create()(props => {
       destroyOnClose={()=>{return true}}
       footer={[
         <div>
-          <span>审核人：</span>
+          <span>授权签字人：</span>
           {form.getFieldDecorator('approver', {
             rules: [
               {
@@ -788,6 +788,7 @@ class CertificateMakeDetail extends PureComponent {
           </Row>
           <div className={styles.tableList}>
             <Table
+              style={{marginTop:5}}
               size="middle"
               loading={loading}
               dataSource={recordData}

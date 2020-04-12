@@ -199,6 +199,8 @@ class Inspector extends PureComponent {
         kind :fieldsValue.kind,
         value: fieldsValue.value,
         certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       };
       dispatch({
         type: 'task/fetchInspect',

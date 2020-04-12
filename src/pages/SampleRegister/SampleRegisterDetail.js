@@ -107,9 +107,10 @@ const ArrivalInvoiceForm = Form.create()(props => {
             initialValue:sampledata.sampleuse
           })(
             <Select placeholder="请选择样品用途">
-              <Option value="水份">水份</Option>
-              <Option value="指标测试">指标测试</Option>
+              <Option value="仲裁">仲裁</Option>
+              <Option value="测试">测试</Option>
               <Option value="留存">留存</Option>
+              <Option value="寄送">寄送</Option>
               <Option value="其他">其他</Option>
             </Select>,
           )}

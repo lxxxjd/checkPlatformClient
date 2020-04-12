@@ -61,13 +61,25 @@ class ListFictionReviewBack extends PureComponent {
     //   dataIndex: 'payer',
     // },
     {
-      title: '价格',
+      title: '定价方式',
+      dataIndex: 'priceway',
+    },
+    {
+      title: '数量',
+      dataIndex: 'quantity',
+    },
+    {
+      title: '单价',
       dataIndex: 'price',
     },
     {
-      title: '状态',
-      dataIndex: 'status',
+      title: '总价',
+      dataIndex: 'total',
     },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'status',
+    // },
     {
       title: '操作',
       render: (text, record) => (

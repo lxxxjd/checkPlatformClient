@@ -86,8 +86,9 @@ class InspectionArrangement extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[]:[ <a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]}
-          <a onClick={() => this.detailItem(text, record)}>查看&nbsp;&nbsp;</a>
+          {/*{text.overallstate==="已发布"|| text.overallstate==="申请作废"?[]:[ <a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]}*/}
+          {/*<a onClick={() => this.detailItem(text, record)}>查看&nbsp;&nbsp;</a>*/}
+          {(text.testman===undefined || text.testman===null) ?[ <a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[ <a onClick={() => this.detailItem(text, record)}>分包&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),

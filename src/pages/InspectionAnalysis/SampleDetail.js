@@ -28,7 +28,6 @@ const { Option } = Select;
   inspectionAnalysis,
   loading: loading.models.inspectionAnalysis,
 }))
-
 @Form.create()
 class SampleDetail extends PureComponent {
   state = {

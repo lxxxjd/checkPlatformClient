@@ -1282,6 +1282,7 @@ class CertificateUploadDetail extends PureComponent {
           </Row>
           <div className={styles.tableList}>
             <Table
+              style={{marginTop:5}}
               size="middle"
               loading={loading}
               dataSource={recordData}

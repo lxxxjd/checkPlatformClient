@@ -321,6 +321,7 @@ class Cost extends PureComponent {
     modalInfo:{},
     CostItemData :{},
     applicantName:[],
+    role:false,
   };
 
   columns = [
@@ -364,8 +365,10 @@ class Cost extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.costtype!=="分包费"&&text.costtype!=="绩效" &&text.status==="已登记"?[<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>]:[]}
-          {text.costtype!=="分包费"&&text.costtype!=="绩效" &&text.status==="已登记"?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
+          {/*{text.costtype!=="分包费"&&text.costtype!=="绩效" &&text.status==="已登记"?[<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>]:[]}*/}
+          {/*{text.costtype!=="分包费"&&text.costtype!=="绩效" &&text.status==="已登记"?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}*/}
+          {text.status==="已登记" ?[(text.costtype!=="绩效" && text.costtype!=="分包费")|| ((text.costtype==="绩效" || text.costtype==="分包费") && this.state.role===true)?[<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>]:[]]:[]}
+          {text.status==="已登记" ?[(text.costtype!=="绩效" && text.costtype!=="分包费")|| ((text.costtype==="绩效" || text.costtype==="分包费") && this.state.role===true)?[<a onClick={() => this.deleteItem(text, true)}>删除&nbsp;&nbsp;</a>]:[]]:[]}
           <a onClick={() => this.handleReview(true, text)}>查看&nbsp;&nbsp;</a>
         </Fragment>
       ),
@@ -374,6 +377,12 @@ class Cost extends PureComponent {
   // &nbsp;&nbsp;<a onClick={() => this.previewItem(text, record)}>查看</a>
 
   componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    if(user.role!==undefined){
+      if(user.role.indexOf("总经理")!==-1 || user.role.indexOf("业务副总")!==-1 || user.role.indexOf("操作经理")!==-1 ){
+        this.state.role = true;
+      }
+    }
     this.init();
   }
 

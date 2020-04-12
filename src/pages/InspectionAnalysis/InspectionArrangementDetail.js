@@ -24,11 +24,11 @@ import moment from 'moment'
 const  operationTabList = [
     {
       key: 'tab1',
-      tab: '人员',
+      tab: '分包',
     },
     {
       key: 'tab2',
-      tab: '分包',
+      tab: '人员',
     },
   ];
 
@@ -317,21 +317,21 @@ class InspectionArrangementDetail extends PureComponent {
     };
     const contentList = {
       tab1: (
+          <Table
+            pagination={false}
+            loading={loading}
+            dataSource={testInfo}
+            rowKey = 'testman'
+            columns={this.columns2}
+          />
+      ),
+      tab2: (
         <Table
           pagination={false}
           loading={loading}
           dataSource={inspman}
           rowKey = 'inspman'
           columns={this.columns1}
-        />
-      ),
-      tab2: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={testInfo}
-          rowKey = 'testman'
-          columns={this.columns2}
         />
       ),
     };
