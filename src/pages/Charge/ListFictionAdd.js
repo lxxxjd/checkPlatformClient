@@ -25,7 +25,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,priceMaking,onFocusApproverusers,invoiceTitlesOptions,approverusersOptions,getRepeatListNo} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,firstreportno,onFocusApproverusers,invoiceTitlesOptions,approverusersOptions,getRepeatListNo} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -76,7 +76,7 @@ const AddListFrom = Form.create()(props =>  {
         </Form.Item>
         <Form.Item labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} label="清单号：">
           {form.getFieldDecorator('listno', {
-            initialValue:(priceMaking!==undefined&&priceMaking.length>0)?priceMaking[0].reportno:undefined,
+            initialValue:firstreportno,
             rules: [{required: true,validator:getRepeatListNo,}],
           })(<Input placeholder="请输入清单号" />)}
         </Form.Item>
@@ -328,6 +328,9 @@ class ListFictionAdd extends PureComponent {
     reportPriceMaking:{},
     checkProject:[],
     value:'按单价',
+
+    priceMakingData:[],  // 用于拟制
+    firstreportno:undefined,
   };
 
   columns = [
@@ -369,12 +372,10 @@ class ListFictionAdd extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>定价</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.removeExistItem(text, record)}>剔除</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.mobileItem(text, record)}>定价&nbsp;&nbsp;</a>
+          <a onClick={() => this.makeListItem(text, record)}>拟制&nbsp;&nbsp;</a>
+          <a onClick={() => this.removeExistItem(text, record)}>剔除&nbsp;&nbsp;</a>
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
-          &nbsp;&nbsp;
         </Fragment>
       ),
     },
@@ -441,7 +442,63 @@ class ListFictionAdd extends PureComponent {
     return source;
   };
 
+  // 单条拟制
+  makeListItem = (text) =>{
+      if(text.status ===undefined || text.status ==="未定价"){
+        message.error('状态未定价，请定价后重试！');
+        return;
+      }
+      if (text.status !=="已定价未拟制"){
+        message.error('状态已拟制，如需重新拟制，请删除清单后操作！');
+        return;
+      }
+    const {dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const values = {
+      certCode:user.certCode,
+    };
 
+    dispatch({
+      type: 'charge/getInvoiceTitleList',
+      payload:values,
+      callback: (response) => {
+
+        // 设置账户
+        if(response!==undefined && response.length !==undefined && response.length>0) {
+          this.setState({
+            invoiceTitles: response,
+          });
+          // 拟制操作
+          let data=[];
+          data.push(text);
+          this.state.total = text.total;
+          this.setState({priceMakingData:data});
+          this.setState({payer:text.payer});
+          this.setState({firstreportno:text.reportno});
+          // 获取清单审核人员
+          dispatch({
+            type: 'user/getMan',
+            payload:{
+              certcode:user.certCode,
+              func:"清单审核" ,
+            },
+            callback: (response2) => {
+              if(response2){
+                this.setState({approverusers:response2});
+                this.handleAddListVisible(true);
+              }else{
+                message.error("未配置审核人用户角色");
+              }
+            }
+          });
+
+        }else{
+          message.success('请配置到账账户');
+        }
+      }
+    });
+
+  };
 
 
   handleSubmit = () => {
@@ -488,9 +545,11 @@ class ListFictionAdd extends PureComponent {
             }
             total += parseFloat(state.priceMaking[j].total);
           }
+          this.state.firstreportno = (state.priceMaking!==undefined&&state.priceMaking.length>0)?state.priceMaking[0].reportno:undefined;
           this.state.total = total;
+          this.state.priceMakingData = state.priceMaking;
 
-          //获取清单审核人员
+          // 获取清单审核人员
           dispatch({
             type: 'user/getMan',
             payload:{
@@ -522,7 +581,7 @@ class ListFictionAdd extends PureComponent {
       certcode:user.certCode,
       reviewer:fieldvalues.reviewer,
       listman:user.nameC,
-      priceMakings:this.state.priceMaking,
+      priceMakings:this.state.priceMakingData,
       listno:fieldvalues.listno,
       payer:this.state.payer,
       invoiceTitle:fieldvalues.invoiceTitle,
@@ -535,6 +594,11 @@ class ListFictionAdd extends PureComponent {
           message.success('收费清单添加成功');
           sessionStorage.setItem('reportnoForList',JSON.stringify(response));
           window.open("/Charge/DetailList");
+          const {priceMakingData,priceMaking} = this.state;
+          for(let i =0 ;i<priceMakingData.length;i++){
+            priceMaking.find(item => item.reportno === priceMakingData[i].reportno).status="已拟制未开具";
+          }
+          this.setState({priceMaking});
         } else {
           message.error('收费清单添加失败');
         }
@@ -803,6 +867,8 @@ class ListFictionAdd extends PureComponent {
     }
   };
 
+
+
   // 定价
   mobileItem = text => {
     // sessionStorage.setItem('reportno',text.reportno);
@@ -896,7 +962,7 @@ class ListFictionAdd extends PureComponent {
       loading,dispatch
     } = this.props;
 
-    const {priceMaking,modalAddListVisible,total,payer,invoiceTitles,approverusers,modalPriceMakingVisible,reportPriceMaking,checkProject,value} = this.state;
+    const {priceMaking,modalAddListVisible,total,payer,invoiceTitles,firstreportno,approverusers,modalPriceMakingVisible,reportPriceMaking,checkProject,value} = this.state;
 
     // 下载模板 模态框方法
     const parentMethods = {
@@ -1002,8 +1068,8 @@ class ListFictionAdd extends PureComponent {
             <Form onSubmit={this.handleSubmit}>
               <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
               <Row className={styles.tableListForm}>{formItems}</Row>
-              <AddListFrom {...parentMethods} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} invoiceTitlesOptions={invoiceTitlesOptions} approverusersOptions={approverusersOptions} />
-              <PriceMakingForm {...parentMethods} modalPriceMakingVisible={modalPriceMakingVisible} dispatch={dispatch} reportPriceMaking={reportPriceMaking} checkProjectRadio={checkProjectRadio} value={value} />
+              <AddListFrom {...parentMethods} firstreportno={firstreportno} modalAddListVisible={modalAddListVisible} priceMaking={priceMaking} total={total} payer={payer} invoiceTitlesOptions={invoiceTitlesOptions} approverusersOptions={approverusersOptions} />
+              <PriceMakingForm {...parentMethods} firstreportno={firstreportno} modalPriceMakingVisible={modalPriceMakingVisible} dispatch={dispatch} reportPriceMaking={reportPriceMaking} checkProjectRadio={checkProjectRadio} value={value} />
             </Form>
             <Table
               style={{marginTop:5}}

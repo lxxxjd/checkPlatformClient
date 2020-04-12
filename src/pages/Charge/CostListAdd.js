@@ -25,7 +25,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 // 拟制清单
 const AddListFrom = Form.create()(props =>  {
-  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,paylistno,approverusersOptions,costList,paycompany,getRepeatPayListNo,onFocusApproverusers} = props;
+  const { form, modalAddListVisible, handleAddListVisible,handleFormAddList,total,paylistno,approverusersOptions,paycompany,getRepeatPayListNo,onFocusApproverusers} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -114,6 +114,9 @@ class CostListAdd extends PureComponent {
     paylistno:undefined,
     approverusers:[],
     applicantName:[],//工商接口申请人
+
+
+    costListData:[],  // 用于拟制
   };
 
   columns = [
@@ -161,10 +164,9 @@ class CostListAdd extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.removeExistItem(text, record)}>剔除</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.makecostItem(text, record)}>拟制 &nbsp;&nbsp;</a>
+          <a onClick={() => this.removeExistItem(text, record)}>剔除 &nbsp;&nbsp;</a>
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
-          &nbsp;&nbsp;
         </Fragment>
       ),
     },
@@ -224,6 +226,41 @@ class CostListAdd extends PureComponent {
   };
 
 
+  makecostItem = (text) =>{
+
+    if(text.status !=="已登记"){
+      Modal.error({
+        okText: '确定',
+        title:'清单记录不是全部‘已登记’状态！',
+        content: "请选择剔除或者重新查询！",
+      });
+      return;
+    }
+    this.setState({total:text.costmoney});
+    this.setState({paylistno:text.reportno});
+    this.setState({paycompany:text.reciever});
+    let data = [];
+    data.push(text);
+    this.setState({costListData:data});
+
+    const{dispatch} = this.props;
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'user/getMan',
+      payload:{
+        certcode:user.certCode,
+        func:"成本审核" ,
+      },
+      callback: (response) => {
+        if(response){
+          this.setState({approverusers:response});
+        }else{
+          message.error("未配置审核人用户角色");
+        }
+      }
+    });
+    this.handleAddListVisible(true);
+  };
 
 
   handleSubmit = () => {
@@ -264,6 +301,7 @@ class CostListAdd extends PureComponent {
     if(state.costList!==undefined ) {
       this.state.paylistno = state.costList[0].reportno;
     }
+    this.setState({costListData:state.costList});
     const{dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     dispatch({
@@ -297,7 +335,7 @@ class CostListAdd extends PureComponent {
     const values={
       costlist,
       reviewer:fieldvalues.reviewer,
-      costs:this.state.costList,
+      costs:this.state.costListData,
     };
 
     dispatch({
@@ -307,7 +345,13 @@ class CostListAdd extends PureComponent {
         if (response) {
           message.success('成本清单添加成功');
           sessionStorage.setItem('CostListDetail_costlist',JSON.stringify(response));
-         window.open("/CostManage/CostListDetail");
+          window.open("/CostManage/CostListDetail");
+
+          const {costList,costListData} = this.state;
+          for(let i =0 ;i<costListData.length;i++){
+            costList.find(item => item.keyno === costListData[i].keyno).status="已拟制";
+          }
+          this.setState({costList});
         } else {
           message.error('成本清单添加失败');
         }

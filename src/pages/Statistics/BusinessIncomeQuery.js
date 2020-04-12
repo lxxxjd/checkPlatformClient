@@ -134,7 +134,6 @@ class BusinessIncomeQuery extends PureComponent {
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
       if (err){
-        console.log(err);
         return;
       }
       const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -149,14 +148,8 @@ class BusinessIncomeQuery extends PureComponent {
           mvalues.push("未定价");
         }else if(fieldsValue.status ==="未到账"){
           mkinds.push("p.status");
-          mconditions.push("is not");
-          mvalues.push("null");
-          mkinds.push("p.status");
-          mconditions.push("!=");
-          mvalues.push("未定价");
-          mkinds.push("p.status");
-          mconditions.push("!=");
-          mvalues.push("收讫");
+          mconditions.push("=");
+          mvalues.push("已开具未收讫");
         }else if(fieldsValue.status ==="已收讫"){
           mkinds.push("p.status");
           mconditions.push("=");
@@ -165,6 +158,10 @@ class BusinessIncomeQuery extends PureComponent {
           mkinds.push("p.status");
           mconditions.push("like");
           mvalues.push("%收讫%");
+        }else if(fieldsValue.status ==="未开票"){
+          mkinds.push("p.status");
+          mconditions.push("like");
+          mvalues.push("%拟制%");
         }
       }
 
@@ -195,7 +192,6 @@ class BusinessIncomeQuery extends PureComponent {
       const keys = form.getFieldValue('keys');
       for(const key in keys){
         const k = keys[key];
-        console.log(k);
         const kind = form.getFieldValue(`kinds${k}`);
         const condition = form.getFieldValue(`conditions${k}`);
         const value = form.getFieldValue(`values${k}`);
@@ -244,29 +240,27 @@ class BusinessIncomeQuery extends PureComponent {
       const mconditions=[];
 
       // 状态条件
-      if(fieldsValue.status !== undefined){
-        if(fieldsValue.status ==="未定价"){
+      if(fieldsValue.status !== undefined) {
+        if (fieldsValue.status === "未定价") {
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("未定价");
-        }else if(fieldsValue.status ==="未到账"){
+        } else if (fieldsValue.status === "未到账") {
           mkinds.push("p.status");
-          mconditions.push("is not");
-          mvalues.push("null");
-          mkinds.push("p.status");
-          mconditions.push("!=");
-          mvalues.push("未定价");
-          mkinds.push("p.status");
-          mconditions.push("!=");
-          mvalues.push("收讫");
-        }else if(fieldsValue.status ==="已收讫"){
+          mconditions.push("=");
+          mvalues.push("已开具未收讫");
+        } else if (fieldsValue.status === "已收讫") {
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("收讫");
-        }else if(fieldsValue.status ==="已开票"){
+        } else if (fieldsValue.status === "已开票") {
           mkinds.push("p.status");
           mconditions.push("like");
           mvalues.push("%收讫%");
+        } else if (fieldsValue.status === "未开票") {
+          mkinds.push("p.status");
+          mconditions.push("like");
+          mvalues.push("%拟制%");
         }
       }
 
@@ -350,29 +344,27 @@ class BusinessIncomeQuery extends PureComponent {
       const mconditions = [];
 
       // 状态条件
-      if(fieldsValue.status !== undefined){
-        if(fieldsValue.status ==="未定价"){
+      if(fieldsValue.status !== undefined) {
+        if (fieldsValue.status === "未定价") {
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("未定价");
-        }else if(fieldsValue.status ==="未到账"){
+        } else if (fieldsValue.status === "未到账") {
           mkinds.push("p.status");
-          mconditions.push("is not");
-          mvalues.push("null");
-          mkinds.push("p.status");
-          mconditions.push("!=");
-          mvalues.push("未定价");
-          mkinds.push("p.status");
-          mconditions.push("!=");
-          mvalues.push("收讫");
-        }else if(fieldsValue.status ==="已收讫"){
+          mconditions.push("=");
+          mvalues.push("已开具未收讫");
+        } else if (fieldsValue.status === "已收讫") {
           mkinds.push("p.status");
           mconditions.push("=");
           mvalues.push("收讫");
-        }else if(fieldsValue.status ==="已开票"){
+        } else if (fieldsValue.status === "已开票") {
           mkinds.push("p.status");
           mconditions.push("like");
           mvalues.push("%收讫%");
+        } else if (fieldsValue.status === "未开票") {
+          mkinds.push("p.status");
+          mconditions.push("like");
+          mvalues.push("%拟制%");
         }
       }
 
