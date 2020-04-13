@@ -176,7 +176,7 @@ export default [
         path: '/TaskAppoint',
         icon: 'table',
         name: 'TaskAppoint',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理"],
         routes: [
           {
             path: '/TaskAppoint/CustomerService',
@@ -322,6 +322,7 @@ export default [
             path: '/InspectionAnalysis/InspectionArrangement',
             name: 'InspectionArrangement',
             component: './InspectionAnalysis/InspectionArrangement',
+            authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理"],
           },
 
           {

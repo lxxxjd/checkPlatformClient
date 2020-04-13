@@ -66,7 +66,7 @@ class CostlistEdit extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.status==="已拟制"||text.status==="审核退回"?[<a onClick={() => this.goToCostlistDetailReviewPass(text, record)}>通过 &nbsp;&nbsp;</a>]:[]}
+          {text.status==="已拟制"||text.status==="审核退回"?[<a onClick={() => this.goToCostlistDetailReviewPass(text, record)}>审核 &nbsp;&nbsp;</a>]:[]}
           {text.status==="审核通过"?[<a onClick={() => this.goToCostlistDetailReviewBack(text, record)}>退回   &nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.goToCostlistDetail(text, record)}>查看</a>
         </Fragment>
@@ -168,7 +168,7 @@ class CostlistEdit extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={3} sm={20}>
+          <Col md={4} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}

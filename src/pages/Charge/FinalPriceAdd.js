@@ -212,54 +212,61 @@ class FinalPriceAdd extends PureComponent {
   };
 
   submit = () => {
-    this.sum();
     const {
       form: {validateFieldsAndScroll},
       dispatch,
     } = this.props;
-    validateFieldsAndScroll((error, values) => {
-      const user = JSON.parse(localStorage.getItem("userinfo"));
-      const reportno = sessionStorage.getItem('reportno');
-      const FinalPriceOrigin = sessionStorage.getItem('FinalPriceOrigin');
-      const {value} = this.state;
+    Modal.confirm({
+      title: '确定删除此清单吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        this.sum();
+        validateFieldsAndScroll((error, values) => {
+          const user = JSON.parse(localStorage.getItem("userinfo"));
+          const reportno = sessionStorage.getItem('reportno');
+          const FinalPriceOrigin = sessionStorage.getItem('FinalPriceOrigin');
+          const {value} = this.state;
+          if (!error) {
+            // submit the values
+            dispatch({
+              type: 'charge/updatePriceMaking',
+              payload: {
+                ...values,
+                reportno,
+                priceman: user.nameC,
+                priceway: value,
+              },
+              callback: (response) => {
+                if (response.code === 200) {
+                  notification.open({
+                    message: '定价成功',
+                  });
+                  // 判断页面来源
+                  if(FinalPriceOrigin==='ListFictionAdd'){
+                    router.push({
+                      pathname: '/Charge/ListFictionAdd',
+                    });
+                  }else if(FinalPriceOrigin==='FinalPrice'){
+                    router.push({
+                      pathname: '/Charge/FinalPrice',
+                    });
+                  }
 
-      if (!error) {
-        // submit the values
-        dispatch({
-          type: 'charge/updatePriceMaking',
-          payload: {
-            ...values,
-            reportno,
-            priceman: user.nameC,
-            priceway: value,
-          },
-          callback: (response) => {
-            if (response.code === 200) {
-              notification.open({
-                message: '定价成功',
-              });
-              // 判断页面来源
-              if(FinalPriceOrigin==='ListFictionAdd'){
-                router.push({
-                  pathname: '/Charge/ListFictionAdd',
-                });
-              }else if(FinalPriceOrigin==='FinalPrice'){
-                router.push({
-                  pathname: '/Charge/FinalPrice',
-                });
+                } else {
+                  notification.open({
+                    message: '添加失败',
+                    description: response.data,
+                  });
+                }
               }
-
-            } else {
-              notification.open({
-                message: '添加失败',
-                description: response.data,
-              });
-            }
+            });
           }
         });
       }
     });
-  }
+
+  };
   render() {
     const {
       charge: {data},
