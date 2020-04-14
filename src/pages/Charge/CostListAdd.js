@@ -146,6 +146,7 @@ class CostListAdd extends PureComponent {
     {
       title: '接收人',
       dataIndex: 'reciever',
+      width:200,
     },
     {
       title: '登记人',
