@@ -78,10 +78,10 @@ class DetailForSub extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {/*{!(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[<a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>]:[]}*/}
-          {/*{!(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}*/}
-          <a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>
-          <a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>
+          {!(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[<a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>]:[]}
+          {!(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}
+          {/*<a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>*/}
+          {/*<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>*/}
         </Fragment>
       ),
     },
@@ -458,9 +458,9 @@ class DetailForSub extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              {/*{(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[]:*/}
-              {/*<Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>}*/}
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>
+              {(this.state.overallstate==="已发布"||this.state.overallstate==="申请作废")?[]:
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>}
+              {/*<Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>*/}
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 8 ,paddingLeft:0,paddingRight:15 }} onClick={this.back}>

@@ -137,11 +137,13 @@ class InspectionArrangement extends PureComponent {
   };
 
   detailItem = text => {
+
     sessionStorage.setItem('InspectionArrangementDetail_Report',JSON.stringify(text));
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     sessionStorage.setItem('sampleno',text.sampleno);
+    sessionStorage.setItem('overallstate_InspectionDetail',text.overallstate);
     router.push({
       pathname:'/InspectionAnalysis/InspectionArrangementDetail',
     });
@@ -191,6 +193,18 @@ class InspectionArrangement extends PureComponent {
   };
 
   show = text =>{
+
+    if(text.overallstate ==="申请作废"|| text.overallstate ==="已发布"){
+      Modal.info({
+        title: '该委托已发布，无法修改分包信息！',
+        okText: '确认',
+        onOk: () => {
+
+        }
+      });
+      return;
+    }
+
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('sampleno',text.sampleno);
     this.setState({modalText:text});

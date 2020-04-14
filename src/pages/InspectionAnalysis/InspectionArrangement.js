@@ -143,6 +143,7 @@ class InspectionArrangement extends PureComponent {
     sessionStorage.setItem('shipname',text.shipname);
     sessionStorage.setItem('applicant',text.applicant);
     sessionStorage.setItem('sampleno',text.sampleno);
+    sessionStorage.setItem('overallstate_InspectionDetail',text.overallstate);
     router.push({
       pathname:'/InspectionAnalysis/InspectionArrangementDetail',
     });

@@ -47,9 +47,11 @@ class InspectionArrangementDetail extends PureComponent {
     modalInfo:{},
     maininfoText:{},
   };
+
   onOperationTabChange = key => {
     this.setState({ operationkey: key });
   };
+
   columns1 = [
     {
       title: '人员',
@@ -88,6 +90,7 @@ class InspectionArrangementDetail extends PureComponent {
       dataIndex: 'trafficfee',
     },
   ];
+
   columns2 = [
     {
       title: '检测机构',
@@ -120,12 +123,41 @@ class InspectionArrangementDetail extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>修改</a>
-          &nbsp;&nbsp;
-          <a onClick={() => this.deleteItem(text, record)}>删除</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.mobileItem(text, record)}>修改&nbsp;&nbsp;</a>
+          <a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>
         </Fragment>
       ),
+    },
+  ];
+
+
+  columns22 = [
+    {
+      title: '检测机构',
+      dataIndex: 'testman',
+    },
+    {
+      title: '分包时间',
+      dataIndex: 'assigndate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '计价方式',
+      dataIndex: 'priceway',
+    },
+    {
+      title: '单价',
+      dataIndex: 'price',
+    },
+    {
+      title: '总价',
+      dataIndex: 'totalfee',
+    },
+    {
+      title: '状态',
+      dataIndex: 'reviewstatus',
     },
   ];
 
@@ -310,6 +342,7 @@ class InspectionArrangementDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const applicant = sessionStorage.getItem('applicant');
+    const overallstate = sessionStorage.getItem("overallstate_InspectionDetail");
     const reprotText= {
       reportno,
       shipname,
@@ -321,8 +354,8 @@ class InspectionArrangementDetail extends PureComponent {
             pagination={false}
             loading={loading}
             dataSource={testInfo}
-            rowKey = 'testman'
-            columns={this.columns2}
+            rowKey='testman'
+            columns={overallstate==="已发布"|| overallstate==="申请作废"?this.columns22:this.columns2}
           />
       ),
       tab2: (
