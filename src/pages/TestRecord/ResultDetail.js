@@ -771,6 +771,7 @@ class ResultDetail extends PureComponent {
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const applicant = sessionStorage.getItem('applicant');
+    const quanlity = sessionStorage.getItem("resultdetail_quanlity");
     const reprotText= {
       reportno,
       shipname,
@@ -829,7 +830,7 @@ class ResultDetail extends PureComponent {
                   ]
                 }
               </Col>
-              <Col span={12}>
+              <Col span={8}>
                 <Form.Item
                   label="重量："
                   labelCol={{span: 4}}
@@ -845,8 +846,17 @@ class ResultDetail extends PureComponent {
                         }
                       }, message: '请输入数字' }]
                   })(
-                    <Input style={{width:'98%'}} placeholder="本次检查如果有数重量结果，请将数重量填入该输入框" />
+                    <Input style={{width:'98%'}} placeholder="本次检查如果有数重量结果，请输入" />
                   )}
+                </Form.Item>
+              </Col>
+              <Col span={4}>
+                <Form.Item
+                  labelCol={{span: 4}}
+                  wrapperCol={{span: 20}}
+                  colon={false}
+                >
+                  <span>申报数量：{quanlity}</span>
                 </Form.Item>
               </Col>
             </Row>
