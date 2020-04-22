@@ -41,5 +41,12 @@ export default {
   'validation.customreceive.error2': 'customreceive has submitted',
   'validation.customreceive.noexist': 'customreceive cannot be empty',
 
+  'validation.diviceid.repeat':'diviceid is repeated',
+  'validation.diviceid.error':'diviceid has error',
+
+  'validation.invoiceno.repeat':'invoiceno is repeated',
+  'validation.invoiceno.error':'invoiceno has error',
+  'validation.invoiceno.noexist':'invoiceno cannot be empty',
+
 
 };

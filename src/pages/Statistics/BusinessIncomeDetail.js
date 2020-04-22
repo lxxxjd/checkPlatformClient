@@ -427,6 +427,7 @@ class BusinessIncomeDetail extends Component {
       callback:response=>{
         if(response.code === 200){
           this.setState({sample:response.data});
+
         }
       }
     });
@@ -713,7 +714,7 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="开票人">{pricemaking.invoiceMan}</Descriptions.Item>
             <Descriptions.Item label="发票号码">{pricemaking.invoiceno}</Descriptions.Item>
             <Descriptions.Item label="到账日期">{pricemaking.paydate !== null ? moment(pricemaking.paydate).format('YYYY-MM-DD'):null}</Descriptions.Item>
-            <Descriptions.Item label="到账日期">{pricemaking.listman}</Descriptions.Item>
+            <Descriptions.Item label="收款人">{pricemaking.payregistMan}</Descriptions.Item>
             <Descriptions.Item label="到账状态">{pricemaking.paystatus}</Descriptions.Item>
           </Descriptions>
         </Card>

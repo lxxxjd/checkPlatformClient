@@ -375,22 +375,29 @@ class CertificateSealDetail extends PureComponent {
 
   undoCert = text =>{
     const { dispatch } = this.props;
-    dispatch({
-      type: 'certificate/undoCert',
-      payload:{keyno:text.keyno},
-      callback: (response) => {
-        if(response==="success"){
-          message.success("回退成功");
-          const reportno = sessionStorage.getItem('reportno');
-          dispatch({
-            type: 'certificate/getCertFiles',
-            payload:{
-              reportno,
-            },
-          });
-        }else {
-          message.success("回退失败");
-        }
+    Modal.confirm({
+      title: '退回至最初“待拟制状态”，确定此操作吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'certificate/undoCert',
+          payload:{keyno:text.keyno},
+          callback: (response) => {
+            if(response==="success"){
+              message.success("回退成功");
+              const reportno = sessionStorage.getItem('reportno');
+              dispatch({
+                type: 'certificate/getCertFiles',
+                payload:{
+                  reportno,
+                },
+              });
+            }else {
+              message.success("回退失败");
+            }
+          }
+        });
       }
     });
   };

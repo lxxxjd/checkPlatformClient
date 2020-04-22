@@ -39,4 +39,12 @@ export default {
   'validation.customreceive.error1': '存在已提交，请重新选择',
   'validation.customreceive.error2': '有效期超过两个月，还不能提交',
   'validation.customreceive.noexist': '海关名称不能为空，请输入',
+
+  'validation.diviceid.repeat': '设备编号重复，请重新输入',
+  'validation.diviceid.error': '设备编号存在错误，请重新输入',
+
+
+  'validation.invoiceno.repeat': '发票号码重复，请重新输入',
+  'validation.invoiceno.error': '发票号码错误，请重新输入',
+  'validation.invoiceno.noexist': '发票号码不能为空，请输入',
 }

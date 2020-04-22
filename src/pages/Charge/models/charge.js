@@ -3,6 +3,7 @@ import { getAllList,getReports,addList,deleteBylistno,getReportListBylistno,pass
   downloadListTemp,downloadCostListTemp,getPdfByOssPath,getRepeatListNo,getRepeatPayListNo} from '@/services/Charge';
 import { getAllClientName,getBusiness} from '@/services/Entrustment';
 import { getInvoiceTitleList } from '@/services/InvoiceTitle';
+import { getRepeatInvoiceno } from '@/services/ListInfo';
 
 
 export default {
@@ -167,6 +168,16 @@ export default {
       });
       if (callback) callback(response.data);
     },
+
+    *getRepeatInvoiceno({ payload,callback }, { call, put }) {
+      const response = yield call(getRepeatInvoiceno, payload);
+      yield put({
+        type: 'saveAddCost',
+        payload: response,
+      });
+      if (callback) callback(response.data);
+    },
+
 
     // 删除成本信息
     *deleteCostFetch({ payload,callback }, { call, put }) {

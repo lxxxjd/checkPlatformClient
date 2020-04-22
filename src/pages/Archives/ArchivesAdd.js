@@ -44,13 +44,13 @@ const CreateForm = Form.create()(props => {
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="归档位置">
         {form.getFieldDecorator('archiveplace', {
-          rules: [{ required: true}],
+          rules: [{ required: true,message:"请输入归档位置"}],
         })(<Input placeholder="请输入归档位置" />)}
       </FormItem>
 
       <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15}} label="归档时间">
         {form.getFieldDecorator('archivesdate', {
-          rules: [{ required: true}],
+          rules: [{ required: true,message:"请选择归档时间"}],
         })(
           <DatePicker
             style={{ width: '100%' }}

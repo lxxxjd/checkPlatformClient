@@ -23,6 +23,7 @@ export async function selectListInfosByConditionsInit(params){
   });
 }
 
+
 // 数据统计-收入分配-查询总额
 export async function selectListInfoTotalByConditions(params){
   return request('/api/list/selectListInfoTotalByConditions', {
@@ -36,5 +37,10 @@ export async function selectListInfoTotalByConditions(params){
 // 主键查询list
 export async function getListBylistno(params) {
   return request(`/api/list/getListBylistno?certcode=${params.certcode}&listno=${params.listno}`);
+}
+
+
+export async function getRepeatInvoiceno(params) {
+  return request(`/api/list/getRepeatInvoiceno?certcode=${params.certcode}&invoiceno=${params.invoiceno}`);
 }
 

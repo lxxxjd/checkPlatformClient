@@ -753,7 +753,7 @@ class ListFictionAdd extends PureComponent {
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleSearch}>
                 查询
               </Button>
-              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleSubmit}>拟制
+              <Button type="primary" style={{ marginLeft: 8 }} onClick={this.handleSubmit}>批量拟制
               </Button>
               <Button type="primary" style={{ marginLeft: 8 }} onClick={this.back}>返回</Button>
             </span>
