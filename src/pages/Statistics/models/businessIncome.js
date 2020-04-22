@@ -1,6 +1,9 @@
 import {selectBusinessIncomesByConditions, selectBusinessIncomeTotalByConditions,
   downloadBusinessIncomesAsExcelByConditions,downloadFile,selectBusinessIncomesByConditionsInit} from '@/services/Report';
 
+import {selectTaskSampleByReportno} from '@/services/Sample';
+import { getCnasInfo} from '@/services/Entrustment';
+
 export default {
   namespace: 'businessIncome',
   state: {
@@ -10,7 +13,15 @@ export default {
 
   effects: {
 
+    *getCnasInfo({ payload ,callback}, { call, put }) {
+      const response = yield call(getCnasInfo, payload);
+      if (callback) callback(response);
+    },
 
+    * selectTaskSampleByReportno({payload, callback}, {call, put}){
+      const response = yield call(selectTaskSampleByReportno, payload);
+      if(callback) callback(response);
+    },
 
     * selectBusinessIncomesByConditions({payload, callback}, {call, put}){
       const response = yield call(selectBusinessIncomesByConditions, payload);

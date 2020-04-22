@@ -169,7 +169,7 @@ class BusinessIncomeDetail extends Component {
       dataIndex: 'samplename',
     },
     {
-      title: '指派日期',
+      title: '制备日期',
       dataIndex: 'makingdate',
       render: val => {
         if(val != null){
@@ -177,10 +177,32 @@ class BusinessIncomeDetail extends Component {
         }
       }
     },
-    // {
-    //   title: '检测人员',
-    //   dataIndex: 'testmans',
-    // },
+    {
+      title: '检测人员',
+      dataIndex: 'testmans',
+      render: (text, record) => {
+        let  contentStr = [];
+        if(text===undefined || text ===null ||text ===""){
+          return null;
+        }
+        contentStr = text.split("|");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j = 0 ; j < contentStr.length ; j ++){
+          if(j===0){
+            result=contentStr[j];
+          }else if(j%2===0){
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }else{
+            result=<span>{result}&nbsp;{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
+    },
     {
       title: '操作',
       render: (text, record) => (
@@ -334,7 +356,7 @@ class BusinessIncomeDetail extends Component {
         if(report.cnasCode !==undefined && report.cnasCode !==null  ){
           if(report.iscnas === "1"){
             dispatch({
-              type: 'entrustment/getCnasInfo',
+              type: 'businessIncomeDetail/getCnasInfo',
               payload: {
                 checkCode:report.cnasCode,
               },
@@ -422,15 +444,17 @@ class BusinessIncomeDetail extends Component {
       payload:{
          certCode : user.certCode,
          kind:'reportno',
-         value:reportno
+         value:reportno,
+         role:user.role,
+         nameC:user.nameC,
       },
       callback:response=>{
         if(response.code === 200){
           this.setState({sample:response.data});
-
         }
       }
     });
+
     dispatch({
       type: 'businessIncomeDetail/getTestByReportNoAndAssignsort',
       payload:{

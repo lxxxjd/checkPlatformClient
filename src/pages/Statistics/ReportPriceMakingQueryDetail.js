@@ -74,7 +74,7 @@ class ReportPriceMakingQueryDetail extends Component {
         if(report.cnasCode !==undefined && report.cnasCode !==null  ){
           if(report.iscnas === "1"){
             dispatch({
-              type: 'entrustment/getCnasInfo',
+              type: 'businessIncomeDetail/getCnasInfo',
               payload: {
                 checkCode:report.cnasCode,
               },

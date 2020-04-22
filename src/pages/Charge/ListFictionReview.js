@@ -175,7 +175,7 @@ class ListFictionReview extends PureComponent {
         <Card bordered={false}>
           <Row gutter={8}>
             <Col span={2}>
-              <Button type="primary" onClick={this.handlePass}>通过</Button>
+              <Button type="primary" onClick={this.handlePass}>审核</Button>
             </Col>
             <Col span={2}>
               <Button type="primary" style={{ marginLeft: 1  ,paddingLeft:0,paddingRight:15}} onClick={this.back}>
