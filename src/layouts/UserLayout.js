@@ -68,7 +68,7 @@ class UserLayout extends Component {
               </div>
               <div style={{marginTop:10}}>
                 <img alt="404" src={logo} style={{height:27,paddingTop:2}} />
-                <span style={{verticalAlign:'middle',fontFamily:"楷体",fontSize:23,marginLeft:10,color:'black'}}>明检达</span>
+                <span style={{verticalAlign:'middle',fontFamily:"楷体",fontSize:23,marginLeft:10,color:'black'}}>水木梁清</span>
               </div>
               <div className={styles.desc} />
             </div>

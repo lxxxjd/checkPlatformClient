@@ -231,6 +231,7 @@ class ArchivesQuery extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:"shipname",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
@@ -243,7 +244,7 @@ class ArchivesQuery extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col md={6} sm={20}>
+          <Col md={4} sm={20}>
             <FormItem>
               {getFieldDecorator('value',{rules: [{ message: '搜索数据' }],})(<Input placeholder="请输入" />)}
             </FormItem>

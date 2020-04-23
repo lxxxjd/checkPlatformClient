@@ -32,7 +32,6 @@ const SearchForm = Form.create()(Search);
   inspectionAnalysis,
   loading: loading.models.inspectionAnalysis,
 }))
-
 @Form.create()
 class InspectionArrangement extends PureComponent {
   state = {
@@ -94,7 +93,7 @@ class InspectionArrangement extends PureComponent {
       },
     },
     {
-      title: '状态',
+      title: '样品状态',
       dataIndex: 'state',
     },
     {

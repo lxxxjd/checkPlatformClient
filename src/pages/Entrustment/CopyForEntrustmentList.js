@@ -174,6 +174,7 @@ class CopyForEntrustmentList extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:'applicant',
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">

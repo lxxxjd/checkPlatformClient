@@ -183,7 +183,7 @@ class CostlistEdit extends PureComponent {
                   <Option value="paycompany">接收人</Option>
                   <Option value="listman">拟制人</Option>
                   <Option value="refundMan">退款人</Option>
-                  <Option value="status">状态</Option>
+                  <Option value="status">支付状态</Option>
 
                 </Select>
               )}

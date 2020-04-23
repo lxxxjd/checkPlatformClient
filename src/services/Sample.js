@@ -31,10 +31,6 @@ export async function deleteSamleRegister(params) {
   return request(`/api/sampleRegister/deleteSamleRegister?sampleno=${params.sampleno}&reportno=${params.reportno}`);
 }
 
-export async function selectTaskSampleByReportno(params) {
-  return request(`/api/sampleRegister/selectTaskSampleByReportno?reportno=${params.reportno}`);
-}
-
 export async function selectSampleRegisterByConditions(params) {
   return request(`/api/sampleRegister/selectSampleRegisterByConditions`,{
     method: 'POST',

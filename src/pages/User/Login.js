@@ -68,7 +68,7 @@ class LoginPage extends Component {
   );
 
   openRegister=()=>{
-    const url = `https://www.smlq.vip/checkPlatformMain/user/register`;
+    const url = `http://www.smlq.vip:83/user/register`;
     window.open(url);
   };
 

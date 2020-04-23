@@ -242,14 +242,14 @@ class TestMan extends PureComponent {
         }
       });
     });
-  };
+  }
 
   isValidDate =date=> {
     if(date !==undefined && date !==null ){
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  };
+  }
 
   modifyItem = text => {
     this.setState({
@@ -260,30 +260,22 @@ class TestMan extends PureComponent {
 
   deleteItem = text =>{
     const { dispatch } = this.props;
-    Modal.confirm({
-      title: '确定删除此分包信息吗？',
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => {
-        const values = {
-          ...text
-        };
-        dispatch({
-          type: 'testman/deleteTestman',
-          payload:values,
-          callback: (response) => {
-            if(response==="success"){
-              this.init();
-              message.success("删除成功");
-            } else{
-              message.success("删除失败");
-            }
-          }
-        });
+    const values = {
+      ...text
+    };
+    dispatch({
+      type: 'testman/deleteTestman',
+      payload:values,
+      callback: (response) => {
+        if(response==="success"){
+          this.init();
+          message.success("删除成功");
+        } else{
+          message.success("删除失败");
+        }
       }
     });
-
-  };
+  }
 
 
   addItem = () => {
@@ -309,7 +301,7 @@ class TestMan extends PureComponent {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     let prams = modalInfo;
-    prams.namec =  fields.namec;
+    prams.name =  fields.name;
     prams.testmantype =  fields.testmantype;
     prams.place =  fields.place;
     const values = {
@@ -345,7 +337,7 @@ class TestMan extends PureComponent {
       addModalVisible: false,
     });
 
-    if( this.state.dataSource.find(item=>item.namec === fields.namec)){
+    if( this.state.dataSource.find(item=>item.name === fields.name)){
       message.success("添加分包方已存在");
       return;
     }

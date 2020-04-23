@@ -44,13 +44,13 @@ const CreateForm = Form.create()(props => {
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="归档位置">
         {form.getFieldDecorator('archiveplace', {
-          rules: [{ required: true,message:"请输入归档位置"}],
+          rules: [{ required: true}],
         })(<Input placeholder="请输入归档位置" />)}
       </FormItem>
 
       <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15}} label="归档时间">
         {form.getFieldDecorator('archivesdate', {
-          rules: [{ required: true,message:"请选择归档时间"}],
+          rules: [{ required: true}],
         })(
           <DatePicker
             style={{ width: '100%' }}
@@ -304,6 +304,7 @@ class ArchivesAdd extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:"shipname",
                 rules: [{  message: '选择字段' }],
               })(
                 <Select placeholder="搜索类型">
@@ -320,7 +321,7 @@ class ArchivesAdd extends PureComponent {
             </Form.Item>
           </Col>
 
-          <Col md={4} sm={20}>
+          <Col md={2} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
@@ -338,7 +339,7 @@ class ArchivesAdd extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col md={4} sm={10}>
+          <Col md={3} sm={10}>
             <FormItem>
               {getFieldDecorator('value',{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
             </FormItem>
@@ -348,7 +349,7 @@ class ArchivesAdd extends PureComponent {
             <Icon type="plus-circle" style={{fontSize:24, marginLeft: 8 ,marginTop:4}} theme='twoTone' twoToneColor="#00ff00" onClick={this.add} />
           </Col>
 
-          <Col md={3} sm={20}>
+          <Col md={4} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
@@ -366,7 +367,7 @@ class ArchivesAdd extends PureComponent {
             </Form.Item>
           </Col>
 
-          <Col md={3} sm={20}>
+          <Col md={4} sm={20}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}

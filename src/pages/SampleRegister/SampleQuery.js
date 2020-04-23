@@ -430,19 +430,21 @@ class SampleQuery extends PureComponent {
             wrapperCol={{ span: 6 }}
           >
             {getFieldDecorator(`kinds${k}`, {
+              initial:"shipname",
               rules: [{  message: '选择字段' }],
             })(
               <Select placeholder="选择字段">
                 <Option value="reportno"> 委托编号</Option>
                 <Option value="shipname">船名标识</Option>
                 <Option value="cargoname">检查品名</Option>
+                <Option value="applicant">委托人</Option>
+                <Option value="agent">代理</Option>
                 <Option value="sampleno">样品编号</Option>
                 <Option value="samplename">样品名称</Option>
                 <Option value="sampleuse">样品用途</Option>
                 <Option value="owner">持有人</Option>
-                <Option value="duration">保存天数</Option>
                 <Option value="position">存放位置</Option>
-                <Option value="status">状态</Option>
+                <Option value="status">样品状态</Option>
               </Select>
             )}
           </Form.Item>

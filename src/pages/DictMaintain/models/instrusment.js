@@ -1,5 +1,4 @@
-import { addInstrument,getInstrument,deleteInstrument,updateInstrument,
-  getInstrumentRecord, uploadInstrumentRecord, deleteInstrumentRecord, getUrl,getRepeatInstrument} from '@/services/Intrusment';
+import { addInstrument,getInstrument,deleteInstrument,updateInstrument, getInstrumentRecord, uploadInstrumentRecord, deleteInstrumentRecord, getUrl} from '@/services/Intrusment';
 
 
 
@@ -10,12 +9,6 @@ export default {
   },
   effects: {
 
-
-    *getRepeatInstrument({ payload,callback }, { call, put }) {
-      const response = yield call(getRepeatInstrument, payload);
-      if (callback) callback(response.data);
-    },
-
     *updateInstrument({ payload,callback }, { call, put }) {
       const response = yield call(updateInstrument, payload);
       yield put({
@@ -24,8 +17,6 @@ export default {
       });
       if (callback) callback(response.data);
     },
-
-
     *getUrl({ payload,callback }, { call, put }) {
       const response = yield call(getUrl, payload);
       if (callback) callback(response);

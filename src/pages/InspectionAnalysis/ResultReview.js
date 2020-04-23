@@ -77,7 +77,7 @@ class ResultReview extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.state==="已录入" &&(text.overallstate!=="已发布"&& text.overallstate !=="申请作废")?[<a onClick={() => this.goToReviewPass(text, record)}>审核&nbsp;&nbsp;</a>]:[]}
+          {text.state==="已录入" &&(text.overallstate!=="已发布"&& text.overallstate !=="申请作废")?[<a onClick={() => this.goToReviewPass(text, record)}>通过&nbsp;&nbsp;</a>]:[]}
           {text.state==="已复核" &&(text.overallstate!=="已发布"&& text.overallstate !=="申请作废")?<a onClick={() => this.goToReviewReturn(text, record)}>退回 &nbsp;&nbsp;</a>:[]}
           <a onClick={() => this.detailItem(text, record)}>查看</a> &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>

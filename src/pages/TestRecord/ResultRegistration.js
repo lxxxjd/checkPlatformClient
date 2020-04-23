@@ -159,12 +159,16 @@ class ResultRegistration extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initial:"shipname",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
                   <Option value="reportno">委托编号</Option>
                   <Option value="shipname">船名标识</Option>
                   <Option value="cargoname">检查品名</Option>
+                  <Option value="applicant">委托人</Option>
+                  <Option value="agent">代理人</Option>
+                  <Option value="overallstate">状态</Option>
                 </Select>
               )}
             </Form.Item>

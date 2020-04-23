@@ -186,14 +186,15 @@ class ListFile extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:"listno",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
                   <Option value="listno">清单号</Option>
+                  <Option value="invoiceno">发票号</Option>
                   <Option value="listman">拟制人</Option>
                   <Option value="payer">付款人</Option>
-                  <Option value="invoiceno">发票号码</Option>
-                  <Option value="paystatus">状态</Option>
+                  <Option value="paystatus">支付状态</Option>
                 </Select>
               )}
             </Form.Item>

@@ -702,12 +702,16 @@ class UserManage extends PureComponent {
 
   fileItem = text => {
     sessionStorage.setItem('nameC',text.nameC);
-    window.open("/CompanyManage/ManRecord");
+    router.push({
+      pathname:'/CompanyManage/ManRecord',
+    });
   };
 
   viewInfo = text => {
     sessionStorage.setItem('usertext',JSON.stringify(text));
-    window.open("/CompanyManage/ManDetail");
+    router.push({
+      pathname:'/CompanyManage/ManDetail',
+    });
   };
 
   init =()=>{
@@ -842,7 +846,9 @@ class UserManage extends PureComponent {
 
   uploadItem = (text) =>{
     sessionStorage.setItem('username',text.userName);
-    window.open("/CompanyManage/ManUpload");
+    router.push({
+      pathname:'/CompanyManage/ManUpload',
+    });
     this.setState({username:text.userName});
     this.setState({visible:true});
   };

@@ -114,7 +114,6 @@ const ArrivalInvoiceForm = Form.create()(props => {
               <Option value="其他">其他</Option>
             </Select>,
           )}
-          <div>注意：样品用途为“测试”，才可添加指标</div>
         </Form.Item>
 
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品数量">
@@ -286,26 +285,19 @@ class SampleRegisterDetail extends PureComponent {
   deleteItem = text => {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportSampleRegisterDetailNo');
-    Modal.confirm({
-      title: '确定删除此记录吗？',
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => {
-        dispatch({
-          type: 'sample/deleteSamleRegister',
-          payload: {
-            sampleno: text.sampleno,
-            reportno,
-          },
-          callback: (response) => {
-            if (response) {
-              message.success("删除成功");
-              this.init();
-            }else{
-              message.success("删除失败");
-            }
-          }
-        });
+    dispatch({
+      type: 'sample/deleteSamleRegister',
+      payload: {
+        sampleno: text.sampleno,
+        reportno,
+      },
+      callback: (response) => {
+        if (response) {
+          message.success("删除成功");
+          this.init();
+        }else{
+          message.success("删除失败");
+        }
       }
     });
   };
@@ -475,11 +467,11 @@ class SampleRegisterDetail extends PureComponent {
                   <Option value="其他">其他</Option>
                 </Select>,
               )}
-              <div>注意：样品用途为“测试”，才可添加指标</div>
             </Form.Item>
+
             <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="样品数量">
               {getFieldDecorator('weight', {
-                initialValue:1
+                initialValue:0
               })(<Input placeholder="请输入样品编号" />)}
             </Form.Item>
 

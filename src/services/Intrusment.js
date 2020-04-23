@@ -1,20 +1,10 @@
 import request from '@/utils/request';
 import { stringify } from 'qs';
-import { formatMessage } from 'umi-plugin-react/locale';
+
 // addInstrument,getInstrument,deleteInstrument
 
 export async function updateInstrument(params) {
   return request(`/api/instrument/updateInstrument`,{
-    method: 'POST',
-    data: {
-      ...params,
-    },
-  });
-}
-
-
-export async function getRepeatInstrument(params) {
-  return request(`/api/instrument/getRepeatInstrument`,{
     method: 'POST',
     data: {
       ...params,

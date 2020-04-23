@@ -121,9 +121,10 @@ const CostAddUpdateForm = Form.create()(props => {
               <Option value="外聘劳务">外聘劳务</Option>
               <Option value="车辆">车辆</Option>
               <Option value="耗材">耗材</Option>
+              <Option value="试剂">耗材</Option>
               <Option value="仪器设备">仪器设备</Option>
               <Option value="药品试剂">药品试剂</Option>
-              <Option value="误支费">误支费</Option>
+              <Option value="误餐费">误餐费</Option>
               <Option value="其他费">其他费</Option>
             </Select>
           )}
@@ -246,9 +247,10 @@ const CostAddNewForm = Form.create()(props => {
               <Option value="外聘劳务">外聘劳务</Option>
               <Option value="车辆">车辆</Option>
               <Option value="耗材">耗材</Option>
+              <Option value="试剂">耗材</Option>
               <Option value="仪器设备">仪器设备</Option>
               <Option value="药品试剂">药品试剂</Option>
-              <Option value="误支费">误支费</Option>
+              <Option value="误餐费">误餐费</Option>
               <Option value="其他费">其他费</Option>
             </Select>
           )}
@@ -322,8 +324,6 @@ class Cost extends PureComponent {
     CostItemData :{},
     applicantName:[],
     role:false,
-
-    text:{},
   };
 
   columns = [
@@ -369,21 +369,17 @@ class Cost extends PureComponent {
         <Fragment>
           {/*{text.costtype!=="分包费"&&text.costtype!=="绩效" &&text.status==="已登记"?[<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>]:[]}*/}
           {/*{text.costtype!=="分包费"&&text.costtype!=="绩效" &&text.status==="已登记"?[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>]:[]}*/}
-          {/*{text.status==="已登记" ?[(text.costtype!=="绩效" && text.costtype!=="分包费")|| ((text.costtype==="绩效" || text.costtype==="分包费") && this.state.role===true)?[<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>]:[]]:[]}*/}
-          {/*{text.status==="已登记" ?[(text.costtype!=="绩效" && text.costtype!=="分包费")|| ((text.costtype==="绩效" || text.costtype==="分包费") && this.state.role===true)?[<a onClick={() => this.deleteItem(text, true)}>删除&nbsp;&nbsp;</a>]:[]]:[]}*/}
-          {this.getRoleModify(text)}
-          {this.getRoleDelete(text)}
+          {text.status==="已登记" ?[(text.costtype!=="绩效" && text.costtype!=="分包费")|| ((text.costtype==="绩效" || text.costtype==="分包费") && this.state.role===true)?[<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>]:[]]:[]}
+          {text.status==="已登记" ?[(text.costtype!=="绩效" && text.costtype!=="分包费")|| ((text.costtype==="绩效" || text.costtype==="分包费") && this.state.role===true)?[<a onClick={() => this.deleteItem(text, true)}>删除&nbsp;&nbsp;</a>]:[]]:[]}
           <a onClick={() => this.handleReview(true, text)}>查看&nbsp;&nbsp;</a>
         </Fragment>
       ),
     },
   ];
-
+  // &nbsp;&nbsp;<a onClick={() => this.previewItem(text, record)}>查看</a>
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    const text = JSON.parse( sessionStorage.getItem('reportinfoCost'));
-    this.setState({text});
     if(user.role!==undefined){
       if(user.role.indexOf("总经理")!==-1 || user.role.indexOf("业务副总")!==-1 || user.role.indexOf("操作经理")!==-1 ){
         this.state.role = true;
@@ -392,42 +388,6 @@ class Cost extends PureComponent {
     this.init();
   }
 
-  getRoleModify =(text)=>{
-    if(text.status==="已登记" ){
-      if(text.costtype!=="绩效" && text.costtype!=="分包费"){
-        return [<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>];
-      }
-      if(((text.costtype==="绩效" || text.costtype==="分包费"))){
-        if(this.state.text.overallstate!=="已发布"){
-          return [];
-        }
-        if(this.state.role===true){
-          return [<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>];
-        }else{
-          if(text.costtype==="绩效"){
-            return [];
-          }
-          if(text.costtype==="分包费"){
-            return [<a onClick={() => this.handleAddUpdateCost(text, true)}>修改&nbsp;&nbsp;</a>];
-          }
-        }
-      }
-    }
-    return [];
-  };
-
-  getRoleDelete =(text)=>{
-    if(text.status==="已登记" ){
-      if(text.costtype!=="绩效" && text.costtype!=="分包费"){
-        return [<a onClick={() => this.deleteItem(text, true)}>删除&nbsp;&nbsp;</a>];
-      }
-
-      if(((text.costtype==="绩效" || text.costtype==="分包费"))){
-        return [];
-      }
-    }
-    return [];
-  };
 
   previewItem = text => {
     sessionStorage.setItem('reportNoForCostEdit',text.reportno);

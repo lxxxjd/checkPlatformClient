@@ -75,34 +75,12 @@ const ReviewFrom = (props => {
 // 修改的Form
 const CreateForm = Form.create()(props => {
 
-  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo,userOptions,departOptions,dispatch } = props;
+  const { modalVisible, form, handleEdit, handleModalVisible,modalInfo,userOptions,departOptions } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
       handleEdit(fieldsValue,modalInfo);
-    });
-  };
-
-
-  const getRepeatInstrument = (rule, value, callback) => {
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const values = {
-      certcode:user.certCode,
-      diviceid:value,
-    };
-    dispatch({
-      type: 'intrusment/getRepeatInstrument',
-      payload:values,
-      callback: (response) => {
-        if(response === "repeat"){
-          callback(formatMessage({ id: 'validation.diviceid.repeat' }));
-        }else if(response ==="success") {
-          callback();
-        }else{
-          callback(formatMessage({ id: 'validation.diviceid.error' }));
-        }
-      }
     });
   };
 
@@ -121,8 +99,7 @@ const CreateForm = Form.create()(props => {
           rules: [
             {
               required: true,
-              message: "请输入设备编号为必填项，且不能重复",
-              validator: getRepeatInstrument,
+              message: "请输入设备编号",
             },
           ],
         })(<Input style={{ width: '100%' }} placeholder="请输入设备编号" />)}
@@ -343,33 +320,12 @@ const CreateForm = Form.create()(props => {
 
 
 const AddForm = Form.create()(props => {
-  const { addModalVisible, form, handleAdd, addHandleModalVisible,userOptions,departOptions,dispatch} = props;
+  const { addModalVisible, form, handleAdd, addHandleModalVisible,userOptions,departOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
       handleAdd(fieldsValue);
-    });
-  };
-
-  const getRepeatInstrument = (rule, value, callback) => {
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const values = {
-      certcode:user.certCode,
-      diviceid:value,
-    };
-    dispatch({
-      type: 'intrusment/getRepeatInstrument',
-      payload:values,
-      callback: (response) => {
-        if(response === "repeat"){
-          callback(formatMessage({ id: 'validation.diviceid.repeat' }));
-        }else if(response ==="success") {
-          callback();
-        }else{
-          callback(formatMessage({ id: 'validation.diviceid.error' }));
-        }
-      }
     });
   };
 
@@ -388,8 +344,7 @@ const AddForm = Form.create()(props => {
           rules: [
             {
               required: true,
-              message: "请输入设备编号为必填项，且不能重复",
-              validator: getRepeatInstrument,
+              message: "请输入设备编号",
             },
           ],
         })(<Input style={{ width: '100%' }} placeholder="请输入设备编号" />)}
@@ -577,7 +532,6 @@ const AddForm = Form.create()(props => {
 
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="状态">
         {form.getFieldDecorator('status', {
-          initialValue:'正常',
           rules: [
             {
             },
@@ -740,6 +694,7 @@ class Intrusment extends PureComponent {
       }
     });
 
+
     dispatch({
       type: 'company/getDepartmentList',
       payload: params,
@@ -815,25 +770,18 @@ class Intrusment extends PureComponent {
 
   deleteItem = text =>{
     const { dispatch } = this.props;
-    Modal.confirm({
-      title: '确定删除此记录吗？',
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => {
-        const formData = new FormData();
-        formData.append("keyno",text.keyno);
-        dispatch({
-          type: 'intrusment/deleteInstrument',
-          payload:formData,
-          callback: (response) => {
-            if(response==="success"){
-              this.init();
-              message.success("删除成功");
-            } else{
-              message.error("删除失败");
-            }
-          }
-        });
+    const formData = new FormData();
+    formData.append("keyno",text.keyno);
+    dispatch({
+      type: 'intrusment/deleteInstrument',
+      payload:formData,
+      callback: (response) => {
+        if(response==="success"){
+          this.init();
+          message.success("删除成功");
+        } else{
+          message.error("删除失败");
+        }
       }
     });
   };
@@ -931,7 +879,7 @@ class Intrusment extends PureComponent {
       addModalVisible: false,
     });
 
-    if( this.state.dataSource.find(item=>(item.diviceid === fields.diviceid))){
+    if( this.state.dataSource.find(item=>(item.divicename === fields.divicename)||(item.diviceid === fields.diviceid))){
       message.error("添加项目已存在");
       return;
     }
@@ -945,17 +893,12 @@ class Intrusment extends PureComponent {
           this.init();
         } else{
           message.error("保存失败");
-          this.init();
         }
       }
     });
 
 
   };
-
-
-
-
 
 
 
@@ -1029,8 +972,6 @@ class Intrusment extends PureComponent {
       handleModalVisible: this.handleModalVisible,
       addHandleModalVisible:this.addHandleModalVisible,
       handleModalReviewVisible:this.handleModalReviewVisible,
-      getRepeatInstrument:this.getRepeatInstrument,
-
     };
     const userOptions = userListData.map(d => <Option key={d.username} value={d.nameC}>{d.nameC}</Option>);
     const departOptions = departListResult.map(d => <Option key={d.branchname} value={d.branchname}>{d.branchname}</Option>);

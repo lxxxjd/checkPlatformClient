@@ -73,6 +73,7 @@ class Search  extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:"shipname",
                 rules: [{  message: '搜索类型' }],
               })(
 	                <Select placeholder="搜索类型">
@@ -81,6 +82,8 @@ class Search  extends PureComponent {
 	                  <Option value="cargoname">检查品名</Option>
 	                  <Option value="sr.sampleno">样品编号</Option>
 	                  <Option value="samplename">样品名称</Option>
+                    <Option value="applicant">委托人</Option>
+                    <Option value="agent">代理人</Option>
 	                </Select>
 	              )}
 	            </Form.Item>

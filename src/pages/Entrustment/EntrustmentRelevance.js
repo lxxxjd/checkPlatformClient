@@ -191,6 +191,7 @@ class EntrustmentRelevance extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:'shipname',
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">

@@ -169,7 +169,7 @@ class BusinessIncomeDetail extends Component {
       dataIndex: 'samplename',
     },
     {
-      title: '制备日期',
+      title: '指派日期',
       dataIndex: 'makingdate',
       render: val => {
         if(val != null){
@@ -177,32 +177,10 @@ class BusinessIncomeDetail extends Component {
         }
       }
     },
-    {
-      title: '检测人员',
-      dataIndex: 'testmans',
-      render: (text, record) => {
-        let  contentStr = [];
-        if(text===undefined || text ===null ||text ===""){
-          return null;
-        }
-        contentStr = text.split("|");
-        if (contentStr.length < 2) {
-          return text;
-        }
-        let result = null;
-        const br = <br />;
-        for( let  j = 0 ; j < contentStr.length ; j ++){
-          if(j===0){
-            result=contentStr[j];
-          }else if(j%2===0){
-            result=<span>{result}{br}{contentStr[j]}</span>;
-          }else{
-            result=<span>{result}&nbsp;{contentStr[j]}</span>;
-          }
-        }
-        return <div>{result}</div>;
-      },
-    },
+    // {
+    //   title: '检测人员',
+    //   dataIndex: 'testmans',
+    // },
     {
       title: '操作',
       render: (text, record) => (
@@ -356,7 +334,7 @@ class BusinessIncomeDetail extends Component {
         if(report.cnasCode !==undefined && report.cnasCode !==null  ){
           if(report.iscnas === "1"){
             dispatch({
-              type: 'businessIncomeDetail/getCnasInfo',
+              type: 'entrustment/getCnasInfo',
               payload: {
                 checkCode:report.cnasCode,
               },
@@ -444,9 +422,7 @@ class BusinessIncomeDetail extends Component {
       payload:{
          certCode : user.certCode,
          kind:'reportno',
-         value:reportno,
-         role:user.role,
-         nameC:user.nameC,
+         value:reportno
       },
       callback:response=>{
         if(response.code === 200){
@@ -454,7 +430,6 @@ class BusinessIncomeDetail extends Component {
         }
       }
     });
-
     dispatch({
       type: 'businessIncomeDetail/getTestByReportNoAndAssignsort',
       payload:{
@@ -738,7 +713,7 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="开票人">{pricemaking.invoiceMan}</Descriptions.Item>
             <Descriptions.Item label="发票号码">{pricemaking.invoiceno}</Descriptions.Item>
             <Descriptions.Item label="到账日期">{pricemaking.paydate !== null ? moment(pricemaking.paydate).format('YYYY-MM-DD'):null}</Descriptions.Item>
-            <Descriptions.Item label="收款人">{pricemaking.payregistMan}</Descriptions.Item>
+            <Descriptions.Item label="到账日期">{pricemaking.listman}</Descriptions.Item>
             <Descriptions.Item label="到账状态">{pricemaking.paystatus}</Descriptions.Item>
           </Descriptions>
         </Card>

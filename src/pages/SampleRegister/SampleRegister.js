@@ -197,6 +197,7 @@ class SampleRegister extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initial:"shipname",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
@@ -205,7 +206,7 @@ class SampleRegister extends PureComponent {
                   <Option value="agent">代理人</Option>
                   <Option value="shipname">船名标识</Option>
                   <Option value="cargoname">检查品名</Option>
-
+                  <Option value="overallstate">状态</Option>
                 </Select>
               )}
             </Form.Item>

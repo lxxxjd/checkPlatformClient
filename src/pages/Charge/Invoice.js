@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { formatMessage } from 'umi-plugin-react/locale/index';
 import moment from 'moment';
 import {
   Row,
@@ -21,7 +20,7 @@ const { Option } = Select;
 
 // 开具发票组件
 const CreateInvoiceForm = Form.create()(props => {
-  const { modalVisible, form, handleModalVisible,invoiceData,dispatch,init,invoiceTitlesOptions,getRepeatInvoiceno} = props;
+  const { modalVisible, form, handleModalVisible,invoiceData,dispatch,init,invoiceTitlesOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -99,7 +98,7 @@ const CreateInvoiceForm = Form.create()(props => {
         </Form.Item>
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18}} label="发票号码">
           {form.getFieldDecorator('invoiceno', {
-            rules: [{ validator: getRepeatInvoiceno,}],
+            rules: [{ required: true ,message: '选择发票号码！'}],
           })(<Input placeholder="请输入" />)}
         </Form.Item>
         <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} label="付款方式">
@@ -256,8 +255,6 @@ class Invoice extends PureComponent {
   };
 
 
-
-
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -349,32 +346,6 @@ class Invoice extends PureComponent {
     });
   };
 
-  getRepeatInvoiceno = (rule, value, callback) => {
-    const { dispatch } = this.props;
-    const user = JSON.parse(localStorage.getItem("userinfo"));
-    const values = {
-      certcode:user.certCode,
-      invoiceno:value,
-    };
-    if(value===undefined || value ===""){
-      callback(formatMessage({ id: 'validation.invoiceno.noexist' }));
-    }
-    dispatch({
-      type: 'charge/getRepeatInvoiceno',
-      payload:values,
-      callback: (response) => {
-        if(response === "repeat"){
-          callback(formatMessage({ id: 'validation.invoiceno.repeat' }));
-        }else if(response ==="success") {
-          callback();
-        }else{
-          callback(formatMessage({ id: 'validation.invoiceno.error' }));
-        }
-      }
-    });
-  };
-
-
 
   renderSimpleForm() {
     const {
@@ -390,14 +361,15 @@ class Invoice extends PureComponent {
               colon={false}
             >
               {getFieldDecorator('kind', {
+                initialValue:"listno",
                 rules: [{  message: '搜索类型' }],
               })(
                 <Select placeholder="搜索类型">
                   <Option value="listno">清单号</Option>
+                  <Option value="invoiceno">发票号</Option>
                   <Option value="listman">拟制人</Option>
                   <Option value="payer">付款人</Option>
-                  <Option value="invoiceno">发票号码</Option>
-                  <Option value="paystatus">状态</Option>
+                  <Option value="paystatus">支付状态</Option>
                 </Select>
               )}
             </Form.Item>
@@ -434,7 +406,6 @@ class Invoice extends PureComponent {
     const parentMethods = {
       handleModalVisible: this.handleModalVisible,
       init:this.init,
-      getRepeatInvoiceno:this.getRepeatInvoiceno,
     };
     const { modalVisible,invoiceData,destoryInvoiceVisble,invoiceTitles} = this.state;
     const invoiceTitlesOptions = invoiceTitles.map(d => <Option key={d.namec} value={d.namec}>{d.namec}</Option>);
