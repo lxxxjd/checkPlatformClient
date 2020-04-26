@@ -138,11 +138,11 @@ class CNASCheckFourCertCode extends PureComponent {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       // eslint-disable-next-line prefer-destructuring
-      const certCode = sessionStorage.getItem('goCNASCheckFourCertCodeListInfo_CertCode');
+      const user = JSON.parse(localStorage.getItem("userinfo"));
       const values = {
         kind :fieldsValue.kind.trim(),
         value: fieldsValue.value.trim(),
-        certCode,
+        certCode:user.certCode,
       };
 
       dispatch({
