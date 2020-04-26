@@ -62,7 +62,7 @@ class SampleIndex extends PureComponent {
       dataIndex: 'samplename',
     },
     {
-      title: '状态',
+      title: '样品状态',
       dataIndex: 'state',
     },
     {
@@ -97,6 +97,7 @@ class SampleIndex extends PureComponent {
    window.open("/Entrustment/DetailForEntrustment");
     localStorage.setItem('reportDetailNo',text.reportno);
   };
+
   mobileItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('sampleno',text.sampleno);
@@ -106,6 +107,7 @@ class SampleIndex extends PureComponent {
       pathname:'/InspectionAnalysis/SampleModify',
     });
   };
+
   detailItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     sessionStorage.setItem('sampleno',text.sampleno);
@@ -114,6 +116,7 @@ class SampleIndex extends PureComponent {
       pathname:'/InspectionAnalysis/SampleDetail',
     });
   };
+
   render() {
     const {
       inspectionAnalysis: {samples},

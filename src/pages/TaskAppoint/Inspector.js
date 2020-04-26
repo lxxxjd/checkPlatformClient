@@ -10,13 +10,98 @@ import {
   Input,
   Button,
   Select,
-  Table,
+  Table, notification, Modal,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
 import moment from 'moment'
 
+// 查阅检验人员窗口
+const ReadRecordFrom = (props => {
+  const { modalReadRecordVisible, handleModalReadRecordVisible,ReadRecordData,loading } = props;
+
+  // 处理指派日期格式
+  const handleDate = (val) => {
+    if(val!==undefined && val!==null){
+      return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+    }
+    return null;
+  };
+
+  const columns = [
+    {
+      title: '检验员',
+      dataIndex: 'inspman',
+    },
+    {
+      title: '电话',
+      dataIndex: 'tel',
+    },
+    {
+      title: '任务',
+      dataIndex: 'inspway',
+    },
+    {
+      title: '岗位',
+      dataIndex: 'position',
+    },
+    {
+      title: '工时',
+      dataIndex: 'manhour',
+    },
+    {
+      title: '劳务',
+      dataIndex: 'labourfee',
+    },
+    {
+      title: '误餐',
+      dataIndex: 'lunchfee',
+    },
+    {
+      title: '交通',
+      dataIndex: 'trafficfee',
+    },
+    {
+      title: '其他',
+      dataIndex: 'otherfee',
+    },
+    {
+      title: '指派日期',
+      dataIndex: 'taskdate',
+      render: val => handleDate(val),
+    },
+    {
+      title: '指派人',
+      dataIndex: 'taskman',
+    },
+  ];
+
+  return (
+    <Modal
+      destroyOnClose
+      title="查看检验人员"
+      visible={modalReadRecordVisible}
+      style={{ top: 100 }}
+      width={1000}
+      onCancel={() => handleModalReadRecordVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleModalReadRecordVisible()}>
+          关闭
+        </Button>
+      ]}
+    >
+      <Table
+        size="middle"
+        loading={loading}
+        dataSource={ReadRecordData}
+        columns={columns}
+        rowKey="inspman"
+        pagination={{showQuickJumper:true,showSizeChanger:true}}
+      />
+    </Modal>
+  );
+});
 
 
 
@@ -37,6 +122,8 @@ const getValue = obj =>
 class Inspector extends PureComponent {
   state = {
     formValues: {},
+    modalReadRecordVisible:false,
+    ReadRecordData:[],
   };
 
   columns = [
@@ -80,8 +167,8 @@ class Inspector extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toInspectDetail(text, record)}>检验人员</a>
-          &nbsp;&nbsp;
+          <a onClick={() => this.toInspectDetail(text, record)}>检验人员</a>&nbsp;&nbsp;
+          <a onClick={() => this.ReviewSurveyor(text, record)}>查看</a> &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -108,9 +195,7 @@ class Inspector extends PureComponent {
       return <span>{moment(date).format('YYYY-MM-DD')}</span>;
     }
     return [];
-  };
-
-
+  }
 
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -148,6 +233,33 @@ class Inspector extends PureComponent {
 
   };
 
+  ReviewSurveyor=(text) => {
+    const { dispatch } = this.props;
+    const formData = new FormData();
+    formData.append('reportno', text.reportno);
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    const params = {
+      certCode:user.certCode,
+      reportNo:text.reportno
+    };
+    dispatch({
+      type: 'task/getInspects',
+      payload: params,
+      callback: (response) => {
+        if (response){
+          let res =[];
+          for (let i = 0; i < response.list.length; i++) {
+            if (response.list[i].state === 1) {
+              res.push(response.list[i]);
+            }
+          }
+          this.state.ReadRecordData =res;
+        }
+      }
+    });
+    this.handleModalReadRecordVisible(true);
+  };
+
   previewItem = text => {
     router.push({
       pathname:'/Entrustment/DetailForEntrustment',
@@ -183,10 +295,6 @@ class Inspector extends PureComponent {
 
   };
 
-
-
-
-
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -208,8 +316,6 @@ class Inspector extends PureComponent {
       });
     });
   };
-
-
 
   renderSimpleForm() {
     const {
@@ -234,7 +340,7 @@ class Inspector extends PureComponent {
                   <Option value="cargoname">检查品名</Option>
                   <Option value="applicant">委托人</Option>
                   <Option value="agent">代理人</Option>
-
+                  <Option value="overallstate">状态</Option>
                 </Select>
               )}
             </Form.Item>
@@ -260,6 +366,11 @@ class Inspector extends PureComponent {
     );
   }
 
+  handleModalReadRecordVisible = (flag) => {
+    this.setState({
+      modalReadRecordVisible: !!flag,
+    });
+  };
 
 
 
@@ -268,11 +379,17 @@ class Inspector extends PureComponent {
       task: {dataInspect},
       loading,
     } = this.props;
+
+    const parentMethods = {
+      handleModalReadRecordVisible :this.handleModalReadRecordVisible,
+    };
+    const {modalReadRecordVisible,ReadRecordData}  = this.state;
     return (
       <PageHeaderWrapper title="检验指派">
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
+            <ReadRecordFrom {...parentMethods} modalReadRecordVisible={modalReadRecordVisible} ReadRecordData={ReadRecordData} loading={loading} />
             <Table
               size="middle"
               rowKey="reportno"

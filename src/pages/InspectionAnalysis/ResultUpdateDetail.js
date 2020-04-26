@@ -96,7 +96,7 @@ const UpdateForm = Form.create()(props =>  {
       title="录入样品指标"
       visible={visible}
       style={{ top: 100 }}
-      width={500}
+      width={600}
       onCancel={() => handleVisible()}
       footer={[
         <Button type="primary" onClick={() => handleVisible()}>

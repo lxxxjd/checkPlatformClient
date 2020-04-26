@@ -458,7 +458,7 @@ class CertificateAbandon extends PureComponent {
       }
     });
     this.handleModalReadRecordVisible(true);
-};
+  };
 
 
 

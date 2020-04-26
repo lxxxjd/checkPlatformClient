@@ -90,6 +90,7 @@ class SampleModify extends PureComponent {
       dataIndex: 'unit',
     },
   ];
+
   modifyItem = text => {
     const { dispatch ,form} = this.props;
     const cargoname = sessionStorage.getItem('cargoname');

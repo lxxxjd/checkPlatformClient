@@ -54,7 +54,7 @@ class InspectionArrangementDetail extends PureComponent {
 
   columns1 = [
     {
-      title: '人员',
+      title: '检验员',
       dataIndex: 'inspman',
     },
     {
@@ -62,32 +62,43 @@ class InspectionArrangementDetail extends PureComponent {
       dataIndex: 'tel',
     },
     {
-      title: '住址',
-      dataIndex: 'place',
+      title: '任务',
+      dataIndex: 'inspway',
     },
     {
       title: '岗位',
       dataIndex: 'position',
     },
     {
-      title: '工作任务',
-      dataIndex: 'inspway',
-    },
-    {
-      title: '工时费',
-      dataIndex: 'labourfee',
-    },
-    {
-      title: '劳务费',
+      title: '工时',
       dataIndex: 'manhour',
     },
     {
-      title: '餐饮费',
+      title: '劳务',
+      dataIndex: 'labourfee',
+    },
+    {
+      title: '误餐',
       dataIndex: 'lunchfee',
     },
     {
-      title: '交通费',
+      title: '交通',
       dataIndex: 'trafficfee',
+    },
+    {
+      title: '其他',
+      dataIndex: 'otherfee',
+    },
+    {
+      title: '指派日期',
+      dataIndex: 'taskdate',
+      render: val => <span>{
+        moment(val).format('YYYY-MM-DD')
+      }</span>
+    },
+    {
+      title: '指派人',
+      dataIndex: 'taskman',
     },
   ];
 
@@ -95,16 +106,21 @@ class InspectionArrangementDetail extends PureComponent {
     {
       title: '检测机构',
       dataIndex: 'testman',
+      width:'28%',
     },
     {
-      title: '分包时间',
+      title: '分包日期',
       dataIndex: 'assigndate',
       render: val => <span>{
         moment(val).format('YYYY-MM-DD')
       }</span>
     },
     {
-      title: '计价方式',
+      title: '分包人',
+      dataIndex: 'assignman',
+    },
+    {
+      title: '计价',
       dataIndex: 'priceway',
     },
     {

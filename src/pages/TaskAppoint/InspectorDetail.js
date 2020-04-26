@@ -80,8 +80,8 @@ const ReviewFrom = (props => {
         <Descriptions.Item label="劳务">{modalInfo.labourfee}</Descriptions.Item>
         <Descriptions.Item label="餐饮">{modalInfo.lunchfee}</Descriptions.Item>
         <Descriptions.Item label="交通">{modalInfo.trafficfee}</Descriptions.Item>
-        <Descriptions.Item label="编辑人">{modalInfo.taskman}</Descriptions.Item>
-        <Descriptions.Item label="编辑时间">{date}</Descriptions.Item>
+        <Descriptions.Item label="指派人">{modalInfo.taskman}</Descriptions.Item>
+        <Descriptions.Item label="指派日期">{date}</Descriptions.Item>
       </Descriptions>
     </Modal>
   );
