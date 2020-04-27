@@ -626,6 +626,7 @@ class UserManage extends PureComponent {
           <a onClick={() => this.fileItem(text, record)}>上传文件&nbsp;&nbsp;</a>
           <a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>
           <a onClick={() => this.resetPassword(text, record)}>重置密码</a>    &nbsp;&nbsp;
+          <a onClick={() => this.sendSignUrl(text, record)}>签名链接</a>    &nbsp;&nbsp;
           <a onClick={() => this.deleteItem(text, record)}>删除</a>
         </Fragment>
       ),
@@ -873,6 +874,30 @@ class UserManage extends PureComponent {
     });
   };
 
+  sendSignUrl =(text)=>{
+    const {dispatch} = this.props;
+    Modal.confirm({
+      title: '确定发送链接吗吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'company/sendSignUrl',
+          payload:{
+            username:text.userName,
+          },
+          callback: (response) => {
+            if(response.code === 200){
+              message.success("发送签名链接成功");
+            }
+            else{
+              message.error("发送签名链接失败");
+            }
+          }
+        });
+      }
+    });
+  };
 
   resetPassword =(text)=>{
     Modal.confirm({

@@ -7,6 +7,7 @@ import {getRecordCompanyList,uploadRecordCompany,deleteRecordCompany,getRepeatRe
 import {getPreCustomReceiveList,addPreCustomReceive,updatePreCustomReceive,deletePreCustomReceive,
   getCustomReceiveList,addCustomReceive,updateCustomReceive,deleteCustomReceive,getAllReceive,getMonthReceive} from '@/services/CustomReceive';
 import {getCustomInfos, } from '@/services/Entrustment';
+import {sendSignUrl} from '@/services/user';
 
 
 export default {
@@ -37,6 +38,12 @@ export default {
 
 
     // 海关备案
+
+
+    *sendSignUrl({ payload , callback}, { call, put }) {
+      const response = yield call(sendSignUrl, payload);
+      if (callback) callback(response);
+    },
 
     *getAllReceive({ payload , callback}, { call, put }) {
       const response = yield call(getAllReceive, payload);
