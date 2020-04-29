@@ -18,6 +18,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
 import style from './ResultUpdate.less';
 import { bool } from 'prop-types';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -253,8 +254,21 @@ class ResultUpdateDetail extends PureComponent {
       title: '结果',
       dataIndex: 'testresult',
       editable: true,
-      width: '15%',
+      width: '10%',
     },
+    {
+      title: '比较方法',
+      dataIndex: 'calWay',
+    },
+    {
+      title: '参考值',
+      dataIndex: 'referValue',
+    },
+    {
+      title: '可差值',
+      dataIndex: 'rangeValue',
+    },
+
     {
       title: '操作',
       render: (text, record) => (
@@ -269,6 +283,8 @@ class ResultUpdateDetail extends PureComponent {
   componentDidMount() {
     this.init();
   }
+
+
 
   init = ()=>{
     const { dispatch } = this.props;
@@ -292,6 +308,8 @@ class ResultUpdateDetail extends PureComponent {
       }
     });
   };
+
+
 
   back = () =>{
     this.props.history.goBack();

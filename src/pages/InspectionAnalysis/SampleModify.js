@@ -45,6 +45,7 @@ class SampleModify extends PureComponent {
     onLoad:false,
     onDetail:false,
     testDetail:null,
+    orfixed:false,
   };
   columns = [
     {
@@ -63,10 +64,28 @@ class SampleModify extends PureComponent {
       title: '单位',
       dataIndex: 'unit',
     },
+    {
+      title: '参考值',
+      dataIndex: 'referValue',
+    },
+
+    {
+      title: '比较方法',
+      dataIndex: 'calWay',
+    },
+    {
+      title: '上下浮动',
+      dataIndex: 'rangeValue',
+    },
+    {
+      title: '强制',
+      dataIndex: 'orFixed',
+    },
+
     { title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改标准 &nbsp;&nbsp;</a>
+          <a onClick={() => this.modifyItem(text, record)}>修改 &nbsp;&nbsp;</a>
           <a onClick={() => this.deleteOne(text, record)}>删除</a>
         </Fragment>
       ),
@@ -89,6 +108,24 @@ class SampleModify extends PureComponent {
       title: '单位',
       dataIndex: 'unit',
     },
+    {
+      title: '参考值',
+      dataIndex: 'referValue',
+    },
+
+    {
+      title: '比较方法',
+      dataIndex: 'calWay',
+    },
+    {
+      title: '上下浮动',
+      dataIndex: 'rangeValue',
+    },
+    {
+      title: '强制',
+      dataIndex: 'orFixed',
+    },
+
   ];
 
   modifyItem = text => {
@@ -103,9 +140,20 @@ class SampleModify extends PureComponent {
       },
     });
     form.setFieldsValue({['teststandard']: text.teststandard});
+    form.setFieldsValue({['referValue']: text.referValue});
+    form.setFieldsValue({['rangeValue']: text.rangeValue});
+    form.setFieldsValue({['calWay']: text.calWay});
     this.setState({ testDetail : text});
+    // console.log(text);
+    if(text.orFixed === "是" ){
+      this.setState({orfixed:true});
+    }else{
+      this.setState({orfixed:false});
+    }
     this.setState({ modify: true });
   };
+
+
   modify = text =>{
     const {testDetail} = this.state;
     var value = testDetail;
@@ -114,6 +162,9 @@ class SampleModify extends PureComponent {
       console.log(err);
       if (err) return;
       value.teststandard =  form.getFieldValue('teststandard');
+      value.referValue =  form.getFieldValue('referValue');
+      value.calWay =  form.getFieldValue('calWay');
+      value.rangeValue =  form.getFieldValue('rangeValue');
       dispatch({
         type: 'inspectionAnalysis/modifyDetail',
         payload: value,
@@ -276,11 +327,23 @@ class SampleModify extends PureComponent {
     },
     {
       title: '检测标准',
-      dataIndex: 'teststandard',
+      dataIndex: 'standard',
     },
     {
       title: '单位',
       dataIndex: 'unit',
+    },
+    {
+      title: '参考值',
+      dataIndex: 'referValue',
+    },
+    {
+      title: '比较方法',
+      dataIndex: 'calWay',
+    },
+    {
+      title: '是否强制',
+      dataIndex: 'orFixed',
     },
   ];
 
@@ -421,7 +484,7 @@ class SampleModify extends PureComponent {
     const applicant = sessionStorage.getItem('applicant');
     const cargoname = sessionStorage.getItem('cargoname');
     const certCode = JSON.parse(localStorage.getItem("userinfo")).certCode;
-    console.log(cargoname);
+    // console.log(cargoname);
     const { dispatch } = this.props;
     dispatch({
       type: 'inspectionAnalysis/getSamplesByFilter',
@@ -433,6 +496,7 @@ class SampleModify extends PureComponent {
       }
     });
   };
+
   render() {
     const {
       inspectionAnalysis: {detail,items,reportSample,details,testStandards},
@@ -491,7 +555,7 @@ class SampleModify extends PureComponent {
             visible={addMany}
             onOk={this.addMany}
             onCancel={this.handleCancel}
-            width={800}
+            width={1000}
             okText="添加"
           >
             <Table
@@ -509,7 +573,7 @@ class SampleModify extends PureComponent {
             visible={onDelete}
             onOk={this.delete}
             onCancel={this.handleCancel}
-            width={800}
+            width={1000}
             okText="删除"
           >
             <Table
@@ -527,7 +591,7 @@ class SampleModify extends PureComponent {
             visible={onLoad}
             onOk={this.handleCancel}
             onCancel={this.handleCancel}
-            width={800}
+            width={1000}
           >
             <div className={styles.tableListForm}><SearchForm applicant={applicant} cargoname={cargoname} /></div>
             <Table
@@ -544,6 +608,7 @@ class SampleModify extends PureComponent {
             visible={modify}
             onOk={this.modify}
             onCancel={this.handleCancel}
+            width={400}
           >
             <Form>
               <Form.Item label="检验标准">
@@ -558,6 +623,37 @@ class SampleModify extends PureComponent {
                     </Select>
                   )}
               </Form.Item>
+
+              <Form.Item label="参考值">
+               {getFieldDecorator('referValue', {
+                rules: [{ required:false, message: '请输入数值'}],
+              })(
+                <Input disabled={this.state.orfixed} />
+                )}
+               </Form.Item>
+
+              <Form.Item label="比较方法">
+                {getFieldDecorator('calWay', {
+                  rules: [{ required:false, message: '请选择比较方法'}],
+                })(
+                  <Select placeholder="请选择比较方法" disabled={this.state.orfixed}>
+                    <Option value="小于">小于</Option>
+                    <Option value="小于等于">小于等于</Option>
+                    <Option value="大于">大于</Option>
+                    <Option value="大于等于">大于等于</Option>
+                    <Option value="等于">等于</Option>
+                    <Option value="范围内">范围内</Option>
+                  </Select>
+                )}
+              </Form.Item>
+
+              <Form.Item label="上下浮动值">
+                {getFieldDecorator('rangeValue', {
+                  rules: [{ required:false, message: '请输入数值'}],
+                })(
+                  <Input disabled={this.state.orfixed} />
+                )}
+              </Form.Item>
             </Form>
           </Modal>
           <Modal
@@ -565,7 +661,7 @@ class SampleModify extends PureComponent {
             visible={onDetail}
             onCancel={this.handleCancelDetail}
             footer={null}
-            width={500}
+            width={900}
           >
             <Table
               size='middle'

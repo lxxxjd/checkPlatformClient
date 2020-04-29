@@ -142,7 +142,7 @@ class ResultDetail extends PureComponent {
       dataIndex: 'weight',
     },
 
-    { title: '结果', dataIndex: 'result',key:"desc",
+    { title: '结果描述', dataIndex: 'result',key:"desc",
       onCell: () => {
         return {
           style: {
@@ -214,7 +214,7 @@ class ResultDetail extends PureComponent {
       render: val => this.isValidDate(val),
     },
 
-    { title: '结果', dataIndex: 'result',key:"desc",
+    { title: '结果描述', dataIndex: 'result',key:"desc",
       onCell: () => {
         return {
           style: {
@@ -868,7 +868,7 @@ class ResultDetail extends PureComponent {
                   })(
                     <Transfer
                       listStyle={{
-                        width:'48%'
+                        width:'45%'
                       }}
                       dataSource={standards}
                       titles={['待选标准', '已选标准']}
@@ -957,7 +957,7 @@ class ResultDetail extends PureComponent {
             </Row>
 
             <Row>
-              <Form.Item label="结果" labelCol={{span: 2}} wrapperCol={{span: 22}}>
+              <Form.Item label="结果描述" labelCol={{span: 2}} wrapperCol={{span: 22}}>
                 {getFieldDecorator('result', {
                   // rules: [{ required: true, message: '请输入结果' }],
                 })(

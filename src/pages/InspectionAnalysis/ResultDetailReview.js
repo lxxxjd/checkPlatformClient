@@ -16,6 +16,7 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
+import moment from 'moment';
 
 /* eslint react/no-multi-comp:0 */
 @connect(({ inspectionAnalysis, loading }) => ({
@@ -32,22 +33,48 @@ class ResultDetailReview extends PureComponent {
     {
       title: '指标名称',
       dataIndex: 'itemC',
+      render: (text,record) => this.setRedText(text,record),
     },
-    {
-      title: '英文名称',
-      dataIndex: 'itemE',
-    },
+
     {
       title: '检测标准',
       dataIndex: 'teststandard',
+      render: (text,record) => this.setRedText(text,record),
     },
     {
       title: '单位',
       dataIndex: 'unit',
+      render: (text,record) => this.setRedText(text,record),
     },
     {
       title: '结果',
       dataIndex: 'testresult',
+      render: (text,record) => this.setRedText(text,record),
+    },
+    {
+      title: '比较方法',
+      dataIndex: 'calWay',
+      render: (text,record) => this.setRedText(text,record),
+    },
+    {
+      title: '参考值',
+      dataIndex: 'referValue',
+      render: (text,record) => this.setRedText(text,record),
+    },
+    {
+      title: '上下浮动',
+      dataIndex: 'rangeValue',
+      render: (text,record) => this.setRedText(text,record),
+    },
+    {
+      title: '差值',
+      dataIndex: 'diffvalue',
+      render: (text,record) => this.setRedText(text,record),
+    },
+    {
+      title: '状态',
+      dataIndex: 'qualityErr',
+      render: (text,record) => this.setRedText(text,record),
     },
   ];
 
@@ -78,6 +105,15 @@ class ResultDetailReview extends PureComponent {
       }
     });
   };
+
+  setRedText =(text,record)=>{
+    if(record.qualityErr==='异常'){
+      return <span style={{color:'red'}}>{text}</span>
+    }
+    return <span>{text}</span>
+  };
+
+
 
   reviewPass =()=>{
     const { dispatch } = this.props;

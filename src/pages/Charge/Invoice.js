@@ -82,6 +82,7 @@ const CreateInvoiceForm = Form.create()(props => {
               <Option value="增值税专用发票">增值税专用发票.</Option>
               <Option value="增值税普通发票">增值税普通发票</Option>
               <Option value="国际自制发票">国际自制发票</Option>
+              <Option value="企业自制收据">企业自制收据</Option>
             </Select>
           )}
         </Form.Item>

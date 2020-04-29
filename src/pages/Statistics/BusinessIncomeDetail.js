@@ -320,6 +320,18 @@ class BusinessIncomeDetail extends Component {
       title: '结果',
       dataIndex: 'testresult',
     },
+    {
+      title: '比较方法',
+      dataIndex: 'calWay',
+    },
+    {
+      title: '参考值',
+      dataIndex: 'referValue',
+    },
+    {
+      title: '状态',
+      dataIndex: 'qualityErr',
+    },
   ];
 
   componentWillMount() {
@@ -572,8 +584,8 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="检查品名">{report.cargoname}</Descriptions.Item>
             <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
             <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
-            <Descriptions.Item label="申报数量和单位">{((report.quantityd === undefined || report.quantityd === null ) ? "":report.quantityd  )+report.unit }</Descriptions.Item>
-            <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
+            <Descriptions.Item label="申报数量">{((report.quantityd === undefined || report.quantityd === null ) ? "":report.quantityd  )+report.unit }</Descriptions.Item>
+            <Descriptions.Item label="预检日期">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
             <Descriptions.Item label="检验港口">{report.fromto}</Descriptions.Item>
             <Descriptions.Item label="检验地点">{report.inspectplace}</Descriptions.Item>
           </Descriptions>
@@ -617,7 +629,7 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="当前状态">{report.overallstate}</Descriptions.Item>
           </Descriptions>
         </Card>
-        <Card bordered={false}  title="检查结果">
+        <Card bordered={false}  title="现场检查">
           <div>
             <Table
               size="middle"
@@ -689,7 +701,7 @@ class BusinessIncomeDetail extends Component {
             />
           </div>
         </Card>
-        <Card bordered={false}  title="证书">
+        <Card bordered={false}  title="证稿证书">
           <div>
             <Table
               size="middle"
@@ -708,12 +720,12 @@ class BusinessIncomeDetail extends Component {
             <Descriptions.Item label="定价金额">{pricemaking.total}</Descriptions.Item>
             <Descriptions.Item label="清单日期">{pricemaking.listdate !== null ? moment(pricemaking.listdate).format('YYYY-MM-DD'):null}</Descriptions.Item>
             <Descriptions.Item label="拟单人">{pricemaking.listman}</Descriptions.Item>
-            <Descriptions.Item label="拟单号">{pricemaking.listno}</Descriptions.Item>
+            <Descriptions.Item label="清单号">{pricemaking.listno}</Descriptions.Item>
             <Descriptions.Item label="发票日期">{pricemaking.invoiceDate !== null ? moment(pricemaking.invoiceDate).format('YYYY-MM-DD'):null}</Descriptions.Item>
             <Descriptions.Item label="开票人">{pricemaking.invoiceMan}</Descriptions.Item>
             <Descriptions.Item label="发票号码">{pricemaking.invoiceno}</Descriptions.Item>
             <Descriptions.Item label="到账日期">{pricemaking.paydate !== null ? moment(pricemaking.paydate).format('YYYY-MM-DD'):null}</Descriptions.Item>
-            <Descriptions.Item label="到账日期">{pricemaking.listman}</Descriptions.Item>
+            <Descriptions.Item label="到账登记">{pricemaking.payregistMan}</Descriptions.Item>
             <Descriptions.Item label="到账状态">{pricemaking.paystatus}</Descriptions.Item>
           </Descriptions>
         </Card>
