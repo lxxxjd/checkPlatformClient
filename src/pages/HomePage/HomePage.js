@@ -92,7 +92,7 @@ class HomePage extends Component {
               <Row>
                 <Col span={2} />
                 <Col span={4}><img alt="404" src={testImg} style={{height:27,paddingLeft:0}} /></Col>
-                <Col span={15}><span style={{fontFamily:"楷体",marginBottom:5,fontSize:24,color:'black'}}>水木梁清</span></Col>
+                <Col span={15}><span style={{fontFamily:"楷体",marginBottom:5,fontSize:24,color:'black'}}>明检达</span></Col>
               </Row>
               <h2 style={{fontFamily:"楷体",color:'black'}}> 大宗商品公共服务平台</h2>
             </div>

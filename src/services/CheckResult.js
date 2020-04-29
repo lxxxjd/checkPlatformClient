@@ -2,7 +2,6 @@ import request from '@/utils/request';
 import { stringify } from 'qs';
 
 export async function addCheckResult(params) {
-
   return request(`/api/checkResult/addCheckResult`,{
     method: 'POST',
     data: {

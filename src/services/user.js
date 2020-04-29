@@ -8,6 +8,10 @@ export async function queryCurrent() {
   return request('/api/currentUser');
 }
 
+export async function sendSignUrl(params) {
+  return request(`/api/user/sendSignUrl?username=${params.username}`);
+}
+
 export async function getMan(params) {
   return request(`/api/user/getMan?certcode=${params.certcode}&func=${params.func}`);
 }
