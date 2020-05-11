@@ -155,7 +155,7 @@ class InspectionArrangement extends PureComponent {
       loading,
     } = this.props;
     return (
-      <PageHeaderWrapper title="检验安排">
+      <PageHeaderWrapper title="检验人员">
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
             <div className={styles.tableListForm}><SearchForm /></div>

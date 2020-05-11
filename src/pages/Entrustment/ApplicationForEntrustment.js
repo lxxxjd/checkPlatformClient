@@ -66,10 +66,10 @@ const fieldLabels = {
   reportdate: '委托日期',
   tradeway: '贸易方式',
   businesssource: '业务来源',
-  shipname: '标识/船名',
-  fromto: '产地/装卸港',
+  shipname: '船名标识',
+  fromto: '产地/装港',
   insplinkway: '现场手机',
-  inspdate: '检验时间',
+  inspdate: '预检日期',
   cargoname: '检查品名',
   cargosort: '货物类别',
   quantityD: '申报数量',
@@ -83,7 +83,7 @@ const fieldLabels = {
   certstyle: '证书要求',
   section: '执行部门',
   customsName: '海关部门',
-  iscostoms:"是否向海关推送报告",
+  iscostoms:"向海关推送报告？",
 };
 
 
@@ -354,7 +354,6 @@ class ApplicationForEntrustment extends PureComponent {
         name: value
       },
       callback: (response) => {
-
         this.setState({agentName: response})
       }
     });
@@ -500,7 +499,6 @@ class ApplicationForEntrustment extends PureComponent {
         content:'请管理员在“字典管理-贸易方式”菜单配置！',
         okText:"知道了",
         onOk() {
-
         },
       });
       this.setState({isViewonTradeAway:true});
@@ -1010,7 +1008,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('chineselocalname', {
                     rules: [],
-                  })(<Input placeholder="请输入中文俗名" />)}
+                  })(<Input placeholder="请输入型号或俗名" />)}
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -1022,7 +1020,7 @@ class ApplicationForEntrustment extends PureComponent {
                 >
                   {getFieldDecorator('shipname', {
                     rules: [],
-                  })(<Input placeholder="请输入船名"/>)}
+                  })(<Input placeholder="请输入船名或标识"/>)}
                 </Form.Item>
               </Col>
             </Row>
@@ -1058,12 +1056,14 @@ class ApplicationForEntrustment extends PureComponent {
                   })(
                     <Select placeholder="请选择">
                       <Option value="公吨">公吨</Option>
-<Option value="立方米">立方米</Option>
-<Option value="桶">桶</Option>
+                      <Option value="立方米">立方米</Option>
+                      <Option value="桶">桶</Option>
+                      <Option value="台">台</Option>
                       <Option value="包">包</Option>
                       <Option value="千克">千克</Option>
                       <Option value="个">个</Option>
                       <Option value="捆">捆</Option>
+                      <Option value="其他">其他</Option>
                     </Select>
                   )}
                 </Form.Item>

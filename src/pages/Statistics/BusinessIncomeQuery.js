@@ -504,8 +504,8 @@ class BusinessIncomeQuery extends PureComponent {
           {/* 下拉框 */}
           <Col span={4}>
             <Form.Item
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 6 }}
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 6}}
               colon={false}
             >
               {getFieldDecorator("statisticFields", {
@@ -521,7 +521,7 @@ class BusinessIncomeQuery extends PureComponent {
             </Form.Item>
           </Col>
           {/* 日期范围选择控件 */}
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 6 }}
@@ -535,7 +535,7 @@ class BusinessIncomeQuery extends PureComponent {
               )}
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={13}>
             <Form.Item
               label="收费状态："
               labelCol={{ span: 5 }}
@@ -546,8 +546,9 @@ class BusinessIncomeQuery extends PureComponent {
                 <Radio.Group buttonStyle="solid">
                   <Radio.Button value="全部">全部</Radio.Button>
                   <Radio.Button value="未定价">未定价</Radio.Button>
-                  <Radio.Button value="未到账">未到账</Radio.Button>
+                  <Radio.Button value="未开票">未开票</Radio.Button>
                   <Radio.Button value="已开票">已开票</Radio.Button>
+                  <Radio.Button value="未到账">未到账</Radio.Button>
                   <Radio.Button value="已收讫">已收讫</Radio.Button>
                 </Radio.Group>)}
             </Form.Item>

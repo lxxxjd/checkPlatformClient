@@ -116,8 +116,6 @@ class DetailForSub extends PureComponent {
   ];
 
 
-
-
   componentDidMount() {
     const overallstate = sessionStorage.getItem('overallstate');
     this.setState({overallstate:overallstate});

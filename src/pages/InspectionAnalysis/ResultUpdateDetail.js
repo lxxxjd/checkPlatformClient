@@ -12,7 +12,7 @@ import {
   Select,
   Table,
   Icon,
-  Modal, Popconfirm, notification, message, AutoComplete,
+  Modal, Popconfirm, notification, message, AutoComplete,Descriptions
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
@@ -24,7 +24,40 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 
+// 查看框
+const ReviewFrom =Form.create() (props => {
+  const { modalReviewVisible, handleModalReviewVisible,modalInfo } = props;
 
+  // 处理操作时间
+  const handleDate = (val) => {
+    if(val!==undefined && val!==null){
+      return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+    }
+    return null;
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="查看具体指标"
+      visible={modalReviewVisible}
+      width={document.body.clientWidth*0.6}
+      height={document.body.clientHeight*0.6}
+      style={{ top: 100 }}
+      onCancel={() => handleModalReviewVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleModalReviewVisible()}>
+          关闭
+        </Button>
+      ]}
+    >
+      <Descriptions bordered>
+        <Descriptions.Item label="委托编号">{modalInfo.reportno}</Descriptions.Item>
+        <Descriptions.Item label="样品编号">{modalInfo.sampleno}</Descriptions.Item>
+      </Descriptions>
+    </Modal>
+  );
+});
 
 
 // 提交审核
@@ -213,9 +246,10 @@ class EditableCell extends React.Component {
         {editable ? (
           <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
         ) : (
-          children
-        )}
+        children
+       )}
       </td>
+
     );
   }
 }
@@ -235,7 +269,9 @@ class ResultUpdateDetail extends PureComponent {
 
     dataSource: [],
     modalSaveListVisible:false,
+    modalReviewVisible:false,
     reviewUsers:[],
+    modalInfo:{},
 
 
 
@@ -250,10 +286,10 @@ class ResultUpdateDetail extends PureComponent {
       title: '指标名称',
       dataIndex: 'itemC',
     },
-    {
-      title: '英文名称',
-      dataIndex: 'itemE',
-    },
+    // {
+    //   title: '英文名称',
+    //   dataIndex: 'itemE',
+    // },
     {
       title: '检测标准',
       dataIndex: 'teststandard',
@@ -263,10 +299,14 @@ class ResultUpdateDetail extends PureComponent {
       dataIndex: 'unit',
     },
     {
+      title: '参考值',
+      dataIndex: 'referValue',
+    },
+    {
       title: '结果',
       dataIndex: 'testresult',
       editable: true,
-      width: '10%',
+      // width: '8%',
     },
     {
       title: '比较方法',
@@ -274,28 +314,42 @@ class ResultUpdateDetail extends PureComponent {
       editable: true,
     },
     {
-      title: '参考值',
-      dataIndex: 'referValue',
+      title: '检测人员',
+        dataIndex: 'inspector',
+      // width: '20%',
     },
     {
-      title: '可差值',
-      dataIndex: 'rangeValue',
+      title: '仪器设备',
+      dataIndex: 'instrument',
+      // width: '20%',
     },
-
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.modifyItem(text, record)}>修改</a>
+          <a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>
+          <a onClick={() => this.handleReview(text, record)}>查看</a>
         </Fragment>
       ),
     },
   ];
 
 
+
   componentDidMount() {
     this.init();
   }
+
+  handleReview = (flag,text) => {
+    this.state.modalInfo = text;
+    this.handleModalReviewVisible(flag);
+  };
+
+  handleModalReviewVisible = (flag) => {
+    this.setState({
+      modalReviewVisible: !!flag,
+    });
+  };
 
 
 
@@ -468,7 +522,7 @@ class ResultUpdateDetail extends PureComponent {
     const {
       loading,
     } = this.props;
-    const {visible,dataSource,modalSaveListVisible,reviewUsers,testDetail} = this.state;
+    const {visible,dataSource,modalSaveListVisible,reviewUsers,testDetail,modalReviewVisible,modalInfo} = this.state;
     const reviewUsersOptions = reviewUsers.map(d => <Option value={d.userName}>{d.nameC}</Option>);
     // 下载模板 模态框方法
     const parentMethods = {
@@ -476,6 +530,7 @@ class ResultUpdateDetail extends PureComponent {
       handleSaveList:this.handleSaveList,
       handleVisible:this.handleVisible,
       handleOk:this.handleOk,
+      handleModalReviewVisible:this.handleModalReviewVisible,
     };
 
 
@@ -529,11 +584,11 @@ class ResultUpdateDetail extends PureComponent {
           </Row>
           <SaveListFrom {...parentMethods} modalSaveListVisible={modalSaveListVisible} reviewUsersOptions={reviewUsersOptions}  />
           <UpdateForm {...parentMethods} visible={visible} testDetail={testDetail} />
+          <ReviewFrom {...parentMethods} modalReviewVisible={modalReviewVisible} modalInfo={modalInfo} />
           <div className={styles.tableList}>
             <Table
               size="middle"
               components={components}
-              //bordered
               dataSource={dataSource}
               columns={columns}
               pagination={{showQuickJumper:true,showSizeChanger:true}}

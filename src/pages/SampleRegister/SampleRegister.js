@@ -155,10 +155,6 @@ class SampleRegister extends PureComponent {
     });
   };
 
-
-
-
-
   handleSearch = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
