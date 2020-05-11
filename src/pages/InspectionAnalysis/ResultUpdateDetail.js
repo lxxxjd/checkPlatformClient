@@ -12,7 +12,7 @@ import {
   Select,
   Table,
   Icon,
-  Modal, Popconfirm,notification,message
+  Modal, Popconfirm, notification, message, AutoComplete,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
@@ -164,7 +164,9 @@ class EditableCell extends React.Component {
   renderCell = form => {
     this.form = form;
     const { children, dataIndex, record, title } = this.props;
-    const { editing } = this.state;
+    const { editing} = this.state;
+    const man = ["徐佳待"];
+    const manOptions = man.map(d => <Option key={d} value={d}>{d}</Option>);
     return editing ? (
       <Form.Item style={{ margin: 0 }}>
         {form.getFieldDecorator(dataIndex, {
@@ -175,7 +177,14 @@ class EditableCell extends React.Component {
             },
           ],
           initialValue: record[dataIndex],
-        })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+        })(
+          <AutoComplete
+            className="global-search"
+            dataSource={manOptions}
+          >
+            <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />
+          </AutoComplete>
+          )}
       </Form.Item>
     ) : (
       <div
@@ -222,12 +231,15 @@ class ResultUpdateDetail extends PureComponent {
   state = {
     formValues: {},
     visible:false,
-    editingKey: '' ,
     testDetail:{},
 
     dataSource: [],
     modalSaveListVisible:false,
     reviewUsers:[],
+
+
+
+    coldata:[],
 
 
   };
@@ -259,6 +271,7 @@ class ResultUpdateDetail extends PureComponent {
     {
       title: '比较方法',
       dataIndex: 'calWay',
+      editable: true,
     },
     {
       title: '参考值',
@@ -485,6 +498,8 @@ class ResultUpdateDetail extends PureComponent {
       if (!col.editable) {
         return col;
       }
+
+
       return {
         ...col,
         onCell: record => ({
@@ -493,6 +508,7 @@ class ResultUpdateDetail extends PureComponent {
           dataIndex: col.dataIndex,
           title: col.title,
           handleSave: this.handleSave,
+          selectable: col.selectable,
         }),
       };
     });
