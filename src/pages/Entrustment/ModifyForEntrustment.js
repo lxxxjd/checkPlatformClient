@@ -68,10 +68,10 @@ const fieldLabels = {
   reportdate: '委托日期',
   tradeway: '贸易方式',
   businesssource: '业务来源',
-  shipname: '标识/船名',
-  fromto: '产地/装卸港',
+  shipname: '船名标识',
+  fromto: '产地/装港',
   insplinkway: '现场手机',
-  inspdate: '检验时间',
+  inspdate: '预检日期',
   cargoname: '检查品名',
   cargosort: '货物类别',
   quantityD: '申报数量',
@@ -85,7 +85,7 @@ const fieldLabels = {
   certstyle: '证书要求',
   section:'执行部门',
   customsName:'海关部门',
-  iscostoms:"是否向海关推送报告",
+  iscostoms:"向海关推送报告？",
 
 
 };
@@ -379,7 +379,7 @@ class ModifyForEntrustment extends PureComponent {
       okText: '确认',
       cancelText: '取消',
       onOk: () => {
-        message.success("正在保存数据，请稍等几秒...");
+        message.success("正在保存数据，请稍等...");
         const {
           form: {validateFieldsAndScroll},
           dispatch,
@@ -816,7 +816,7 @@ class ModifyForEntrustment extends PureComponent {
                   {getFieldDecorator('section', {
                     //rules: [{required: true, message: '执行部门'}],
                   })(
-                  <Select mode="tags" placeholder="请选择执行部门" onFocus={this.onSectionFocus}>
+                    <Select mode="tags" placeholder="请选择执行部门" onFocus={this.onSectionFocus}>
                       {departmentOptions}
                     </Select>
                   )}
@@ -933,7 +933,7 @@ class ModifyForEntrustment extends PureComponent {
                   {getFieldDecorator('tradeway', {
                     rules: [],
                   })(
-                        <Select placeholder="请选择贸易方式" onFocus={this.onTradeAwayFocus}>
+                    <Select placeholder="请选择贸易方式" onFocus={this.onTradeAwayFocus}>
                       {tradewayOptions}
                     </Select>
                   )}
@@ -1211,12 +1211,14 @@ class ModifyForEntrustment extends PureComponent {
                   })(
                     <Select placeholder="请选择">
                       <Option value="公吨">公吨</Option>
-<Option value="立方米">立方米</Option>
-<Option value="桶">桶</Option>
+                      <Option value="立方米">立方米</Option>
+                      <Option value="桶">桶</Option>
+                      <Option value="台">台</Option>
                       <Option value="包">包</Option>
                       <Option value="千克">千克</Option>
                       <Option value="个">个</Option>
                       <Option value="捆">捆</Option>
+                      <Option value="其他">其他</Option>
                     </Select>
                   )}
                 </Form.Item>
@@ -1236,7 +1238,6 @@ class ModifyForEntrustment extends PureComponent {
                       style={{width: '100%'}}
                       format="YYYY-MM-DD"
                       getPopupContainer={trigger => trigger.parentNode}
-
                     />
                   )}
                 </Form.Item>

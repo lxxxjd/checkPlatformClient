@@ -343,7 +343,7 @@ class ReportPriceMakingQuery extends PureComponent {
 
         {/* 利润率 */}
         <Row gutter={16}>
-          <Col span={3}>
+          <Col span={2}>
             <FormItem
               label="利润率"
               labelCol={{span: 1}}
@@ -366,7 +366,7 @@ class ReportPriceMakingQuery extends PureComponent {
               ~
             </span>
           </Col>
-          <Col span={2}>
+          <Col span={1}>
             <FormItem>
               {getFieldDecorator('maxRate', {
                 rules: [],
@@ -381,7 +381,7 @@ class ReportPriceMakingQuery extends PureComponent {
             </FormItem>
           </Col>
           {/* 委托日期 */}
-          <Col span={7}>
+          <Col span={9}>
             <Form.Item
               label="委托日期"
               labelCol={{span: 2}}
@@ -511,6 +511,7 @@ class ReportPriceMakingQuery extends PureComponent {
             })(
               <Select placeholder="选择字段">
                 <Option value="reportno"> 委托编号</Option>
+                <Option value="shipname"> 船名标识</Option>
                 <Option value="applicant">委托人</Option>
                 <Option value="agent">代理人</Option>
                 <Option value="payer">付款人</Option>
@@ -526,7 +527,7 @@ class ReportPriceMakingQuery extends PureComponent {
             )}
           </Form.Item>
         </Col>
-        <Col md={3} sm={20}>
+        <Col md={2} sm={20}>
           <Form.Item
             style={{marginRight:8}}
             labelCol={{ span: 5 }}
@@ -544,7 +545,7 @@ class ReportPriceMakingQuery extends PureComponent {
             )}
           </Form.Item>
         </Col>
-        <Col md={4} sm={10}>
+        <Col md={3} sm={10}>
           <FormItem>
             {getFieldDecorator(`values${k}`,{rules: [{ message: '选择数值' }],})(<Input placeholder="请输入" />)}
           </FormItem>

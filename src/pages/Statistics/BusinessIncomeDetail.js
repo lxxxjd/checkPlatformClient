@@ -169,6 +169,10 @@ class BusinessIncomeDetail extends Component {
       dataIndex: 'samplename',
     },
     {
+      title: '检测人员',
+      dataIndex: 'testmans',
+    },
+    {
       title: '指派日期',
       dataIndex: 'makingdate',
       render: val => {
@@ -177,10 +181,10 @@ class BusinessIncomeDetail extends Component {
         }
       }
     },
-    // {
-    //   title: '检测人员',
-    //   dataIndex: 'testmans',
-    // },
+    {
+    title: '指派人',
+      dataIndex: 'taskman',
+    },
     {
       title: '操作',
       render: (text, record) => (

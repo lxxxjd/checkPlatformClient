@@ -134,7 +134,7 @@ class ResultDetailReview extends PureComponent {
             if(response ==="success"){
               message.success("复核通过");
             }else{
-              message.error("操作失败")
+              message.error("复核失败")
             }
           }
         });
