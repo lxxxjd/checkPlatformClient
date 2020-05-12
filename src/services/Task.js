@@ -115,6 +115,11 @@ export async function getPerTaskReportnos(params) {
 }
 
 
+export async function getInspman(params) {
+  return request(`/api/task/getInspman?reportno=${params.reportno}&inspmanType=${params.inspmanType}`);
+}
+
+
 
 // post请求 注意 ` 这个符号 不是这种 ’号
 export async function queryUser2(params) {
