@@ -274,7 +274,6 @@ class EditableCell extends React.Component {
       index,
       handleSave,
       children,
-      coldata,
       ...restProps
     } = this.props;
     return (
@@ -307,8 +306,6 @@ class ResultUpdateDetail extends PureComponent {
     modalReviewVisible:false,
     reviewUsers:[],
     modalInfo:{},
-
-    coldata:[],
     inspmans:[],
     instruments:[],
 
