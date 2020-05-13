@@ -114,30 +114,34 @@ const CreateForm = Form.create()(props => {
           </FormItem>
 
           <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="角色" colon={false}>
-            {form.getFieldDecorator('role', {
-              initialValue: modalInfo.role,
-              rules: [
-                {
-                  required: true,
-                  message: "请选择角色权限，可以选择一项或多项",
-                },
-              ],
-            })(
-              <Select style={{width:'100%'}} placeholder="请选择角色，可以选择一项或多项" mode="tags">
-                <Option value="总经理">总经理</Option>
-                <Option value="业务副总">业务副总</Option>
-                <Option value="财务副总">财务副总</Option>
-                <Option value="操作经理">操作经理</Option>
-                <Option value="实验室主任">实验室主任</Option>
-                <Option value="业务经理">业务经理</Option>
-                <Option value="财务经理">财务经理</Option>
-                <Option value="客服人员">客服人员</Option>
-                <Option value="检验人员">检验人员</Option>
-                <Option value="检测人员">检测人员</Option>
-                <Option value="财务人员">财务人员</Option>
-                <Option value="管理员">管理员</Option>
-                <Option value="授权签字人">授权签字人</Option>
-              </Select>)}
+            {
+              form.getFieldDecorator('role', {
+                initialValue: modalInfo.role,
+                rules: [
+                  {
+                    required: true,
+                    message: "请选择角色权限，可以选择一项或多项",
+                  },
+                ],
+              })
+              (
+                <Select style={{width:'100%'}} placeholder="请选择角色，可以选择一项或多项" mode="tags">
+                  <Option value="总经理">总经理</Option>
+                  <Option value="业务副总">业务副总</Option>
+                  <Option value="财务副总">财务副总</Option>
+                  <Option value="操作经理">操作经理</Option>
+                  <Option value="实验室主任">实验室主任</Option>
+                  <Option value="业务经理">业务经理</Option>
+                  <Option value="财务经理">财务经理</Option>
+                  <Option value="客服人员">客服人员</Option>
+                  <Option value="检验人员">检验人员</Option>
+                  <Option value="检测人员">检测人员</Option>
+                  <Option value="财务人员">财务人员</Option>
+                  <Option value="管理员">管理员</Option>
+                  <Option value="授权签字人">授权签字人</Option>
+                </Select>
+              )
+            }
           </FormItem>
           <FormItem labelCol={{ span: 6 }} wrapperCol={{ span: 15 }} label="是否授权签字" colon={false} >
             {form.getFieldDecorator('isauthorize', {
@@ -932,7 +936,7 @@ class UserManage extends PureComponent {
     const { dispatch } = this.props;
     let prams = {
       ...modalInfo,
-  };
+    };
     let role = "";
     if(fields.role !== null && fields.role !== undefined){
       for(let i=0;fields.role.length!==undefined && i<fields.role.length;i++){
@@ -942,6 +946,7 @@ class UserManage extends PureComponent {
           role+= `${fields.role[i]}`;
         }
       }
+      // const role = fields.role.join(" ");
     }
     prams.role = role;
     prams.userName =  fields.userName;

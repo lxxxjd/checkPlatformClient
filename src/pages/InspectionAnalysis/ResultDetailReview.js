@@ -12,7 +12,7 @@ import {
   Button,
   Table,
   Icon,
-  message, Modal,
+  message, Modal, Descriptions,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
@@ -52,17 +52,12 @@ class ResultDetailReview extends PureComponent {
       render: (text,record) => this.setRedText(text,record),
     },
     {
-      title: '比较方法',
-      dataIndex: 'calWay',
-      render: (text,record) => this.setRedText(text,record),
-    },
-    {
       title: '参考值',
       dataIndex: 'referValue',
       render: (text,record) => this.setRedText(text,record),
     },
     {
-      title: '上下浮动',
+      title: '允许浮动',
       dataIndex: 'rangeValue',
       render: (text,record) => this.setRedText(text,record),
     },
@@ -71,6 +66,16 @@ class ResultDetailReview extends PureComponent {
       dataIndex: 'diffvalue',
       render: (text,record) => this.setRedText(text,record),
     },
+    {
+      title: '检测人员',
+      dataIndex: 'inspector',
+      render: (text,record) => this.setRedText(text,record),
+    },
+    // {
+    //   title: '仪器设备',
+    //   dataIndex: 'instrument',
+    //   render: (text,record) => this.setRedText(text,record),
+    // },
     {
       title: '状态',
       dataIndex: 'qualityErr',

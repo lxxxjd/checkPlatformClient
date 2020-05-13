@@ -14,11 +14,12 @@ import {
   Table,
   Checkbox,
   DatePicker,
-  Radio
+  Radio, Descriptions,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../table.less';
 import Search from './Search.js';
+import moment from 'moment';
 const SearchForm = Form.create()(Search);
 
 const CheckboxGroup = Checkbox.Group;

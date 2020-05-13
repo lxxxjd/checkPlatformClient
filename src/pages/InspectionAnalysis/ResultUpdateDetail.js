@@ -140,7 +140,7 @@ const UpdateForm = Form.create()(props =>  {
       title="录入样品指标"
       visible={visible}
       style={{ top: 100 }}
-      width={600}
+      width={400}
       onCancel={() => handleVisible()}
       footer={[
         <Button type="primary" onClick={() => handleVisible()}>
@@ -162,32 +162,26 @@ const UpdateForm = Form.create()(props =>  {
         </Form.Item>
         <Form.Item label="检测人员">
           {form.getFieldDecorator('inspector', {
-            rules: [{ required: true, message: '请选择检测人员' }],
-            initialValue:testDetail.inspector
+            rules: [{ required: false, message: '请选择检测人员' }],
+            initialValue:testDetail.inspector===undefined||testDetail.instrument===null?[]:testDetail.inspector.split(' ')
           })(
-            <AutoComplete
-              className="global-search"
-              dataSource={inspmansOptions}
-            >
-              <Input style={{width:'100%'}} />
-            </AutoComplete>
+
+            <Select showSearch placeholder="请选择" mode="tags">
+              {inspmansOptions}
+            </Select>
           )}
         </Form.Item>
         <Form.Item label="仪器设备">
           {form.getFieldDecorator('instrument', {
-            rules: [{ required: true, message: '请选择仪器设备' }],
-            initialValue:testDetail.instrument
+            rules: [{ required: false, message: '请选择仪器设备' }],
+            initialValue:testDetail.instrument===undefined||testDetail.instrument===null?[]:testDetail.instrument.split(' ')
           })(
-            <AutoComplete
-              className="global-search"
-              dataSource={instrumentsOptions}
-            >
-              <Input style={{width:'100%'}} />
-            </AutoComplete>
+            <Select showSearch placeholder="请选择" mode="tags">
+              {instrumentsOptions}
+            </Select>
           )}
         </Form.Item>
       </Form>
-
     </Modal>
   );
 });
@@ -348,11 +342,11 @@ class ResultUpdateDetail extends PureComponent {
       editable: true,
       width: '10%',
     },
-    {
-      title: '比较方法',
-      dataIndex: 'calWay',
-
-    },
+    // {
+    //   title: '比较方法',
+    //   dataIndex: 'calWay',
+    //
+    // },
     {
       title: '检测人员',
       dataIndex: 'inspector',
@@ -444,6 +438,7 @@ class ResultUpdateDetail extends PureComponent {
     });
 
 
+
   };
 
 
@@ -468,8 +463,17 @@ class ResultUpdateDetail extends PureComponent {
     var value = testDetail;
     const { dispatch } = this.props;
     value.testresult = fieldsValue.result;
-    value.instrument = fieldsValue.instrument;
-    value.inspector = fieldsValue.inspector;
+    if(fieldsValue.instrument===undefined ||  fieldsValue.instrument===null || fieldsValue.instrument.length===0){
+      value.instrument = undefined;
+    }else{
+      value.instrument = fieldsValue.instrument.join(" ");
+    }
+    if(fieldsValue.inspector===undefined ||  fieldsValue.inspector===null || fieldsValue.inspector.length===0){
+      value.inspector = undefined;
+    }else{
+      value.inspector = fieldsValue.inspector.join(" ");
+    }
+
     dispatch({
       type: 'inspectionAnalysis/addResult',
       payload: value,
@@ -500,6 +504,19 @@ class ResultUpdateDetail extends PureComponent {
 
   modifyItem = text => {
     this.setState({ testDetail: text});
+    // if(this.state.testDetail.inspector!==undefined && this.state.testDetail.inspector!==null){
+    //   const inspectors= this.state.testDetail.inspector.split(' ');
+    //   this.state.testDetail.inspector= inspectors;
+    // }else{
+    //   this.state.testDetail.inspector =[];
+    // }
+    //
+    // if(this.state.testDetail.instrument!==undefined && this.state.testDetail.instrument!==null){
+    //   const instruments= this.state.testDetail.instrument.split(' ');
+    //   this.state.testDetail.instrument= instruments;
+    // }else{
+    //   this.state.testDetail.instrument =[];
+    // }
     this.handleVisible(true);
   };
 
