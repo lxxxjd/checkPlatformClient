@@ -617,8 +617,7 @@ class SampleModify extends PureComponent {
                 })(
                     <Select
                       showSearch
-                      placeholder="请选择"
-                    >
+                      placeholder="请选择" >
                       {testStandardOptions}
                     </Select>
                   )}
@@ -647,7 +646,7 @@ class SampleModify extends PureComponent {
                 )}
               </Form.Item>
 
-              <Form.Item label="上下浮动值">
+              <Form.Item label="允许浮动">
                 {getFieldDecorator('rangeValue', {
                   rules: [{ required:false, message: '请输入数值'}],
                 })(

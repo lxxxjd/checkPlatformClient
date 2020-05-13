@@ -24,7 +24,7 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 
-// 查看框
+// 查看页面
 const ReviewFrom =Form.create() (props => {
   const { modalReviewVisible, handleModalReviewVisible,modalInfo } = props;
 
@@ -39,10 +39,10 @@ const ReviewFrom =Form.create() (props => {
   return (
     <Modal
       destroyOnClose
-      title="查看具体指标"
+      title="查看指标详情"
       visible={modalReviewVisible}
-      width={document.body.clientWidth*0.6}
-      height={document.body.clientHeight*0.6}
+      width={document.body.clientWidth*0.7}
+      height={document.body.clientHeight*0.7}
       style={{ top: 100 }}
       onCancel={() => handleModalReviewVisible()}
       footer={[
@@ -54,6 +54,16 @@ const ReviewFrom =Form.create() (props => {
       <Descriptions bordered>
         <Descriptions.Item label="委托编号">{modalInfo.reportno}</Descriptions.Item>
         <Descriptions.Item label="样品编号">{modalInfo.sampleno}</Descriptions.Item>
+        <Descriptions.Item label="指标名称">{modalInfo.itemC}</Descriptions.Item>
+        <Descriptions.Item label="英文名称">{modalInfo.itemE}</Descriptions.Item>
+        <Descriptions.Item label="检测标准">{modalInfo.teststandard}</Descriptions.Item>
+        <Descriptions.Item label="结果单位">{modalInfo.unit}</Descriptions.Item>
+        <Descriptions.Item label="参考值">{modalInfo.referValue}</Descriptions.Item>
+        <Descriptions.Item label="允许浮动">{modalInfo.rangeValue}</Descriptions.Item>
+        <Descriptions.Item label="检测结果">{modalInfo.testresult}</Descriptions.Item>
+        <Descriptions.Item label="结果偏差">{modalInfo.diffvalue}</Descriptions.Item>
+        <Descriptions.Item label="检测人员">{modalInfo.inspector}</Descriptions.Item>
+        <Descriptions.Item label="所用仪器">{modalInfo.instrument}</Descriptions.Item>
       </Descriptions>
     </Modal>
   );
@@ -264,8 +274,6 @@ class ResultUpdateDetail extends PureComponent {
     modalReviewVisible:false,
     reviewUsers:[],
     modalInfo:{},
-
-
   };
 
 
@@ -294,7 +302,7 @@ class ResultUpdateDetail extends PureComponent {
       title: '结果',
       dataIndex: 'testresult',
       editable: true,
-      // width: '8%',
+      width: '10%',
     },
     {
       title: '检测人员',
@@ -327,7 +335,6 @@ class ResultUpdateDetail extends PureComponent {
       modalReviewVisible: !!flag,
     });
   };
-
 
 
   componentDidMount() {
