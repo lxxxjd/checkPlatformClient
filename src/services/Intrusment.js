@@ -30,6 +30,16 @@ export async function getInstrument(params) {
   });
 }
 
+export async function getInstrumentIDName(params) {
+  return request(`/api/instrument/getInstrumentIDName`,{
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+
 // deleteInstrument
 export async function deleteInstrument(params) {
   return request(`/api/instrument/deleteInstrument`,{

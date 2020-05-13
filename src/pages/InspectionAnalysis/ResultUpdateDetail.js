@@ -12,7 +12,7 @@ import {
   Select,
   Table,
   Icon,
-  Modal, Popconfirm, notification, message, Descriptions,
+  Modal, Popconfirm, notification, message, AutoComplete,Descriptions
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
@@ -122,7 +122,7 @@ const SaveListFrom = Form.create()(props =>  {
 
 // 提交审核
 const UpdateForm = Form.create()(props =>  {
-  const { form, visible, handleVisible,handleOk,result,testDetail} = props;
+  const { form, visible, handleVisible,handleOk,result,testDetail,instrumentsOptions,inspmansOptions} = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err){
@@ -158,6 +158,32 @@ const UpdateForm = Form.create()(props =>  {
             initialValue:testDetail.testresult
           })(
             <Input placeholder="请输入结果" />
+          )}
+        </Form.Item>
+        <Form.Item label="检测人员">
+          {form.getFieldDecorator('inspector', {
+            rules: [{ required: true, message: '请选择检测人员' }],
+            initialValue:testDetail.inspector
+          })(
+            <AutoComplete
+              className="global-search"
+              dataSource={inspmansOptions}
+            >
+              <Input style={{width:'100%'}} />
+            </AutoComplete>
+          )}
+        </Form.Item>
+        <Form.Item label="仪器设备">
+          {form.getFieldDecorator('instrument', {
+            rules: [{ required: true, message: '请选择仪器设备' }],
+            initialValue:testDetail.instrument
+          })(
+            <AutoComplete
+              className="global-search"
+              dataSource={instrumentsOptions}
+            >
+              <Input style={{width:'100%'}} />
+            </AutoComplete>
           )}
         </Form.Item>
       </Form>
@@ -206,8 +232,19 @@ class EditableCell extends React.Component {
 
   renderCell = form => {
     this.form = form;
-    const { children, dataIndex, record, title } = this.props;
-    const { editing } = this.state;
+    const { children, dataIndex, record, title,inspmans,instruments } = this.props;
+    const { editing} = this.state;
+    const inspmansOptions = inspmans.map(d => <Option key={d} value={d}>{d}</Option>);
+    const instrumentsOptions = instruments.map(d => <Option key={d} value={d}>{d}</Option>);
+    const getOptions =(index)=>{
+      if(index==="inspector"){
+        return inspmansOptions;
+      }
+      if(index==="instrument"){
+        return instrumentsOptions;
+      }
+      return null;
+    };
     return editing ? (
       <Form.Item style={{ margin: 0 }}>
         {form.getFieldDecorator(dataIndex, {
@@ -218,7 +255,14 @@ class EditableCell extends React.Component {
             },
           ],
           initialValue: record[dataIndex],
-        })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+        })(
+          <AutoComplete
+            className="global-search"
+            dataSource={getOptions(dataIndex)}
+          >
+            <Input style={{width:'100%'}} ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />
+          </AutoComplete>
+          )}
       </Form.Item>
     ) : (
       <div
@@ -226,7 +270,7 @@ class EditableCell extends React.Component {
         style={{ paddingRight: 24 }}
         onClick={this.toggleEdit}
       >
-        {children}
+        {children} &nbsp;
       </div>
     );
   };
@@ -266,14 +310,14 @@ class ResultUpdateDetail extends PureComponent {
   state = {
     formValues: {},
     visible:false,
-    editingKey: '' ,
     testDetail:{},
-
     dataSource: [],
     modalSaveListVisible:false,
     modalReviewVisible:false,
     reviewUsers:[],
     modalInfo:{},
+    inspmans:[],
+    instruments:[],
   };
 
 
@@ -305,13 +349,20 @@ class ResultUpdateDetail extends PureComponent {
       width: '10%',
     },
     {
+      title: '比较方法',
+      dataIndex: 'calWay',
+
+    },
+    {
       title: '检测人员',
       dataIndex: 'inspector',
-      // width: '15%',
+      editable: true,
+      // width: '20%',
     },
     {
       title: '仪器设备',
       dataIndex: 'instrument',
+      editable: true,
       // width: '20%',
     },
     {
@@ -325,6 +376,12 @@ class ResultUpdateDetail extends PureComponent {
     },
   ];
 
+
+
+  componentDidMount() {
+    this.init();
+  }
+
   handleReview = (flag,text) => {
     this.state.modalInfo = text;
     this.handleModalReviewVisible(flag);
@@ -335,11 +392,6 @@ class ResultUpdateDetail extends PureComponent {
       modalReviewVisible: !!flag,
     });
   };
-
-
-  componentDidMount() {
-    this.init();
-  }
 
 
 
@@ -364,6 +416,34 @@ class ResultUpdateDetail extends PureComponent {
         }
       }
     });
+
+    dispatch({
+      type: 'inspectionAnalysis/getInspman',
+      payload:{
+        reportno,
+        inspmanType:'检测人员',
+      },
+      callback: (response) => {
+        if(response.code ===200){
+          this.state.inspmans=response.data;
+        }
+      }
+    });
+
+    const user = JSON.parse(localStorage.getItem("userinfo"));
+    dispatch({
+      type: 'inspectionAnalysis/getInstrumentIDName',
+      payload:{
+        certCode:user.certCode,
+      },
+      callback: (response) => {
+        if(response.code ===200){
+          this.state.instruments = response.data;
+        }
+      }
+    });
+
+
   };
 
 
@@ -388,6 +468,8 @@ class ResultUpdateDetail extends PureComponent {
     var value = testDetail;
     const { dispatch } = this.props;
     value.testresult = fieldsValue.result;
+    value.instrument = fieldsValue.instrument;
+    value.inspector = fieldsValue.inspector;
     dispatch({
       type: 'inspectionAnalysis/addResult',
       payload: value,
@@ -512,8 +594,10 @@ class ResultUpdateDetail extends PureComponent {
     const {
       loading,
     } = this.props;
-    const {visible,dataSource,modalSaveListVisible,reviewUsers,testDetail,modalReviewVisible,modalInfo} = this.state;
+    const {visible,dataSource,modalSaveListVisible,reviewUsers,testDetail,modalReviewVisible,modalInfo,instruments,inspmans} = this.state;
     const reviewUsersOptions = reviewUsers.map(d => <Option value={d.userName}>{d.nameC}</Option>);
+    const instrumentsOptions = instruments.map(d => <Option key={d} value={d}>{d}</Option>);
+    const inspmansOptions = inspmans.map(d => <Option key={d} value={d}>{d}</Option>);
     // 下载模板 模态框方法
     const parentMethods = {
       handleModalSaveListVisible:this.handleModalSaveListVisible,
@@ -551,6 +635,9 @@ class ResultUpdateDetail extends PureComponent {
           dataIndex: col.dataIndex,
           title: col.title,
           handleSave: this.handleSave,
+          selectable: col.selectable,
+          inspmans,
+          instruments,
         }),
       };
     });
@@ -570,13 +657,12 @@ class ResultUpdateDetail extends PureComponent {
             </Col>
           </Row>
           <SaveListFrom {...parentMethods} modalSaveListVisible={modalSaveListVisible} reviewUsersOptions={reviewUsersOptions}  />
-          <UpdateForm {...parentMethods} visible={visible} testDetail={testDetail} />
+          <UpdateForm {...parentMethods} visible={visible} testDetail={testDetail} instrumentsOptions={instrumentsOptions} inspmansOptions={inspmansOptions} />
           <ReviewFrom {...parentMethods} modalReviewVisible={modalReviewVisible} modalInfo={modalInfo} />
           <div className={styles.tableList}>
             <Table
               size="middle"
               components={components}
-              //bordered
               dataSource={dataSource}
               columns={columns}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
