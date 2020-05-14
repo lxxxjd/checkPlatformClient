@@ -60,6 +60,7 @@ const ReviewFrom =Form.create() (props => {
         <Descriptions.Item label="结果单位">{modalInfo.unit}</Descriptions.Item>
         <Descriptions.Item label="参考值">{modalInfo.referValue}</Descriptions.Item>
         <Descriptions.Item label="允许浮动">{modalInfo.rangeValue}</Descriptions.Item>
+        <Descriptions.Item label="比较方法">{modalInfo.calWay}</Descriptions.Item>
         <Descriptions.Item label="检测结果">{modalInfo.testresult}</Descriptions.Item>
         <Descriptions.Item label="结果偏差">{modalInfo.diffvalue}</Descriptions.Item>
         <Descriptions.Item label="检测人员">{modalInfo.inspector}</Descriptions.Item>
@@ -351,11 +352,55 @@ class ResultUpdateDetail extends PureComponent {
       title: '检测人员',
       dataIndex: 'inspector',
       editable: true,
+      render: (text, record) => {
+        let  contentStr = [];
+        if(text===undefined || text ===null ||text ===""){
+          return null;
+        }
+        contentStr = text.split(" ");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j = 0 ; j < contentStr.length ; j ++){
+          if(j===0){
+            result=contentStr[j];
+          }else if(j%1===0){
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }else{
+            result=<span>{result}&nbsp;{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
       // width: '20%',
     },
     {
       title: '仪器设备',
       dataIndex: 'instrument',
+      render: (text, record) => {
+        let  contentStr = [];
+        if(text===undefined || text ===null ||text ===""){
+          return null;
+        }
+        contentStr = text.split(" ");
+        if (contentStr.length < 2) {
+          return text;
+        }
+        let result = null;
+        const br = <br />;
+        for( let  j = 0 ; j < contentStr.length ; j ++){
+          if(j===0){
+            result=contentStr[j];
+          }else if(j%1===0){
+            result=<span>{result}{br}{contentStr[j]}</span>;
+          }else{
+            result=<span>{result}&nbsp;{contentStr[j]}</span>;
+          }
+        }
+        return <div>{result}</div>;
+      },
       editable: true,
       // width: '20%',
     },
@@ -606,6 +651,8 @@ class ResultUpdateDetail extends PureComponent {
       }
     });
   };
+
+
 
   render() {
     const {

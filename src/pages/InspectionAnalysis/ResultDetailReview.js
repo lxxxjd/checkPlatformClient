@@ -18,6 +18,51 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './InspectionArrangement.less';
 import moment from 'moment';
 
+const ReviewFrom =Form.create() (props => {
+  const { modalReviewVisible, handleModalReviewVisible,modalInfo } = props;
+
+  // // 处理操作时间
+  // const handleDate = (val) => {
+  //   if(val!==undefined && val!==null){
+  //     return  <span>{ moment(val).format('YYYY-MM-DD')}</span>;
+  //   }
+  //   return null;
+  // };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="查看指标详情"
+      visible={modalReviewVisible}
+      width={document.body.clientWidth*0.7}
+      height={document.body.clientHeight*0.7}
+      style={{ top: 100 }}
+      onCancel={() => handleModalReviewVisible()}
+      footer={[
+        <Button type="primary" onClick={() => handleModalReviewVisible()}>
+          关闭
+        </Button>
+      ]}
+    >
+      <Descriptions bordered>
+        <Descriptions.Item label="委托编号">{modalInfo.reportno}</Descriptions.Item>
+        <Descriptions.Item label="样品编号">{modalInfo.sampleno}</Descriptions.Item>
+        <Descriptions.Item label="指标名称">{modalInfo.itemC}</Descriptions.Item>
+        <Descriptions.Item label="英文名称">{modalInfo.itemE}</Descriptions.Item>
+        <Descriptions.Item label="检测标准">{modalInfo.teststandard}</Descriptions.Item>
+        <Descriptions.Item label="结果单位">{modalInfo.unit}</Descriptions.Item>
+        <Descriptions.Item label="参考值">{modalInfo.referValue}</Descriptions.Item>
+        <Descriptions.Item label="允许浮动">{modalInfo.rangeValue}</Descriptions.Item>
+        <Descriptions.Item label="比较方法">{modalInfo.calWay}</Descriptions.Item>
+        <Descriptions.Item label="检测结果">{modalInfo.testresult}</Descriptions.Item>
+        <Descriptions.Item label="结果偏差">{modalInfo.diffvalue}</Descriptions.Item>
+        <Descriptions.Item label="检测人员">{modalInfo.inspector}</Descriptions.Item>
+        <Descriptions.Item label="所用仪器">{modalInfo.instrument}</Descriptions.Item>
+      </Descriptions>
+    </Modal>
+  );
+});
+
 /* eslint react/no-multi-comp:0 */
 @connect(({ inspectionAnalysis, loading }) => ({
   inspectionAnalysis,
@@ -27,18 +72,20 @@ import moment from 'moment';
 class ResultDetailReview extends PureComponent {
   state = {
     dataSource: [],
+    modalReviewVisible:false,
+    modalInfo:{},
   };
 
   columns = [
     {
-      title: '指标名称',
+      title: '指标中文',
       dataIndex: 'itemC',
       render: (text,record) => this.setRedText(text,record),
     },
 
     {
-      title: '检测标准',
-      dataIndex: 'teststandard',
+      title: '指标英文',
+      dataIndex: 'itemE',
       render: (text,record) => this.setRedText(text,record),
     },
     {
@@ -81,8 +128,26 @@ class ResultDetailReview extends PureComponent {
       dataIndex: 'qualityErr',
       render: (text,record) => this.setRedText(text,record),
     },
+    {
+      title: '操作',
+      render: (text, record) => (
+        <Fragment>
+          <a onClick={() => this.handleReview(text, record)}>查看</a>
+        </Fragment>
+      ),
+    },
   ];
 
+  handleReview = (flag,text) => {
+    this.state.modalInfo = text;
+    this.handleModalReviewVisible(flag);
+  };
+
+  handleModalReviewVisible = (flag) => {
+    this.setState({
+      modalReviewVisible: !!flag,
+    });
+  };
 
   componentDidMount() {
     this.init();
@@ -118,6 +183,12 @@ class ResultDetailReview extends PureComponent {
     return <span>{text}</span>
   };
 
+  setRowClassName =(record)=> {
+    if(record.qualityErr==='异常'){
+      return styles.rowStyle;
+    }
+    return null;
+  }
 
 
   reviewPass =()=>{
@@ -182,7 +253,15 @@ class ResultDetailReview extends PureComponent {
     const {
       loading,
     } = this.props;
-    const {dataSource} = this.state;
+    const parentMethods = {
+      handleModalSaveListVisible:this.handleModalSaveListVisible,
+      handleSaveList:this.handleSaveList,
+      handleVisible:this.handleVisible,
+      handleOk:this.handleOk,
+      handleModalReviewVisible:this.handleModalReviewVisible,
+    };
+
+    const {dataSource,modalReviewVisible,modalInfo,} = this.state;
     const reportno = sessionStorage.getItem('reportno');
     const shipname = sessionStorage.getItem('shipname');
     const sampleno = sessionStorage.getItem('sampleno');
@@ -207,6 +286,7 @@ class ResultDetailReview extends PureComponent {
               </Button>
             </Col>
           </Row>
+          <ReviewFrom {...parentMethods} modalReviewVisible={modalReviewVisible} modalInfo={modalInfo} />
           <div className={styles.tableList}>
             <Table
               dataSource={dataSource}
@@ -214,6 +294,7 @@ class ResultDetailReview extends PureComponent {
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               loading={loading}
               rowKey="keyno"
+              rowClassName={this.setRowClassName}
             />
           </div>
         </Card>
