@@ -22,14 +22,14 @@ import styles from './InspectionArrangement.less';
 import moment from 'moment'
 
 const  operationTabList = [
-    // {
-    //   key: 'tab1',
-    //   tab: '分包',
-    // },
     {
-      key: 'tab2',
-      tab: '人员',
+      key: 'tab1',
+      tab: '分包',
     },
+    // {
+    //   key: 'tab2',
+    //   tab: '人员',
+    // },
   ];
 
 /* eslint react/no-multi-comp:0 */
@@ -38,9 +38,9 @@ const  operationTabList = [
   loading: loading.models.inspectionAnalysis,
 }))
 @Form.create()
-class InspectionArrangementDetail extends PureComponent {
+class InspectionSubcontractDetail extends PureComponent {
   state = {
-    operationkey: 'tab2',
+    operationkey: 'tab1',
     visible:false,
     allCompanyName:[],
     showPrice:false,
@@ -483,4 +483,4 @@ class InspectionArrangementDetail extends PureComponent {
   }
 }
 
-export default InspectionArrangementDetail;
+export default InspectionSubcontractDetail ;

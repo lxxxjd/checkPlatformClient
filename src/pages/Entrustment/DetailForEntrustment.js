@@ -224,10 +224,11 @@ class DetailForEnturstment extends Component {
             <Descriptions.Item label="检查品名">{report.cargoname}</Descriptions.Item>
             <Descriptions.Item label="中文俗名">{report.chineselocalname}</Descriptions.Item>
             <Descriptions.Item label="船名标识">{report.shipname}</Descriptions.Item>
-            <Descriptions.Item label="申报数量和单位">{((report.quantityd === undefined || report.quantityd === null ) ? "":report.quantityd+report.unit ) }</Descriptions.Item>
+            <Descriptions.Item label="申报数量">{((report.quantityd === undefined || report.quantityd === null ) ? "":report.quantityd+report.unit ) }</Descriptions.Item>
+            <Descriptions.Item label="产地卸港">{report.fromto}</Descriptions.Item>
             <Descriptions.Item label="检验时间">{moment(report.inspdate).format('YYYY-MM-DD')}</Descriptions.Item>
             <Descriptions.Item label="检验地点">{(report.inspplace1===undefined||report.inspplace1===null)?"":this.getPlaceFromCode(report.inspplace1)}</Descriptions.Item>
-            <Descriptions.Item label="检查港口">{report.inspplace2}</Descriptions.Item>
+            <Descriptions.Item label="详细地点">{report.inspplace2}</Descriptions.Item>
           </Descriptions>
         </Card>
         <Card title="检查项目" className={styles.card} bordered={false}>
@@ -263,7 +264,7 @@ class DetailForEnturstment extends Component {
             </tr>
           </table>
         </Card>
-        <Card bordered={false}  title="附件">
+        <Card bordered={false}  title="委托附件">
           <div>
             <Table
               size="middle"
@@ -276,7 +277,7 @@ class DetailForEnturstment extends Component {
           </div>
         </Card>
         <Modal
-          title="记录详情"
+          title="委托附件"
           visible={showVisible}
           onCancel={this.showCancel}
           footer={null}

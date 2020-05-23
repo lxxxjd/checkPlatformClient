@@ -58,71 +58,94 @@ export default [
         ],
       },
       {
+        //设置委托申请的权限
         path: "/Entrustment",
         icon: "file",
         name: "Entrustment",
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
+        // authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
+        authority: ["总经理","业务副总","业务经理","客服人员"],
         routes: [
           {
+            //网上委托
             path: '/Entrustment/AcceptList',
             name: 'AcceptList',
             component: './Entrustment/AcceptList',
+
+          },
+          //网上委托-受理或拒绝受理
+          {
+            path: '/Entrustment/Accept',
+            name: 'Accept',
+            component: './Entrustment/Accept',
+            hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
+            //新建委托
             path: "/Entrustment/ApplicationForEntrustment",
             name: "ApplicationForEntrustment",
             component: "./Entrustment/ApplicationForEntrustment"
           },
           {
+            //修改委托
             path: "/Entrustment/SearchForEntrustment",
             name: "SearchForEntrustment",
             component: "./Entrustment/SearchForEntrustment"
           },
           {
-            path: "/Entrustment/CancelForEntrustment",
-            name: "CancelForEntrustment",
-            component: "./Entrustment/CancelForEntrustment",
-            authority: ["总经理"],
-          },
-          {
-            path: "/Entrustment/DetailForEntrustment",
-            name: "DetailForEntrustment",
-            component: "./Entrustment/DetailForEntrustment",
-            hideInMenu: 'true', //添加页不需要在menu上显示
-          },
-          {
+            //复制委托-修改
             path: "/Entrustment/ModifyForEntrustment",
             name: "ModifyForEntrustment",
             component: "./Entrustment/ModifyForEntrustment",
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
+            //撤销委托
+            path: "/Entrustment/CancelForEntrustment",
+            name: "CancelForEntrustment",
+            component: "./Entrustment/CancelForEntrustment",
+            authority: ["总经理"],
+          },
+          {
+            //显示委托详情
+            path: "/Entrustment/DetailForEntrustment",
+            name: "DetailForEntrustment",
+            component: "./Entrustment/DetailForEntrustment",
+            hideInMenu: 'true', //添加页不需要在menu上显示
+          },
+
+          {
+            //复制委托
+            path: "/Entrustment/CopyForEntrustmentList",
+            name: "CopyForEntrustmentList",
+            component: "./Entrustment/CopyForEntrustmentList",
+          },
+          {
+            //复制委托-复制
             path: "/Entrustment/CopyForEntrustment",
             name: "CopyForEntrustment",
             component: "./Entrustment/copyForEntrustment",
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
           {
-            path: "/Entrustment/CopyForEntrustmentList",
-            name: "CopyForEntrustmentList",
-            component: "./Entrustment/CopyForEntrustmentList",
-          },
-          {
+            //转委托
             path: '/Entrustment/SubEntrustment',
             name: 'SubEntrustment',
             component: './Entrustment/SubEntrustment',
           },
           {
-            path: '/Entrustment/EntrustmentRelevance',
-            name: 'EntrustmentRelevance',
-            component: './Entrustment/EntrustmentRelevance',
-          },
-          {
+            //转委托-转委托按钮
             path: '/Entrustment/DetailForSub',
             name: 'DetailForSub',
             component: './Entrustment/DetailForSub',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+          //委托关联
+          {
+            path: '/Entrustment/EntrustmentRelevance',
+            name: 'EntrustmentRelevance',
+            component: './Entrustment/EntrustmentRelevance',
+          },
+
           {
             path: '/Entrustment/ModifyRelevance',
             name: 'ModifyRelevance',
@@ -147,97 +170,56 @@ export default [
             component: './Entrustment/DetailForUnAccept',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
-          {
-            path: '/Entrustment/Accept',
-            name: 'Accept',
-            component: './Entrustment/Accept',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
+
         ],
       },
 
-
-      // // list
-      // {
-      //   path: '/list',
-      //   icon: 'table',
-      //   name: 'list',
-      //   routes: [
-      //     {
-      //       path: '/list/table-list',
-      //       name: 'searchtable',
-      //       component: './List/TableList',
-      //     }
-      //   ],
-      // },
-
-      // TaskAppoint
       {
+        //任务指派
         path: '/TaskAppoint',
         icon: 'table',
         name: 'TaskAppoint',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理"],
+        authority: ["总经理","业务副总","操作经理","实验室主任","业务经理","客服人员","检验人员","检测人员"],
         routes: [
           {
+            //客服人员
             path: '/TaskAppoint/CustomerService',
             name: 'CustomerService',
             component: './TaskAppoint/CustomerService',
+
           },
           {
+            //检验人员
             path: '/TaskAppoint/Inspector',
             name: 'Inspector',
             component: './TaskAppoint/Inspector',
+            // authority: ["总经理","业务副总","操作经理"],
           },
           {
+            //客服人员-客服人员按钮
             path: '/TaskAppoint/CustomerServiceDetail',
             name: 'CustomerServiceDetail',
             component: './TaskAppoint/CustomerServiceDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
+             // authority: ["总经理","业务副总","业务经理"],
           },
           {
+            //检验人员-检验人员按钮
             path: '/TaskAppoint/InspectorDetail',
             name: 'InspectorDetail',
             component: './TaskAppoint/InspectorDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
+            // authority: ["总经理","业务副总","业务经理"],
           },
         ],
       },
-      //BusinessTransfer
-      // {
-      //   path: '/BusinessTransfer',
-      //   icon: 'dashboard',
-      //   name: 'BusinessTransfer',
-      //   routes: [
-      //     {
-      //       path: '/BusinessTransfer/SubEntrustment',
-      //       name: 'SubEntrustment',
-      //       component: './BusinessTransfer/SubEntrustment',
-      //     },
-      //     {
-      //       path: '/BusinessTransfer/EntrustmentRelevance',
-      //       name: 'EntrustmentRelevance',
-      //       component: './BusinessTransfer/EntrustmentRelevance',
-      //     },
-      //     {
-      //       path: '/BusinessTransfer/DetailForSub',
-      //       name: 'DetailForSub',
-      //       component: './BusinessTransfer/DetailForSub',
-      //       hideInMenu: 'true',//添加页不需要在menu上显示
-      //     },
-      //     {
-      //       path: '/BusinessTransfer/ModifyRelevance',
-      //       name: 'ModifyRelevance',
-      //       component: './BusinessTransfer/ModifyRelevance',
-      //       hideInMenu: 'true',//添加页不需要在menu上显示
-      //     },
-      //   ],
-      // },
-      //
+
       {
+        //现场检查
         path: '/TestRecord',
         icon: 'form',
         name: 'TestRecord',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
+        authority: ["总经理","业务副总","操作经理","实验室主任","业务经理","客服人员","检验人员","检测人员"],
         routes: [
           {
             path: '/TestRecord/ResultRegistration',
@@ -263,12 +245,13 @@ export default [
           },
         ],
       },
-            // SampleRegister
+
       {
+        //样品登记
         path: '/SampleRegister',
         icon: 'profile',
         name: 'SampleRegister',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
+        authority: ["总经理","业务副总","操作经理","实验室主任","业务经理","客服人员","检验人员","检测人员"],
         routes: [
           {
             path: '/SampleRegister/SampleRegister',
@@ -279,13 +262,13 @@ export default [
             path: '/SampleRegister/SampleQuery',
             name: 'SampleQuery',
             component: './SampleRegister/SampleQuery',
-            authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","授权签字人"],
+            authority: ["总经理","业务副总","操作经理","实验室主任"],
           },
           {
             path: '/SampleRegister/SampleDestory',
             name: 'SampleDestory',
             component: './SampleRegister/SampleDestory',
-            authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","授权签字人"],
+            authority: ["总经理","业务副总","操作经理","实验室主任"],
           },
           {
             path: '/SampleRegister/SampleRegisterDetail',
@@ -295,42 +278,52 @@ export default [
           },
         ],
       },
-      // {
-      //   path: '/UEditor',
-      //   icon: 'table',
-      //   name: 'UEditor',
-      //   routes: [
-      //     {
-      //       path: '/UEditor/UEditorText',
-      //       name: 'UEditorText',
-      //       component: './UEditor/UEditorText',
-      //     },
-      //   ],
-      // },
+
       {
+        //分析测试
         path: '/InspectionAnalysis',
         icon: 'table',
         name: 'InspectionAnalysis',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
+        authority: ["总经理","业务副总","实验室主任","业务经理","客服人员","检测人员"],
         routes: [
           {
+            //样品指标
             path: '/InspectionAnalysis/SampleIndex',
             name: 'SampleIndex',
             component: './InspectionAnalysis/SampleIndex',
           },
           {
+            //样品指标 指标按钮
+            path: '/InspectionAnalysis/SampleModify',
+            name: 'SampleModify',
+            component: './InspectionAnalysis/SampleModify',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+            // authority: ["总经理","业务副总","实验室主任","业务经理","客服人员"],
+          },
+          {
+            //检测安排
             path: '/InspectionAnalysis/InspectionArrangement',
             name: 'InspectionArrangement',
             component: './InspectionAnalysis/InspectionArrangement',
-            authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理"],
+            // authority: ["总经理","业务副总","实验室主任"],
+          },
+          {
+            //检测安排
+            path: '/InspectionAnalysis/InspectionSubcontractDetail',
+            name: 'InspectionSubcontractDetail',
+            component: './InspectionAnalysis/InspectionSubcontractDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+            // authority: ["总经理","业务副总","实验室主任","业务经理"],
           },
 
           {
+            //样品分包
             path: '/InspectionAnalysis/InspectionSubcontract',
             name: 'InspectionSubcontract',
             component: './InspectionAnalysis/InspectionSubcontract',
           },
           {
+            //样品分包-分包按钮
             path: '/InspectionAnalysis/InspectionArrangementDetail',
             name: 'InspectionArrangementDetail',
             component: './InspectionAnalysis/InspectionArrangementDetail',
@@ -338,30 +331,41 @@ export default [
           },
 
           {
+            //样品分包-分包查看
+            path: '/InspectionAnalysis/InspectionSubcontractDetailView',
+            name: 'InspectionSubcontractDetailView',
+            component: './InspectionAnalysis/InspectionSubcontractDetailView',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
             path: '/InspectionAnalysis/SampleDetail',
             name: 'SampleDetail',
             component: './InspectionAnalysis/SampleDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
+
           {
-            path: '/InspectionAnalysis/SampleModify',
-            name: 'SampleModify',
-            component: './InspectionAnalysis/SampleModify',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-          {
+            //结果录入
             path: '/InspectionAnalysis/ResultUpdate',
             name: 'ResultUpdate',
             component: './InspectionAnalysis/ResultUpdate',
           },
-
           {
+            //结果录入-编辑
+            path: '/InspectionAnalysis/ResultUpdateDetail',
+            name: 'ResultUpdateDetail',
+            component: './InspectionAnalysis/ResultUpdateDetail',
+            hideInMenu: 'true',//添加页不需要在menu上显示
+          },
+          {
+            //测试报告
             path: '/InspectionAnalysis/RecordUpload',
             name: 'RecordUpload',
             component: './InspectionAnalysis/RecordUpload',
           },
 
           {
+            //结果审核
             path: '/InspectionAnalysis/ResultReview',
             name: 'ResultReview',
             component: './InspectionAnalysis/ResultReview',
@@ -369,16 +373,10 @@ export default [
           },
 
           {
+            //结果审核-审核或退回键
             path: '/InspectionAnalysis/ResultDetailReview',
             name: 'ResultDetailReview',
             component: './InspectionAnalysis/ResultDetailReview',
-            hideInMenu: 'true',//添加页不需要在menu上显示
-          },
-
-          {
-            path: '/InspectionAnalysis/ResultUpdateDetail',
-            name: 'ResultUpdateDetail',
-            component: './InspectionAnalysis/ResultUpdateDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
@@ -397,14 +395,11 @@ export default [
         ],
       },
 
-
-
-      //Certificate
       {
         path: '/Certificate',
         icon: 'profile',
         name: 'Certificate',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
+        authority: ["总经理","业务副总","业务经理","客服人员","授权签字人"],
         routes: [
           {
             path: '/Certificate/CertificateUpload',
@@ -446,6 +441,7 @@ export default [
             path: '/Certificate/CertificateSeal',
             name: 'CertificateSeal',
             component: './Certificate/CertificateSeal',
+            authority: ["授权签字人"],
           },
           {
             path: '/Certificate/CertificateSealDetail',
@@ -471,7 +467,7 @@ export default [
             path: '/Certificate/CertificatePublish',
             name: 'CertificatePublish',
             component: './Certificate/CertificatePublish',
-            authority: ["总经理"],
+            authority: ["总经理","业务副总","业务经理"],
           },
 
           {
@@ -479,13 +475,14 @@ export default [
             name: 'CertificatePublishDetail',
             component: './Certificate/CertificatePublishDetail',
             hideInMenu: 'true',//添加页不需要在menu上显示
-            authority: ["总经理","业务经理","业务副总"],
+            // authority: ["总经理","业务经理","业务副总"],
           },
 
           {
             path: '/Certificate/CertificateAbandon',
             name: 'CertificateAbandon',
             component: './Certificate/CertificateAbandon',
+             authority: ["总经理","业务经理","业务副总","实验室主任"],
           },
 
           {
@@ -495,7 +492,6 @@ export default [
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
 
-
         ],
       },
 
@@ -504,12 +500,13 @@ export default [
         path: '/Charge',
         icon: 'profile',
         name: 'Charge',
-        //authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","财务人员","授权签字人"],
+        authority: ["总经理","业务副总","财务副总","业务经理","财务经理","财务人员","客服人员"],
         routes: [
           {
             path: '/Charge/FinalPrice',
             name: 'FinalPrice',
             component: './Charge/FinalPrice',
+            authority: ["总经理","业务副总","业务经理","客服人员"],
           },
           {
             path: '/Charge/FinalPriceDetail',
@@ -521,17 +518,20 @@ export default [
             path: '/Charge/ListFiction',
             name: 'ListFiction',
             component: './Charge/ListFiction',
+            authority: ["总经理","业务副总","业务经理","客服人员"],
           },
           //
           {
             path: '/Charge/ListFictionAdd',
             name: 'ListFictionAdd',
             component: './Charge/ListFictionAdd',
+            authority: ["总经理","业务副总","业务经理","客服人员"],
           },
           {
             path: '/Charge/ListFictionDelete',
             name: 'ListFictionDelete',
             component: './Charge/ListFictionDelete',
+            authority: ["总经理","业务副总","业务经理","客服人员"],
           },
           {
             path: '/Charge/ListReview',
@@ -544,6 +544,7 @@ export default [
             path: '/Charge/ListFile',
             name: 'ListFile',
             component: './Charge/ListFile',
+            authority: ["总经理","业务副总","业务经理","客服人员"],
           },
 
           {
@@ -551,6 +552,7 @@ export default [
             name: 'ListFictionReview',
             component: './Charge/ListFictionReview',
             hideInMenu: 'true',//添加页不需要在menu上显示
+            authority: ["总经理","业务副总","业务经理"],
           },
 
           {
@@ -561,15 +563,19 @@ export default [
           },
 
           {
+            //开具发票
             path: '/Charge/Invoice',
             name: 'Invoice',
             component: './Charge/Invoice',
+            authority: ["总经理","财务副总","财务经理","财务人员"],
           },
 
           {
+            // 收费到账
             path: '/Charge/ListPay',
             name: 'ListPay',
             component: './Charge/ListPay',
+            authority: ["总经理","财务副总","财务经理","财务人员"],
           },
 
           {
@@ -580,6 +586,7 @@ export default [
           },
 
           {
+
             path: '/Charge/DetailList',
             name: 'DetailList',
             component: './Charge/DetailList',
@@ -589,8 +596,7 @@ export default [
         ],
       },
 
-
-      // Charge
+      // 成本支出
       {
         path: '/CostManage',
         icon: 'profile',
@@ -602,7 +608,6 @@ export default [
             name: 'Cost',
             component: './Charge/Cost',
           },
-
 
           {
             path: '/CostManage/CostlistEdit',
@@ -638,9 +643,8 @@ export default [
             path: '/CostManage/CostlistPay',
             name: 'CostlistPay',
             component: './Charge/CostlistPay',
+            authority: ["总经理","财务经理","财务副总","财务人员"],
           },
-
-
 
           {
             path: '/CostManage/CostEdit',
@@ -648,9 +652,6 @@ export default [
             component: './Charge/CostEdit',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
-
-
-
           {
             path: '/CostManage/CostListDetail',
             name: 'CostListDetail',
@@ -690,7 +691,7 @@ export default [
         path: '/Archives',
         icon: 'profile',
         name: 'Archives',
-        //authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","授权签字人"],
+        authority: ["总经理","业务副总","业务经理","客服人员"],
         routes: [
           {
             path: '/Archives/ArchivesAdd',
@@ -711,7 +712,7 @@ export default [
         ],
       },
 
-      //Dict
+      //字典
       {
         path: '/DictMaintain',
         icon: 'profile',
@@ -791,21 +792,16 @@ export default [
             component: './DictMaintain/InvoiceTitleUpload',
             hideInMenu: 'true',//添加页不需要在menu上显示
           },
-
-
-
         ],
       },
 
-      //Dict
+      //公司管理
       {
         path: '/CompanyManage',
         icon: 'profile',
         name: 'CompanyManage',
         authority: ["总经理","管理员"],
         routes: [
-
-
           {
             path: '/CompanyManage/UserManage',
             name: 'UserManage',
@@ -879,7 +875,7 @@ export default [
         path: '/Statistics',
         icon: 'profile',
         name: 'Statistics',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","授权签字人"],
+        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理"],
         routes: [
 
           {
@@ -937,7 +933,7 @@ export default [
         path: '/CNAS',
         icon: 'profile',
         name: 'CNAS',
-        authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","授权签字人"],
+        authority: ["总经理","管理员"],
         routes: [
           {
             path: '/CNAS/CNASCheckFourCertCode',

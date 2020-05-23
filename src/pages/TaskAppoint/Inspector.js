@@ -124,6 +124,7 @@ class Inspector extends PureComponent {
     formValues: {},
     modalReadRecordVisible:false,
     ReadRecordData:[],
+    isinspectorvisible:false,
   };
 
   columns = [
@@ -167,7 +168,8 @@ class Inspector extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.toInspectDetail(text, record)}>检验人员</a>&nbsp;&nbsp;
+          {/*{this.state.isinspectorvisible===true?[<a onClick={() => this.toInspectDetail(text, record)}>检验指派 &nbsp;&nbsp;</a>]:[]}*/}
+          {(text.overallstate!=="申请作废"&& text.overallstate!=="已发布"&& this.state.isinspectorvisible===true)? [<a onClick={() => this.toInspectDetail(text, record)}>现场指派 &nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.ReviewSurveyor(text, record)}>查看</a> &nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -178,6 +180,11 @@ class Inspector extends PureComponent {
 
   componentDidMount() {
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    // !==-1 存在，===-1 不存在
+    if(user.role.indexOf("总经理")!==-1 || user.role.indexOf("业务副总")!==-1 || user.role.indexOf("操作经理")!==-1 ){
+      this.state.isinspectorvisible = true;
+    }
+
     const { dispatch } = this.props;
     const params = {
       certCode:user.certCode,

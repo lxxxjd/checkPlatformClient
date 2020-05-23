@@ -970,7 +970,7 @@ class ResultDetail extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" ? [] :
+              {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废"  ? [] :
                 [<Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>]}
             </Col>
             <Col span={2}>

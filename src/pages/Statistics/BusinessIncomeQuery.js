@@ -67,10 +67,10 @@ class BusinessIncomeQuery extends PureComponent {
       title: '清单号',
       dataIndex: 'listNo',
     },
-    // {
-    //   title: '发票号',
-    //   dataIndex: 'invoiceNo',
-    // },
+    {
+      title: '发票号',
+      dataIndex: 'invoiceNo',
+    },
     {
       title: '收费状态',
       dataIndex: 'status',

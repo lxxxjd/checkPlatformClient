@@ -25,6 +25,7 @@ const { Option } = Select;
 }))
 class ResultRegistration extends PureComponent {
   state = {
+    isregistervisible:false,
   };
 
   columns = [
@@ -62,9 +63,11 @@ class ResultRegistration extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-
-          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
-            :[<a onClick={() => this.modifyItem(text, record)}>检查结果&nbsp;&nbsp;</a>]}
+          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?
+            [<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
+            :[(this.state.isregistervisible)?
+              [<a onClick={() => this.modifyItem(text, record)}>检查结果&nbsp;&nbsp;</a>]
+              :[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -74,6 +77,10 @@ class ResultRegistration extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    // !==-1 存在，===-1 不存在
+    if(user.role.indexOf("检验人员")!==-1 ){
+      this.state.isregistervisible = true;
+    }
     dispatch({
       type: 'mTestRecord/getReports',
       payload:{

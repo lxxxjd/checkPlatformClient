@@ -95,7 +95,8 @@ class RecordUpload extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[<a onClick={() => this.uploadItem(text, record)}>查看报告&nbsp;&nbsp;</a>]:[<a onClick={() => this.uploadItem(text, record)}>上传报告&nbsp;&nbsp;</a>]}
+          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?
+            [<a onClick={() => this.uploadItem(text, record)}>查看&nbsp;&nbsp;</a>]:[<a onClick={() => this.uploadItem(text, record)}>上传&nbsp;&nbsp;</a>]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),

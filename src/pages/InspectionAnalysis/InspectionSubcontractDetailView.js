@@ -22,14 +22,14 @@ import styles from './InspectionArrangement.less';
 import moment from 'moment'
 
 const  operationTabList = [
-    // {
-    //   key: 'tab1',
-    //   tab: '分包',
-    // },
     {
-      key: 'tab2',
-      tab: '人员',
+      key: 'tab1',
+      tab: '分包',
     },
+    // {
+    //   key: 'tab2',
+    //   tab: '人员',
+    // },
   ];
 
 /* eslint react/no-multi-comp:0 */
@@ -38,9 +38,9 @@ const  operationTabList = [
   loading: loading.models.inspectionAnalysis,
 }))
 @Form.create()
-class InspectionArrangementDetail extends PureComponent {
+class InspectionSubcontractDetailView extends PureComponent {
   state = {
-    operationkey: 'tab2',
+    operationkey: 'tab1',
     visible:false,
     allCompanyName:[],
     showPrice:false,
@@ -135,15 +135,15 @@ class InspectionArrangementDetail extends PureComponent {
       title: '状态',
       dataIndex: 'reviewstatus',
     },
-    {
-      title: '操作',
-      render: (text, record) => (
-        <Fragment>
-          <a onClick={() => this.mobileItem(text, record)}>修改&nbsp;&nbsp;</a>
-          <a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>
-        </Fragment>
-      ),
-    },
+    // {
+    //   title: '操作',
+    //   render: (text, record) => (
+    //     <Fragment>
+    //       <a onClick={() => this.mobileItem(text, record)}>修改&nbsp;&nbsp;</a>
+    //       <a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a>
+    //     </Fragment>
+    //   ),
+    // },
   ];
 
 
@@ -210,6 +210,7 @@ class InspectionArrangementDetail extends PureComponent {
    this.setState({maininfoText:maininfo});
 
   }
+
 
   mobileItem = text => {
     if(text.priceway === "按单价" ){
@@ -483,4 +484,4 @@ class InspectionArrangementDetail extends PureComponent {
   }
 }
 
-export default InspectionArrangementDetail;
+export default InspectionSubcontractDetailView ;

@@ -41,7 +41,7 @@ class InspectionArrangement extends PureComponent {
     allCompanyName:[],
     selectEntrustment:null,
     showPrice:true,
-
+    isoperatevisible:false,
     modalText:{},
 
   };
@@ -88,7 +88,10 @@ class InspectionArrangement extends PureComponent {
         <Fragment>
           {/*{text.overallstate==="已发布"|| text.overallstate==="申请作废"?[]:[ <a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]}*/}
           {/*<a onClick={() => this.detailItem(text, record)}>查看&nbsp;&nbsp;</a>*/}
-          {(text.testman===undefined || text.testman===null) ?[ <a onClick={() => this.show(text, record)}>分包&nbsp;&nbsp;</a>]:[ <a onClick={() => this.detailItem(text, record)}>分包&nbsp;&nbsp;</a>]}
+          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[]
+             :[(text.testman===undefined || text.testman===null) ?[ <a onClick={() => this.show(text, record)}>新建&nbsp;&nbsp;</a>]:[ <a onClick={() => this.detailItem(text, record)}>修改&nbsp;&nbsp;</a>]]}
+
+          <a onClick={() => this.subcontractshow(text, record)}>查看&nbsp;&nbsp;</a>
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -96,9 +99,13 @@ class InspectionArrangement extends PureComponent {
   ];
 
 
+
   componentDidMount() {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    // if(user.role.indexOf("实验室主任")!==-1 || user.role.indexOf("总经理")!==-1 || user.role.indexOf("业务副总")!==-1 ){
+    //   this.state.isoperatevisible = true;
+    // }
     dispatch({
       type: 'inspectionAnalysis/getAllSampleAndTestCompany',
       payload:{
@@ -129,6 +136,18 @@ class InspectionArrangement extends PureComponent {
   }
 
 
+  subcontractshow = text => {
+    sessionStorage.setItem('InspectionArrangementDetail_Report',JSON.stringify(text));
+    sessionStorage.setItem('reportno',text.reportno);
+    sessionStorage.setItem('shipname',text.shipname);
+    sessionStorage.setItem('applicant',text.applicant);
+    sessionStorage.setItem('sampleno',text.sampleno);
+    sessionStorage.setItem('overallstate_InspectionDetail',text.overallstate);
+    router.push({
+      pathname:'/InspectionAnalysis/InspectionSubcontractDetailView',
+    });
+  };
+
 
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
@@ -146,7 +165,7 @@ class InspectionArrangement extends PureComponent {
     sessionStorage.setItem('overallstate_InspectionDetail',text.overallstate);
 
     router.push({
-      pathname:'/InspectionAnalysis/InspectionArrangementDetail',
+      pathname:'/InspectionAnalysis/InspectionSubcontractDetail',
     });
   };
 
@@ -194,7 +213,6 @@ class InspectionArrangement extends PureComponent {
   };
 
   show = text =>{
-
     if(text.overallstate ==="申请作废"|| text.overallstate ==="已发布"){
       Modal.info({
         title: '该委托已发布，无法修改分包信息！',

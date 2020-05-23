@@ -39,6 +39,7 @@ class ResultUpdate extends PureComponent {
     allCompanyName:[],
     selectEntrustment:null,
     showPrice:false,
+    isoperatevisible:false,
   };
 
   columns = [
@@ -77,7 +78,8 @@ class ResultUpdate extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[]:[<a onClick={() => this.mobileItem(text, record)}>编辑&nbsp;&nbsp;</a>]}
+          {(text.overallstate!=="已发布" && text.overallstate!=="申请作废" && this.state.isoperatevisible)?
+            [<a onClick={() => this.mobileItem(text, record)}>录入&nbsp;&nbsp;</a>]:[]}
           {/*{text.overallstate==="已发布"|| text.overallstate==="申请作废"?[<a onClick={() => this.uploadItem(text, record)}>查看文件</a>]:[<a onClick={() => this.uploadItem(text, record)}>上传文件</a>]}    &nbsp;&nbsp;*/}
           <a onClick={() => this.detailItem(text, record)}>查看</a>
           &nbsp;&nbsp;
@@ -113,6 +115,9 @@ class ResultUpdate extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    if( user.role.indexOf("检测人员")!==-1 ) {
+      this.state.isoperatevisible = true;
+    }
     dispatch({
       type: 'inspectionAnalysis/getAllSampleAndTestMan',
       payload:{
@@ -187,11 +192,12 @@ class ResultUpdate extends PureComponent {
           </div>
         </Card>
         <Modal
-            title="结果详情"
-            visible={visible}
-            footer={null}
-            onCancel={this.handleCancel}
-          >
+          title="结果详情"
+          visible={visible}
+          footer={null}
+          width={800}
+          onCancel={this.handleCancel}
+         >
             <Table
               size="middle"
               loading={loading}

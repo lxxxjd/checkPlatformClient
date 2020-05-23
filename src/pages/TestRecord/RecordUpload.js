@@ -25,6 +25,7 @@ const { Option } = Select;
 }))
 class RecordUpload extends PureComponent {
   state = {
+    isuploadvisible:false,
   };
 
   columns = [
@@ -95,8 +96,15 @@ class RecordUpload extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
-            :[<a onClick={() => this.modifyItem(text, record)}>上传记录&nbsp;&nbsp;</a>]}
+          {/*{(text.overallstate==="申请作废"||text.overallstate==="已发布")?*/}
+          {/*  [<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]*/}
+          {/*  :[<a onClick={() => this.modifyItem(text, record)}>上传记录&nbsp;&nbsp;</a>]}*/}
+
+          {(text.overallstate==="申请作废"||text.overallstate==="已发布")?
+            [<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]
+            :[(this.state.isuploadvisible===true)?
+              [<a onClick={() => this.modifyItem(text, record)}>上传&nbsp;&nbsp;</a>]
+              :[<a onClick={() => this.modifyItem(text, record)}>查看&nbsp;&nbsp;</a>]]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -106,6 +114,10 @@ class RecordUpload extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    // !==-1 存在，===-1 不存在
+    if(user.role.indexOf("检验人员")!==-1 ){
+      this.state.isregistervisible = true;
+    }
     dispatch({
       type: 'mTestRecord/getRecordList',
       payload:{

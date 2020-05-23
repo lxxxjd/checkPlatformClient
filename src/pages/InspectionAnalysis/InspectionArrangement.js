@@ -35,7 +35,7 @@ const SearchForm = Form.create()(Search);
 @Form.create()
 class InspectionArrangement extends PureComponent {
   state = {
-
+    isoperatevisible:false,
   };
 
   columns = [
@@ -100,7 +100,8 @@ class InspectionArrangement extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {text.overallstate==="已发布"|| text.overallstate==="申请作废"?[]:[<a onClick={() => this.mobileItem(text, record)}>检测人员&nbsp;&nbsp;</a>]}
+          {(text.overallstate!=="申请作废"&& text.overallstate!=="已发布"&& this.state.isoperatevisible===true)?
+            [<a onClick={() => this.mobileItem(text, record)}>检测指派 &nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.detailItem(text, record)}>查看</a>&nbsp;&nbsp;
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
@@ -112,6 +113,10 @@ class InspectionArrangement extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    // !==-1 存在，===-1 不存在
+    if(user.role.indexOf("实验室主任")!==-1 || user.role.indexOf("总经理")!==-1 || user.role.indexOf("业务副总")!==-1 ){
+      this.state.isoperatevisible = true;
+    }
     dispatch({
       type: 'inspectionAnalysis/getAllSampleAndTestMan',
       payload:{
