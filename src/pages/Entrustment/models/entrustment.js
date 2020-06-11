@@ -2,7 +2,7 @@ import { submitApplication ,queryAllReports,queryAllReportsByFilter,
         queryReport,cancelReportItem,getAllClientName,getAllBusinessSort,
         getAllBusinessSource,getTradeWay,getCheckProject,getCargos,updateReport,getContacts,searchCargos,
   getCnasInfo,getCnasCheckInfo,getDepartmentList,getCustomInfos,getRepeatCustomsNo,getBusiness, addConfigorAuthority,getPortList,
-  searchPortForEntrustment,searchByKindValue,searchPlaceByPlaceCode
+  searchPortForEntrustment,searchByKindValue,searchPlaceByPlaceCode,getPriceMaking
 } from '@/services/Entrustment';
 
 import {
@@ -31,6 +31,11 @@ export default {
 
   effects: {
 
+    *getPriceMaking({ payload , callback}, { call, put }) {
+      const response = yield call(getPriceMaking, payload);
+      if (callback) callback(response);
+    },
+
     *getPerTaskReportnos({ payload , callback}, { call, put }) {
       const response = yield call(getPerTaskReportnos, payload);
       if (callback) callback(response);
@@ -41,6 +46,7 @@ export default {
       const response = yield call(getRepeatCustomsNo, payload);
       if (callback) callback(response.data);
     },
+
 
     // 受理
     *addConfigorAuthority({ payload , callback}, { call, put }) {
@@ -183,11 +189,7 @@ export default {
     },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(cancelReportItem, payload);
-      yield put({
-        type: 'delete',
-        payload:response,
-      });
-      if (callback) callback();
+      if (callback) callback(response);
     },
     *getContacts({ payload, callback }, { call, put }) {
       const response = yield call(getContacts, payload);

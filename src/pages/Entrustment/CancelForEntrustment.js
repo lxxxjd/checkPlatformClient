@@ -78,7 +78,7 @@ class CancelForEntrustment extends PureComponent {
       title: '操作',
       render: (text, record) => (
         <Fragment>
-          {!(text.overallstate==="申请作废"||text.overallstate==="已发布")?[<a onClick={() => this.cancelItem(text, record)}>撤销&nbsp;&nbsp;</a>]:[]}
+          {(text.overallstate===undefined||text.overallstate===null)?[<a onClick={() => this.cancelItem(text, record)}>撤销&nbsp;&nbsp;</a>]:[]}
           <a onClick={() => this.previewItem(text, record)}>委托详情</a>
         </Fragment>
       ),
@@ -87,11 +87,35 @@ class CancelForEntrustment extends PureComponent {
 
   // eslint-disable-next-line react/sort-comp
   cancelItem = text => {
-    this.setState({
-      visible: true,
-      reportNo:text.reportno
+    const { dispatch } = this.props;
+    const params = {
+      reportNo:text.reportno,
+    };
+    dispatch({
+      type: 'entrustment/getPriceMaking',
+      payload: params,
+      callback: (response) => {
+        if(response.code===200){
+          if(response.data.status===undefined || response.data.status==="未定价" || response.data.status==="已定价未拟制"){
+            this.setState({
+              visible: true,
+              reportNo:text.reportno
+            });
+          }else{
+            Modal.error({
+              okText: '确定',
+              title:`该记录的定价状态为：“${response.data.status}”`,
+              content: "请删除定价清单后执行撤销操作！",
+            });
+          }
+        }else{
+          message.error("请求错误,请联系管理员啊");
+        }
+      }
     });
+
   };
+
   previewItem = text => {
     sessionStorage.setItem('reportno',text.reportno);
     localStorage.setItem('reportDetailNo',text.reportno);
@@ -102,7 +126,9 @@ class CancelForEntrustment extends PureComponent {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const { dispatch } = this.props;
     const params = {
-      certCode:user.certCode
+      certCode:user.certCode,
+      role:user.role,
+      nameC:user.nameC,
     };
    dispatch({
       type: 'entrustment/fetch',
@@ -153,7 +179,9 @@ class CancelForEntrustment extends PureComponent {
   handleFormReset = () => {
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const params = {
-      certCode:user.certCode
+      certCode:user.certCode,
+      role:user.role,
+      nameC:user.nameC,
     };
     const { form } = this.props;
     form.resetFields();
@@ -183,6 +211,8 @@ class CancelForEntrustment extends PureComponent {
         kind :fieldsValue.kind,
         value: fieldsValue.value,
         certCode:user.certCode,
+        role:user.role,
+        nameC:user.nameC,
       };
       dispatch({
         type: 'entrustment/fetch',
@@ -254,18 +284,15 @@ class CancelForEntrustment extends PureComponent {
       payload: {
         reportno: reportNo,
       },
-      callback: () => {
-        message.success('撤销成功');
-        const params = {
-          certCode:user.certCode
-        };
-        dispatch({
-          type: 'entrustment/fetch',
-          payload: params,
-          callback: (response) => {
-            this.setState({dataSource:response.data.list});
-          }
-        });
+      callback: (response) => {
+        if(response.data==="success"){
+          console.log(response);
+          const dataSource = [...this.state.dataSource];
+          this.setState({ dataSource: dataSource.filter(item => item.reportno !== reportNo) });
+          message.success('撤销成功');
+        }else{
+          message.error('撤销失败');
+        }
       },
     });
     this.setState({

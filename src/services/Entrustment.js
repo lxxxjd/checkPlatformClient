@@ -221,3 +221,8 @@ export async function getRepeatCustomsNo(params) {
 export async function getBusiness(params) {
   return request(`/api/business/getBusiness?name=${params.name}`);
 }
+
+export async function getPriceMaking(params) {
+  return request(`/api/pricemaking/getPriceMaking?reportNo=${params.reportNo}`);
+}
+
