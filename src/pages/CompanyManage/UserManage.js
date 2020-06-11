@@ -617,18 +617,18 @@ class UserManage extends PureComponent {
         return <div>{result}</div>;
       },
     },
-    // {
-    //   title: '是否授权签字人',
-    //   dataIndex: 'isauthorize',
-    // },
+    {
+      title: '授权签字人',
+      dataIndex: 'isauthorize',
+    },
     {
       title: '操作',
       render: (text, record) => (
         <Fragment>
           {/*{text.signurl !== null ?[<a onClick={() => this.previewItem(text, record)}>查看签名&nbsp;&nbsp;</a>]:[]}*/}
           <a onClick={() => this.viewInfo(text, record)}>查看&nbsp;&nbsp;</a>
-          <a onClick={() => this.uploadItem(text, record)}>上传图片&nbsp;&nbsp;</a>
-          <a onClick={() => this.fileItem(text, record)}>上传文件&nbsp;&nbsp;</a>
+          <a onClick={() => this.uploadItem(text, record)}>照片签名&nbsp;&nbsp;</a>
+          <a onClick={() => this.fileItem(text, record)}>图片文件&nbsp;&nbsp;</a>
           <a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a>
           <a onClick={() => this.resetPassword(text, record)}>重置密码</a>    &nbsp;&nbsp;
           <a onClick={() => this.sendSignUrl(text, record)}>签名链接</a>    &nbsp;&nbsp;

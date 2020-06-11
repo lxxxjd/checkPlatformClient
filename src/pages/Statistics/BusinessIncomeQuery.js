@@ -76,7 +76,7 @@ class BusinessIncomeQuery extends PureComponent {
       dataIndex: 'status',
     },
     {
-      title: '状态',
+      title: '业务状态',
       dataIndex: 'overAllState',
     },
     {

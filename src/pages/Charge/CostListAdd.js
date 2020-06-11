@@ -114,8 +114,6 @@ class CostListAdd extends PureComponent {
     paylistno:undefined,
     approverusers:[],
     applicantName:[],//工商接口申请人
-
-
     costListData:[],  // 用于拟制
   };
 

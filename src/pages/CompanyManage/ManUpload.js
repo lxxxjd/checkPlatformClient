@@ -331,7 +331,7 @@ class ManUpload extends PureComponent {
         <Card size="small">
           <Row>
             <Col span={24}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传签名</Button>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showSign}>上传手签签名</Button>
             </Col>
           </Row>
           {(signUrl===''||signUrl===null||signUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={signUrl} height="100" />]}
@@ -340,7 +340,7 @@ class ManUpload extends PureComponent {
         <Card size="small">
           <Row>
             <Col span={24}>
-              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传授权图片</Button>
+              <Button style={{ marginBottom: 12 }} type="primary" onClick={this.showHead}>上传授权签字</Button>
             </Col>
           </Row>
           {(headUrl===''||headUrl===null||headUrl===undefined)?[<div style={{marginTop:20,marginLeft:20}}>暂无图片</div>]:[<img style={{marginTop:20}} src={headUrl} height="150" />]}
