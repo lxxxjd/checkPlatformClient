@@ -40,6 +40,7 @@ class ResultUpdate extends PureComponent {
     selectEntrustment:null,
     showPrice:false,
     isoperatevisible:false,
+    dataSource:[],
   };
 
   columns = [
@@ -124,8 +125,16 @@ class ResultUpdate extends PureComponent {
         certCode : user.certCode,
         nameC:user.nameC,
         role:user.role,
+      },
+      callback : response => {
+        if(response)
+        this.setState({dataSource:response.list});
       }
     });
+  };
+
+  setStateDate =(dataSource)=>{
+    this.setState({ dataSource });
   };
 
   detailItem = text => {
@@ -169,25 +178,25 @@ class ResultUpdate extends PureComponent {
 
   render() {
     const {
-      inspectionAnalysis: {samples,detail},
+      inspectionAnalysis: {detail},
       form: { getFieldDecorator },
       loading,
     } = this.props;
-    const { visible ,allCompanyName,showPrice} = this.state;
+    const { visible ,allCompanyName,showPrice,dataSource} = this.state;
     const companyNameOptions = allCompanyName.map(d => <Option key={d} value={d}>{d}</Option>);
     return (
       <PageHeaderWrapper title="检验安排">
         <Card bordered={false} size="small">
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}><SearchForm /></div>
+            <div className={styles.tableListForm}><SearchForm setStateDate={this.setStateDate} /></div>
             <Table
               style={{marginTop:5}}
               size="middle"
               loading={loading}
-              dataSource={samples.list}
+              dataSource={dataSource}
               pagination={{showQuickJumper:true,showSizeChanger:true}}
               columns={this.columns}
-              rowKey="reportno"
+              rowKey="sampleno"
             />
           </div>
         </Card>

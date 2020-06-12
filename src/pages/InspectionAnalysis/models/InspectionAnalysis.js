@@ -222,6 +222,7 @@ export default {
       };
     },
     getAllSampleAndTestManInfo(state, { payload }) {
+      this.state.samples=[];
       return {
         ...state,
         samples: payload.data,

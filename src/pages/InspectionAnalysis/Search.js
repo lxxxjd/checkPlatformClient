@@ -21,7 +21,7 @@ import styles from './Search.less';
 class Search  extends PureComponent {
 	handleSearch = e => {
 	    e.preventDefault();
-	    const { dispatch, form } = this.props;
+	    const { dispatch, form,setStateDate } = this.props;
       const user = JSON.parse(localStorage.getItem("userinfo"));
 	    form.validateFields((err, fieldsValue) => {
 	      console.log(err);
@@ -37,12 +37,16 @@ class Search  extends PureComponent {
 	      dispatch({
       		type: 'inspectionAnalysis/getAllSampleAndTestMan',
 	        payload: values,
+          callback : response => {
+            if(response)
+              setStateDate(response.list);
+          }
 	      });
 	    });
   	};
 
   	handleFormReset = () => {
-	    const { form } = this.props;
+	    const { form ,setStateDate} = this.props;
 	    form.resetFields();
 	    this.setState({
 	      formValues: {},
@@ -55,7 +59,12 @@ class Search  extends PureComponent {
             certCode:user.certCode,
             nameC:user.nameC,
             role:user.role,
-     		}
+     		},
+        callback : response => {
+          if(response)
+            if(response)
+              setStateDate(response.list);
+        }
 	    });
   	};
 
