@@ -73,6 +73,9 @@ export async function getAllTaskInspman(params) {
 export async function getReport(params) {
   return request(`/api/report/get_report?reportNo=${params.reportno}`);
 }
+export async function getDetailByKeyno(params) {
+  return request(`/api/testdetail/getDetailByKeyno?keyno=${params.keyno}`);
+}
 
 export async function getTestBySampleNo(params) {
   return request(`/api/TestInfo/getTestBySampleNo?reportno=${params.reportno}&sampleno=${params.sampleno}`);

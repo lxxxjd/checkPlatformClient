@@ -143,7 +143,7 @@ class SampleModify extends PureComponent {
     form.setFieldsValue({['referValue']: text.referValue});
     form.setFieldsValue({['rangeValue']: text.rangeValue});
     form.setFieldsValue({['calWay']: text.calWay});
-    this.setState({ testDetail : text});
+    this.setState({testDetail:text})
     // console.log(text);
     if(text.orFixed === "是" ){
       this.setState({orfixed:true});
@@ -156,34 +156,47 @@ class SampleModify extends PureComponent {
 
   modify = text =>{
     const {testDetail} = this.state;
-    var value = testDetail;
     const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
-      console.log(err);
-      if (err) return;
-      value.teststandard =  form.getFieldValue('teststandard');
-      value.referValue =  form.getFieldValue('referValue');
-      value.calWay =  form.getFieldValue('calWay');
-      value.rangeValue =  form.getFieldValue('rangeValue');
-      dispatch({
-        type: 'inspectionAnalysis/modifyDetail',
-        payload: value,
-        callback:response => {
-          if(response.code === 200){
-            notification.open({
-              message: '修改成功',
+    dispatch({
+      type: 'inspectionAnalysis/getDetailByKeyno',
+      payload: {keyno:testDetail.keyno},
+      callback:response => {
+        if(response.code === 200){
+          var value = response.data;
+          form.validateFields((err, fieldsValue) => {
+            if (err) return;
+            value.teststandard =  fieldsValue.teststandard;
+            value.referValue = fieldsValue.referValue;
+            value.calWay =  fieldsValue.calWay;
+            value.rangeValue =  fieldsValue.rangeValue;
+            dispatch({
+              type: 'inspectionAnalysis/modifyDetail',
+              payload: value,
+              callback:response2 => {
+                if(response2.code === 200){
+                  notification.open({
+                    message: '修改成功',
+                  });
+                  this.componentDidMount();
+                }else{
+                  notification.open({
+                    message: '修改失败',
+                    description:response2.message,
+                  });
+                }
+              }
             });
-          }else{
-            notification.open({
-              message: '修改失败',
-              description:response.message,
-            });
-          }
+          });
+          form.resetFields();
+          this.setState({ modify: false });
+        }else{
+          notification.open({
+            message: '修改失败',
+            description:response.message,
+          });
         }
-      });
+      }
     });
-    form.resetFields();
-    this.setState({ modify: false });
   };
 
   deleteOne= text => {
@@ -240,6 +253,7 @@ class SampleModify extends PureComponent {
       }
     });
   };
+
   columns1 = [
     {
       title: '委托日期',
@@ -316,6 +330,7 @@ class SampleModify extends PureComponent {
     });
     this.setState({onDetail:true});
   };
+
   columns3 = [
     {
       title: '指标名称',
@@ -676,105 +691,5 @@ class SampleModify extends PureComponent {
     );
   }
 }
-  // showAddOne = () => {
-  //   const { dispatch,form} = this.props;
-  //   form.resetFields();
-  //   const reportno = sessionStorage.getItem('reportno');
-  //   const sampleno = sessionStorage.getItem('sampleno');
-  //   const cargonameC = sessionStorage.getItem('cargoname');
 
-  //   console.log(cargonameC);
-  //   dispatch({
-  //     type: 'inspectionAnalysis/getItemNames',
-  //     payload:{
-  //       reportno,
-  //       sampleno,
-  //       cargonameC,
-  //     },
-  //     callback : response => {
-  //       this.setState({itemName:response.data})
-  //     }
-  //   });
-  //   this.setState({ addOne: true });
-  // };
-            /*<Modal
-              title="新建样品指标"
-              visible={addOne}
-              onOk={this.onAddOne}
-              onCancel={this.handleCancel}
-            >
-            <Form>
-              <Form.Item label="指标名称">
-                {getFieldDecorator('itemC', {
-                  rules: [{ required: true, message: '请选择指标名称' }],
-                })(
-                    <Select
-                      showSearch
-                      placeholder="请选择"
-                      filterOption={false}
-                      onChange={this.handleChange}
-                      //onSearch={this.handleSearch}
-                    >
-                    {itemNameOptions}
-                    </Select>
-                  )}
-              </Form.Item>
-              <Form.Item label="检测标准">
-                {getFieldDecorator('teststandard', {
-                  rules: [{ required: true, message: '请选择检测标准' }],
-                })(
-                    <Select
-                      showSearch
-                      placeholder="请选择"
-                      filterOption={false}
-                      //onSearch={this.handleSearch}
-                    >
-                    {standardOptions}
-                    </Select>
-                  )}
-              </Form.Item>
-            </Form>
-          </Modal>*/
-  //          onAddOne = () => {
-  //   const { dispatch, form } = this.props;
-  //   const reportno = sessionStorage.getItem('reportno');
-  //   const sampleno = sessionStorage.getItem('sampleno');
-  //   const cargonameC = sessionStorage.getItem('cargoname');
-  //   form.validateFields((err, fieldsValue) => {
-  //     console.log(err);
-  //     if (err) return;
-  //     const values = {
-  //       ...fieldsValue,
-  //       reportno,
-  //       sampleno,
-  //       cargonameC,
-  //     };
-  //     dispatch({
-  //       type : 'inspectionAnalysis/addDetail',
-  //       payload : {
-  //         ...values
-  //       },
-  //       callback : response =>{
-  //         if(response.code === 200){
-  //           notification.open({
-  //             message: '添加成功',
-  //           });
-  //           dispatch({
-  //             type: 'inspectionAnalysis/getDetails',
-  //             payload:{
-  //                reportno : reportno,
-  //                sampleno : sampleno ,
-  //             }
-  //           });
-  //         }else{
-  //           notification.open({
-  //             message: '添加失败',
-  //             description:response.data,
-  //           });
-  //         }
-  //       }
-  //     });
-  //   });
-  //   this.setState({addOne:false});
-  // };
 export default SampleModify;
