@@ -95,6 +95,7 @@ class ResultDetail extends PureComponent {
     modalInfo:{},
 
     modalType:"", // 表示新增或者修改
+    isregistervisible:false,
 
   };
 
@@ -142,6 +143,20 @@ class ResultDetail extends PureComponent {
       dataIndex: 'weight',
     },
 
+    {
+      title: '参考值',
+      dataIndex: 'refervalue',
+    },
+    {
+      title: '浮动范围',
+      dataIndex: 'floatvalue',
+    },
+    {
+      title: '浮动比例',
+      dataIndex: 'floatrate',
+    },
+
+
     { title: '结果描述', dataIndex: 'result',key:"desc",
       onCell: () => {
         return {
@@ -160,9 +175,9 @@ class ResultDetail extends PureComponent {
         title: '操作',
         render: (text, record) => (
           <Fragment>
-            <a onClick={() => this.modifyItem(text, record)}>修改</a>  &nbsp;&nbsp;
+            {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" || this.state.isregistervisible===false?[]:[<a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a> ]}
+            {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" || this.state.isregistervisible===false?[]:[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a> ]}
             <a onClick={() => this.handleReview(true, text)}>查看</a>  &nbsp;&nbsp;
-            <a onClick={() => this.deleteItem(text, record)}>删除</a>
           </Fragment>
         ),
     },
@@ -265,6 +280,9 @@ class ResultDetail extends PureComponent {
     const { dispatch } = this.props;
     const reportno = sessionStorage.getItem('reportno');
     const user = JSON.parse(localStorage.getItem("userinfo"));
+    if(user.role.indexOf("检验人员")!==-1 ) {
+      this.state.isregistervisible = true;
+    }
     dispatch({
       type: 'checkResult/getCheckResult',
       payload:{
@@ -993,7 +1011,7 @@ class ResultDetail extends PureComponent {
         <Card bordered={false} size="small">
           <Row>
             <Col span={22}>
-              {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废"  ? [] :
+              {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" || this.state.isregistervisible===false  ? [] :
                 [<Button style={{ marginBottom: 12 }} type="primary" onClick={this.show}>新建</Button>]}
             </Col>
             <Col span={2}>
