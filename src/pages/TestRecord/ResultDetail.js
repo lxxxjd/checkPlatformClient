@@ -139,22 +139,22 @@ class ResultDetail extends PureComponent {
       },
     },
     {
-      title: '重量',
+      title: '检验结果',
       dataIndex: 'weight',
     },
 
-    {
-      title: '参考值',
-      dataIndex: 'refervalue',
-    },
-    {
-      title: '浮动范围',
-      dataIndex: 'floatvalue',
-    },
-    {
-      title: '浮动比例',
-      dataIndex: 'floatrate',
-    },
+    // {
+    //   title: '参考值',
+    //   dataIndex: 'refervalue',
+    // },
+    // {
+    //   title: '浮动范围',
+    //   dataIndex: 'floatvalue',
+    // },
+    // {
+    //   title: '浮动比例',
+    //   dataIndex: 'floatrate',
+    // },
 
 
     { title: '结果描述', dataIndex: 'result',key:"desc",
@@ -176,7 +176,7 @@ class ResultDetail extends PureComponent {
         render: (text, record) => (
           <Fragment>
             {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" || this.state.isregistervisible===false?[]:[<a onClick={() => this.modifyItem(text, record)}>修改&nbsp;&nbsp;</a> ]}
-            {this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" || this.state.isregistervisible===false?[]:[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a> ]}
+            {/*{this.state.overallstate === "已发布" || this.state.overallstate === "申请作废" || this.state.isregistervisible===false?[]:[<a onClick={() => this.deleteItem(text, record)}>删除&nbsp;&nbsp;</a> ]}*/}
             <a onClick={() => this.handleReview(true, text)}>查看</a>  &nbsp;&nbsp;
           </Fragment>
         ),
@@ -191,22 +191,22 @@ class ResultDetail extends PureComponent {
       dataIndex: 'inspway',
     },
     {
-      title: '重量',
+      title: '检验结果',
       dataIndex: 'weight',
     },
 
-    {
-      title: '参考值',
-      dataIndex: 'refervalue',
-    },
-    {
-      title: '浮动范围',
-      dataIndex: 'floatvalue',
-    },
-    {
-      title: '浮动比例',
-      dataIndex: 'floatrate',
-    },
+    // {
+    //   title: '参考值',
+    //   dataIndex: 'refervalue',
+    // },
+    // {
+    //   title: '浮动范围',
+    //   dataIndex: 'floatvalue',
+    // },
+    // {
+    //   title: '浮动比例',
+    //   dataIndex: 'floatrate',
+    // },
 
     {
       title: '人员',
