@@ -179,6 +179,20 @@ class ResultDetail extends PureComponent {
       title: '重量',
       dataIndex: 'weight',
     },
+
+    {
+      title: '参考值',
+      dataIndex: 'refervalue',
+    },
+    {
+      title: '浮动范围',
+      dataIndex: 'floatvalue',
+    },
+    {
+      title: '浮动比例',
+      dataIndex: 'floatrate',
+    },
+
     {
       title: '人员',
       dataIndex: 'inspman',
@@ -228,6 +242,8 @@ class ResultDetail extends PureComponent {
       },
       render: (text) => <Tooltip placement="topLeft" arrowPointAtCenter title={text}>{text}</Tooltip>
     },
+
+
 
     {
       title: '操作',
