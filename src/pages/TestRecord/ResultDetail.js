@@ -359,6 +359,9 @@ class ResultDetail extends PureComponent {
       standard:standardStr,
       instrument:instrumentStr,
       result:text.result,
+      refervalue: text.refervalue,
+      floatvalue: text.floatvalue,
+      floatrate: text.floatrate,
     };
 
 
@@ -410,6 +413,7 @@ class ResultDetail extends PureComponent {
          reportno,
       }
     });
+    this.state.modalInfo = text;
 
     dispatch({
       type: 'checkResult/getTaskByReportNoAndInspway',
@@ -527,6 +531,9 @@ class ResultDetail extends PureComponent {
           finishdate:  values.finishdate,
           instrument:undefined,
           result: values.result,
+          refervalue: this.state.modalInfo.refervalue,
+          floatvalue: this.state.modalInfo.floatvalue,
+          floatrate: this.state.modalInfo.floatrate,
           reportno,
         };
         if(values.inspman!==undefined && values.inspman !== null){
