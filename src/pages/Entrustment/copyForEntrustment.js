@@ -174,7 +174,7 @@ class CopyForEntrustment extends PureComponent {
               'agent': response.agent,
               'applicant': response.applicant,
               'inspwaymemo1': response.inspwaymemo1,
-              'customsNo':response.customsNo,
+              // 'customsNo':response.customsNo,
               'inspplace1':placecodes,
               'inspplace2': response.inspplace2,
               'inspplace3': response.inspplace3,

@@ -326,7 +326,7 @@ class InspmanDetail extends PureComponent {
         formData.append('taskJson', JSON.stringify(params));
         formData.append('reportno', reportinfo.reportno);
         formData.append('inspmantype', '检测人员');
-
+        formData.append('sampleno', reportinfo.sampleno);
         const {dispatch} = this.props;
         dispatch({
           type: 'task/dealInspmans',

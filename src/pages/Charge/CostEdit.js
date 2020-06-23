@@ -360,6 +360,10 @@ class Cost extends PureComponent {
       dataIndex: 'register',
     },
     {
+      title: '备注',
+      dataIndex: 'remark',
+    },
+    {
       title: '状态',
       dataIndex: 'status',
     },
