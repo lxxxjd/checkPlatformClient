@@ -17,7 +17,7 @@ import {
   Typography,
   notification,
   AutoComplete,
-  message, Modal,
+  message, Modal, InputNumber,
 } from 'antd';
 
 import router from 'umi/router';
@@ -1195,10 +1195,10 @@ class ModifyForEntrustment extends PureComponent {
                         if (value) {
                           return Number(value);
                         }
-                      }, message: '请输入数字'
+                      }, message: '请输入正确的数字'
                     }],
                   })(
-                    <Input placeholder="0"/>
+                    <InputNumber placeholder="0" style={{width:'100%'}} />
                   )}
                 </Form.Item>
               </Col>
