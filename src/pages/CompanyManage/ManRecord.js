@@ -133,29 +133,37 @@ class ManRecord extends PureComponent {
   };
 
   deleteItem = text => {
-    const {
-      dispatch,
-    } = this.props;
-    dispatch({
-      type: 'company/deleteManRecord',
-      payload: {
-        keyno:text.keyno,
-      },
-      callback: (response) => {
-        if (response.code === 400) {
-          notification.open({
-            message: '删除失败',
-            description: response.data,
-          });
-        } else {
-          notification.open({
-            message: '删除成功',
-            description: response.data,
-          });
-          this.componentDidMount();
-        }
+    Modal.confirm({
+      title: '确定删除吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        const {
+          dispatch,
+        } = this.props;
+        dispatch({
+          type: 'company/deleteManRecord',
+          payload: {
+            keyno:text.keyno,
+          },
+          callback: (response) => {
+            if (response.code === 400) {
+              notification.open({
+                message: '删除失败',
+                description: response.data,
+              });
+            } else {
+              notification.open({
+                message: '删除成功',
+                description: response.data,
+              });
+              this.componentDidMount();
+            }
+          }
+        });
       }
     });
+
   };
 
   handleOk = () => {

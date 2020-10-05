@@ -835,19 +835,25 @@ class UserManage extends PureComponent {
     const values = {
       userName:text.userName,
     };
-    console.log(values);
-    dispatch({
-      type: 'company/deleteUser',
-      payload:values,
-      callback: (response) => {
-        if(response==="success")
-          message.success("删除成功");
-        else{
-          message.success("删除失败");
-        }
+    Modal.confirm({
+      title: '确定删除吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'company/deleteUser',
+          payload:values,
+          callback: (response) => {
+            if(response==="success")
+              message.success("删除成功");
+            else{
+              message.success("删除失败");
+            }
+          }
+        });
+        this.init();
       }
     });
-    this.init();
   };
 
   uploadItem = (text) =>{

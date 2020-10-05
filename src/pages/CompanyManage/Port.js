@@ -298,16 +298,23 @@ class Port extends PureComponent {
     const values = {
       ...text
     };
-    dispatch({
-      type: 'port/deletePort',
-      payload:values,
-      callback: (response) => {
-        if(response==="success"){
-          this.init();
-          message.success("删除成功");
-        } else{
-          message.success("删除失败");
-        }
+    Modal.confirm({
+      title: '确定删除吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        dispatch({
+          type: 'port/deletePort',
+          payload:values,
+          callback: (response) => {
+            if(response==="success"){
+              this.init();
+              message.success("删除成功");
+            } else{
+              message.success("删除失败");
+            }
+          }
+        });
       }
     });
   };
