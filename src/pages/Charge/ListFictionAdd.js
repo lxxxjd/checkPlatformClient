@@ -471,7 +471,8 @@ class ListFictionAdd extends PureComponent {
           // 拟制操作
           let data=[];
           data.push(text);
-          this.state.total = text.total;
+          const total = text.total.toFixed(2);
+          this.state.total = total;
           this.setState({priceMakingData:data});
           this.setState({payer:text.payer});
           this.setState({firstreportno:text.reportno});
@@ -546,6 +547,7 @@ class ListFictionAdd extends PureComponent {
             total += parseFloat(state.priceMaking[j].total);
           }
           this.state.firstreportno = (state.priceMaking!==undefined&&state.priceMaking.length>0)?state.priceMaking[0].reportno:undefined;
+          total = total.toFixed(2);
           this.state.total = total;
           this.state.priceMakingData = state.priceMaking;
 

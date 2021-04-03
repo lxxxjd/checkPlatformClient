@@ -402,7 +402,7 @@ class BusinessSort extends PureComponent {
                   <Option value="namec">公司名称</Option>
                   <Option value="cocode">税号</Option>
                   <Option value="addresstel">注册地址电话</Option>
-                  <Option value="bankaccount">开户行</Option>
+                  <Option value="bankaccount">开户行及账号</Option>
                 </Select>
               )}
             </Form.Item>
