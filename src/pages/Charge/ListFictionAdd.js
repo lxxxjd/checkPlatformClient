@@ -472,7 +472,7 @@ class ListFictionAdd extends PureComponent {
           let data=[];
           data.push(text);
           const total = text.total.toFixed(2);
-          this.state.total = total;
+          this.state.total = this.toDecimal(text.total);
           this.setState({priceMakingData:data});
           this.setState({payer:text.payer});
           this.setState({firstreportno:text.reportno});
@@ -500,6 +500,16 @@ class ListFictionAdd extends PureComponent {
     });
 
   };
+
+  toDecimal = (x) => {
+    let f = parseFloat(x);
+    if (isNaN(f)) {
+      return x;
+    }
+    f = Math.round(x*100)/100;
+    // eslint-disable-next-line consistent-return
+    return f;
+  }
 
 
   handleSubmit = () => {
@@ -548,7 +558,7 @@ class ListFictionAdd extends PureComponent {
           }
           this.state.firstreportno = (state.priceMaking!==undefined&&state.priceMaking.length>0)?state.priceMaking[0].reportno:undefined;
           total = total.toFixed(2);
-          this.state.total = total;
+          this.state.total = this.toDecimal(total);
           this.state.priceMakingData = state.priceMaking;
 
           // 获取清单审核人员

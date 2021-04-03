@@ -235,7 +235,8 @@ class CostListAdd extends PureComponent {
       });
       return;
     }
-    this.setState({total:text.costmoney});
+    const total = this.toDecimal(text.costmoney);
+    this.setState({total});
     this.setState({paylistno:text.reportno});
     this.setState({paycompany:text.reciever});
     let data = [];
@@ -296,7 +297,7 @@ class CostListAdd extends PureComponent {
       message.warn('存在金额为空的成本，请审阅后继续！');
     }
 
-    this.state.total = total;
+    this.state.total = this.toDecimal(total);
     if(state.costList!==undefined ) {
       this.state.paylistno = state.costList[0].reportno;
     }
@@ -358,6 +359,15 @@ class CostListAdd extends PureComponent {
     });
   };
 
+  toDecimal = (x) => {
+    let f = parseFloat(x);
+    if (isNaN(f)) {
+      return x;
+    }
+    f = Math.round(x*100)/100;
+    // eslint-disable-next-line consistent-return
+    return f;
+  }
 
 
   handleSearch =()=>{
