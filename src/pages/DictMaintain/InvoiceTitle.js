@@ -78,16 +78,16 @@ const CreateForm = Form.create()(props => {
         })(<Input placeholder="请输入注册地址电话" />)}
       </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="开户行">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="开户行及账号">
         {form.getFieldDecorator('bankaccount', {
           initialValue: modalInfo.bankaccount,
           rules: [
             {
               required: true,
-              message: "请输入开户行",
+              message: "请输入开户行及账号",
             },
           ],
-        })(<Input placeholder="请输入开户行" />)}
+        })(<Input placeholder="请输入开户行及账号" />)}
       </FormItem>
 
 
@@ -149,15 +149,15 @@ const AddForm = Form.create()(props => {
         })(<Input placeholder="请输入注册地址电话" />)}
       </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="开户行">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="开户行及账号">
         {form.getFieldDecorator('bankaccount', {
           rules: [
             {
               required: true,
-              message: "请输入开户行",
+              message: "请输入开户行及账号",
             },
           ],
-        })(<Input placeholder="请输入开户行" />)}
+        })(<Input placeholder="请输入开户行及账号" />)}
       </FormItem>
 
     </Modal>
