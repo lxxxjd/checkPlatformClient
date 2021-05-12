@@ -8,7 +8,7 @@ import slash from 'slash2';
 const { pwa, primaryColor } = defaultSettings;
 // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION, TEST } = process.env;
-
+const publicPath = '/checkPlatformClient/';
 const plugins = [
   [
     'umi-plugin-react',
@@ -112,9 +112,13 @@ export default {
       return localName;
     },
   },
+
   manifest: {
-    basePath: '/',
+    basePath: publicPath,
   },
+  base: publicPath, // 最终输出路径
+  publicPath: publicPath,
+
 
   chainWebpack: webpackPlugin,
 };

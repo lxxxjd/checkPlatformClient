@@ -35,7 +35,7 @@ class HomePage extends Component {
 
 
   toCompany = ()=>{
-    window.open(`${this.state.url}/user/login`)
+    window.open(`${this.state.url}/checkPlatformClient/user/login`)
   };
 
   toConsignor = ()=>{
