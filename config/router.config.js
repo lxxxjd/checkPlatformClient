@@ -43,7 +43,7 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // Entrustment
-      { path: '/', redirect: '/Main/Main'},
+      { path: '/', redirect: '/home/homepage'},
 
       {
         path: '/Main',
