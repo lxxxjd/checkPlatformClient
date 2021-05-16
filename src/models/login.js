@@ -37,7 +37,7 @@ export default {
             redirect = null;
           }
         }
-        yield put(routerRedux.replace(redirect || '/'));
+        yield put(routerRedux.replace(redirect || '/Main/Main'));
         localStorage.setItem("userinfo",JSON.stringify(response.user));
       }
 
