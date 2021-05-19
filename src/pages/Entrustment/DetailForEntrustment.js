@@ -96,29 +96,38 @@ class DetailForEnturstment extends Component {
 
   previewItem = text => {
     const { dispatch } = this.props;
-    const reportno = sessionStorage.getItem('reportno');
-    const params = {
-      ...text,
-      reportno:reportno,
-      source : '委托',
-    };
-    dispatch({
-      type: 'testRecordEntrustment/getRecord',
-      payload:params,
-      callback:(response) =>{
-        if(response.code === 400){
-          notification.open({
-            message: '打开失败',
-            description:response.data,
-          });
-        }else{
-          const url = response.data;
-          this.setState({url:url});
-          //window.open(url);
+    const osspath = text.filepath
+    if(osspath === undefined || osspath === null){
+      return;
+    }
+    var extension = osspath.substring(osspath.lastIndexOf(".")+1);
+    if(extension==="pdf"){
+      const reportno = sessionStorage.getItem('reportno');
+      const params = {
+        ...text,
+        reportno:reportno,
+        source : '委托',
+      };
+      dispatch({
+        type: 'testRecordEntrustment/getRecord',
+        payload:params,
+        callback:(response) =>{
+          if(response.code === 400){
+            notification.open({
+              message: '打开失败',
+              description:response.data,
+            });
+          }else{
+            const url = response.data;
+            this.setState({url:url});
+            window.open(url);
+          }
         }
-      }
-    });
-    this.setState({showVisible:true});
+      });
+    }else{
+      const picUrl = `https://www.smlq.vip/api/cert_report/getFileStream?osspath=${osspath}`;
+      window.open(picUrl);
+    }
   };
 
   handleOk = e => {

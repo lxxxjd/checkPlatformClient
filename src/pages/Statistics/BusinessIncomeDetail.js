@@ -483,23 +483,37 @@ class BusinessIncomeDetail extends Component {
 
   previewItem = text => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'businessIncomeDetail/getOssPdf',
-      payload:{
-        osspath:text.filepath
-      },
-      callback:(response) =>{
-        if(response.code === 400){
-          notification.open({
-            message: '打开失败',
-            description:response.data,
-          });
-        }else{
-          const url = response.data;
-          window.open(url);
+    const osspath = text.filepath
+    if(osspath === undefined || osspath === null){
+      return;
+    }
+    var extension = osspath.substring(osspath.lastIndexOf(".")+1);
+    if(extension==="pdf"){
+      dispatch({
+        type: 'businessIncomeDetail/getOssPdf',
+        payload:{
+          osspath
+        },
+        callback:(response) =>{
+          console.log(response);
+          if(response.code === 400){
+            notification.open({
+              message: '打开失败',
+              description:response.data,
+            });
+          }else{
+            const url = response.data;
+            this.setState({url:url});
+            console.log(url);
+            window.open(url);
+          }
         }
-      }
-    });
+      });
+    }else{
+      const picUrl = `https://www.smlq.vip/api/cert_report/getFileStream?osspath=${osspath}`;
+      window.open(picUrl);
+    }
+    // this.setState({showVisible:true});
   };
 
   previewCertItem = text =>{

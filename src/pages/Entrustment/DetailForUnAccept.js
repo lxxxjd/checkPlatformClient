@@ -70,26 +70,42 @@ class DetailForUnAccept extends Component {
       }
     });
   }
+
   previewItem = text => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'preMainInfo/getOssPdf',
-      payload:{
-        osspath:text.filepath
-      },
-      callback:(response) =>{
-        if(response.code === 400){
-          notification.open({
-            message: '打开失败',
-            description:response.data,
-          });
-        }else{
-          this.setState({url:response.data});
+    const osspath = text.filepath
+    if(osspath === undefined || osspath === null){
+      return;
+    }
+    var extension = osspath.substring(osspath.lastIndexOf(".")+1);
+    if(extension==="pdf"){
+      dispatch({
+        type: 'preMainInfo/getOssPdf',
+        payload:{
+          osspath
+        },
+        callback:(response) =>{
+          console.log(response);
+          if(response.code === 400){
+            notification.open({
+              message: '打开失败',
+              description:response.data,
+            });
+          }else{
+            const url = response.data;
+            this.setState({url:url});
+            console.log(url);
+            window.open(url);
+          }
         }
-      }
-    });
-    this.setState({showVisible:true});
+      });
+    }else{
+      const picUrl = `https://www.smlq.vip/api/cert_report/getFileStream?osspath=${osspath}`;
+      window.open(picUrl);
+    }
+    // this.setState({showVisible:true});
   };
+
 
   handleOk = e => {
     console.log(e);
