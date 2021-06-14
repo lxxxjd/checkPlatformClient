@@ -217,7 +217,7 @@ class FinalPriceAdd extends PureComponent {
       dispatch,
     } = this.props;
     Modal.confirm({
-      title: '确定删除此清单吗？',
+      title: '确定保存该价格吗？',
       okText: '确认',
       cancelText: '取消',
       onOk: () => {

@@ -9,6 +9,7 @@ import testImg from './img/timg.png'
 import styles from './HomePage.less'
 import home1 from './img/home1.png'
 import home2 from './img/home2.png'
+import home3 from './img/home3.png'
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -119,16 +120,11 @@ class HomePage extends Component {
           </Col>
         </Row>
         <Row style={{marginTop:20}}>
-          <Col span={14}>
-            <div style={{position:'relative'}}>
-              <img alt="404" src={home1} style={{width:'100%',height:document.body.clientHeight*0.9,paddingRight:10,paddingLeft:10}} />
-              <a style={{position:'absolute',left:document.body.clientHeight*0.6,top:30}} onClick={this.openContactReadMe}>委托人使用说明 </a>
-              <a style={{position:'absolute',left:document.body.clientHeight*0.6+150,top:30}} onClick={this.openCompanyReadMe}>检验机构使用说明 </a>
-            </div>
-          </Col>
-          <Col span={10}>
-            <img alt="404" src={home2} style={{width:'100%',height:document.body.clientHeight*0.9,paddingLeft:10,paddingRight:10}} />
-          </Col>
+          <div style={{position:'relative'}}>
+            <img alt="404" src={home3} style={{width:'100%',height:document.body.clientHeight*0.9,paddingRight:10,paddingLeft:10}} />
+            <a style={{position:'absolute',left:document.body.clientHeight*0.6,top:30}} onClick={this.openContactReadMe}>委托人使用说明 </a>
+            {/*<a style={{position:'absolute',left:document.body.clientHeight*0.6+150,top:30}} onClick={this.openCompanyReadMe}>检验机构使用说明 </a>*/}
+          </div>
         </Row>
         <Row>
           <FooterView />

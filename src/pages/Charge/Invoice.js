@@ -110,6 +110,8 @@ const CreateInvoiceForm = Form.create()(props => {
               <Option value="汇款">汇款.</Option>
               <Option value="现金">现金</Option>
               <Option value="支票">支票</Option>
+              <Option value="银行承兑">银行承兑</Option>
+              <Option value="商业承兑">商业承兑</Option>
             </Select>
           )}
         </Form.Item>

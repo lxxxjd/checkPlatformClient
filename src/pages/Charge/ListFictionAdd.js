@@ -444,25 +444,24 @@ class ListFictionAdd extends PureComponent {
 
   // 单条拟制
   makeListItem = (text) =>{
-      if(text.status ===undefined || text.status ==="未定价"){
-        message.error('状态未定价，请定价后重试！');
-        return;
-      }
-      if (text.status !=="已定价未拟制"){
-        message.error('状态已拟制，如需重新拟制，请删除清单后操作！');
-        return;
-      }
+    if(text.status ===undefined || text.status ==="未定价"){
+      message.error('状态未定价，请定价后重试！');
+      return;
+    }
+    if (text.status !=="已定价未拟制"){
+      message.error('状态已拟制，如需重新拟制，请删除清单后操作！');
+      return;
+    }
     const {dispatch} = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
     const values = {
       certCode:user.certCode,
     };
-
     dispatch({
       type: 'charge/getInvoiceTitleList',
       payload:values,
       callback: (response) => {
-
+        console.log(response);
         // 设置账户
         if(response!==undefined && response.length !==undefined && response.length>0) {
           this.setState({
@@ -471,11 +470,14 @@ class ListFictionAdd extends PureComponent {
           // 拟制操作
           let data=[];
           data.push(text);
-          const total = text.total.toFixed(2);
-          this.state.total = this.toDecimal(text.total);
+          // const total = text.total.toFixed(2);
+          const total = this.toDecimal(text.total);
+          console.log(total);
+          this.setState({total});
           this.setState({priceMakingData:data});
           this.setState({payer:text.payer});
           this.setState({firstreportno:text.reportno});
+
           // 获取清单审核人员
           dispatch({
             type: 'user/getMan',
@@ -492,7 +494,6 @@ class ListFictionAdd extends PureComponent {
               }
             }
           });
-
         }else{
           message.success('请配置到账账户');
         }
@@ -557,7 +558,7 @@ class ListFictionAdd extends PureComponent {
             total += parseFloat(state.priceMaking[j].total);
           }
           this.state.firstreportno = (state.priceMaking!==undefined&&state.priceMaking.length>0)?state.priceMaking[0].reportno:undefined;
-          total = total.toFixed(2);
+          // total = total.toFixed(2);
           this.state.total = this.toDecimal(total);
           this.state.priceMakingData = state.priceMaking;
 
@@ -985,7 +986,7 @@ class ListFictionAdd extends PureComponent {
       handlePriceMakingVisible:this.handlePriceMakingVisible,
       sum:this.sum,
       onChange:this.onChange,
-      handlePriceMakingSubmit:this.handlePriceMakingSubmit,
+      user:this.handlePriceMakingSubmit,
     };
 
     const invoiceTitlesOptions = invoiceTitles.map(d => <Option key={d.namec} value={d.namec}>{d.namec}</Option>);
