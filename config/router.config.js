@@ -111,6 +111,7 @@ export default [
             name: "DetailForEntrustment",
             component: "./Entrustment/DetailForEntrustment",
             hideInMenu: 'true', //添加页不需要在menu上显示
+            authority: ["总经理","业务副总","财务副总","操作经理","实验室主任","业务经理","财务经理","客服人员","检验人员","检测人员","财务人员","授权签字人"],
           },
 
           {

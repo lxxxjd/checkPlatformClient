@@ -126,8 +126,8 @@ class BasicLayout extends React.Component {
             onCollapse={this.handleMenuCollapse}
             menuData={menuData}
             isMobile={isMobile}
-            username={user.nameC}
-            company={user.companyname===undefined||user.companyname===null?"":user.companyname}
+            username={user === undefined || user === null ?"":user.nameC}
+            company={user === undefined || user === null ||  user.companyname===undefined||user.companyname===null?"":user.companyname}
             {...this.props}
           />
         )}
@@ -179,3 +179,4 @@ export default connect(({ global, setting, menu: menuModel }) => ({
     {isMobile => <BasicLayout {...props} isMobile={isMobile} />}
   </Media>
 ));
+
