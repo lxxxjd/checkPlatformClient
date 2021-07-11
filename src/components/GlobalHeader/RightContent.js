@@ -73,7 +73,7 @@ export default class GlobalHeaderRight extends PureComponent {
       theme,
     } = this.props;
     const user = JSON.parse(localStorage.getItem("userinfo"));
-    const username = user.userName;
+    const username = user === undefined || user === null ?"":user.userName;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
         {/*<Menu.Item key="userCenter">*/}
